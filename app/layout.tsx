@@ -8,17 +8,17 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Miranda · IDEA 无限大厦",
+    default: "祁宁 Miranda · AI 商业化产品作品集",
     template: "%s | 祁宁 Miranda",
   },
-  description: "Miranda 的 IDEA 无限大厦：AI 商业化、大模型应用产品化、AIGC 工具增长与行业 AI 解决方案作品集。",
+  description: "祁宁 Miranda 的 AI 商业化产品作品集：大模型应用产品化、AIGC 工具增长与行业 AI 解决方案。",
 };
 
 const links = [
-  { label: "首页", href: "/" },
-  { label: "项目", href: "/projects" },
-  { label: "方法", href: "/method" },
-  { label: "关于", href: "/about" },
+  { label: "总控层", href: "/" },
+  { label: "05F 项目", href: "/projects" },
+  { label: "04F 方法", href: "/method" },
+  { label: "02F 关于", href: "/about" },
 ];
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -27,16 +27,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <header className="global-nav">
           <Navigation3
-            brand="Miranda · IDEA 无限大厦"
-            brandSub="AI 商业化与体验系统"
+            brand="MIRANDA"
+            brandSub="不堆砌 AI 功能，见可运行的产品系统"
             brandHref="/"
-            brandMark="7"
+            brandMark="M"
             links={links}
-            loginLabel="185 8631 2570"
-            loginHref="tel:18586312570"
-            signupLabel="发送邮件"
-            signupHref="mailto:yourandrea77@gmail.com"
-            accent="#c7ff3d"
+            loginLabel=""
+            signupLabel="联系 ID 主理人"
+            signupHref="#contact"
+            accent="#caff52"
             dark
           />
         </header>

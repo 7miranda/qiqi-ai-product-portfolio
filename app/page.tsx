@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ArrowUpRight, BriefcaseBusiness, Layers3, UserRound } from "lucide-react";
-import MetallicSwirl from "@/components/react-bits/metallic-swirl";
+import { ArrowUpRight, BriefcaseBusiness, Languages, Layers3, Mail, MessageCircle, Phone, UserRound } from "lucide-react";
+import { RadialLiquid } from "@/components/react-bits/radial-liquid";
 import StaggeredText from "@/components/react-bits/staggered-text";
 import About5 from "@/components/blocks/about-5";
 import PortfolioAgent from "@/components/site/portfolio-agent";
@@ -13,19 +13,28 @@ export default function Home() {
   return (
     <main className="home-page">
       <section className="portfolio-mast" aria-labelledby="hero-title">
-        <div className="mast-metal" aria-hidden="true">
-          <MetallicSwirl
+        <div className="mast-fluid" aria-hidden="true">
+          <RadialLiquid
             width="100%"
             height="100%"
-            speed={0.42}
-            zoom={5.4}
-            backgroundColor="#e8ebe8"
-            brightness={0.86}
-            colorRange={0.54}
-            colorBias={0.56}
-            opacity={0.48}
-            cursorInteraction
-            cursorIntensity={0.42}
+            speed={0.22}
+            color1="#d8ff62"
+            color2="#78f5ad"
+            color3="#244538"
+            backgroundColor="#08090a"
+            iterations={3}
+            position="right"
+            overallOpacity={0.72}
+            waveSize={2.2}
+            edgeSoftness={0.48}
+            scale={1.32}
+            distortionType="plasma"
+            distortionScale={0.5}
+            chromaShift={0.04}
+            enableCursorInteraction
+            refractionStrength={1.4}
+            fresnelIntensity={0.32}
+            edgeHighlight={0.38}
           />
         </div>
 
@@ -33,10 +42,10 @@ export default function Home() {
         <div className="mast-inner">
           <div className="mast-copy-panel">
             <div className="mast-kicker">
-              <span>77F / IDEA 无限大厦总控层</span>
+              <span>IDEA 大厦 / 总控层</span>
               <span>OPEN FOR AI COMMERCIALIZATION</span>
             </div>
-            <p className="mast-name">7 / MIRANDA · AI 商业化与体验系统主理人</p>
+            <p className="mast-name">祁宁 / MIRANDA · AI 商业化与体验系统主理人</p>
             <StaggeredText
               as="h1"
               text={"思 AI 所不能，\n见 AI 之所能。"}
@@ -55,17 +64,17 @@ export default function Home() {
             <div className="mast-actions" aria-label="主要入口">
               <Link className="mast-action mast-action-primary" href="/projects">
                 <BriefcaseBusiness />
-                <span><strong>前往 05F · 项目</strong><small>5 个完整案例</small></span>
+                <span><strong>项目</strong><small>05F · 5 个完整案例</small></span>
                 <ArrowUpRight />
               </Link>
               <Link className="mast-action" href="/method">
                 <Layers3 />
-                <span><strong>前往 04F · 方法</strong><small>从问题到交付</small></span>
+                <span><strong>方法</strong><small>04F · 从问题到交付</small></span>
                 <ArrowUpRight />
               </Link>
               <Link className="mast-action" href="/about">
                 <UserRound />
-                <span><strong>前往 02F · 关于</strong><small>经历与优势</small></span>
+                <span><strong>关于祁宁</strong><small>02F · 经历与优势</small></span>
                 <ArrowUpRight />
               </Link>
             </div>
@@ -83,22 +92,23 @@ export default function Home() {
                 </Link>
               ))}
             </div>
-            <p className="signature-caption">不堆 AI 功能，建可运行的产品系统。</p>
+            <p className="signature-caption">不堆砌 AI 功能，建可运行的产品系统</p>
           </div>
         </div>
 
         <div className="mast-contact-rail">
-          <span>7 · MIRANDA</span>
-          <a href="tel:18586312570">185 8631 2570</a>
-          <a href="mailto:yourandrea77@gmail.com">yourandrea77@gmail.com</a>
-          <span>微信 · DJ_MIRANDA</span>
+          <span><UserRound />祁宁</span>
+          <span><Languages />Miranda</span>
+          <a href="tel:18586312570"><Phone />185 8631 2570</a>
+          <a href="mailto:yourandrea77@gmail.com"><Mail />yourandrea77@gmail.com</a>
+          <span><MessageCircle />DJ_MIRANDA</span>
         </div>
         <aside className="home-toolbelt">
-          <div className="toolbelt-handle"><span>TOOLBELT · 真实工作流工具</span><strong>悬停展开</strong></div>
+          <div className="toolbelt-handle"><span>TOOLBELT · 真实工作流工具</span><strong>持续运行</strong></div>
           <About5 rowOne={toolsOne} rowTwo={toolsTwo} />
         </aside>
-        <PortfolioAgent />
       </section>
+      <PortfolioAgent />
     </main>
   );
 }

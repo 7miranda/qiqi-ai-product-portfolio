@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Copy, Mail, MessageCircle, Phone, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,12 +8,34 @@ import { Button } from "@/components/ui/button";
 const contacts = [
   { label: "电话", value: "18586312570", href: "tel:18586312570", icon: Phone },
   { label: "邮箱", value: "yourandrea77@gmail.com", href: "mailto:yourandrea77@gmail.com", icon: Mail },
-  { label: "微信", value: "DJ_MIRANDA", href: null, icon: MessageCircle },
+  { label: "社交 ID", value: "DJ_MIRANDA", href: null, icon: MessageCircle },
 ];
 
 export default function ContactDrawer() {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
+
+  useEffect(() => {
+    const sync = () => setOpen(window.location.hash === "#contact");
+    const intercept = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (!target?.closest('a[href="#contact"]')) return;
+      event.preventDefault();
+      setOpen(true);
+    };
+    sync();
+    window.addEventListener("hashchange", sync);
+    document.addEventListener("click", intercept);
+    return () => {
+      window.removeEventListener("hashchange", sync);
+      document.removeEventListener("click", intercept);
+    };
+  }, []);
+
+  const close = () => {
+    setOpen(false);
+    if (window.location.hash === "#contact") window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  };
 
   const copy = async (value: string) => {
     await navigator.clipboard.writeText(value);
@@ -25,7 +47,7 @@ export default function ContactDrawer() {
     <>
       <Button className="contact-fab" type="button" onClick={() => setOpen(true)} aria-label="打开联系方式">
         <Mail size={18} />
-        联系 IDEA 主理人
+        联系 ID 主理人
       </Button>
       <AnimatePresence>
         {open ? (
@@ -36,7 +58,7 @@ export default function ContactDrawer() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setOpen(false)}
+              onClick={close}
             />
             <motion.aside
               className="contact-drawer"
@@ -51,7 +73,7 @@ export default function ContactDrawer() {
                   <span className="eyebrow">DIRECT CONTACT</span>
                   <h2>和 Miranda 聊聊</h2>
                 </div>
-                <Button variant="outline" size="icon-lg" onClick={() => setOpen(false)} aria-label="关闭">
+                <Button variant="outline" size="icon-lg" onClick={close} aria-label="关闭">
                   <X />
                 </Button>
               </div>

@@ -17,7 +17,7 @@ export default function ProjectsPage() {
             <h1>不是功能清单，<br />是产品判断的证据。</h1>
             <BlurHighlight
               highlightedBits={["连续的产品能力演进线"]}
-              highlightColor="#c7ff3d"
+              highlightColor="#caff52"
               blurAmount={6}
               inactiveOpacity={0.26}
               highlightDelay={0.35}
@@ -49,8 +49,8 @@ export default function ProjectsPage() {
       </section>
       <Footer8
         statement="复杂能力需要被组织成清晰的产品判断，才有机会真正进入业务。"
-        actionLabel="联系 IDEA 主理人"
-        actionHref="mailto:yourandrea77@gmail.com"
+        actionLabel="联系 ID 主理人"
+        actionHref="#contact"
       />
     </main>
   );

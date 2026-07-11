@@ -7,6 +7,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import type { CSSProperties, ReactNode } from "react";
 
 export interface Navigation3Link {
   label: string;
@@ -38,10 +40,17 @@ const isExternal = (href: string) => /^https?:\/\//.test(href);
 const linkTarget = (href: string) =>
   isExternal(href) ? { target: "_blank" as const, rel: "noreferrer" } : {};
 
+function SmartLink({ href, children, className, style, onClick }: { href: string; children: ReactNode; className?: string; style?: CSSProperties; onClick?: () => void }) {
+  if (isExternal(href) || href.startsWith("mailto:") || href.startsWith("tel:")) {
+    return <a href={href} {...linkTarget(href)} className={className} style={style} onClick={onClick}>{children}</a>;
+  }
+  return <Link href={href} className={className} style={style} onClick={onClick}>{children}</Link>;
+}
+
 export function Navigation3({
   brand = "祁宁 · Miranda",
   brandHref = "/",
-  brandMark = "77",
+  brandMark = "祁",
   brandSub,
   links = DEFAULT_LINKS,
   loginLabel = "LOGIN",
@@ -72,24 +81,24 @@ export function Navigation3({
           transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
         >
           {/* Logo */}
-          <a
+          <SmartLink
             href={brandHref}
             className="flex items-center gap-3 text-xl font-semibold no-underline"
             style={{ color: ink }}
           >
             <span
-              className="flex h-10 w-10 items-center justify-center rounded-full text-xs font-bold"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-base font-bold"
               style={{ background: markBg }}
             >
               <span style={{ color: accent }}>{brandMark}</span>
             </span>
             <span>{brand}</span>
             {brandSub ? (
-              <span className="text-xs font-normal tracking-[0.08em]" style={{ color: mutedInk }}>
+              <span className="text-base font-normal" style={{ color: mutedInk }}>
                 {brandSub}
               </span>
             ) : null}
-          </a>
+          </SmartLink>
 
           {/* Nav Links Group - Centered */}
           <div
@@ -97,36 +106,31 @@ export function Navigation3({
             style={{ background: pillBg }}
           >
             {links.map((link) => (
-              <a
+              <SmartLink
                 key={link.label}
                 href={link.href}
-                {...linkTarget(link.href)}
-                className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-colors no-underline ${pillHover}`}
+                className={`rounded-full px-5 py-2.5 text-base font-semibold transition-colors no-underline ${pillHover}`}
                 style={{ color: mutedInk }}
               >
                 {link.label}
-              </a>
+              </SmartLink>
             ))}
           </div>
 
           {/* Auth Buttons - Right */}
           <div className="flex items-center gap-3">
-            <a
+            {loginLabel ? <SmartLink
               href={loginHref}
-              {...linkTarget(loginHref)}
-              className="px-4 py-3 text-sm font-semibold transition-opacity hover:opacity-70 no-underline"
+              className="px-4 py-3 text-base font-semibold transition-opacity hover:opacity-70 no-underline"
               style={{ color: mutedInk }}
-            >
-              {loginLabel}
-            </a>
-            <a
+            >{loginLabel}</SmartLink> : null}
+            <SmartLink
               href={signupHref}
-              {...linkTarget(signupHref)}
-              className="rounded-full px-6 py-3 text-sm font-semibold transition-transform hover:scale-[1.02] no-underline"
-              style={{ background: ctaBg, color: ctaFg }}
+              className="rounded-full px-6 py-3 text-base font-semibold transition-transform hover:scale-[1.02] no-underline"
+              style={{ background: ctaBg, color: "#090b08" }}
             >
               {signupLabel}
-            </a>
+            </SmartLink>
           </div>
         </motion.div>
 
@@ -138,19 +142,19 @@ export function Navigation3({
           transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
         >
           <div className="flex items-center justify-between">
-            <a
+            <SmartLink
               href={brandHref}
               className="flex items-center gap-2 text-lg font-medium no-underline"
               style={{ color: ink }}
             >
               <span
-              className="flex h-9 w-9 items-center justify-center rounded-full text-[11px] font-bold"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-base font-bold"
               style={{ background: markBg }}
             >
                 <span style={{ color: accent }}>{brandMark}</span>
               </span>
               <span>{brand}</span>
-            </a>
+            </SmartLink>
 
             <Button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -177,39 +181,31 @@ export function Navigation3({
                     style={{ background: pillBg }}
                   >
                     {links.map((link, index) => (
-                      <motion.a
+                      <SmartLink
                         key={link.label}
                         href={link.href}
-                        {...linkTarget(link.href)}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.2, delay: index * 0.03 }}
                         onClick={() => setMobileMenuOpen(false)}
-                        className={`block px-4 py-2.5 text-sm font-medium rounded-xl transition-colors no-underline ${pillHover}`}
+                        className={`block px-4 py-2.5 text-base font-medium rounded-xl transition-colors no-underline ${pillHover}`}
                         style={{ color: mutedInk }}
                       >
                         {link.label}
-                      </motion.a>
+                      </SmartLink>
                     ))}
                   </div>
 
                   <div className="flex flex-col gap-2 pt-2">
-                    <a
+                    {loginLabel ? <SmartLink
                       href={loginHref}
-                      {...linkTarget(loginHref)}
-                      className="block text-center px-4 py-2.5 text-sm font-medium no-underline"
+                      className="block text-center px-4 py-2.5 text-base font-medium no-underline"
                       style={{ color: mutedInk }}
-                    >
-                      {loginLabel}
-                    </a>
-                    <a
+                    >{loginLabel}</SmartLink> : null}
+                    <SmartLink
                       href={signupHref}
-                      {...linkTarget(signupHref)}
-                      className="block text-center px-5 py-2.5 rounded-full text-sm font-medium no-underline"
+                      className="block text-center px-5 py-2.5 rounded-full text-base font-medium no-underline"
                       style={{ background: ctaBg, color: ctaFg }}
                     >
                       {signupLabel}
-                    </a>
+                    </SmartLink>
                   </div>
                 </div>
               </motion.div>

@@ -40,13 +40,7 @@ const DEFAULT_COLUMNS: Footer8Column[] = [
       { label: "AI 评测", href: "/case-study#evaluation" },
     ],
   },
-  {
-    title: "Interview",
-    links: [
-      { label: "我的方法", href: "/#method", direction: "back" },
-      { label: "面试速读", href: "/#evidence", direction: "back" },
-    ],
-  },
+  { title: "Connect", links: [{ label: "我的方法", href: "/method" }, { label: "关于祁宁", href: "/about" }] },
 ];
 
 export default function Footer8({
@@ -123,9 +117,9 @@ export default function Footer8({
           {wordmark}
         </div>
 
-        <div className="flex flex-col gap-3 border-t border-[var(--line)] pt-5 font-mono text-[10px] tracking-[0.12em] text-[var(--ink-faint)] sm:flex-row sm:items-center sm:justify-between sm:text-[11px]">
+        <div className="flex flex-col gap-3 border-t border-[var(--line)] pt-5 font-mono text-base text-[var(--ink-faint)] sm:flex-row sm:items-center sm:justify-between">
           <p className="m-0">{copyright}</p>
-          <p className="m-0">OPEN FOR AI COMMERCIALIZATION & AGENT PRODUCT ROLES</p>
+          <p className="m-0">AI COMMERCIALIZATION & AGENT SYSTEMS</p>
         </div>
       </div>
     </footer>

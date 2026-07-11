@@ -38,6 +38,14 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     ["03", "五阶段成长引擎", "按用户阶段调度知识、任务和媒介，而不是一次性回答。"],
     ["04", "扣子自研后台", "为工作流配置、质量评测与数据回流预留后台截图位。"],
   ];
+  const systemAssets = [
+    ["BUSINESS MODEL", "业务目标与价值规则"],
+    ["KNOWLEDGE BASE", "领域知识与案例资产"],
+    ["INTERACTION FLOW", "任务路径与异常状态"],
+    ["DESIGN TOKEN", "信息、组件与多端规范"],
+    ["QA GATE", "评测样本与发布门槛"],
+    ["AGENT SKILL", "可调用的原子能力"],
+  ];
 
   return (
     <main className="secondary-page project-detail">
@@ -73,6 +81,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <div className="fact-row">{project.facts.map((fact) => <span key={fact}>{fact}</span>)}</div>
       </section>
 
+      <section className="project-system-layer">
+        <div className="page-shell system-layer-head"><span className="case-index">SYSTEM ASSETS / 产品化资产层</span><h2>不止交付功能，<br />同时建立可复用的规则。</h2><p>把一次项目中的判断沉淀为知识、规范、组件、评测与 Agent 能力，让后续迭代不再从零开始。</p></div>
+        <div className="page-shell system-asset-grid">{systemAssets.map(([name, description], index) => <article key={name} className={index === 0 || index === 3 ? "is-key" : ""}><span>0{index + 1}</span><h3>{name}</h3><p>{description}</p></article>)}</div>
+      </section>
+
       {project.slug === "persona-agent" ? (
         <><section className="workflow-showroom">
           <div className="page-shell workflow-showroom-grid">
@@ -104,7 +117,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           </div>
         </section>
         <section className="persona-system page-shell">
-          <header className="persona-system-head"><span className="case-index">PRODUCT SYSTEM / 我参与的完整链路</span><h2>从人格内容到产品承接，<br />把五个阶段做成一套可运行系统。</h2><p>StarDimeAI / BINGOAI 的公开产品结构包含行动路线、工作流、提示词、课程资料与产品入口。狠人智能体承担其中的人格化承接层，把用户从内容触达带入持续行动与商业转化。</p></header>
+          <header className="persona-system-head"><span className="case-index">PRODUCT SYSTEM / 我参与的完整链路</span><h2>从人格内容到产品承接，<br />把五个阶段做成一套可运行系统。</h2><p>星辰维度的公开产品结构包含行动路线、工作流、提示词、课程资料与产品入口。狠人智能体承担其中的人格化承接层，把用户从内容触达带入持续行动与商业转化。</p></header>
           <div className="persona-stage-row">
             {["01 认知觉醒","02 掌握底层规律","03 构建高维武器","04 主宰价值博弈","05 建立个人帝国"].map((stage) => <span key={stage}>{stage}</span>)}
           </div>
@@ -140,7 +153,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               hoverEffect="none"
               clickEffect="none"
               fadeEdges={false}
-              height={`${Math.max(420, approachItems.length * 150)}px`}
+              height={`${Math.max(340, approachItems.length * 116)}px`}
               itemGap={10}
               className="approach-list"
               itemClassName="approach-list-item"
@@ -181,7 +194,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       <Link className="next-project" href={`/projects/${next.slug}`}>
         <span>下一个项目</span><strong>{next.title}</strong><ArrowUpRight />
       </Link>
-      <Footer8 statement="想继续追问项目中的取舍、评测或协作细节？" actionLabel="发送邮件" actionHref="mailto:yourandrea77@gmail.com" />
+      <Footer8 statement="想继续追问项目中的取舍、评测或协作细节？" actionLabel="联系 ID 主理人" actionHref="#contact" />
     </main>
   );
 }

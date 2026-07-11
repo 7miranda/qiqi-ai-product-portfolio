@@ -6,7 +6,7 @@ import Footer8 from "@/components/blocks/footer-8";
 export const metadata: Metadata = { title: "关于我" };
 
 const cards = [
-  <article className="about-stack-panel tone-red" key="judgment"><span>01 / JUDGMENT</span><div><h3>产品判断</h3><p>从业务链路和用户任务出发，识别 AI 真正值得介入的位置。</p></div></article>,
+  <article className="about-stack-panel tone-accent" key="judgment"><span>01 / JUDGMENT</span><div><h3>产品判断</h3><p>从业务链路和用户任务出发，识别 AI 真正值得介入的位置。</p></div></article>,
   <article className="about-stack-panel tone-blue" key="design"><span>02 / DESIGN</span><div><h3>体验表达</h3><p>用信息架构、原型与交互，把复杂能力翻译成用户能理解的产品。</p></div></article>,
   <article className="about-stack-panel tone-light" key="evaluation"><span>03 / EVALUATION</span><div><h3>评测闭环</h3><p>通过失败样本、离线回归和发布门槛，让质量不再依赖主观感觉。</p></div></article>,
   <article className="about-stack-panel tone-dark" key="delivery"><span>04 / DELIVERY</span><div><h3>跨团队交付</h3><p>在研发、算法、业务和合规之间建立可以共同执行的产品规则。</p></div></article>,
@@ -14,7 +14,7 @@ const cards = [
 
 const skills = [
   { label: "Agent 产品", background: "#111310", color: "#f5f5f2", x: 31, y: 28, width: 30, rotate: -3 },
-  { label: "AIGC 工作流", background: "#c7ff3d", color: "#111310", x: 68, y: 30, width: 34, rotate: 3 },
+  { label: "AIGC 工作流", background: "#caff52", color: "#111310", x: 68, y: 30, width: 34, rotate: 3 },
   { label: "RAG / 知识库", background: "#f5f5f2", color: "#111310", x: 50, y: 50, width: 35, rotate: 2 },
   { label: "高级 UI/UX", background: "#dfe2df", color: "#111310", x: 31, y: 72, width: 31, rotate: 3 },
   { label: "商业化", background: "#111310", color: "#f5f5f2", x: 69, y: 71, width: 28, rotate: -3 },
@@ -31,7 +31,7 @@ export default function AboutPage() {
           <dl className="about-contacts">
             <div><dt>PHONE</dt><dd><a href="tel:18586312570">185 8631 2570</a></dd></div>
             <div><dt>EMAIL</dt><dd><a href="mailto:yourandrea77@gmail.com">yourandrea77@gmail.com</a></dd></div>
-            <div><dt>WECHAT</dt><dd>DJ_MIRANDA</dd></div>
+            <div><dt>SOCIAL ID</dt><dd>DJ_MIRANDA</dd></div>
           </dl>
         </div>
         <div className="about-stack-wrap">
@@ -50,7 +50,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      <Footer8 statement="有产品岗位、Agent 场景或复杂体验问题，欢迎直接联系我。" actionLabel="发送邮件" actionHref="mailto:yourandrea77@gmail.com" />
+      <Footer8 statement="有 Agent 场景、产品系统或复杂体验问题，欢迎直接联系我。" actionLabel="联系 ID 主理人" actionHref="#contact" />
     </main>
   );
 }
