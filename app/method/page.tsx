@@ -17,9 +17,9 @@ export default function MethodPage() {
     <main className="secondary-page method-page">
       <section className="method-manifesto">
         <div className="page-shell">
-          <span className="page-index">02 / PRODUCT METHOD</span>
-          <h1>我的工作不是给产品加上 AI，<br />而是判断哪一棒该不该交给 AI，<br />以及在哪里必须停下。</h1>
-          <BlurHighlight highlightedBits={["清晰、可验证、可交付"]} highlightColor="#caff52" blurAmount={7}>
+          <span className="page-index">4F / PRODUCT METHOD</span>
+          <h1>我的工作不是<br />给产品加上 <em>AI</em>，<br />而是判断哪一棒该交给 <em>AI</em>，<br />哪里必须由人接住</h1>
+          <BlurHighlight highlightedBits={["清晰、可验证、可交付"]} highlightColor="#ff3b30" blurAmount={7}>
             <p className="method-highlight">产品方法的价值，是让复杂能力变得清晰、可验证、可交付。</p>
           </BlurHighlight>
         </div>
@@ -29,7 +29,7 @@ export default function MethodPage() {
         heading={<>从问题定义<br />到可信交付</>}
         intro="九年产品与体验设计经验让我习惯同时处理用户、业务、技术与交付。AI 只是能力，只有进入清晰的产品结构，才能形成价值。"
         steps={steps}
-        accent="#caff52"
+        accent="#ff3b30"
         ctaLabel="查看项目证据"
         ctaHref="/projects"
         footnote="方法并非抽象框架，五个项目分别展示了它在 AIGC、商业 Agent、企业 Agent、IoT 与政企服务中的落地。"

@@ -3,7 +3,6 @@ import Navigation3 from "@/components/blocks/navigation-3";
 import ContactDrawer from "@/components/site/contact-drawer";
 import ElevatorTransition from "@/components/site/elevator-transition";
 import LobbyIntro from "@/components/site/lobby-intro";
-import AmbientAudio from "@/components/site/ambient-audio";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,9 +15,9 @@ export const metadata: Metadata = {
 
 const links = [
   { label: "总控层", href: "/" },
-  { label: "05F 项目", href: "/projects" },
-  { label: "04F 方法", href: "/method" },
-  { label: "02F 关于", href: "/about" },
+  { label: "5F 项目", href: "/projects" },
+  { label: "4F 方法", href: "/method" },
+  { label: "2F 关于", href: "/about" },
 ];
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -43,7 +42,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <LobbyIntro />
         <ElevatorTransition />
         <ContactDrawer />
-        <AmbientAudio />
       </body>
     </html>
   );

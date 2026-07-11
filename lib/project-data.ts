@@ -1,6 +1,7 @@
 export type Project = {
   slug: string;
   index: string;
+  floor: string;
   title: string;
   category: string;
   timeframe: string;
@@ -9,6 +10,7 @@ export type Project = {
   thesis: string;
   metric: string;
   metricLabel: string;
+  metricUnit: string;
   accent: string;
   facts: string[];
   problem: string;
@@ -23,6 +25,7 @@ export const projects: Project[] = [
   {
     slug: "bingo-coze",
     index: "01",
+    floor: "5F",
     title: "AIGC 内容生产中枢",
     category: "AIGC 工作流 / 商业化",
     timeframe: "2024.06 — 2025.06",
@@ -31,6 +34,7 @@ export const projects: Project[] = [
     thesis: "交付物不再是知识，而是用户能稳定拿到的结果。",
     metric: "2–3 → 10–20",
     metricLabel: "条 / 日 · 零基础学员稳定日产",
+    metricUnit: "条 / 日",
     accent: "#caff52",
     facts: ["66 条工作流", "4 个内容赛道", "2000+ 设计资产", "内容团队缩减 4 人"],
     problem: "课程教会了用户使用 ChatGPT、Midjourney 和剪映，却没有覆盖选题、脚本、视觉、发布、复盘与成交组成的完整任务链。真正的问题不是工具不会用，而是多个工具无法被组织成一条可运转的生产线。",
@@ -52,6 +56,7 @@ export const projects: Project[] = [
   {
     slug: "persona-agent",
     index: "02",
+    floor: "4F",
     title: "狠人思维模型 · 人格化商业智能体",
     category: "Persona Agent / Post-Training",
     timeframe: "2025.01 — 至今",
@@ -60,6 +65,7 @@ export const projects: Project[] = [
     thesis: "Agent 的壁垒不在于会回答，而在于长期保持一致的人格与判断。",
     metric: "600 万+",
     metricLabel: "元 · 单一 Agent 累计销售额",
+    metricUnit: "元",
     accent: "#111310",
     facts: ["50 个智能体模块", "5 个成长阶段", "3 种媒介形态", "单日峰值 20 万"],
     problem: "内容供给与流量增长已经成立，但用户从“他说得对”到“我愿意付费”的信任链路仍然断裂。标准课程页和促销 SOP 无法承担人格化的持续信任建设。",
@@ -81,6 +87,7 @@ export const projects: Project[] = [
   {
     slug: "enterprise-agent",
     index: "03",
+    floor: "3F",
     title: "校友基金会经营小助 · 企业级 Agent",
     category: "Enterprise Agent / 人机协作",
     timeframe: "2025 — 至今",
@@ -89,6 +96,7 @@ export const projects: Project[] = [
     thesis: "B 端 Agent 的核心指标不是自动化率，而是用户是否敢把任务交给它。",
     metric: "71% → 89%",
     metricLabel: "% · 工具调用准确率",
+    metricUnit: "%",
     accent: "#b8d8ff",
     facts: ["14 个后端工具接口", "200 条真实评测样本", "3 档协作模式", "10+ 分行试点"],
     problem: "平台已经记录高校、基金会、项目、协议和资金，但客户经理仍需在多个模块间查找和拼接数据。一份经营月报两天起步，70% 的时间消耗在数据搬运和排版。",
@@ -110,6 +118,7 @@ export const projects: Project[] = [
   {
     slug: "iot-platform",
     index: "04",
+    floor: "2F",
     title: "鸿泉物联网 · IoT 车联网多端系统",
     category: "IoT / 数据建模 / 风控",
     timeframe: "早期项目",
@@ -118,6 +127,7 @@ export const projects: Project[] = [
     thesis: "没有结构化的数据，就没有后续的 AI 产品化。",
     metric: "−65%",
     metricLabel: "% · 上线首月工地事故率下降",
+    metricUnit: "%",
     accent: "#5c6159",
     facts: ["设备 / 告警 / 工单建模", "多端一致性体验", "动态风控规则引擎", "实时预警体系"],
     problem: "设备、车辆、工地、告警和维保信息分散在不同系统，运营人员无法获得一致的数据对象和风险判断。",
@@ -139,7 +149,8 @@ export const projects: Project[] = [
   {
     slug: "government-knowledge",
     index: "05",
-    title: "易电工 · C 端服务与网校系统",
+    floor: "1F",
+    title: "益电工 · C 端履约与网校协同平台",
     category: "服务平台 / 订单协同 / 网校系统",
     timeframe: "早期项目",
     role: "高级产品体验主管",
@@ -147,6 +158,7 @@ export const projects: Project[] = [
     thesis: "服务平台的效率，不来自更多入口，而来自订单、履约与知识支持的闭环。",
     metric: "+28%",
     metricLabel: "% · 商家成单率提升",
+    metricUnit: "%",
     accent: "#111310",
     facts: ["C 端服务下单", "客服订单中台", "电工技术支持", "同方向网校系统"],
     problem: "C 端用户完成下单后，客服需要分派和追踪订单，后台电工团队同时承担技术支持；培训内容又分散在独立课程中。订单、履约、技术知识和网课学习之间缺少统一承接，导致服务响应和人员成长都依赖人工协调。",

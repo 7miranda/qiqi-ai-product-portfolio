@@ -63,7 +63,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               <p>{project.summary}</p>
             </div>
             <div className="project-cover-proof">
-              <span>CORE EVIDENCE</span><strong>{project.metric}</strong><small>{project.metricLabel}</small>
+              <span>CORE EVIDENCE</span><small className="metric-unit">{project.metricUnit}</small><strong>{project.metric}</strong><small>{project.metricLabel.replace(`${project.metricUnit} · `, "")}</small>
               <p>{project.thesis}</p>
             </div>
           </div>
@@ -132,14 +132,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
       <section className="case-section case-problem">
         <div className="page-shell case-grid">
-          <span className="case-index">01 / 问题</span>
           <div><h2>先找到结构性矛盾，<br />再决定产品形态。</h2><p>{project.problem}</p></div>
+          <span className="case-index">01 / 问题</span>
         </div>
       </section>
 
       <section className="case-section page-shell">
         <div className="case-grid">
-          <span className="case-index">02 / 方案</span>
           <div>
             <h2>把复杂能力拆成<br />可交付的产品模块。</h2>
             <AnimatedList
@@ -162,6 +161,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               initialStagger={0.08}
             />
           </div>
+          <span className="case-index">02 / 方案</span>
         </div>
       </section>
 

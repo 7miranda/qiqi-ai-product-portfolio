@@ -5,15 +5,15 @@ import { AnimatePresence, motion } from "motion/react";
 import { usePathname } from "next/navigation";
 
 const floorFor = (href: string) => {
-  if (href.includes("persona-agent")) return "04F · 狠人思维模型";
-  if (href.includes("bingo-coze")) return "05F · 内容生产中枢";
-  if (href.includes("enterprise-agent")) return "03F · 企业级 Agent";
-  if (href.includes("iot-platform")) return "02F · 鸿泉物联网";
-  if (href.includes("government-knowledge")) return "01F · 易电工";
-  if (href.includes("projects")) return "05F · 项目展厅";
-  if (href.includes("method")) return "04F · 产品方法";
-  if (href.includes("about")) return "02F · Miranda";
-  return "总控层 · 首页";
+  if (href.includes("persona-agent")) return "4F · 狠人思维模型";
+  if (href.includes("bingo-coze")) return "5F · 内容生产中枢";
+  if (href.includes("enterprise-agent")) return "3F · 企业级 Agent";
+  if (href.includes("iot-platform")) return "2F · 鸿泉物联网";
+  if (href.includes("government-knowledge")) return "1F · 益电工";
+  if (href.includes("projects")) return "5F · 项目展厅";
+  if (href.includes("method")) return "4F · 产品方法";
+  if (href.includes("about")) return "2F · Miranda";
+  return "77F · 总控层";
 };
 
 export default function ElevatorTransition() {
@@ -47,7 +47,7 @@ export default function ElevatorTransition() {
 
   return (
     <>
-      <aside className={`current-floor${floorVisible ? "" : " is-hidden"}`} aria-label={`当前楼层 ${currentFloor}`}><span>NOW</span><strong>{currentFloor}</strong><small>IDEA 大厦 · 当前所在位置</small></aside>
+      <aside className={`current-floor${floorVisible ? "" : " is-hidden"}`} aria-label={`当前楼层 ${currentFloor}`}><span>NOW</span><strong>{currentFloor}</strong><small>当前楼层</small></aside>
       <AnimatePresence>
       {target ? (
         <motion.div className="elevator-transition" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>

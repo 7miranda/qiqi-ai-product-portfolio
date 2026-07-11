@@ -27,13 +27,13 @@ export default function PortfolioAgent() {
 
   return <>
     <motion.button className="agent-launcher" type="button" drag dragMomentum={false} dragElastic={0.08} whileDrag={{ scale: 1.06 }} whileHover={{ y: -4, scale: 1.02 }} onClick={() => setOpen(true)} aria-label="打开 IDEA 智能导览">
-      <span className="agent-avatar"><Bot aria-hidden="true" /></span><span><strong>问 IDEA 导览</strong><small>快速定位项目证据</small></span><Sparkles aria-hidden="true" />
+      <span className="agent-avatar"><Bot aria-hidden="true" /></span><span><strong>快速了解主理人</strong><small>定位项目证据</small></span><Sparkles aria-hidden="true" />
     </motion.button>
     <AnimatePresence>{open ? <>
       <motion.button className="agent-backdrop" aria-label="关闭导览 Agent" onClick={() => setOpen(false)} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />
       <motion.aside className="agent-panel" initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ duration: .48, ease: [.22,1,.36,1] }} aria-label="IDEA 导览 Agent">
         <header><div><span>IDEA GUIDE / LIVE</span><h2>从问题出发，认识祁宁</h2><p>选择你关心的方向，我会带你到最相关的内容。</p></div><Button variant="outline" size="icon-lg" onClick={() => setOpen(false)} aria-label="关闭"><X /></Button></header>
-        <div className="agent-prompts">{prompts.map((prompt) => <Button key={prompt} variant={asked === prompt ? "default" : "outline"} onClick={() => setAsked(prompt)}>{prompt}</Button>)}</div>
+        <div className="agent-prompts">{prompts.map((prompt) => <Button key={prompt} aria-pressed={asked === prompt} variant={asked === prompt ? "default" : "outline"} onClick={() => setAsked(prompt)}>{prompt}</Button>)}</div>
         <div className="agent-conversation">
           <motion.div className="agent-question" key={asked} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>{asked}</motion.div>
           <motion.article className="agent-answer" key={`${asked}-answer`} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .12 }}><span>IDEA GUIDE / ANSWER</span><h3>{answer.title}</h3><p>{answer.body}</p>{answer.href ? <Link href={answer.href} onClick={() => setOpen(false)}>{answer.link}<ArrowUpRight /></Link> : null}</motion.article>

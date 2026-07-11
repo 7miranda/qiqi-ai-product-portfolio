@@ -12,7 +12,6 @@ export default function ProjectsPage() {
     <main className="secondary-page projects-page">
       <section className="secondary-hero">
         <div className="page-shell secondary-hero-grid">
-          <span className="page-index">01 / SELECTED WORK</span>
           <div>
             <h1>不是功能清单，<br />是产品判断的证据。</h1>
             <BlurHighlight
@@ -26,6 +25,7 @@ export default function ProjectsPage() {
               <p className="secondary-highlight">从数据结构、内容产线、人格信任到企业级可信执行，五个项目构成一条连续的产品能力演进线。</p>
             </BlurHighlight>
           </div>
+          <span className="page-index">5F / SELECTED WORK</span>
         </div>
       </section>
 
@@ -39,8 +39,9 @@ export default function ProjectsPage() {
             </div>
             <p>{project.summary}</p>
             <div className="project-evidence">
+              <small>{project.metricUnit}</small>
               <strong>{project.metric}</strong>
-              <span>{project.metricLabel}</span>
+              <span>{project.metricLabel.replace(`${project.metricUnit} · `, "")}</span>
             </div>
             <ArrowUpRight />
             <i style={{ background: project.accent }} aria-hidden="true" />
