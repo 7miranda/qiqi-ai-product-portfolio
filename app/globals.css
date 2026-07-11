@@ -22,7 +22,7 @@ html { background: var(--paper); scroll-behavior: smooth; }
 body { margin: 0; overflow-x: clip; background: var(--paper); color: var(--ink); font-family: var(--sans); text-rendering: optimizeLegibility; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; }
-::selection { background: var(--red); color: white; }
+::selection { background: var(--lime); color: var(--ink); }
 .page-shell { width: min(1400px, calc(100% - 64px)); margin: 0 auto; }
 .eyebrow, .page-index, .case-index { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
 
@@ -81,7 +81,7 @@ button { font: inherit; }
 .contact-row small, .contact-row strong { display: block; }
 .contact-row small { color: var(--ink-faint); font-family: var(--mono); font-size: 9px; letter-spacing: .12em; }
 .contact-row strong { margin-top: 4px; font-size: 15px; }
-.contact-status { margin-top: 24px; padding: 14px; background: var(--lime); font-size: 13px; font-weight: 700; }
+.contact-status { margin-top: 24px; padding: 14px; background: var(--lime); color: var(--ink); font-size: 13px; font-weight: 700; }
 
 /* Secondary pages */
 .secondary-page { padding-top: 80px; }
@@ -137,7 +137,7 @@ button { font: inherit; }
 .approach-list ul { padding: 0 !important; }
 .approach-list-item, .approach-list-content { border: 0 !important; border-radius: 0 !important; background: transparent !important; padding: 0 !important; }
 .approach-item { display: grid; grid-template-columns: 72px 1fr; gap: 24px; padding: 24px; border: 1px solid var(--line); background: var(--paper-hi); }
-.approach-item > span { display: grid; width: 54px; height: 54px; place-items: center; border-radius: 50%; background: var(--red); color: white; font-family: var(--mono); font-size: 12px; }
+.approach-item > span { display: grid; width: 54px; height: 54px; place-items: center; border-radius: 50%; background: var(--lime); color: var(--ink); font-family: var(--mono); font-size: 12px; font-weight: 800; }
 .approach-item h3 { margin: 0; font-size: 25px; }
 .approach-item p { margin: 9px 0 0; color: var(--ink-muted); font-size: 15px; line-height: 1.7; }
 .decision-band { background: var(--red); color: var(--ink); }
@@ -177,7 +177,7 @@ button { font: inherit; }
 .about-stack-panel > span { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; }
 .about-stack-panel h3 { margin: 0; font-size: 40px; }
 .about-stack-panel p { margin: 14px 0 0; font-size: 16px; line-height: 1.7; }
-.tone-red { background: var(--red); }.tone-blue { background: var(--blue); color: white; }.tone-light { background: var(--paper-hi); }.tone-dark { background: var(--ink); color: white; }
+.tone-red { background: var(--lime); color: var(--ink); }.tone-blue { background: var(--blue); color: white; }.tone-light { background: var(--paper-hi); }.tone-dark { background: var(--ink); color: white; }
 .about-skills { padding: 96px 0; border-top: 1px solid var(--line); background: var(--paper-hi); }
 .about-skills-grid { display: grid; grid-template-columns: .75fr 1.25fr; align-items: center; gap: 40px; }
 .about-skills h2 { margin: 28px 0 0; font-size: clamp(42px,5vw,72px); font-weight: 600; line-height: 1.1; }
