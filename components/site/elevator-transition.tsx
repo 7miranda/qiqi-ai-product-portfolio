@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { usePathname } from "next/navigation";
 
 const floorFor = (href: string) => {
   if (href.includes("persona-agent")) return "04F · 狠人思维模型";
@@ -17,6 +18,8 @@ const floorFor = (href: string) => {
 
 export default function ElevatorTransition() {
   const [target, setTarget] = useState<string | null>(null);
+  const pathname = usePathname();
+  const currentFloor = floorFor(pathname);
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
@@ -35,7 +38,9 @@ export default function ElevatorTransition() {
   }, []);
 
   return (
-    <AnimatePresence>
+    <>
+      <aside className="current-floor" aria-label={`当前楼层 ${currentFloor}`}><span>NOW</span><strong>{currentFloor}</strong><small>77 层产品大楼</small></aside>
+      <AnimatePresence>
       {target ? (
         <motion.div className="elevator-transition" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <motion.div className="elevator-door elevator-door-left" initial={{ x: "-100%" }} animate={{ x: 0 }} transition={{ duration: .56, ease: [.22, 1, .36, 1] }} />
@@ -45,6 +50,7 @@ export default function ElevatorTransition() {
           </motion.div>
         </motion.div>
       ) : null}
-    </AnimatePresence>
+      </AnimatePresence>
+    </>
   );
 }

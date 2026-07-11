@@ -28,7 +28,7 @@ export default function Home() {
         <div className="mast-inner">
           <div className="mast-copy-panel">
             <div className="mast-kicker">
-              <span>77F / AI PRODUCT MANAGER</span>
+              <span>77F / AI 商业化产品经理</span>
               <span>LOBBY · OPEN TO WORK</span>
             </div>
             <p className="mast-name">七七 / MIRANDA · BUILDING DIRECTORY</p>
@@ -43,7 +43,7 @@ export default function Home() {
               blur
             />
             <p className="mast-english">Think what AI can&apos;t, build what AI can.</p>
-            <p id="hero-title" className="mast-deck">把想象变成看得见的世界。9 年产品与高级 UI/UX 经验，用判断力定义问题，用设计与 AI 把答案交付。</p>
+            <p id="hero-title" className="mast-deck">把想象变成看得见的世界。大模型应用产品化 / AIGC 工具增长 / 行业 AI 解决方案落地 / CCIA 高级 AIGC 内容创作师。</p>
             <div className="taste-tags" aria-label="个人主张">
               <span>Taste / 产品判断力</span><span>Design engineer / 品味工程</span><span>判断力大于执行力</span>
             </div>

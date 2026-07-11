@@ -27,7 +27,7 @@ export default function AboutPage() {
         <div>
           <span className="page-index">03 / ABOUT QINING</span>
           <h1>产品经理的判断力，<br />高级设计师的表达力。</h1>
-          <p>我是祁宁，Miranda。拥有 9 年数字化产品与体验设计经验，近 3 年专注 AIGC 商业化、人格化 Agent 与企业级 AI 应用落地。</p>
+          <p>我是祁宁，Miranda。AI 应用产品经理 · 6 年全平台全链路 · 体验策略与产品增长，3 年企业级 AIGC / Agent 商业化操盘落地。</p>
           <dl className="about-contacts">
             <div><dt>PHONE</dt><dd><a href="tel:18586312570">185 8631 2570</a></dd></div>
             <div><dt>EMAIL</dt><dd><a href="mailto:yourandrea77@gmail.com">yourandrea77@gmail.com</a></dd></div>
