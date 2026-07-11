@@ -16,7 +16,7 @@ export default function ProjectsPage() {
             <h1>不是功能清单，<br />是产品判断的证据。</h1>
             <BlurHighlight
               highlightedBits={["连续的产品能力演进线"]}
-              highlightColor="#caff52"
+              highlightColor="#ff3b30"
               blurAmount={6}
               inactiveOpacity={0.26}
               highlightDelay={0.35}
@@ -25,7 +25,7 @@ export default function ProjectsPage() {
               <p className="secondary-highlight">从数据结构、内容产线、人格信任到企业级可信执行，五个项目构成一条连续的产品能力演进线。</p>
             </BlurHighlight>
           </div>
-          <span className="page-index">5F / SELECTED WORK</span>
+          <span className="page-index">PROJECT GALLERY / SELECTED WORK</span>
         </div>
       </section>
 
@@ -39,18 +39,17 @@ export default function ProjectsPage() {
             </div>
             <p>{project.summary}</p>
             <div className="project-evidence">
-              <small>{project.metricUnit}</small>
-              <strong>{project.metric}</strong>
-              <span>{project.metricLabel.replace(`${project.metricUnit} · `, "")}</span>
+              <strong>{project.metric}{project.metricUnit ? <em>{project.metricUnit}</em> : null}</strong>
+              <span>{project.metricExplanation}</span>
             </div>
             <ArrowUpRight />
             <i style={{ background: project.accent }} aria-hidden="true" />
           </Link>
         ))}
       </section>
-      <Footer8
+      <Footer8 dense
         statement="复杂能力需要被组织成清晰的产品判断，才有机会真正进入业务。"
-        actionLabel="联系 ID 主理人"
+        actionLabel="联系主理人"
         actionHref="#contact"
       />
     </main>

@@ -18,16 +18,16 @@ export default function LobbyIntro() {
   return (
     <AnimatePresence>
       {visible ? (
-        <motion.div className="lobby-intro" initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .6 }}>
-          <motion.img className="lobby-intro-image" src="images/product-tower-lobby-v3.png" alt="一位兼具 DJ 与产品经理气质的 Q 版女生从背面走向 IDEA 大厦电梯" initial={{ scale: 1.08 }} animate={{ scale: 1 }} transition={{ duration: 3.1, ease: [.22, 1, .36, 1] }} />
+        <motion.div className="lobby-intro" initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .45 }}>
+          <motion.img className="lobby-intro-image" src="images/product-tower-lobby-v4.png" alt="一位兼具 DJ 与产品经理气质的 Q 版女生从背面走向 IDEA 大厦电梯" initial={{ scale: 1.12, x: "-4%", y: "4%" }} animate={{ scale: 1, x: 0, y: 0 }} transition={{ duration: 3.35, ease: [.22, 1, .36, 1] }} />
           <div className="lobby-intro-shade" />
-          <div className="lobby-building-sign">IDEA 无限大厦 · 77F</div>
           <motion.div className="lobby-intro-copy" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .35, duration: .8 }}>
             <span>IDEA 无限大厦 · 总控层</span>
             <strong>欢迎来到<br />IDEA 无限大厦</strong>
-            <p>Miranda · AI 商业化与体验系统主理人</p>
+            <p>AI 商业化与体验系统主理人</p>
           </motion.div>
-          <div className="lobby-floor-display"><small>起始楼层 · 总控层</small><strong>77</strong><span>F</span></div>
+          <div className="lobby-floor-display"><small>共 5 层 · 正在进入</small><strong>1</strong><span>层</span></div>
+          <motion.div className="lobby-rise-light" initial={{ y: "72vh", opacity: 0 }} animate={{ y: ["72vh", "-18vh", "-18vh", "58vh"], opacity: [0, .8, .5, 0] }} transition={{ duration: 3.5, times: [0, .42, .72, 1], ease: "easeInOut" }} />
           <motion.div className="lobby-scan" initial={{ y: "-100vh" }} animate={{ y: "100vh" }} transition={{ duration: 2.2, ease: "linear" }} />
         </motion.div>
       ) : null}

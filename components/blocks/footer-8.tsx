@@ -23,6 +23,8 @@ export interface Footer8Props {
   actionLabel?: string;
   actionHref?: string;
   actionDirection?: "forward" | "back";
+  compact?: boolean;
+  dense?: boolean;
 }
 
 const DEFAULT_COLUMNS: Footer8Column[] = [
@@ -30,17 +32,17 @@ const DEFAULT_COLUMNS: Footer8Column[] = [
     title: "Explore",
     links: [
       { label: "首页", href: "/", direction: "back" },
-      { label: "案例", href: "/case-study", direction: "forward" },
+      { label: "项目展厅", href: "/projects", direction: "forward" },
     ],
   },
   {
     title: "Focus",
     links: [
-      { label: "产品判断", href: "/case-study#decisions" },
-      { label: "AI 评测", href: "/case-study#evaluation" },
+      { label: "产品判断", href: "/method" },
+      { label: "AI 评测", href: "/projects/enterprise-agent" },
     ],
   },
-  { title: "Connect", links: [{ label: "我的方法", href: "/method" }, { label: "关于祁宁", href: "/about" }] },
+  { title: "Connect", links: [{ label: "主理人档案", href: "/about" }, { label: "方法归纳", href: "/method" }] },
 ];
 
 export default function Footer8({
@@ -51,7 +53,15 @@ export default function Footer8({
   actionLabel = "OPEN CASE",
   actionHref = "/case-study",
   actionDirection = "forward",
+  compact = false,
+  dense = false,
 }: Footer8Props = {}) {
+  if (compact) {
+    return <footer className="site-footer-compact"><div><p>{statement}</p><Link href={actionHref} className="action-link">{actionLabel}<ArrowUpRight size={16} /></Link></div></footer>;
+  }
+  if (dense) {
+    return <footer className="site-footer-dense"><div className="site-footer-dense-inner"><p>{statement}</p><div className="site-footer-dense-links">{columns.map((column) => <div key={column.title}><span>{column.title}</span>{column.links.slice(0,1).map((link) => <Link key={link.label} href={link.href}>{link.label}</Link>)}</div>)}</div><Link href={actionHref} className="action-link">{actionLabel}<ArrowUpRight size={16} /></Link></div></footer>;
+  }
   return (
     <footer className="relative w-full overflow-hidden bg-[var(--paper-hi)] px-5 py-14 text-[var(--ink)] sm:px-8 sm:py-20 lg:px-12">
       <div className="mx-auto w-full max-w-[1400px]">

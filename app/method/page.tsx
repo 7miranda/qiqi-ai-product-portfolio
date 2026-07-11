@@ -17,8 +17,8 @@ export default function MethodPage() {
     <main className="secondary-page method-page">
       <section className="method-manifesto">
         <div className="page-shell">
-          <span className="page-index">4F / PRODUCT METHOD</span>
-          <h1>我的工作不是<br />给产品加上 <em>AI</em>，<br />而是判断哪一棒该交给 <em>AI</em>，<br />哪里必须由人接住</h1>
+          <span className="page-index">METHOD ARCHIVE / PRODUCT METHOD</span>
+          <h1>我的工作不是给产品加上 AI，<br />而是判断哪一棒该<em>交给 AI</em>，<br />哪里必须<em>由人接住</em></h1>
           <BlurHighlight highlightedBits={["清晰、可验证、可交付"]} highlightColor="#ff3b30" blurAmount={7}>
             <p className="method-highlight">产品方法的价值，是让复杂能力变得清晰、可验证、可交付。</p>
           </BlurHighlight>

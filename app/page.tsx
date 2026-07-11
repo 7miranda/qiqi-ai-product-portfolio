@@ -1,13 +1,13 @@
 import Link from "next/link";
-import { ArrowUpRight, BriefcaseBusiness, Languages, Layers3, Mail, MessageCircle, Phone, UserRound } from "lucide-react";
+import { ArrowUpRight, BriefcaseBusiness, Layers3, Mail, MessageCircle, Phone, UserRound } from "lucide-react";
 import HalftoneWave from "@/components/react-bits/halftone-wave";
 import StaggeredText from "@/components/react-bits/staggered-text";
 import About5 from "@/components/blocks/about-5";
 import PortfolioAgent from "@/components/site/portfolio-agent";
 import { projects } from "@/lib/project-data";
 
-const toolsOne = [{name:"即梦",icon:"tool-logos/jimeng.ico"},{name:"可灵",icon:"tool-logos/kling.ico"},{name:"Cursor",icon:"tool-logos/cursor.svg"},{name:"Notion",icon:"tool-logos/notion.svg"},{name:"Cloudflare",icon:"tool-logos/cloudflare.svg"},{name:"Cloud Design",icon:"tool-logos/cloud-design.svg"},{name:"AI Studio",icon:"tool-logos/googlegemini.svg"},{name:"Runway",icon:"tool-logos/runway.svg"},{name:"C Dance",icon:"tool-logos/cdance.ico"}];
-const toolsTwo = [{name:"C Dream",icon:"tool-logos/cgdream.svg"},{name:"GPT-4o · Image 2.0",icon:"tool-logos/openai.svg"},{name:"Gemini",icon:"tool-logos/googlegemini.svg"},{name:"Love Art",icon:"tool-logos/lovart.ico"},{name:"GitHub",icon:"tool-logos/github.svg"},{name:"VS Code",icon:"tool-logos/vscode.svg"},{name:"Code",icon:"tool-logos/anthropic.svg"},{name:"Codex",icon:"tool-logos/openai.svg"},{name:"Hermes",icon:"tool-logos/hermes.ico"}];
+const toolsOne = [{name:"即梦",icon:"tool-logos/jimeng.ico"},{name:"可灵",icon:"tool-logos/kling.ico"},{name:"Cursor",icon:"tool-logos/cursor.svg"},{name:"Notion",icon:"tool-logos/notion.svg"},{name:"Cloudflare",icon:"tool-logos/cloudflare.svg"},{name:"Cloud Design",icon:"tool-logos/cloud-design.svg"},{name:"AI Studio",icon:"tool-logos/googlegemini.svg"},{name:"Runway",icon:"tool-logos/runway.svg"},{name:"See the Dance",icon:"tool-logos/seedance.svg"}];
+const toolsTwo = [{name:"See the Dream",icon:"tool-logos/seedream.svg"},{name:"GPT-4o · Image 2.0",icon:"tool-logos/openai.svg"},{name:"Gemini",icon:"tool-logos/googlegemini.svg"},{name:"Lovart",icon:"tool-logos/lovart.ico"},{name:"GitHub",icon:"tool-logos/github.svg"},{name:"VS Code",icon:"tool-logos/vscode.svg"},{name:"Claude Code",icon:"tool-logos/anthropic.svg"},{name:"Codex",icon:"tool-logos/openai.svg"},{name:"Hermes",icon:"tool-logos/hermes.png"}];
 
 export default function Home() {
   return (
@@ -28,10 +28,10 @@ export default function Home() {
             scrollX={0.025}
             scrollY={0.018}
             rotation={-8}
-            colorA="#1b1d1a"
-            colorB="#3a3d38"
-            backgroundColor="#060706"
-            opacity={0.48}
+            colorA="#7d1713"
+            colorB="#b9ec5c"
+            backgroundColor="#080a08"
+            opacity={0.68}
             cursorInteraction
           />
         </div>
@@ -39,7 +39,7 @@ export default function Home() {
         <div className="mast-grid-overlay" aria-hidden="true" />
         <div className="mast-inner">
           <div className="mast-copy-panel">
-            <div className="tower-control-label"><span>IDEA 无限大厦</span><strong>77F <i>总控层</i></strong></div>
+            <p className="mast-zone-label">IDEA 无限大厦 / 总控层</p>
             <p className="mast-name">祁宁 / MIRANDA · AI 商业化产品与体验系统</p>
             <StaggeredText
               as="h1"
@@ -56,30 +56,30 @@ export default function Home() {
             <div className="mast-actions" aria-label="主要入口">
               <Link className="mast-action mast-action-primary" href="/projects">
                 <BriefcaseBusiness />
-                <span><strong>项目</strong><small>5F · 5 个完整案例</small></span>
+                <span><strong>项目展厅</strong><small>5 个完整案例</small></span>
                 <ArrowUpRight />
               </Link>
               <Link className="mast-action" href="/method">
                 <Layers3 />
-                <span><strong>方法</strong><small>4F · 从问题到交付</small></span>
+                <span><strong>方法归纳</strong><small>从问题到可信交付</small></span>
                 <ArrowUpRight />
               </Link>
               <Link className="mast-action" href="/about">
                 <UserRound />
-                <span><strong>关于祁宁</strong><small>2F · 经历与优势</small></span>
+                <span><strong>主理人档案</strong><small>经历、判断与优势</small></span>
                 <ArrowUpRight />
               </Link>
             </div>
           </div>
 
           <div className="mast-signature" aria-label="五个项目的核心成果">
-            <div className="elevator-heading"><span>PROJECT ELEVATOR</span><strong>选择楼层，查看证据</strong></div>
+            <div className="elevator-heading"><span>PROJECT ARCHIVE</span><strong>选择项目，了解过往实践</strong></div>
             <div className="project-elevator">
               {projects.map((project) => (
                 <Link key={project.slug} href={`/projects/${project.slug}`} className="project-floor">
                   <span className="floor-no">{project.floor}</span>
-                  <span className="floor-project"><strong>{project.title.split("·")[0].trim()}</strong><small>{project.thesis}</small></span>
-                  <span className="floor-metric"><small className="metric-unit">{project.metricUnit}</small><strong>{project.metric}</strong><small>{project.metricLabel.replace(`${project.metricUnit} · `, "")}</small></span>
+                  <span className="floor-project"><strong>{project.slug === "enterprise-agent" ? project.title : project.title.split("·")[0].trim()}</strong></span>
+                  <span className="floor-metric"><strong>{project.metric}{project.metricUnit ? <em>{project.metricUnit}</em> : null}</strong><small>{project.shortProof}</small></span>
                   <ArrowUpRight />
                 </Link>
               ))}
@@ -89,8 +89,7 @@ export default function Home() {
         </div>
 
         <div className="mast-contact-rail">
-          <span><UserRound />祁宁</span>
-          <span><Languages />Miranda</span>
+          <span><UserRound />祁宁 <i>Miranda</i></span>
           <a href="tel:18586312570"><Phone />185 8631 2570</a>
           <a href="mailto:yourandrea77@gmail.com"><Mail />yourandrea77@gmail.com</a>
           <span><MessageCircle />DJ_MIRANDA</span>

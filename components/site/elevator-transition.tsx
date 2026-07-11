@@ -2,25 +2,21 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { usePathname } from "next/navigation";
 
 const floorFor = (href: string) => {
-  if (href.includes("persona-agent")) return "4F · 狠人思维模型";
-  if (href.includes("bingo-coze")) return "5F · 内容生产中枢";
-  if (href.includes("enterprise-agent")) return "3F · 企业级 Agent";
-  if (href.includes("iot-platform")) return "2F · 鸿泉物联网";
-  if (href.includes("government-knowledge")) return "1F · 益电工";
-  if (href.includes("projects")) return "5F · 项目展厅";
-  if (href.includes("method")) return "4F · 产品方法";
-  if (href.includes("about")) return "2F · Miranda";
-  return "77F · 总控层";
+  if (href.includes("persona-agent")) return "狠人思维模型";
+  if (href.includes("bingo-coze")) return "内容生产中枢";
+  if (href.includes("enterprise-agent")) return "企业级 Agent";
+  if (href.includes("iot-platform")) return "鸿泉物联网";
+  if (href.includes("government-knowledge")) return "益电工";
+  if (href.includes("projects")) return "项目展厅";
+  if (href.includes("method")) return "方法归纳";
+  if (href.includes("about")) return "主理人档案";
+  return "总控层";
 };
 
 export default function ElevatorTransition() {
   const [target, setTarget] = useState<string | null>(null);
-  const [floorVisible, setFloorVisible] = useState(true);
-  const pathname = usePathname();
-  const currentFloor = floorFor(pathname);
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
@@ -38,23 +34,15 @@ export default function ElevatorTransition() {
     return () => document.removeEventListener("click", handleClick);
   }, []);
 
-  useEffect(() => {
-    const update = () => setFloorVisible(window.scrollY < 120);
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
-  }, [pathname]);
-
   return (
     <>
-      <aside className={`current-floor${floorVisible ? "" : " is-hidden"}`} aria-label={`当前楼层 ${currentFloor}`}><span>NOW</span><strong>{currentFloor}</strong><small>当前楼层</small></aside>
       <AnimatePresence>
       {target ? (
         <motion.div className="elevator-transition" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <motion.div className="elevator-door elevator-door-left" initial={{ x: "-100%" }} animate={{ x: 0 }} transition={{ duration: .56, ease: [.22, 1, .36, 1] }} />
           <motion.div className="elevator-door elevator-door-right" initial={{ x: "100%" }} animate={{ x: 0 }} transition={{ duration: .56, ease: [.22, 1, .36, 1] }} />
           <motion.div className="elevator-display" initial={{ opacity: 0, scale: .88 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: .3 }}>
-            <span>IDEA 大厦</span><strong>{target}</strong><small>空间切换中 · 目的层已锁定</small>
+            <span>IDEA 无限大厦</span><strong>{target}</strong><small>空间切换中 · 目的地已锁定</small>
           </motion.div>
         </motion.div>
       ) : null}

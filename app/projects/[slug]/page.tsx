@@ -61,9 +61,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               <span>{project.category}</span>
               <StaggeredText as="h1" text={project.title} segmentBy="words" direction="bottom" delay={45} duration={0.78} blur />
               <p>{project.summary}</p>
+              {project.slug === "bingo-coze" ? <a className="project-live-link" href="https://stardime.ai/" target="_blank" rel="noreferrer">进入 Bingo AI 内容系统 <ArrowUpRight /></a> : null}
             </div>
             <div className="project-cover-proof">
-              <span>CORE EVIDENCE</span><small className="metric-unit">{project.metricUnit}</small><strong>{project.metric}</strong><small>{project.metricLabel.replace(`${project.metricUnit} · `, "")}</small>
+              <span>CORE EVIDENCE</span><strong>{project.metric}{project.metricUnit ? <em>{project.metricUnit}</em> : null}</strong><small>{project.metricExplanation}</small>
               <p>{project.thesis}</p>
             </div>
           </div>
@@ -90,7 +91,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <><section className="workflow-showroom">
           <div className="page-shell workflow-showroom-grid">
             <div className="workflow-showroom-copy">
-              <span className="case-index">WORKFLOW SHOWROOM / 04F</span>
+              <span className="case-index">WORKFLOW SHOWROOM / LIVE SYSTEM</span>
               <h2>这不是一个聊天机器人，<br />而是一组持续运行的商业工作流。</h2>
               <p>选择一张工作流卡片，查看它如何把人格一致性、内容生产、成长阶段和转化动作连接起来。前三项可进入现有体验网站；最后一项为扣子自研后台保留正式图片展位。</p>
               <a className="workflow-live-link" href="https://sandbox-n0qp33ght-m2pzbvsv29-bots-projects.vercel.app/" target="_blank" rel="noreferrer">进入狠人工作流网站 <ArrowUpRight /></a>
@@ -146,9 +147,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               autoAddDelay={0}
               maxItems={approachItems.length}
               startFrom="top"
-              animationType="blur"
-              enterFrom="bottom"
-              pauseOnHover
+              animationType="fade"
+              enterFrom="top"
+              pauseOnHover={false}
               hoverEffect="none"
               clickEffect="none"
               fadeEdges={false}
@@ -157,8 +158,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               className="approach-list"
               itemClassName="approach-list-item"
               contentClassName="approach-list-content"
-              animateInitial
-              initialStagger={0.08}
+              animateInitial={false}
             />
           </div>
           <span className="case-index">02 / 方案</span>
@@ -194,7 +194,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       <Link className="next-project" href={`/projects/${next.slug}`}>
         <span>下一个项目</span><strong>{next.title}</strong><ArrowUpRight />
       </Link>
-      <Footer8 statement="想继续追问项目中的取舍、评测或协作细节？" actionLabel="联系 ID 主理人" actionHref="#contact" />
+      <Footer8 compact statement="想继续追问项目中的取舍、评测或协作细节？" actionLabel="联系主理人" actionHref="#contact" />
     </main>
   );
 }

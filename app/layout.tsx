@@ -3,6 +3,7 @@ import Navigation3 from "@/components/blocks/navigation-3";
 import ContactDrawer from "@/components/site/contact-drawer";
 import ElevatorTransition from "@/components/site/elevator-transition";
 import LobbyIntro from "@/components/site/lobby-intro";
+import SiteCursor from "@/components/site/site-cursor";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,9 +16,9 @@ export const metadata: Metadata = {
 
 const links = [
   { label: "总控层", href: "/" },
-  { label: "5F 项目", href: "/projects" },
-  { label: "4F 方法", href: "/method" },
-  { label: "2F 关于", href: "/about" },
+  { label: "项目展厅", href: "/projects" },
+  { label: "方法归纳", href: "/method" },
+  { label: "主理人档案", href: "/about" },
 ];
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -26,13 +27,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <header className="global-nav">
           <Navigation3
-            brand="MIRANDA"
-            brandSub="不堆砌 AI 功能，见可运行的产品系统"
+            brand="IDEA 无限大厦 · 祁宁"
+            brandSub=""
             brandHref="/"
-            brandMark="M"
+            brandMark="I"
             links={links}
             loginLabel=""
-            signupLabel="联系 ID 主理人"
+            signupLabel="联系主理人"
             signupHref="#contact"
             accent="#caff52"
             dark
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <LobbyIntro />
         <ElevatorTransition />
         <ContactDrawer />
+        <SiteCursor />
       </body>
     </html>
   );
