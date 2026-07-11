@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     viewTransition: true,
   },
   turbopack: {
-    root: "/Users/a77",
+    root: process.cwd(),
   },
 };
 
