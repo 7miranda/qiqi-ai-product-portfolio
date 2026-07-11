@@ -1,17 +1,8 @@
 import Link from "next/link";
-import { ArrowUpRight, Building2, BriefcaseBusiness, Layers3, UserRound } from "lucide-react";
+import { ArrowUpRight, BriefcaseBusiness, Layers3, UserRound } from "lucide-react";
 import MetallicSwirl from "@/components/react-bits/metallic-swirl";
-import ParallaxPills from "@/components/react-bits/parallax-pills";
 import StaggeredText from "@/components/react-bits/staggered-text";
 import { projects } from "@/lib/project-data";
-
-const pills = [
-  { label: "05 / AI 产品项目", background: "#111310", color: "#ffffff", x: 52, y: 25, width: 58, rotate: -1 },
-  { label: "04 / 产品判断力", background: "#c7ff3d", color: "#111310", x: 46, y: 39, width: 54, rotate: 1 },
-  { label: "03 / 品味工程", background: "#ffffff", color: "#111310", x: 55, y: 53, width: 50, rotate: -1 },
-  { label: "02 / 关于七七", background: "#dfe2df", color: "#111310", x: 48, y: 67, width: 52, rotate: 1 },
-  { label: "01 / 联系方式", background: "#3b3e3a", color: "#ffffff", x: 54, y: 81, width: 48, rotate: -1 },
-];
 
 export default function Home() {
   return (
@@ -75,24 +66,19 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mast-signature" aria-label="祁宁的 AI 产品能力地图">
-            <div className="signature-index"><Building2 /><span>77F</span></div>
-            <p className="signature-caption">AI 时代，TASTE 才是真正的生产力 · SELECT A FLOOR</p>
-            <ParallaxPills
-              pills={pills}
-              width="100%"
-              height="100%"
-              pillHeight={58}
-              pillRadius={6}
-              fontSize={16}
-              fontWeight={700}
-              parallaxStrength={8}
-              parallaxStiffness={160}
-              parallaxDamping={26}
-              disableEmptyPills
-              entryDistance={130}
-              entryDamping={17}
-            />
+          <div className="mast-signature" aria-label="五个项目的核心成果">
+            <div className="elevator-heading"><span>PROJECT ELEVATOR</span><strong>选择楼层，查看证据</strong></div>
+            <div className="project-elevator">
+              {projects.map((project) => (
+                <Link key={project.slug} href={`/projects/${project.slug}`} className="project-floor">
+                  <span className="floor-no">{String(6 - Number(project.index)).padStart(2, "0")}F</span>
+                  <span className="floor-project"><strong>{project.title.split("·")[0].trim()}</strong><small>{project.thesis}</small></span>
+                  <span className="floor-metric"><strong>{project.metric}</strong><small>{project.metricLabel}</small></span>
+                  <ArrowUpRight />
+                </Link>
+              ))}
+            </div>
+            <p className="signature-caption">AI 时代，TASTE 才是真正的生产力</p>
           </div>
         </div>
 
@@ -103,14 +89,6 @@ export default function Home() {
           <span>微信 · DJ_MIRANDA</span>
         </div>
 
-        <div className="mast-project-rail" aria-label="项目快速入口">
-          {projects.map((project) => (
-            <Link key={project.slug} href={`/projects/${project.slug}`}>
-              <span>{project.index}</span>
-              <strong>{project.title.split("·")[0].trim()}</strong>
-            </Link>
-          ))}
-        </div>
       </section>
     </main>
   );

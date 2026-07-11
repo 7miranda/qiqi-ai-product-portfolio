@@ -41,15 +41,21 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             <Link href="/projects"><ArrowLeft /> 返回全部项目</Link>
             <span>{project.index} / 05</span>
           </div>
-          <div className="project-cover-title">
-            <span>{project.category}</span>
-            <StaggeredText as="h1" text={project.title} segmentBy="words" direction="bottom" delay={45} duration={0.78} blur />
-            <p>{project.summary}</p>
+          <div className="project-cover-focus">
+            <div className="project-cover-title">
+              <span>{project.category}</span>
+              <StaggeredText as="h1" text={project.title} segmentBy="words" direction="bottom" delay={45} duration={0.78} blur />
+              <p>{project.summary}</p>
+            </div>
+            <div className="project-cover-proof">
+              <span>CORE EVIDENCE</span><strong>{project.metric}</strong><small>{project.metricLabel}</small>
+              <p>{project.thesis}</p>
+            </div>
           </div>
           <div className="project-cover-meta">
             <div><span>ROLE</span><strong>{project.role}</strong></div>
             <div><span>TIME</span><strong>{project.timeframe}</strong></div>
-            <div className="cover-evidence"><span>CORE EVIDENCE</span><strong>{project.metric}</strong><small>{project.metricLabel}</small></div>
+            <div className="cover-evidence"><span>PROJECT SCALE</span><strong>{project.facts[0]}</strong><small>{project.facts.slice(1, 3).join(" · ")}</small></div>
           </div>
         </div>
       </section>
