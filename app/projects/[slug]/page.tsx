@@ -74,7 +74,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       </section>
 
       {project.slug === "persona-agent" ? (
-        <section className="workflow-showroom">
+        <><section className="workflow-showroom">
           <div className="page-shell workflow-showroom-grid">
             <div className="workflow-showroom-copy">
               <span className="case-index">WORKFLOW SHOWROOM / 04F</span>
@@ -103,6 +103,18 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             </div>
           </div>
         </section>
+        <section className="persona-system page-shell">
+          <header className="persona-system-head"><span className="case-index">PRODUCT SYSTEM / 我参与的完整链路</span><h2>从人格内容到产品承接，<br />把五个阶段做成一套可运行系统。</h2><p>StarDimeAI / BINGOAI 的公开产品结构包含行动路线、工作流、提示词、课程资料与产品入口。狠人智能体承担其中的人格化承接层，把用户从内容触达带入持续行动与商业转化。</p></header>
+          <div className="persona-stage-row">
+            {["01 认知觉醒","02 掌握底层规律","03 构建高维武器","04 主宰价值博弈","05 建立个人帝国"].map((stage) => <span key={stage}>{stage}</span>)}
+          </div>
+          <div className="persona-proof-grid">
+            <article><img src="../../images/persona-agent/evolution-blueprint.jpg" alt="狠人进化蓝图的五阶段内容架构" /><div><span>01 / 体系设计</span><h3>五阶段成长蓝图</h3><p>将零散内容整理成从认知到行动、再到价值与商业结果的递进路径。</p><strong>我负责：阶段体系、信息架构、内容与产品承接关系。</strong></div></article>
+            <article><img src="../../images/persona-agent/agent-entry-matrix.jpg" alt="多个狠人智能体与阶段入口" /><div><span>02 / 入口矩阵</span><h3>智能体与阶段入口</h3><p>不同二维码入口对应不同阶段任务，让用户不是“随便聊”，而是进入明确的问题场景。</p><strong>我负责：Agent 矩阵规划、入口策略、场景与知识模块映射。</strong></div></article>
+            <article><img src="../../images/persona-agent/agent-conversation.png" alt="狠人智能体输出行动任务的对话界面" /><div><span>03 / 交付体验</span><h3>人格化回答与行动任务</h3><p>回答同时包含判断、问题拆解和限时行动，把内容消费转化成下一步执行。</p><strong>我负责：人格一致性、回答结构、行动钩子、评测与反馈闭环。</strong></div></article>
+          </div>
+          <div className="stardime-flow"><span>用户目标</span><i>→</i><span>行动路线</span><i>→</i><span>工作流 / Prompt</span><i>→</i><span>狠人 Agent</span><i>→</i><span>产品承接与复盘</span></div>
+        </section></>
       ) : null}
 
       <section className="case-section case-problem">

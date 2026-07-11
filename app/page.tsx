@@ -2,7 +2,11 @@ import Link from "next/link";
 import { ArrowUpRight, BriefcaseBusiness, Layers3, UserRound } from "lucide-react";
 import MetallicSwirl from "@/components/react-bits/metallic-swirl";
 import StaggeredText from "@/components/react-bits/staggered-text";
+import About5 from "@/components/blocks/about-5";
 import { projects } from "@/lib/project-data";
+
+const toolsOne = [{name:"ChatGPT",mark:"G"},{name:"Claude",mark:"C"},{name:"Gemini",mark:"Gm"},{name:"Coze",mark:"Co"},{name:"Midjourney",mark:"Mj"},{name:"Sora",mark:"So"},{name:"可灵",mark:"Kl"},{name:"即梦",mark:"Jm"},{name:"Suno",mark:"Su"},{name:"CapCut",mark:"剪"}];
+const toolsTwo = [{name:"Figma",mark:"Fi"},{name:"Cursor",mark:"Cu"},{name:"Claude Code",mark:"CC"},{name:"Notion",mark:"N"},{name:"ComfyUI",mark:"UI"},{name:"Nano Banana",mark:"NB"},{name:"Lovart",mark:"Lo"},{name:"DeepSeek",mark:"DS"},{name:"通义千问",mark:"Q"},{name:"Cloudflare",mark:"CF"}];
 
 export default function Home() {
   return (
@@ -88,6 +92,10 @@ export default function Home() {
           <a href="mailto:yourandrea77@gmail.com">yourandrea77@gmail.com</a>
           <span>微信 · DJ_MIRANDA</span>
         </div>
+        <aside className="home-toolbelt">
+          <div className="toolbelt-handle"><span>TOOLBELT · 课程与工作流工具</span><strong>按下展开</strong></div>
+          <About5 rowOne={toolsOne} rowTwo={toolsTwo} />
+        </aside>
 
       </section>
     </main>
