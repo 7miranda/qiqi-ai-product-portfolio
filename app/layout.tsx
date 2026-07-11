@@ -30,7 +30,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             brand="IDEA 无限大厦 · 祁宁"
             brandSub=""
             brandHref="/"
-            brandMark="I"
+            brandMark="PM"
             links={links}
             loginLabel=""
             signupLabel="联系主理人"

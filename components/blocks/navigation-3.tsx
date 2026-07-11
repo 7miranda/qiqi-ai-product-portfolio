@@ -207,7 +207,7 @@ export function Navigation3({
                       className="block text-center px-5 py-2.5 rounded-full text-base font-medium no-underline"
                       style={{ background: ctaBg, color: ctaFg }}
                     >
-                      {signupLabel}
+                      <span className="inline-flex items-center justify-center">{signupLabel}</span>
                     </SmartLink>
                   </div>
                 </div>

@@ -33,10 +33,17 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     ),
   }));
   const personaWorkflows = [
-    ["01", "人格诊断工作流", "从问题识别进入人格化建议与行动路径。"],
-    ["02", "内容转化工作流", "把人格表达、信任建立与商业承接放在一条链路里。"],
-    ["03", "五阶段成长引擎", "按用户阶段调度知识、任务和媒介，而不是一次性回答。"],
-    ["04", "扣子自研后台", "为工作流配置、质量评测与数据回流预留后台截图位。"],
+    { index: "01", title: "人格诊断工作流", body: "从问题识别进入人格化判断、行动建议与阶段任务。", image: "evolution-blueprint.jpg" },
+    { index: "02", title: "内容转化工作流", body: "把人格表达、信任建立与商业承接组织在一条链路里。", image: "agent-entry-matrix.jpg" },
+    { index: "03", title: "五阶段成长引擎", body: "按用户阶段调度知识、任务和媒介，不停留在一次性回答。", image: "agent-conversation.png" },
+    { index: "04", title: "扣子工作流后台", body: "承载工作流配置、知识资产、质量评测与数据回流。", image: "product-cases/ruthless.jpg" },
+  ];
+  const productCases = [
+    { title: "天道造命论", image: "tiandao.jpg", href: "https://stardime.ai/products/tiandao-life-design" },
+    { title: "狠人进化论", image: "ruthless.jpg", href: "https://stardime.ai/products/ruthless-evolution" },
+    { title: "野心家博弈心法", image: "ambition.jpg", href: "https://stardime.ai/products/ambition-game" },
+    { title: "EvoMind 进化蓝图", image: "evomind.jpg", href: "https://stardime.ai/products/evomind-hua-tu" },
+    { title: "聪明脑子 101", image: "smart-brain.jpg", href: "https://stardime.ai/products/smart-brain-101" },
   ];
   const systemAssets = [
     ["BUSINESS MODEL", "业务目标与价值规则"],
@@ -98,10 +105,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             </div>
             <div className="workflow-stack-wrap">
               <ClickStack
-                items={personaWorkflows.map(([index, title, body], itemIndex) => (
+                items={personaWorkflows.map(({ index, title, body, image }) => (
                   <article className="workflow-exhibit" key={title}>
-                    <div className="workflow-exhibit-visual"><span>{index}</span><strong>{itemIndex === 3 ? "BACKSTAGE IMAGE SLOT" : "LIVE WORKFLOW"}</strong></div>
-                    <div className="workflow-exhibit-copy"><small>狠人思维模型 / {index}</small><h3>{title}</h3><p>{body}</p>{itemIndex === 3 ? <span>等待替换后台截图</span> : <a href="https://sandbox-n0qp33ght-m2pzbvsv29-bots-projects.vercel.app/" target="_blank" rel="noreferrer">打开工作流 <ArrowUpRight /></a>}</div>
+                    <div className="workflow-exhibit-visual"><img src={`../../images/persona-agent/${image}`} alt={`${title}界面`} /><span>{index}</span><strong>LIVE WORKFLOW</strong></div>
+                    <div className="workflow-exhibit-copy"><small>狠人思维模型 / {index}</small><h3>{title}</h3><p>{body}</p><a href="https://sandbox-n0qp33ght-m2pzbvsv29-bots-projects.vercel.app/" target="_blank" rel="noreferrer">打开工作流 <ArrowUpRight /></a></div>
                   </article>
                 ))}
                 cardWidth={520}
@@ -129,6 +136,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           </div>
           <div className="stardime-flow"><span>用户目标</span><i>→</i><span>行动路线</span><i>→</i><span>工作流 / Prompt</span><i>→</i><span>狠人 Agent</span><i>→</i><span>产品承接与复盘</span></div>
         </section></>
+      ) : null}
+
+      {project.slug === "persona-agent" ? (
+        <section className="product-case-library">
+          <div className="page-shell product-case-head"><span className="case-index">PRODUCT CASE LIBRARY / 产品案例库</span><h2>一款爆品，一套素材，<br />一组工作流</h2><p>案例库不是作品陈列，而是经过市场验证的选题、素材与生产路径。每个产品案例都能回到对应的工作流继续复用。</p></div>
+          <div className="page-shell product-case-grid">{productCases.map((item, index) => <a key={item.title} href={item.href} target="_blank" rel="noreferrer"><img src={`../../images/persona-agent/product-cases/${item.image}`} alt={`${item.title}产品封面`} /><span>0{index + 1}</span><strong>{item.title}</strong><ArrowUpRight /></a>)}</div>
+        </section>
       ) : null}
 
       <section className="case-section case-problem">

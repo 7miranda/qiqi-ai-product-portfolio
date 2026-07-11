@@ -12,6 +12,8 @@ const cards = [
   <article className="about-stack-panel tone-dark" key="delivery"><span>04 / DELIVERY GOVERNANCE</span><div><h3>跨职能交付治理</h3><p>在业务、研发、算法与合规之间建立责任边界、协作规则和规模化交付机制。</p></div></article>,
 ];
 
+const slogans = ["Prompt to Product, Automate the Rest", "Systems to Girls"];
+
 const skills = [
   { label: "Agent 产品", background: "#111310", color: "#f5f5f2", x: 31, y: 28, width: 30, rotate: -3 },
   { label: "AIGC 工作流", background: "#caff52", color: "#111310", x: 68, y: 30, width: 34, rotate: 3 },
@@ -24,10 +26,12 @@ export default function AboutPage() {
   return (
     <main className="secondary-page about-page">
       <section className="about-hero page-shell">
-        <div>
+        <div className="about-hero-copy">
           <span className="page-index">PROFILE / ABOUT MIRANDA</span>
-          <h1>把复杂能力组织成<br />清晰、可信的系统。</h1>
-          <p>我是祁宁，Miranda。AI 应用产品经理 · 6 年全平台全链路 · 体验策略与产品增长，3 年企业级 AIGC / Agent 商业化操盘落地。</p>
+          <h1>把复杂能力组织成<br /><em>清晰、可信</em>的系统</h1>
+          <p className="about-positioning">9 年多端复杂业务数字化产品经验，6 年高级 UI/UX 与全链路体验设计，近 3 年聚焦 AIGC 商业化与企业级 AI 应用落地。CCIA 高级 AIGC 内容创作师。</p>
+          <p className="about-core-slogan">Test, Iterate, Then<br />Automate Everything</p>
+          <div className="about-slogan-tags">{slogans.map((slogan) => <span key={slogan}>{slogan}</span>)}</div>
           <dl className="about-contacts">
             <div><dt>PHONE</dt><dd><a href="tel:18586312570">185 8631 2570</a></dd></div>
             <div><dt>EMAIL</dt><dd><a href="mailto:yourandrea77@gmail.com">yourandrea77@gmail.com</a></dd></div>
@@ -35,11 +39,11 @@ export default function AboutPage() {
           </dl>
         </div>
         <div className="about-stack-wrap">
-          <ClickStack items={cards} cardWidth={340} cardHeight={430} spreadX={28} spreadY={-24} duration={0.46} borderRadius={8} visibleCount={4} cardColor="#f5f5f2" className="about-stack" />
+          <ClickStack items={cards} cardWidth={340} cardHeight={430} spreadX={28} spreadY={-24} duration={0.46} borderRadius={8} visibleCount={4} cardColor="#111410" className="about-stack" />
         </div>
       </section>
       <section className="about-skills">
-        <div className="page-shell about-skills-grid"><div><span className="page-index">CAPABILITY MAP</span><h2>擅长把复杂能力，<br />组织成清晰系统。</h2></div><ParallaxPills pills={skills} height={520} pillHeight={60} pillRadius={6} fontSize={16} parallaxStrength={8} disableEmptyPills /></div>
+        <div className="page-shell about-skills-grid"><div><span className="page-index">CAPABILITY MAP</span><h2><span>擅长把复杂能力</span><span>组织成清晰系统</span></h2></div><ParallaxPills pills={skills} height={520} pillHeight={60} pillRadius={6} fontSize={16} parallaxStrength={8} disableEmptyPills /></div>
       </section>
       <section className="dual-capability">
         <div className="page-shell">
@@ -51,7 +55,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      <Footer8 statement="有 Agent 场景、产品系统或复杂体验问题，欢迎直接联系我。" actionLabel="联系主理人" actionHref="#contact" />
+      <Footer8 dense statement="把判断沉淀成系统，让一次交付成为下一次增长的起点。" actionLabel="联系主理人" actionHref="#contact" copyright="© 2026 QI NING / MIRANDA PROFILE" />
     </main>
   );
 }

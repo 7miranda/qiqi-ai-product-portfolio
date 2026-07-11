@@ -4,10 +4,35 @@ import HalftoneWave from "@/components/react-bits/halftone-wave";
 import StaggeredText from "@/components/react-bits/staggered-text";
 import About5 from "@/components/blocks/about-5";
 import PortfolioAgent from "@/components/site/portfolio-agent";
-import { projects } from "@/lib/project-data";
+import ProjectElevator from "@/components/site/project-elevator";
 
-const toolsOne = [{name:"即梦",icon:"tool-logos/jimeng.ico"},{name:"可灵",icon:"tool-logos/kling.ico"},{name:"Cursor",icon:"tool-logos/cursor.svg"},{name:"Notion",icon:"tool-logos/notion.svg"},{name:"Cloudflare",icon:"tool-logos/cloudflare.svg"},{name:"Cloud Design",icon:"tool-logos/cloud-design.svg"},{name:"AI Studio",icon:"tool-logos/googlegemini.svg"},{name:"Runway",icon:"tool-logos/runway.svg"},{name:"See the Dance",icon:"tool-logos/seedance.svg"}];
-const toolsTwo = [{name:"See the Dream",icon:"tool-logos/seedream.svg"},{name:"GPT-4o · Image 2.0",icon:"tool-logos/openai.svg"},{name:"Gemini",icon:"tool-logos/googlegemini.svg"},{name:"Lovart",icon:"tool-logos/lovart.ico"},{name:"GitHub",icon:"tool-logos/github.svg"},{name:"VS Code",icon:"tool-logos/vscode.svg"},{name:"Claude Code",icon:"tool-logos/anthropic.svg"},{name:"Codex",icon:"tool-logos/openai.svg"},{name:"Hermes",icon:"tool-logos/hermes.png"}];
+const toolsOne = [
+  { name: "ChatGPT", icon: "tool-logos/openai.svg" },
+  { name: "Claude", icon: "tool-logos/claude.svg" },
+  { name: "Claude Code", icon: "tool-logos/claude-code.svg" },
+  { name: "Gemini", icon: "tool-logos/gemini-color.svg" },
+  { name: "DeepSeek", icon: "tool-logos/deepseek-color.svg" },
+  { name: "Qwen", icon: "tool-logos/qwen-color.svg" },
+  { name: "Kimi", icon: "tool-logos/kimi.svg" },
+  { name: "豆包", icon: "tool-logos/doubao-color.svg" },
+  { name: "Cursor", icon: "tool-logos/cursor-official.svg" },
+  { name: "Notion", icon: "tool-logos/notion-official.svg" },
+];
+const toolsTwo = [
+  { name: "Seedream 5.0 Pro", icon: "tool-logos/bytedance-seed.ico" },
+  { name: "Seedance 2.0", icon: "tool-logos/bytedance-seed.ico" },
+  { name: "即梦 Dreamina", icon: "tool-logos/jimeng-color.svg" },
+  { name: "可灵 Kling AI", icon: "tool-logos/kling-color.svg" },
+  { name: "Sora", icon: "tool-logos/sora-color.svg" },
+  { name: "Nano Banana", icon: "tool-logos/nano-banana-color.svg" },
+  { name: "Midjourney", icon: "tool-logos/midjourney.svg" },
+  { name: "Runway", icon: "tool-logos/runway.svg" },
+  { name: "ComfyUI", icon: "tool-logos/comfyui.svg" },
+  { name: "CapCut", icon: "tool-logos/capcut.svg" },
+  { name: "Lovart", icon: "tool-logos/lovart.svg" },
+  { name: "Cloudflare", icon: "tool-logos/cloudflare-color.svg" },
+  { name: "Coze", icon: "tool-logos/coze.svg" },
+];
 
 export default function Home() {
   return (
@@ -40,7 +65,7 @@ export default function Home() {
         <div className="mast-inner">
           <div className="mast-copy-panel">
             <p className="mast-zone-label">IDEA 无限大厦 / 总控层</p>
-            <p className="mast-name">祁宁 / MIRANDA · AI 商业化产品与体验系统</p>
+            <p className="mast-name">祁宁 / MIRANDA · 6 年高级 UI/UX × AI 商业化产品</p>
             <StaggeredText
               as="h1"
               text={"思 AI 所不能，\n见 AI 之所能。"}
@@ -52,7 +77,7 @@ export default function Home() {
               blur
             />
             <p className="mast-english">Think what AI can&apos;t, build what AI can.</p>
-            <p id="hero-title" className="mast-deck">把想象变成看得见的世界。3 年企业级 AIGC / Agent 商业化落地，把复杂能力组织成可运行的产品系统。</p>
+            <p id="hero-title" className="mast-deck">把想象变成看得见的产品。9 年多端复杂业务产品经验，近 3 年聚焦 AIGC 商业化与企业级 AI 应用落地。</p>
             <div className="mast-actions" aria-label="主要入口">
               <Link className="mast-action mast-action-primary" href="/projects">
                 <BriefcaseBusiness />
@@ -73,18 +98,9 @@ export default function Home() {
           </div>
 
           <div className="mast-signature" aria-label="五个项目的核心成果">
-            <div className="elevator-heading"><span>PROJECT ARCHIVE</span><strong>选择项目，了解过往实践</strong></div>
-            <div className="project-elevator">
-              {projects.map((project) => (
-                <Link key={project.slug} href={`/projects/${project.slug}`} className="project-floor">
-                  <span className="floor-no">{project.floor}</span>
-                  <span className="floor-project"><strong>{project.slug === "enterprise-agent" ? project.title : project.title.split("·")[0].trim()}</strong></span>
-                  <span className="floor-metric"><strong>{project.metric}{project.metricUnit ? <em>{project.metricUnit}</em> : null}</strong><small>{project.shortProof}</small></span>
-                  <ArrowUpRight />
-                </Link>
-              ))}
-            </div>
-            <p className="signature-caption">不堆砌 AI 功能，建可运行的产品系统</p>
+            <div className="elevator-heading"><span>PROJECT ARCHIVE</span><strong>选择项目了解过往实践</strong></div>
+            <ProjectElevator />
+            <p className="signature-caption">Prompt to Product, Automate the Rest</p>
           </div>
         </div>
 
@@ -95,7 +111,7 @@ export default function Home() {
           <span><MessageCircle />DJ_MIRANDA</span>
         </div>
         <aside className="home-toolbelt">
-          <div className="toolbelt-handle"><span>TOOLBELT · 真实工作流工具</span><strong>持续运行</strong></div>
+          <div className="toolbelt-handle"><span>AI OPERATOR TOOLBELT</span><strong>AI 操盘手的时代：测试、迭代，让一切自动化</strong><em>TEST → ITERATE → SEE → AUTOMATE</em></div>
           <About5 rowOne={toolsOne} rowTwo={toolsTwo} />
         </aside>
       </section>

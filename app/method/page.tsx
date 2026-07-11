@@ -6,10 +6,10 @@ import Footer8 from "@/components/blocks/footer-8";
 export const metadata: Metadata = { title: "产品方法" };
 
 const steps = [
-  { label: "FRAME", title: "先定义任务，不先定义功能", description: "从用户真正要完成的判断与动作出发，明确业务约束、失败成本和可验证的成功标准。" },
-  { label: "PROTOTYPE", title: "用原型暴露不确定性", description: "在投入完整工程之前，先验证答案结构、操作路径、确认点和人工接管是否被用户理解。" },
-  { label: "EVALUATE", title: "评测先于规模化", description: "把事实、工具、引用、拒答、合规与人格稳定性拆成可以复现、可以阻止风险上线的指标。" },
-  { label: "DELIVER", title: "把模型放进真实协作", description: "通过自动、确认和接管三档边界，让业务、研发、算法和合规在同一套产品规则中协作。" },
+  { label: "TEST", title: "先用最小闭环验证任务", description: "从用户真正要完成的判断与动作出发，用最小可运行方案验证业务约束、失败成本和成功标准。" },
+  { label: "ITERATE", title: "用真实反馈收敛不确定性", description: "围绕答案结构、操作路径、人工确认和异常接管快速迭代，不让团队在假设上堆功能。" },
+  { label: "SEE", title: "先看见小结果，再扩大权限", description: "用事实、工具、引用、拒答、合规与人格稳定性评测确认小结果真实成立。" },
+  { label: "AUTOMATE", title: "把被验证的路径系统化", description: "将稳定路径封装为 Prompt、Skill、知识资产和协作规则，再进入可持续自动化。" },
 ];
 
 export default function MethodPage() {
@@ -22,6 +22,8 @@ export default function MethodPage() {
           <BlurHighlight highlightedBits={["清晰、可验证、可交付"]} highlightColor="#ff3b30" blurAmount={7}>
             <p className="method-highlight">产品方法的价值，是让复杂能力变得清晰、可验证、可交付。</p>
           </BlurHighlight>
+          <div className="method-operating-route" aria-label="产品行动路线"><span>TEST</span><i>→</i><span>ITERATE</span><i>→</i><span>SEE</span><i>→</i><span>AUTOMATE</span></div>
+          <p className="method-principle">提示即产品 · 其余自动 · 造系统，不定空目标</p>
         </div>
       </section>
       <HowItWorks5
@@ -34,7 +36,7 @@ export default function MethodPage() {
         ctaHref="/projects"
         footnote="方法并非抽象框架，五个项目分别展示了它在 AIGC、商业 Agent、企业 Agent、IoT 与政企服务中的落地。"
       />
-      <Footer8 statement="方法的价值，在于让团队面对不确定性时仍然可以清晰推进。" actionLabel="查看项目" actionHref="/projects" />
+      <Footer8 dense statement="Prompt to Product：先证明结果，再把可靠路径自动化。" actionLabel="查看项目" actionHref="/projects" />
     </main>
   );
 }
