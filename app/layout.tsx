@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Navigation3 from "@/components/blocks/navigation-3";
 import ContactDrawer from "@/components/site/contact-drawer";
+import ElevatorTransition from "@/components/site/elevator-transition";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -34,9 +35,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             signupLabel="发送邮件"
             signupHref="mailto:yourandrea77@gmail.com"
             accent="#c7ff3d"
+            dark
           />
         </header>
         {children}
+        <ElevatorTransition />
         <ContactDrawer />
       </body>
     </html>

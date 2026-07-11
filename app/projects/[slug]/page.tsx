@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import AnimatedList, { type AnimatedListItem } from "@/components/react-bits/animated-list";
 import StaggeredText from "@/components/react-bits/staggered-text";
 import Footer8 from "@/components/blocks/footer-8";
+import ClickStack from "@/components/react-bits/click-stack";
 import { getProject, projects } from "@/lib/project-data";
 
 export function generateStaticParams() {
@@ -31,6 +32,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       </article>
     ),
   }));
+  const personaWorkflows = [
+    ["01", "人格诊断工作流", "从问题识别进入人格化建议与行动路径。"],
+    ["02", "内容转化工作流", "把人格表达、信任建立与商业承接放在一条链路里。"],
+    ["03", "五阶段成长引擎", "按用户阶段调度知识、任务和媒介，而不是一次性回答。"],
+    ["04", "扣子自研后台", "为工作流配置、质量评测与数据回流预留后台截图位。"],
+  ];
 
   return (
     <main className="secondary-page project-detail">
@@ -65,6 +72,38 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <h2>{project.thesis}</h2>
         <div className="fact-row">{project.facts.map((fact) => <span key={fact}>{fact}</span>)}</div>
       </section>
+
+      {project.slug === "persona-agent" ? (
+        <section className="workflow-showroom">
+          <div className="page-shell workflow-showroom-grid">
+            <div className="workflow-showroom-copy">
+              <span className="case-index">WORKFLOW SHOWROOM / 04F</span>
+              <h2>这不是一个聊天机器人，<br />而是一组持续运行的商业工作流。</h2>
+              <p>选择一张工作流卡片，查看它如何把人格一致性、内容生产、成长阶段和转化动作连接起来。前三项可进入现有体验网站；最后一项为扣子自研后台保留正式图片展位。</p>
+              <a className="workflow-live-link" href="https://sandbox-n0qp33ght-m2pzbvsv29-bots-projects.vercel.app/" target="_blank" rel="noreferrer">进入狠人工作流网站 <ArrowUpRight /></a>
+            </div>
+            <div className="workflow-stack-wrap">
+              <ClickStack
+                items={personaWorkflows.map(([index, title, body], itemIndex) => (
+                  <article className="workflow-exhibit" key={title}>
+                    <div className="workflow-exhibit-visual"><span>{index}</span><strong>{itemIndex === 3 ? "BACKSTAGE IMAGE SLOT" : "LIVE WORKFLOW"}</strong></div>
+                    <div className="workflow-exhibit-copy"><small>狠人思维模型 / {index}</small><h3>{title}</h3><p>{body}</p>{itemIndex === 3 ? <span>等待替换后台截图</span> : <a href="https://sandbox-n0qp33ght-m2pzbvsv29-bots-projects.vercel.app/" target="_blank" rel="noreferrer">打开工作流 <ArrowUpRight /></a>}</div>
+                  </article>
+                ))}
+                cardWidth={520}
+                cardHeight={500}
+                spreadX={34}
+                spreadY={-26}
+                duration={0.48}
+                borderRadius={4}
+                visibleCount={4}
+                cardColor="#11130f"
+                className="workflow-stack"
+              />
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="case-section case-problem">
         <div className="page-shell case-grid">
