@@ -25,7 +25,7 @@ export default function ContactDrawer() {
     <>
       <Button className="contact-fab" type="button" onClick={() => setOpen(true)} aria-label="打开联系方式">
         <Mail size={18} />
-        联系祁宁
+        联系 IDEA 主理人
       </Button>
       <AnimatePresence>
         {open ? (
@@ -49,7 +49,7 @@ export default function ContactDrawer() {
               <div className="contact-drawer-head">
                 <div>
                   <span className="eyebrow">DIRECT CONTACT</span>
-                  <h2>和祁宁聊聊</h2>
+                  <h2>和 Miranda 聊聊</h2>
                 </div>
                 <Button variant="outline" size="icon-lg" onClick={() => setOpen(false)} aria-label="关闭">
                   <X />

@@ -51,9 +51,9 @@ const DEFAULT_COLUMNS: Footer8Column[] = [
 
 export default function Footer8({
   statement = "把复杂问题做成清晰、可评测、能上线的 AI 产品。",
-  wordmark = "AI PRODUCT",
+  wordmark = "IDEA TOWER",
   columns = DEFAULT_COLUMNS,
-  copyright = "© 2026 WENWO.STUDIO / AI PRODUCT MANAGER PORTFOLIO",
+  copyright = "© 2026 MIRANDA / IDEA TOWER PORTFOLIO",
   actionLabel = "OPEN CASE",
   actionHref = "/case-study",
   actionDirection = "forward",
@@ -125,7 +125,7 @@ export default function Footer8({
 
         <div className="flex flex-col gap-3 border-t border-[var(--line)] pt-5 font-mono text-[10px] tracking-[0.12em] text-[var(--ink-faint)] sm:flex-row sm:items-center sm:justify-between sm:text-[11px]">
           <p className="m-0">{copyright}</p>
-          <p className="m-0">SHANGHAI · AVAILABLE FOR AI PRODUCT ROLES</p>
+          <p className="m-0">OPEN FOR AI COMMERCIALIZATION & AGENT PRODUCT ROLES</p>
         </div>
       </div>
     </footer>

@@ -3,10 +3,11 @@ import { ArrowUpRight, BriefcaseBusiness, Layers3, UserRound } from "lucide-reac
 import MetallicSwirl from "@/components/react-bits/metallic-swirl";
 import StaggeredText from "@/components/react-bits/staggered-text";
 import About5 from "@/components/blocks/about-5";
+import PortfolioAgent from "@/components/site/portfolio-agent";
 import { projects } from "@/lib/project-data";
 
-const toolsOne = [{name:"ChatGPT",mark:"G"},{name:"Claude",mark:"C"},{name:"Gemini",mark:"Gm"},{name:"Coze",mark:"Co"},{name:"Midjourney",mark:"Mj"},{name:"Sora",mark:"So"},{name:"可灵",mark:"Kl"},{name:"即梦",mark:"Jm"},{name:"Suno",mark:"Su"},{name:"CapCut",mark:"剪"}];
-const toolsTwo = [{name:"Figma",mark:"Fi"},{name:"Cursor",mark:"Cu"},{name:"Claude Code",mark:"CC"},{name:"Notion",mark:"N"},{name:"ComfyUI",mark:"UI"},{name:"Nano Banana",mark:"NB"},{name:"Lovart",mark:"Lo"},{name:"DeepSeek",mark:"DS"},{name:"通义千问",mark:"Q"},{name:"Cloudflare",mark:"CF"}];
+const toolsOne = [{name:"Claude",icon:"tool-logos/anthropic.svg"},{name:"Gemini",icon:"tool-logos/googlegemini.svg"},{name:"Cursor",icon:"tool-logos/cursor.svg"},{name:"Figma",icon:"tool-logos/figma.svg"},{name:"Notion",icon:"tool-logos/notion.svg"},{name:"Cloudflare",icon:"tool-logos/cloudflare.svg"}];
+const toolsTwo = [{name:"GitHub",icon:"tool-logos/github.svg"},{name:"Vercel",icon:"tool-logos/vercel.svg"},{name:"n8n",icon:"tool-logos/n8n.svg"},{name:"Claude Code",icon:"tool-logos/anthropic.svg"},{name:"AI Studio",icon:"tool-logos/googlegemini.svg"},{name:"Cursor",icon:"tool-logos/cursor.svg"}];
 
 export default function Home() {
   return (
@@ -32,10 +33,10 @@ export default function Home() {
         <div className="mast-inner">
           <div className="mast-copy-panel">
             <div className="mast-kicker">
-              <span>77F / AI 商业化产品经理</span>
-              <span>LOBBY · OPEN TO WORK</span>
+              <span>77F / IDEA 无限大厦总控层</span>
+              <span>OPEN FOR AI COMMERCIALIZATION</span>
             </div>
-            <p className="mast-name">七七 / MIRANDA · BUILDING DIRECTORY</p>
+            <p className="mast-name">7 / MIRANDA · AI 商业化与体验系统主理人</p>
             <StaggeredText
               as="h1"
               text={"思 AI 所不能，\n见 AI 之所能。"}
@@ -47,9 +48,9 @@ export default function Home() {
               blur
             />
             <p className="mast-english">Think what AI can&apos;t, build what AI can.</p>
-            <p id="hero-title" className="mast-deck">把想象变成看得见的世界。大模型应用产品化 / AIGC 工具增长 / 行业 AI 解决方案落地 / CCIA 高级 AIGC 内容创作师。</p>
+            <p id="hero-title" className="mast-deck">把想象变成看得见的世界。3 年企业级 AIGC / Agent 商业化操盘落地，覆盖大模型应用产品化、AIGC 工具增长与行业 AI 解决方案。</p>
             <div className="taste-tags" aria-label="个人主张">
-              <span>Taste / 产品判断力</span><span>Design engineer / 品味工程</span><span>判断力大于执行力</span>
+              <span>判断先于生成</span><span>系统放大想象</span><span>体验承接商业价值</span>
             </div>
             <div className="mast-actions" aria-label="主要入口">
               <Link className="mast-action mast-action-primary" href="/projects">
@@ -82,21 +83,21 @@ export default function Home() {
                 </Link>
               ))}
             </div>
-            <p className="signature-caption">AI 时代，TASTE 才是真正的生产力</p>
+            <p className="signature-caption">不堆 AI 功能，建可运行的产品系统。</p>
           </div>
         </div>
 
         <div className="mast-contact-rail">
-          <span>七七 · MIRANDA</span>
+          <span>7 · MIRANDA</span>
           <a href="tel:18586312570">185 8631 2570</a>
           <a href="mailto:yourandrea77@gmail.com">yourandrea77@gmail.com</a>
           <span>微信 · DJ_MIRANDA</span>
         </div>
         <aside className="home-toolbelt">
-          <div className="toolbelt-handle"><span>TOOLBELT · 课程与工作流工具</span><strong>按下展开</strong></div>
+          <div className="toolbelt-handle"><span>TOOLBELT · 真实工作流工具</span><strong>悬停展开</strong></div>
           <About5 rowOne={toolsOne} rowTwo={toolsTwo} />
         </aside>
-
+        <PortfolioAgent />
       </section>
     </main>
   );

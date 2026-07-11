@@ -6,6 +6,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export interface Navigation3Link {
   label: string;
@@ -151,14 +152,14 @@ export function Navigation3({
               <span>{brand}</span>
             </a>
 
-            <button
+            <Button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="flex h-12 w-12 items-center justify-center rounded-full"
               style={{ background: dark ? "rgba(255,255,255,0.1)" : "#0d0d0c", color: "#ffffff" }}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
+            </Button>
           </div>
 
           <AnimatePresence>

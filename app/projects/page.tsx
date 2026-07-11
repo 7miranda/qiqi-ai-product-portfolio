@@ -49,7 +49,7 @@ export default function ProjectsPage() {
       </section>
       <Footer8
         statement="复杂能力需要被组织成清晰的产品判断，才有机会真正进入业务。"
-        actionLabel="联系祁宁"
+        actionLabel="联系 IDEA 主理人"
         actionHref="mailto:yourandrea77@gmail.com"
       />
     </main>

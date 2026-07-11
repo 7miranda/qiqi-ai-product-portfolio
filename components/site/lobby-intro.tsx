@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { Button } from "@/components/ui/button";
 
 export default function LobbyIntro() {
   const [visible, setVisible] = useState(false);
@@ -25,16 +26,16 @@ export default function LobbyIntro() {
     <AnimatePresence>
       {visible ? (
         <motion.div className="lobby-intro" initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .6 }}>
-          <motion.img className="lobby-intro-image" src="images/product-tower-lobby-v2.png" alt="一位兼具 DJ 与产品经理气质的 3D 女生站在产品大楼电梯前" initial={{ scale: 1.08 }} animate={{ scale: 1 }} transition={{ duration: 3.1, ease: [.22, 1, .36, 1] }} />
+          <motion.img className="lobby-intro-image" src="images/product-tower-lobby-v3.png" alt="一位兼具 DJ 与产品经理气质的 Q 版女生从背面走向 77 层电梯" initial={{ scale: 1.08 }} animate={{ scale: 1 }} transition={{ duration: 3.1, ease: [.22, 1, .36, 1] }} />
           <div className="lobby-intro-shade" />
           <motion.div className="lobby-intro-copy" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .35, duration: .8 }}>
-            <span>PRODUCT TOWER · 77 FLOORS</span>
-            <strong>正在进入<br />七七的产品大楼</strong>
-            <p>AI 商业化产品经理 · 大模型应用产品化</p>
+            <span>IDEA TOWER · 77 FLOORS</span>
+            <strong>欢迎来到<br />IDEA 无限大厦</strong>
+            <p>Miranda · AI 商业化与体验系统主理人</p>
           </motion.div>
           <div className="lobby-floor-display"><small>GOING UP</small><strong>{String(floor).padStart(2, "0")}</strong><span>F</span></div>
           <motion.div className="lobby-scan" initial={{ y: "-100vh" }} animate={{ y: "100vh" }} transition={{ duration: 2.2, ease: "linear" }} />
-          <button className="lobby-skip" onClick={() => setVisible(false)}>跳过入场</button>
+          <Button className="lobby-skip" variant="outline" onClick={() => setVisible(false)}>直接进入 77F</Button>
         </motion.div>
       ) : null}
     </AnimatePresence>

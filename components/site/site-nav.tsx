@@ -128,7 +128,7 @@ export default function SiteNav({
                 ))}
               </nav>
               <p className="mobile-menu-footnote">
-                AI PRODUCT MANAGER · INTERVIEW PORTFOLIO
+                MIRANDA · AI COMMERCIALIZATION & EXPERIENCE SYSTEMS
               </p>
             </motion.div>
           ) : null}

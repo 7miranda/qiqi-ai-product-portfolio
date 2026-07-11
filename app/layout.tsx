@@ -3,14 +3,15 @@ import Navigation3 from "@/components/blocks/navigation-3";
 import ContactDrawer from "@/components/site/contact-drawer";
 import ElevatorTransition from "@/components/site/elevator-transition";
 import LobbyIntro from "@/components/site/lobby-intro";
+import AmbientAudio from "@/components/site/ambient-audio";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "祁宁 Miranda · AI 产品经理作品集",
+    default: "Miranda · IDEA 无限大厦",
     template: "%s | 祁宁 Miranda",
   },
-  description: "AI 商业化产品经理，大模型应用产品化、AIGC 工具增长与行业 AI 解决方案落地。",
+  description: "Miranda 的 IDEA 无限大厦：AI 商业化、大模型应用产品化、AIGC 工具增长与行业 AI 解决方案作品集。",
 };
 
 const links = [
@@ -26,10 +27,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <header className="global-nav">
           <Navigation3
-            brand="七七 · Miranda"
-            brandSub="AI 商业化产品经理"
+            brand="Miranda · IDEA 无限大厦"
+            brandSub="AI 商业化与体验系统"
             brandHref="/"
-            brandMark="七七"
+            brandMark="7"
             links={links}
             loginLabel="185 8631 2570"
             loginHref="tel:18586312570"
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <LobbyIntro />
         <ElevatorTransition />
         <ContactDrawer />
+        <AmbientAudio />
       </body>
     </html>
   );

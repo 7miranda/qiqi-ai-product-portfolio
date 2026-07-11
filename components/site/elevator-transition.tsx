@@ -12,8 +12,8 @@ const floorFor = (href: string) => {
   if (href.includes("government-knowledge")) return "01F · 益电工";
   if (href.includes("projects")) return "05F · 项目展厅";
   if (href.includes("method")) return "04F · 产品方法";
-  if (href.includes("about")) return "02F · 关于七七";
-  return "LOBBY";
+  if (href.includes("about")) return "02F · Miranda";
+  return "77F · 总控大厅";
 };
 
 export default function ElevatorTransition() {
@@ -39,14 +39,14 @@ export default function ElevatorTransition() {
 
   return (
     <>
-      <aside className="current-floor" aria-label={`当前楼层 ${currentFloor}`}><span>NOW</span><strong>{currentFloor}</strong><small>77 层产品大楼</small></aside>
+      <aside className="current-floor" aria-label={`当前楼层 ${currentFloor}`}><span>NOW</span><strong>{currentFloor}</strong><small>IDEA 无限大厦 · 共 77 层</small></aside>
       <AnimatePresence>
       {target ? (
         <motion.div className="elevator-transition" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <motion.div className="elevator-door elevator-door-left" initial={{ x: "-100%" }} animate={{ x: 0 }} transition={{ duration: .56, ease: [.22, 1, .36, 1] }} />
           <motion.div className="elevator-door elevator-door-right" initial={{ x: "100%" }} animate={{ x: 0 }} transition={{ duration: .56, ease: [.22, 1, .36, 1] }} />
           <motion.div className="elevator-display" initial={{ opacity: 0, scale: .88 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: .3 }}>
-            <span>PRODUCT TOWER</span><strong>{target}</strong><small>电梯运行中 · GOING UP</small>
+            <span>IDEA 无限大厦</span><strong>{target}</strong><small>电梯运行中 · 楼层已锁定</small>
           </motion.div>
         </motion.div>
       ) : null}

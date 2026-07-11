@@ -1,6 +1,6 @@
 "use client";
 
-export interface ToolItem { name: string; mark: string; }
+export interface ToolItem { name: string; icon: string; }
 export interface About5Props { rowOne: ToolItem[]; rowTwo: ToolItem[]; }
 
 function ToolRow({ items, reverse }: { items: ToolItem[]; reverse?: boolean }) {
@@ -8,7 +8,7 @@ function ToolRow({ items, reverse }: { items: ToolItem[]; reverse?: boolean }) {
   return (
     <div className="tool-marquee-window">
       <div className={`tool-marquee-track ${reverse ? "tool-marquee-reverse" : ""}`}>
-        {repeated.map((tool, index) => <span className="tool-chip" key={`${tool.name}-${index}`}><i>{tool.mark}</i><strong>{tool.name}</strong></span>)}
+        {repeated.map((tool, index) => <span className="tool-chip" key={`${tool.name}-${index}`}><i><img src={tool.icon} alt="" /></i><strong>{tool.name}</strong></span>)}
       </div>
     </div>
   );
