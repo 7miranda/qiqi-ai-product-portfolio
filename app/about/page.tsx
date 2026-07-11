@@ -13,11 +13,11 @@ const cards = [
 ];
 
 const skills = [
-  { label: "Agent 产品", background: "#111214", color: "#f5f5f2", x: 31, y: 28, width: 30, rotate: -3 },
-  { label: "AIGC 工作流", background: "#ff3b30", color: "#ffffff", x: 68, y: 30, width: 34, rotate: 3 },
-  { label: "RAG / 知识库", background: "#f5f5f2", color: "#111214", x: 50, y: 50, width: 35, rotate: 2 },
-  { label: "高级 UI/UX", background: "#315cff", color: "#ffffff", x: 31, y: 72, width: 31, rotate: 3 },
-  { label: "商业化", background: "#111214", color: "#f5f5f2", x: 69, y: 71, width: 28, rotate: -3 },
+  { label: "Agent 产品", background: "#111310", color: "#f5f5f2", x: 31, y: 28, width: 30, rotate: -3 },
+  { label: "AIGC 工作流", background: "#c7ff3d", color: "#111310", x: 68, y: 30, width: 34, rotate: 3 },
+  { label: "RAG / 知识库", background: "#f5f5f2", color: "#111310", x: 50, y: 50, width: 35, rotate: 2 },
+  { label: "高级 UI/UX", background: "#dfe2df", color: "#111310", x: 31, y: 72, width: 31, rotate: 3 },
+  { label: "商业化", background: "#111310", color: "#f5f5f2", x: 69, y: 71, width: 28, rotate: -3 },
 ];
 
 export default function AboutPage() {

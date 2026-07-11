@@ -17,7 +17,7 @@ export default function ProjectsPage() {
             <h1>不是功能清单，<br />是产品判断的证据。</h1>
             <BlurHighlight
               highlightedBits={["连续的产品能力演进线"]}
-              highlightColor="#ff3b30"
+              highlightColor="#c7ff3d"
               blurAmount={6}
               inactiveOpacity={0.26}
               highlightDelay={0.35}

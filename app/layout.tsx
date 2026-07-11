@@ -33,7 +33,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             loginHref="tel:18586312570"
             signupLabel="发送邮件"
             signupHref="mailto:yourandrea77@gmail.com"
-            accent="#3567f6"
+            accent="#c7ff3d"
           />
         </header>
         {children}

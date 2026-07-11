@@ -6,11 +6,11 @@ import StaggeredText from "@/components/react-bits/staggered-text";
 import { projects } from "@/lib/project-data";
 
 const pills = [
-  { label: "05 / AI 产品项目", background: "#3567f6", color: "#ffffff", x: 52, y: 25, width: 58, rotate: -1 },
-  { label: "04 / 产品判断力", background: "#d7ff72", color: "#172033", x: 46, y: 39, width: 54, rotate: 1 },
-  { label: "03 / 品味工程", background: "#ffffff", color: "#172033", x: 55, y: 53, width: 50, rotate: -1 },
-  { label: "02 / 关于七七", background: "#dce7ff", color: "#172033", x: 48, y: 67, width: 52, rotate: 1 },
-  { label: "01 / 联系方式", background: "#172033", color: "#ffffff", x: 54, y: 81, width: 48, rotate: -1 },
+  { label: "05 / AI 产品项目", background: "#111310", color: "#ffffff", x: 52, y: 25, width: 58, rotate: -1 },
+  { label: "04 / 产品判断力", background: "#c7ff3d", color: "#111310", x: 46, y: 39, width: 54, rotate: 1 },
+  { label: "03 / 品味工程", background: "#ffffff", color: "#111310", x: 55, y: 53, width: 50, rotate: -1 },
+  { label: "02 / 关于七七", background: "#dfe2df", color: "#111310", x: 48, y: 67, width: 52, rotate: 1 },
+  { label: "01 / 联系方式", background: "#3b3e3a", color: "#ffffff", x: 54, y: 81, width: 48, rotate: -1 },
 ];
 
 export default function Home() {
@@ -23,7 +23,7 @@ export default function Home() {
             height="100%"
             speed={0.42}
             zoom={5.4}
-            backgroundColor="#edf3ff"
+            backgroundColor="#e8ebe8"
             brightness={0.86}
             colorRange={0.54}
             colorBias={0.56}

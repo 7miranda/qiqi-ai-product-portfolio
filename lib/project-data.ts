@@ -31,7 +31,7 @@ export const projects: Project[] = [
     thesis: "交付物不再是知识，而是用户能稳定拿到的结果。",
     metric: "2–3 → 10–20",
     metricLabel: "零基础学员稳定日产内容",
-    accent: "#ff3b30",
+    accent: "#c7ff3d",
     facts: ["66 条工作流", "4 个内容赛道", "2000+ 设计资产", "内容团队缩减 4 人"],
     problem: "课程教会了用户使用 ChatGPT、Midjourney 和剪映，却没有覆盖选题、脚本、视觉、发布、复盘与成交组成的完整任务链。真正的问题不是工具不会用，而是多个工具无法被组织成一条可运转的生产线。",
     approach: [
@@ -60,7 +60,7 @@ export const projects: Project[] = [
     thesis: "Agent 的壁垒不在于会回答，而在于长期保持一致的人格与判断。",
     metric: "600 万+",
     metricLabel: "单一 Agent 累计销售额",
-    accent: "#315cff",
+    accent: "#111310",
     facts: ["50 个智能体模块", "5 个成长阶段", "3 种媒介形态", "单日峰值 20 万"],
     problem: "内容供给与流量增长已经成立，但用户从“他说得对”到“我愿意付费”的信任链路仍然断裂。标准课程页和促销 SOP 无法承担人格化的持续信任建设。",
     approach: [
@@ -89,7 +89,7 @@ export const projects: Project[] = [
     thesis: "B 端 Agent 的核心指标不是自动化率，而是用户是否敢把任务交给它。",
     metric: "71% → 89%",
     metricLabel: "工具调用准确率",
-    accent: "#ff3b30",
+    accent: "#c7ff3d",
     facts: ["14 个后端工具接口", "200 条真实评测样本", "3 档协作模式", "10+ 分行试点"],
     problem: "平台已经记录高校、基金会、项目、协议和资金，但客户经理仍需在多个模块间查找和拼接数据。一份经营月报两天起步，70% 的时间消耗在数据搬运和排版。",
     approach: [
@@ -118,7 +118,7 @@ export const projects: Project[] = [
     thesis: "没有结构化的数据，就没有后续的 AI 产品化。",
     metric: "0 → 1",
     metricLabel: "多端产品定义与交付",
-    accent: "#f06a24",
+    accent: "#5c6159",
     facts: ["设备 / 告警 / 工单建模", "多端一致性体验", "动态风控规则引擎", "实时预警体系"],
     problem: "设备、车辆、工地、告警和维保信息分散在不同系统，运营人员无法获得一致的数据对象和风险判断。",
     approach: [
@@ -147,7 +147,7 @@ export const projects: Project[] = [
     thesis: "知识服务的规模化，始于流程和资产的结构化。",
     metric: "+28%",
     metricLabel: "商家成单率",
-    accent: "#315cff",
+    accent: "#111310",
     facts: ["多角色权限", "政企多端一致性", "知识资产结构化", "团队与交付管理"],
     problem: "政企服务流程长、角色多、权限复杂，知识依赖个人经验，跨端交付和团队协作缺少统一标准。",
     approach: [
