@@ -77,7 +77,7 @@ export default function ContactDrawer() {
                   <X />
                 </Button>
               </div>
-              <p className="contact-intro">适合联系我的话题：AI 产品经理、Agent 产品、企业 AI 落地、AIGC 商业化与高级 UI/UX 设计。</p>
+              <p className="contact-intro">适合联系我的话题：AI 产品经理、Agent 产品、企业 AI 落地、AIGC 商业化与企业级 AI 应用落地。</p>
               <div className="contact-rows">
                 {contacts.map((item) => {
                   const Icon = item.icon;

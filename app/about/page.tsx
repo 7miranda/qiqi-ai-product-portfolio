@@ -30,7 +30,7 @@ export default function AboutPage() {
         <div className="about-hero-copy">
           <span className="page-index">PROFILE / ABOUT MIRANDA</span>
           <h1>把复杂能力组织成<br /><em>清晰、可信</em>的系统</h1>
-          <p className="about-positioning">9 年多端复杂业务数字化产品经验，6 年高级 UI/UX 与全链路体验设计，近 3 年聚焦 AIGC 商业化与企业级 AI 应用落地。CCIA 高级 AIGC 内容创作师。</p>
+          <p className="about-positioning">9 年多端复杂业务数字化产品经验，近 3 年聚焦 AIGC 商业化与企业级 AI 应用落地。CCIA 高级 AIGC 内容创作师。</p>
           <p className="about-core-slogan">Test, Iterate, Then<br />Automate Everything</p>
           <div className="about-slogan-tags">{slogans.map((slogan) => <span key={slogan}>{slogan}</span>)}</div>
           <dl className="about-contacts">

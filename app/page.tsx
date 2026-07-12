@@ -66,7 +66,7 @@ export default function Home() {
         <div className="mast-inner">
           <div className="mast-copy-panel">
             <p className="mast-zone-label">IDEA 无限大厦 / 总控层</p>
-            <p className="mast-name">祁宁 / MIRANDA · 6 年高级 UI/UX × AI 商业化产品</p>
+            <p className="mast-name">祁宁 / MIRANDA · UI/UX · 9 年产品实践 · AI 商业化落地</p>
             <StaggeredText
               as="h1"
               text={"思 AI 所不能，\n见 AI 之所能。"}
