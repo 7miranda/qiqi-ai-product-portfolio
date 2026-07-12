@@ -101,7 +101,7 @@ export const projects: Project[] = [
     summary: "把高校经营平台从记录系统升级为能理解数据、发现机会并推动动作的可信 Agent。",
     thesis: "B 端 Agent 的核心指标不是自动化率，而是用户是否敢把任务交给它。",
     metric: "71% → 89%",
-    metricLabel: "工具调用精度",
+    metricLabel: "业务工具调用成功率",
     metricUnit: "",
     metricExplanation: "接到指令后 Agent 选对工具的比例，从 71% 提升至 89%——提升来自工具描述从后端语言重构为业务语言",
     shortProof: "调用准确率达 89%",
