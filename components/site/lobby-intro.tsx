@@ -1,19 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 
 export default function LobbyIntro() {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const pathname = usePathname();
 
   useEffect(() => {
     const path = window.location.pathname.replace(/\/+$/, "");
     const isHome = path === "" || path.endsWith("qiqi-ai-product-portfolio");
-    if (!isHome || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!isHome || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisible(false);
+      return;
+    }
     setVisible(true);
     const close = window.setTimeout(() => setVisible(false), 3000);
     return () => window.clearTimeout(close);
-  }, []);
+  }, [pathname]);
 
   return (
     <AnimatePresence>

@@ -21,30 +21,23 @@ export default function ElevatorTransition() {
   const [target, setTarget] = useState<Destination | null>(null);
 
   useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
-      const link = (event.target as HTMLElement).closest("a");
-      if (!link || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      const href = link.getAttribute("href");
-      if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:") || link.target === "_blank") return;
-      const url = new URL(link.href, window.location.href);
-      if (url.origin !== window.location.origin || url.pathname === window.location.pathname) return;
-      if (url.pathname === "/" || url.pathname === "/qiqi-ai-product-portfolio/") return;
-      event.preventDefault();
+    const handleNavigate = (event: Event) => {
+      const url = new URL((event as CustomEvent<{ url: string }>).detail.url, window.location.href);
       setTarget(destinationFor(url.pathname));
-      window.setTimeout(() => { window.location.href = url.href; }, 390);
+      window.setTimeout(() => { window.location.assign(url.href); }, 2420);
     };
-    document.addEventListener("click", handleClick);
-    return () => document.removeEventListener("click", handleClick);
+    window.addEventListener("idea:navigate", handleNavigate);
+    return () => window.removeEventListener("idea:navigate", handleNavigate);
   }, []);
 
   return (
     <>
       <AnimatePresence>
       {target ? (
-        <motion.div className="elevator-transition transition-glide" initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 1, 0] }} transition={{ duration: .38, times: [0, .24, .7, 1], ease: [.22, 1, .36, 1] }}>
-          <motion.div className="transition-glide-light" initial={{ x: "-125%" }} animate={{ x: "125%" }} transition={{ duration: .38, ease: [.22, 1, .36, 1] }} />
-          <motion.div className="transition-glide-label" initial={{ opacity: 0, y: 5 }} animate={{ opacity: [0, .88, 0], y: [5, 0, -3] }} transition={{ duration: .36, times: [0, .35, 1] }}>
-            <span>{target.title}</span><small>{target.subtitle}</small>
+        <motion.div className="elevator-transition transition-glide" initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 1, 0] }} transition={{ duration: 2.35, times: [0, .12, .86, 1], ease: [.22, 1, .36, 1] }}>
+          <motion.div className="transition-glide-light" initial={{ opacity: 0 }} animate={{ opacity: [0, .62, .62, 0] }} transition={{ duration: 2.3, times: [0, .2, .8, 1] }} />
+          <motion.div className="elevator-display elevator-display-static" initial={{ opacity: 0, scale: .985 }} animate={{ opacity: [0, 1, 1, 0], scale: [.985, 1, 1, 1] }} transition={{ duration: 2.3, times: [0, .14, .84, 1] }}>
+            <span>IDEA 无限大厦 / DESTINATION</span><strong>{target.title}</strong><small>{target.subtitle}</small>
           </motion.div>
         </motion.div>
       ) : null}

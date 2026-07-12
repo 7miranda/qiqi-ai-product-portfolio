@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, MouseEvent as ReactMouseEvent, ReactNode } from "react";
 
 export interface Navigation3Link {
   label: string;
@@ -41,7 +41,7 @@ const isExternal = (href: string) => /^https?:\/\//.test(href);
 const linkTarget = (href: string) =>
   isExternal(href) ? { target: "_blank" as const, rel: "noreferrer" } : {};
 
-function SmartLink({ href, children, className, style, onClick }: { href: string; children: ReactNode; className?: string; style?: CSSProperties; onClick?: () => void }) {
+function SmartLink({ href, children, className, style, onClick }: { href: string; children: ReactNode; className?: string; style?: CSSProperties; onClick?: (event: ReactMouseEvent<HTMLAnchorElement>) => void }) {
   if (isExternal(href) || href.startsWith("mailto:") || href.startsWith("tel:")) {
     return <a href={href} {...linkTarget(href)} className={className} style={style} onClick={onClick}>{children}</a>;
   }
@@ -72,6 +72,11 @@ export function Navigation3({
   const ctaBg = dark ? accent : "#0d0d0c";
   const ctaFg = "#090b08";
   const isActive = (href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const handleFloorNavigation = (event: ReactMouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href === "/" || isExternal(href) || href.startsWith("#") || isActive(href)) return;
+    event.preventDefault();
+    window.dispatchEvent(new CustomEvent("idea:navigate", { detail: { url: event.currentTarget.href } }));
+  };
 
   return (
     <nav className="relative z-50 w-full px-4 py-4 sm:px-7" style={{ color: ink }}>
@@ -112,6 +117,7 @@ export function Navigation3({
               <SmartLink
                 key={link.label}
                 href={link.href}
+                onClick={(event) => handleFloorNavigation(event, link.href)}
                 className={`nav-floor-tab px-5 py-2.5 text-base font-semibold transition-colors no-underline ${isActive(link.href) ? "is-active" : ""} ${pillHover}`}
                 style={{ color: isActive(link.href) ? "#090b08" : mutedInk, background: isActive(link.href) ? accent : undefined }}
               >
@@ -187,7 +193,10 @@ export function Navigation3({
                       <SmartLink
                         key={link.label}
                         href={link.href}
-                        onClick={() => setMobileMenuOpen(false)}
+                        onClick={(event) => {
+                          setMobileMenuOpen(false);
+                          handleFloorNavigation(event, link.href);
+                        }}
                         className={`nav-mobile-link block px-4 py-2.5 text-base font-medium transition-colors no-underline ${isActive(link.href) ? "is-active" : ""} ${pillHover}`}
                         style={{ color: isActive(link.href) ? "#090b08" : mutedInk, background: isActive(link.href) ? accent : undefined }}
                       >

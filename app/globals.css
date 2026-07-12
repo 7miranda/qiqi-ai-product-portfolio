@@ -1219,11 +1219,13 @@ body:has(.home-page) .current-floor { display:none; }
 .elevator-display { min-width:min(480px,84vw) !important; padding:28px 30px !important; box-shadow:0 20px 70px rgba(0,0,0,.38) !important; }
 .elevator-display strong { margin:14px 0 !important; font-size:clamp(34px,5vw,58px) !important; }
 .nav-contact { gap:0 !important; min-height:42px; padding-block:10px !important; }
-.transition-glide { background:rgba(5,7,6,.36) !important; backdrop-filter:none !important; }
-.transition-glide-light { position:absolute; inset:-20% auto -20% 35%; width:30%; background:linear-gradient(90deg,transparent,rgba(202,255,82,.15),rgba(255,255,255,.2),transparent); filter:blur(22px); transform:skewX(-12deg); }
+.transition-glide { background:radial-gradient(circle at 50% 48%,#1a211b 0%,#0b0e0c 38%,#050706 76%) !important; backdrop-filter:none !important; }
+.transition-glide-light { position:absolute; inset:0; background:radial-gradient(circle at 50% 50%,rgba(202,255,82,.1),transparent 34%); filter:blur(18px); }
 .transition-glide-label { position:relative; z-index:2; display:flex; align-items:baseline; gap:14px; padding:12px 18px; border-radius:999px; background:rgba(9,12,10,.72); color:#f4f5f0; box-shadow:0 16px 50px rgba(0,0,0,.24); }
 .transition-glide-label span { font-size:18px; font-weight:760; }
 .transition-glide-label small { color:rgba(244,245,240,.58); font-size:14px; }
+.elevator-display-static { min-width:min(500px,86vw) !important; padding:30px 32px !important; border-color:rgba(255,255,255,.2) !important; border-radius:9px !important; background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(8,11,9,.78)) !important; }
+.elevator-display-static strong { margin:15px 0 !important; font-size:clamp(36px,5vw,58px) !important; }
 @media (max-width:760px) {
   .mast-contact-rail { display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)) !important; min-height:52px !important; }
   .mast-contact-rail > * { min-width:0 !important; min-height:52px !important; padding:0 5px !important; font-size:10px !important; }

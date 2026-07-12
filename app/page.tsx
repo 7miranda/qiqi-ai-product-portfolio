@@ -14,7 +14,7 @@ const toolsOne = [
   { name: "DeepSeek", icon: "tool-logos/deepseek-color.svg" },
   { name: "Qwen", icon: "tool-logos/qwen-color.svg" },
   { name: "Kimi", icon: "tool-logos/kimi.svg" },
-  { name: "豆包", icon: "tool-logos/doubao-color.svg" },
+  { name: "豆包", icon: "tool-logos/doubao-official.png" },
   { name: "Cursor", icon: "tool-logos/cursor-official.svg" },
   { name: "Notion", icon: "tool-logos/notion-official.svg" },
 ];
