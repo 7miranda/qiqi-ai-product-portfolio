@@ -103,7 +103,7 @@ export const projects: Project[] = [
     metric: "71% → 89%",
     metricLabel: "业务工具调用成功率",
     metricUnit: "",
-    metricExplanation: "Agent 在自然语言指令下正确选择并调用业务工具的比例，从 71% 提升至 89%",
+    metricExplanation: "客户经理用日常语言提问时，Agent 准确理解意图并调取业务数据的成功率，从 71% 提升至 89%",
     shortProof: "业务工具调用成功率达 89%",
     accent: "#b8d8ff",
     facts: ["14 个后端工具接口", "200 条真实评测样本", "3 档协作模式", "10+ 分行试点"],
