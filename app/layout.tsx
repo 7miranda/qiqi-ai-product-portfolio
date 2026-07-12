@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import "@fontsource-variable/inter";
+import "@fontsource-variable/noto-sans-sc";
 import Navigation3 from "@/components/blocks/navigation-3";
 import ContactDrawer from "@/components/site/contact-drawer";
 import ElevatorTransition from "@/components/site/elevator-transition";
