@@ -5,20 +5,20 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 
 export default function LobbyIntro() {
-  const [visible, setVisible] = useState(true);
   const pathname = usePathname();
+  const normalizedPath = pathname.replace(/\/+$/, "");
+  const isHomePath = normalizedPath === "" || normalizedPath.endsWith("qiqi-ai-product-portfolio");
+  const [visible, setVisible] = useState(isHomePath);
 
   useEffect(() => {
-    const path = window.location.pathname.replace(/\/+$/, "");
-    const isHome = path === "" || path.endsWith("qiqi-ai-product-portfolio");
-    if (!isHome || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (!isHomePath || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setVisible(false);
       return;
     }
     setVisible(true);
     const close = window.setTimeout(() => setVisible(false), 3000);
     return () => window.clearTimeout(close);
-  }, [pathname]);
+  }, [isHomePath]);
 
   return (
     <AnimatePresence>
