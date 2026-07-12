@@ -70,7 +70,7 @@ button { font: inherit; }
 .floor-project small { overflow:hidden; margin-top:6px; color:var(--ink-muted); font-size:12px; line-height:1.35; text-overflow:ellipsis; white-space:nowrap; }
 .floor-metric { display:flex; flex-direction:column; justify-content:center; padding-left:16px; border-left:1px solid var(--ink); }
 .floor-metric strong { font-family:var(--display); font-size:32px; line-height:1; }
-.floor-metric small { margin-top:4px; color:var(--ink-muted); font-size:13px; line-height:1.4; font-weight:500; }
+.floor-metric small { display:block !important; margin-top:4px; color:var(--ink-muted); font-size:13px; line-height:1.4; font-weight:500; }
 .signature-caption { position:absolute; right:26px; bottom:14px; z-index:4; margin:0; padding:10px 14px; border-radius:4px; background:var(--ink); color:var(--lime); font-family:var(--mono); font-size:12px; font-weight:800; letter-spacing:.06em; }
 .mast-contact-rail { position: absolute; z-index: 12; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: 1.1fr .8fr 1.45fr .8fr; min-height: 50px; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); background: var(--ink); color: var(--lime); }
 .mast-contact-rail > * { display: flex; align-items: center; justify-content: center; padding: 0 18px; border-right: 1px solid rgba(188,203,181,.28); font-family: var(--mono); font-size: 12px; font-weight: 800; letter-spacing: .05em; }
