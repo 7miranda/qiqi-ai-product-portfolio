@@ -24,7 +24,7 @@ export default function ElevatorTransition() {
     const handleNavigate = (event: Event) => {
       const url = new URL((event as CustomEvent<{ url: string }>).detail.url, window.location.href);
       setTarget(destinationFor(url.pathname));
-      window.setTimeout(() => { window.location.assign(url.href); }, 2420);
+      window.setTimeout(() => { window.location.assign(url.href); }, 2360);
     };
     window.addEventListener("idea:navigate", handleNavigate);
     return () => window.removeEventListener("idea:navigate", handleNavigate);
@@ -34,11 +34,12 @@ export default function ElevatorTransition() {
     <>
       <AnimatePresence>
       {target ? (
-        <motion.div className="elevator-transition transition-glide" initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 1, 0] }} transition={{ duration: 2.35, times: [0, .12, .86, 1], ease: [.22, 1, .36, 1] }}>
-          <motion.div className="transition-glide-light" initial={{ opacity: 0 }} animate={{ opacity: [0, .62, .62, 0] }} transition={{ duration: 2.3, times: [0, .2, .8, 1] }} />
-          <motion.div className="elevator-display elevator-display-static" initial={{ opacity: 0, scale: .985 }} animate={{ opacity: [0, 1, 1, 0], scale: [.985, 1, 1, 1] }} transition={{ duration: 2.3, times: [0, .14, .84, 1] }}>
+        <motion.div className="elevator-transition transition-glide" initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 1, 0] }} transition={{ duration: 2.3, times: [0, .12, .9, 1], ease: [.22, 1, .36, 1] }}>
+          <motion.div className="transition-glide-light" initial={{ opacity: 0 }} animate={{ opacity: [0, .62, .62, 0] }} transition={{ duration: 2.28, times: [0, .2, .78, 1] }} />
+          <motion.div className="elevator-display elevator-display-static" initial={{ opacity: 0, scale: .985 }} animate={{ opacity: [0, 1, 1, 0], scale: [.985, 1, 1, 1] }} transition={{ duration: 2.28, times: [0, .14, .76, .9] }}>
             <span>IDEA 无限大厦 / DESTINATION</span><strong>{target.title}</strong><small>{target.subtitle}</small>
           </motion.div>
+          <motion.div className="transition-floor-opening" initial={{ opacity: 0, scaleX: .02 }} animate={{ opacity: [0, 0, .9, 0], scaleX: [.02, .02, 1, 1] }} transition={{ duration: 2.28, times: [0, .76, .92, 1], ease: [.22, 1, .36, 1] }} />
         </motion.div>
       ) : null}
       </AnimatePresence>

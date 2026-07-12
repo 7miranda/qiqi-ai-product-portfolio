@@ -1226,6 +1226,7 @@ body:has(.home-page) .current-floor { display:none; }
 .transition-glide-label small { color:rgba(244,245,240,.58); font-size:14px; }
 .elevator-display-static { min-width:min(500px,86vw) !important; padding:30px 32px !important; border-color:rgba(255,255,255,.2) !important; border-radius:9px !important; background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(8,11,9,.78)) !important; }
 .elevator-display-static strong { margin:15px 0 !important; font-size:clamp(36px,5vw,58px) !important; }
+.transition-floor-opening { position:absolute; z-index:4; top:50%; left:12%; width:76%; height:2px; transform-origin:center; background:linear-gradient(90deg,transparent,#caff52 18%,#fff 50%,#caff52 82%,transparent); box-shadow:0 0 22px rgba(202,255,82,.72),0 0 90px rgba(202,255,82,.34); }
 @media (max-width:760px) {
   .mast-contact-rail { display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)) !important; min-height:52px !important; }
   .mast-contact-rail > * { min-width:0 !important; min-height:52px !important; padding:0 5px !important; font-size:10px !important; }
