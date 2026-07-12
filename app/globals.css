@@ -166,7 +166,7 @@ body:has(.home-page) .sound-toggle { right:24px; bottom:134px; background:transp
 .project-cover-inner { position: relative; z-index: 3; display: flex; min-height: min(86svh,780px); flex-direction: column; justify-content: space-between; padding: 42px 0 32px; }
 .project-breadcrumb { display: flex; justify-content: space-between; gap: 20px; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; }
 .project-breadcrumb a { display: inline-flex; align-items: center; gap: 8px; }
-.project-cover-title { max-width: 960px; }
+.project-cover-title { max-width: 1200px; }
 .project-cover-focus { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr); align-items:end; gap:54px; }
 .project-cover-title > span { display:inline-block; padding:8px 11px; background:var(--lime); color:var(--ink); font-family:var(--mono); font-size:12px; font-weight:850; letter-spacing:.1em; }
 .project-cover-title h1 { margin: 18px 0 0; font-size: clamp(62px,7.8vw,112px); font-weight: 600; letter-spacing: .04em; line-height: 1.05; }
@@ -527,7 +527,7 @@ body { background:#070806; color:#f3f4ef; }
 .eyebrow,.page-index,.case-index,.elevator-heading span,.floor-no,.floor-project small,.floor-metric small,.signature-caption,.project-no,.project-title-block > span,.project-evidence span,.project-breadcrumb,.project-cover-title > span,.project-cover-proof > span,.project-cover-proof > small,.project-cover-meta span,.project-cover-meta small,.project-cover-meta strong,.project-thesis > span,.fact-row span,.system-layer-head > p,.system-asset-grid article > span,.system-asset-grid h3,.system-asset-grid p,.approach-item > span,.approach-item p,.reflection-section li::before,.next-note span,.next-project span,.about-contacts dt,.about-contacts dd,.about-stack-panel > span,.workflow-exhibit-visual strong,.workflow-exhibit-copy small,.workflow-exhibit-copy > span,.workflow-exhibit-copy > a,.persona-stage-row span,.persona-proof-grid article span,.persona-proof-grid p,.persona-proof-grid strong,.stardime-flow span { font-size:16px; }
 body:has(.home-page) .current-floor { display:none; }
 .signature-caption { display:none; }
-.project-cover-title h1 { max-width:1000px; font-size:clamp(62px,6.8vw,100px); line-height:1.05; text-wrap:balance; }
+.project-cover-title h1 { max-width:1200px; font-size:clamp(62px,6.8vw,100px); line-height:1.05; text-wrap:balance; }
 .system-layer-head h2 { font-size:clamp(34px,3.4vw,48px); text-wrap:balance; }
 .current-floor { min-width:210px; padding:12px 14px; }
 .current-floor > span,.current-floor strong,.current-floor small { font-size:16px; }
