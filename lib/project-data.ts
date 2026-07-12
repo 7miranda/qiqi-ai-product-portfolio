@@ -99,7 +99,7 @@ export const projects: Project[] = [
     timeframe: "2025 — 至今",
     role: "AI 产品经理",
     summary: "把高校经营平台从记录系统，升级为理解数据、发现机会的经营大脑。",
-    thesis: "B 端 Agent 的核心指标不是自动化，是信任。",
+    thesis: "B 端 Agent 的关键不是替代率，而是采纳率——采纳的前提，是信任。",
     metric: "71% → 89%",
     metricLabel: "业务工具调用成功率",
     metricUnit: "",
