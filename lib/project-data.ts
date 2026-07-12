@@ -98,7 +98,7 @@ export const projects: Project[] = [
     category: "Enterprise Agent / 人机协作",
     timeframe: "2025 — 至今",
     role: "AI 产品经理",
-    summary: "把高校经营平台从记录系统升级为能理解数据、发现机会、推动动作的可信 Agent。",
+    summary: "把高校经营平台从记录系统，升级为理解数据、发现机会的经营大脑。",
     thesis: "B 端 Agent 的核心指标：不是自动化，而是用户是否敢把任务交给他。",
     metric: "71% → 89%",
     metricLabel: "业务工具调用成功率",
