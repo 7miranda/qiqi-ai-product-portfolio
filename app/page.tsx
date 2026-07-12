@@ -5,33 +5,34 @@ import StaggeredText from "@/components/react-bits/staggered-text";
 import About5 from "@/components/blocks/about-5";
 import PortfolioAgent from "@/components/site/portfolio-agent";
 import ProjectElevator from "@/components/site/project-elevator";
+import { assetPath } from "@/lib/asset-path";
 
 const toolsOne = [
-  { name: "ChatGPT", icon: "tool-logos/openai.svg" },
-  { name: "Claude", icon: "tool-logos/claude.svg" },
-  { name: "Claude Code", icon: "tool-logos/claude-code.svg" },
-  { name: "Gemini", icon: "tool-logos/gemini-color.svg" },
-  { name: "DeepSeek", icon: "tool-logos/deepseek-color.svg" },
-  { name: "Qwen", icon: "tool-logos/qwen-color.svg" },
-  { name: "Kimi", icon: "tool-logos/kimi.svg" },
-  { name: "豆包", icon: "tool-logos/doubao-official.png" },
-  { name: "Cursor", icon: "tool-logos/cursor-official.svg" },
-  { name: "Notion", icon: "tool-logos/notion-official.svg" },
+  { name: "ChatGPT", icon: assetPath("tool-logos/openai.svg") },
+  { name: "Claude", icon: assetPath("tool-logos/claude.svg") },
+  { name: "Claude Code", icon: assetPath("tool-logos/claude-code.svg") },
+  { name: "Gemini", icon: assetPath("tool-logos/gemini-color.svg") },
+  { name: "DeepSeek", icon: assetPath("tool-logos/deepseek-color.svg") },
+  { name: "Qwen", icon: assetPath("tool-logos/qwen-color.svg") },
+  { name: "Kimi", icon: assetPath("tool-logos/kimi.svg") },
+  { name: "豆包", icon: assetPath("tool-logos/doubao-color.svg") },
+  { name: "Cursor", icon: assetPath("tool-logos/cursor-official.svg") },
+  { name: "Notion", icon: assetPath("tool-logos/notion-official.svg") },
 ];
 const toolsTwo = [
-  { name: "Seedream 5.0 Pro", icon: "tool-logos/bytedance-seed.ico" },
-  { name: "Seedance 2.0", icon: "tool-logos/bytedance-seed.ico" },
-  { name: "即梦 Dreamina", icon: "tool-logos/jimeng-color.svg" },
-  { name: "可灵 Kling AI", icon: "tool-logos/kling-color.svg" },
-  { name: "Sora", icon: "tool-logos/sora-color.svg" },
-  { name: "Nano Banana", icon: "tool-logos/nano-banana-color.svg" },
-  { name: "Midjourney", icon: "tool-logos/midjourney.svg" },
-  { name: "Runway", icon: "tool-logos/runway.svg" },
-  { name: "ComfyUI", icon: "tool-logos/comfyui.svg" },
-  { name: "CapCut", icon: "tool-logos/capcut.svg" },
-  { name: "Lovart", icon: "tool-logos/lovart.svg" },
-  { name: "Cloudflare", icon: "tool-logos/cloudflare-color.svg" },
-  { name: "Coze", icon: "tool-logos/coze.svg" },
+  { name: "Seedream 5.0 Pro", icon: assetPath("tool-logos/seedream.svg") },
+  { name: "Seedance 2.0", icon: assetPath("tool-logos/seedance.svg") },
+  { name: "即梦 Dreamina", icon: assetPath("tool-logos/jimeng-color.svg") },
+  { name: "可灵 Kling AI", icon: assetPath("tool-logos/kling-color.svg") },
+  { name: "Sora", icon: assetPath("tool-logos/sora-color.svg") },
+  { name: "Nano Banana", icon: assetPath("tool-logos/nano-banana-color.svg") },
+  { name: "Midjourney", icon: assetPath("tool-logos/midjourney.svg") },
+  { name: "Runway", icon: assetPath("tool-logos/runway.svg") },
+  { name: "ComfyUI", icon: assetPath("tool-logos/comfyui.svg") },
+  { name: "CapCut", icon: assetPath("tool-logos/capcut.svg") },
+  { name: "Lovart", icon: assetPath("tool-logos/lovart.svg") },
+  { name: "Cloudflare", icon: assetPath("tool-logos/cloudflare-color.svg") },
+  { name: "Coze", icon: assetPath("tool-logos/coze.svg") },
 ];
 
 export default function Home() {

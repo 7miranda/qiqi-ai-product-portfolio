@@ -7,6 +7,7 @@ import AnimatedList, { type AnimatedListItem } from "@/components/react-bits/ani
 import StaggeredText from "@/components/react-bits/staggered-text";
 import Footer8 from "@/components/blocks/footer-8";
 import ClickStack from "@/components/react-bits/click-stack";
+import { assetPath } from "@/lib/asset-path";
 import { getProject, projects } from "@/lib/project-data";
 
 export function generateStaticParams() {
@@ -107,7 +108,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               <ClickStack
                 items={personaWorkflows.map(({ index, title, body, image }) => (
                   <article className="workflow-exhibit" key={title}>
-                    <div className="workflow-exhibit-visual"><img src={`../../images/persona-agent/${image}`} alt={`${title}界面`} /><span>{index}</span><strong>LIVE WORKFLOW</strong></div>
+                    <div className="workflow-exhibit-visual"><img src={assetPath(`images/persona-agent/${image}`)} alt={`${title}界面`} /><span>{index}</span><strong>LIVE WORKFLOW</strong></div>
                     <div className="workflow-exhibit-copy"><small>狠人思维模型 / {index}</small><h3>{title}</h3><p>{body}</p><a href="https://sandbox-n0qp33ght-m2pzbvsv29-bots-projects.vercel.app/" target="_blank" rel="noreferrer">打开工作流 <ArrowUpRight /></a></div>
                   </article>
                 ))}
@@ -130,9 +131,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             {["01 认知觉醒","02 掌握底层规律","03 构建高维武器","04 主宰价值博弈","05 建立个人帝国"].map((stage) => <span key={stage}>{stage}</span>)}
           </div>
           <div className="persona-proof-grid">
-            <article><img src="../../images/persona-agent/evolution-blueprint.jpg" alt="狠人进化蓝图的五阶段内容架构" /><div><span>01 / 体系设计</span><h3>五阶段成长蓝图</h3><p>将零散内容整理成从认知到行动、再到价值与商业结果的递进路径。</p><strong>我负责：阶段体系、信息架构、内容与产品承接关系。</strong></div></article>
-            <article><img src="../../images/persona-agent/agent-entry-matrix.jpg" alt="多个狠人智能体与阶段入口" /><div><span>02 / 入口矩阵</span><h3>智能体与阶段入口</h3><p>不同二维码入口对应不同阶段任务，让用户不是“随便聊”，而是进入明确的问题场景。</p><strong>我负责：Agent 矩阵规划、入口策略、场景与知识模块映射。</strong></div></article>
-            <article><img src="../../images/persona-agent/agent-conversation.png" alt="狠人智能体输出行动任务的对话界面" /><div><span>03 / 交付体验</span><h3>人格化回答与行动任务</h3><p>回答同时包含判断、问题拆解和限时行动，把内容消费转化成下一步执行。</p><strong>我负责：人格一致性、回答结构、行动钩子、评测与反馈闭环。</strong></div></article>
+            <article><img src={assetPath("images/persona-agent/evolution-blueprint.jpg")} alt="狠人进化蓝图的五阶段内容架构" /><div><span>01 / 体系设计</span><h3>五阶段成长蓝图</h3><p>将零散内容整理成从认知到行动、再到价值与商业结果的递进路径。</p><strong>我负责：阶段体系、信息架构、内容与产品承接关系。</strong></div></article>
+            <article><img src={assetPath("images/persona-agent/agent-entry-matrix.jpg")} alt="多个狠人智能体与阶段入口" /><div><span>02 / 入口矩阵</span><h3>智能体与阶段入口</h3><p>不同二维码入口对应不同阶段任务，让用户不是“随便聊”，而是进入明确的问题场景。</p><strong>我负责：Agent 矩阵规划、入口策略、场景与知识模块映射。</strong></div></article>
+            <article><img src={assetPath("images/persona-agent/agent-conversation.png")} alt="狠人智能体输出行动任务的对话界面" /><div><span>03 / 交付体验</span><h3>人格化回答与行动任务</h3><p>回答同时包含判断、问题拆解和限时行动，把内容消费转化成下一步执行。</p><strong>我负责：人格一致性、回答结构、行动钩子、评测与反馈闭环。</strong></div></article>
           </div>
           <div className="stardime-flow"><span>用户目标</span><i>→</i><span>行动路线</span><i>→</i><span>工作流 / Prompt</span><i>→</i><span>狠人 Agent</span><i>→</i><span>产品承接与复盘</span></div>
         </section></>
@@ -141,7 +142,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       {project.slug === "persona-agent" ? (
         <section className="product-case-library">
           <div className="page-shell product-case-head"><span className="case-index">PRODUCT CASE LIBRARY / 产品案例库</span><h2>一款爆品，一套素材，<br />一组工作流</h2><p>案例库不是作品陈列，而是经过市场验证的选题、素材与生产路径。每个产品案例都能回到对应的工作流继续复用。</p></div>
-          <div className="page-shell product-case-grid">{productCases.map((item, index) => <a key={item.title} href={item.href} target="_blank" rel="noreferrer"><img src={`../../images/persona-agent/product-cases/${item.image}`} alt={`${item.title}产品封面`} /><span>0{index + 1}</span><strong>{item.title}</strong><ArrowUpRight /></a>)}</div>
+          <div className="page-shell product-case-grid">{productCases.map((item, index) => <a key={item.title} href={item.href} target="_blank" rel="noreferrer"><img src={assetPath(`images/persona-agent/product-cases/${item.image}`)} alt={`${item.title}产品封面`} /><span>0{index + 1}</span><strong>{item.title}</strong><ArrowUpRight /></a>)}</div>
         </section>
       ) : null}
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ClickStack from "@/components/react-bits/click-stack";
 import ParallaxPills from "@/components/react-bits/parallax-pills";
 import Footer8 from "@/components/blocks/footer-8";
+import { assetPath } from "@/lib/asset-path";
 
 export const metadata: Metadata = { title: "关于我" };
 
@@ -49,9 +50,9 @@ export default function AboutPage() {
         <div className="page-shell">
           <header className="dual-capability-head"><span className="page-index">TWO SIDES / ONE SYSTEM</span><h2>设计侧建立标准，体验侧让标准真正发生。</h2><p>从 D20 方法中吸收的不是视觉表皮，而是一套把专业判断沉淀为 AI 可执行规则的工作方式。</p></header>
           <div className="dual-side-grid capability-triptych">
-            <article className="capability-side product-side"><span>01 / PRODUCT SIDE</span><h3>产品侧 · 把业务目标转成产品系统</h3><ul><li>定义商业目标、价值规则与产品边界</li><li>拆解 Agent、Prompt、Skill 与知识资产</li><li>设计指标、评测门禁和增长回路</li></ul><img src="../images/d20/inspiration-system.jpg" alt="产品能力与业务知识系统" /></article>
-            <article className="capability-side design-side"><span>02 / DESIGN SIDE</span><h3>设计侧 · 把专业判断沉淀为标准</h3><ul><li>建设 Design Token、组件规范与页面模板</li><li>将灵感、概念和反例沉淀为生成资产</li><li>让动态生成兼容真实业务场景</li></ul><img src="../images/d20/spec-system.jpg" alt="设计规范与生成式界面资产系统" /></article>
-            <article className="capability-side experience-side"><span>03 / EXPERIENCE SIDE</span><h3>体验侧 · 让标准进入真实任务</h3><ul><li>围绕用户任务定义反馈、异常和确认点</li><li>建立人工接管与责任边界</li><li>从过程执行升级为路径与规则制定</li></ul><img src="../images/d20/knowledge-system.jpg" alt="AI 产品知识库与体验规则" /></article>
+            <article className="capability-side product-side"><span>01 / PRODUCT SIDE</span><h3>产品侧 · 把业务目标转成产品系统</h3><ul><li>定义商业目标、价值规则与产品边界</li><li>拆解 Agent、Prompt、Skill 与知识资产</li><li>设计指标、评测门禁和增长回路</li></ul><img src={assetPath("images/d20/inspiration-system.jpg")} alt="产品能力与业务知识系统" /></article>
+            <article className="capability-side design-side"><span>02 / DESIGN SIDE</span><h3>设计侧 · 把专业判断沉淀为标准</h3><ul><li>建设 Design Token、组件规范与页面模板</li><li>将灵感、概念和反例沉淀为生成资产</li><li>让动态生成兼容真实业务场景</li></ul><img src={assetPath("images/d20/spec-system.jpg")} alt="设计规范与生成式界面资产系统" /></article>
+            <article className="capability-side experience-side"><span>03 / EXPERIENCE SIDE</span><h3>体验侧 · 让标准进入真实任务</h3><ul><li>围绕用户任务定义反馈、异常和确认点</li><li>建立人工接管与责任边界</li><li>从过程执行升级为路径与规则制定</li></ul><img src={assetPath("images/d20/knowledge-system.jpg")} alt="AI 产品知识库与体验规则" /></article>
           </div>
         </div>
       </section>

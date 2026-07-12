@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   output: "export",
   basePath: isGitHubPages ? "/qiqi-ai-product-portfolio" : "",
   assetPrefix: isGitHubPages ? "/qiqi-ai-product-portfolio/" : "",
+  env: {
+    NEXT_PUBLIC_BASE_PATH: isGitHubPages ? "/qiqi-ai-product-portfolio" : "",
+  },
   trailingSlash: true,
   experimental: {
     viewTransition: true,
