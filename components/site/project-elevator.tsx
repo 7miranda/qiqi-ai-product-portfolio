@@ -6,7 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { projects } from "@/lib/project-data";
 
 const HOME_TITLES: Record<string, string> = {
-  "bingo-coze": "AIGC 内容增长引擎",
+  "bingo-coze": "AIGC 内容生产 · 增长双引擎",
   "persona-agent": "星辰维度 · 人格化商业 Agent",
   "enterprise-agent": "招商银行 · 高校经营决策 Agent",
   "iot-platform": "车联网 · 多端风控系统",
