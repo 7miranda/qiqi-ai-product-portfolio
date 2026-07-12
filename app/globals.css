@@ -169,7 +169,7 @@ body:has(.home-page) .sound-toggle { right:24px; bottom:134px; background:transp
 .project-cover-title { max-width: 960px; }
 .project-cover-focus { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr); align-items:end; gap:54px; }
 .project-cover-title > span { display:inline-block; padding:8px 11px; background:var(--lime); color:var(--ink); font-family:var(--mono); font-size:12px; font-weight:850; letter-spacing:.1em; }
-.project-cover-title h1 { margin: 18px 0 0; font-size: clamp(56px,7.2vw,104px); font-weight: 600; letter-spacing: -.02em; line-height: .94; }
+.project-cover-title h1 { margin: 18px 0 0; font-size: clamp(62px,7.8vw,112px); font-weight: 600; letter-spacing: .04em; line-height: 1.05; }
 .project-cover-title p { max-width: 760px; margin: 26px 0 0; font-size: 19px; line-height: 1.65; }
 .project-cover-proof { padding:24px 0 6px 28px; border-left:2px solid var(--ink); }
 .project-cover-proof > span { font-family:var(--mono); font-size:11px; font-weight:800; letter-spacing:.12em; }
@@ -527,7 +527,7 @@ body { background:#070806; color:#f3f4ef; }
 .eyebrow,.page-index,.case-index,.elevator-heading span,.floor-no,.floor-project small,.floor-metric small,.signature-caption,.project-no,.project-title-block > span,.project-evidence span,.project-breadcrumb,.project-cover-title > span,.project-cover-proof > span,.project-cover-proof > small,.project-cover-meta span,.project-cover-meta small,.project-cover-meta strong,.project-thesis > span,.fact-row span,.system-layer-head > p,.system-asset-grid article > span,.system-asset-grid h3,.system-asset-grid p,.approach-item > span,.approach-item p,.reflection-section li::before,.next-note span,.next-project span,.about-contacts dt,.about-contacts dd,.about-stack-panel > span,.workflow-exhibit-visual strong,.workflow-exhibit-copy small,.workflow-exhibit-copy > span,.workflow-exhibit-copy > a,.persona-stage-row span,.persona-proof-grid article span,.persona-proof-grid p,.persona-proof-grid strong,.stardime-flow span { font-size:16px; }
 body:has(.home-page) .current-floor { display:none; }
 .signature-caption { display:none; }
-.project-cover-title h1 { max-width:1000px; font-size:clamp(58px,6.4vw,94px); line-height:.96; text-wrap:balance; }
+.project-cover-title h1 { max-width:1000px; font-size:clamp(62px,6.8vw,100px); line-height:1.05; text-wrap:balance; }
 .system-layer-head h2 { font-size:clamp(34px,3.4vw,48px); text-wrap:balance; }
 .current-floor { min-width:210px; padding:12px 14px; }
 .current-floor > span,.current-floor strong,.current-floor small { font-size:16px; }
@@ -666,7 +666,7 @@ body:has(.home-page) .current-floor { display:none; }
 .project-cover::after { right:-4vw; bottom:11%; width:34vw; height:9px; border-radius:0; background:var(--guide-red); opacity:.9; box-shadow:0 28px 0 rgba(255,59,48,.18),0 -28px 0 rgba(255,59,48,.1); transform:rotate(-8deg); }
 .project-cover-grid { opacity:.52; background-size:64px 64px; }
 .project-cover-inner { min-height:min(76svh,700px); padding:34px 0 28px; }
-.project-cover-title h1 { margin-top:20px; font-size:clamp(54px,5.8vw,82px); line-height:1; }
+.project-cover-title h1 { margin-top:20px; font-size:clamp(58px,6.2vw,88px); line-height:1.06; }
 .project-cover-title p { margin-top:22px; }
 .project-cover-proof { border-color:var(--guide-red); }
 .project-cover-proof > .metric-unit { margin-top:18px; color:var(--guide-red); font-size:16px; font-weight:800; }
