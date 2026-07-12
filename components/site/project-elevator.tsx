@@ -10,7 +10,7 @@ const HOME_TITLES: Record<string, string> = {
   "persona-agent": "星辰维度 · 人格化商业 Agent",
   "enterprise-agent": "招商银行 · 高校经营决策 Agent",
   "iot-platform": "车联网 · 多端风控系统",
-  "government-knowledge": "益电工 · C 端履约与网校协同",
+  "government-knowledge": "益电工 · 电工服务与网校协同",
 };
 
 export default function ProjectElevator() {
