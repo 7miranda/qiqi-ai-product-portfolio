@@ -31,7 +31,7 @@ export default function ProjectElevator() {
           >
             <span className="floor-no">{project.floor}F</span>
             <span className="floor-project"><strong>{HOME_TITLES[project.slug]}</strong></span>
-            <span className="floor-metric"><strong>{project.metric}{project.metricUnit ? <em>{project.metricUnit}</em> : null}</strong><small>{project.shortProof}</small></span>
+            <span className="floor-metric"><strong>{project.metric}{project.metricUnit ? <em>{project.metricUnit}</em> : null}</strong><small>{project.metricLabel}</small></span>
             <ArrowUpRight />
           </Link>
         );
