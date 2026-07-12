@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 
 type Destination = { title: string; subtitle: string };
@@ -19,27 +20,42 @@ const destinationFor = (href: string): Destination => {
 
 export default function ElevatorTransition() {
   const [target, setTarget] = useState<Destination | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    const handleNavigate = (event: Event) => {
-      const url = new URL((event as CustomEvent<{ url: string }>).detail.url, window.location.href);
+    const timers: number[] = [];
+    const handleNavigate = (event: MouseEvent) => {
+      const origin = event.target;
+      if (!(origin instanceof Element)) return;
+      const link = origin.closest(".nav-floor-tab, .nav-mobile-link") as HTMLAnchorElement | null;
+      if (!link || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const url = new URL(link.href, window.location.href);
+      const logicalPath = url.pathname.replace(/^\/qiqi-ai-product-portfolio/, "") || "/";
+      if (logicalPath === "/" || url.pathname === window.location.pathname) return;
+      event.preventDefault();
       setTarget(destinationFor(url.pathname));
-      window.setTimeout(() => { window.location.assign(url.href); }, 2360);
+      timers.push(window.setTimeout(() => router.push(logicalPath), 1480));
+      timers.push(window.setTimeout(() => setTarget(null), 2440));
     };
-    window.addEventListener("idea:navigate", handleNavigate);
-    return () => window.removeEventListener("idea:navigate", handleNavigate);
-  }, []);
+    document.addEventListener("click", handleNavigate, true);
+    return () => {
+      document.removeEventListener("click", handleNavigate, true);
+      timers.forEach((timer) => window.clearTimeout(timer));
+    };
+  }, [router]);
 
   return (
     <>
       <AnimatePresence>
       {target ? (
-        <motion.div className="elevator-transition transition-glide" initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 1, 0] }} transition={{ duration: 2.3, times: [0, .12, .9, 1], ease: [.22, 1, .36, 1] }}>
-          <motion.div className="transition-glide-light" initial={{ opacity: 0 }} animate={{ opacity: [0, .62, .62, 0] }} transition={{ duration: 2.28, times: [0, .2, .78, 1] }} />
-          <motion.div className="elevator-display elevator-display-static" initial={{ opacity: 0, scale: .985 }} animate={{ opacity: [0, 1, 1, 0], scale: [.985, 1, 1, 1] }} transition={{ duration: 2.28, times: [0, .14, .76, .9] }}>
+        <motion.div className="elevator-transition transition-glide" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .18 }}>
+          <motion.div className="transition-floor-half transition-floor-half-top" initial={{ y: "0%" }} animate={{ y: ["0%", "0%", "-102%"] }} transition={{ duration: 2.38, times: [0, .76, 1], ease: [.76, 0, .24, 1] }} />
+          <motion.div className="transition-floor-half transition-floor-half-bottom" initial={{ y: "0%" }} animate={{ y: ["0%", "0%", "102%"] }} transition={{ duration: 2.38, times: [0, .76, 1], ease: [.76, 0, .24, 1] }} />
+          <motion.div className="transition-glide-light" initial={{ opacity: 0 }} animate={{ opacity: [0, .62, .62, 0] }} transition={{ duration: 2.24, times: [0, .2, .72, 1] }} />
+          <motion.div className="elevator-display elevator-display-static" initial={{ opacity: 0, scale: .975 }} animate={{ opacity: [0, 1, 1, 0], scale: [.975, 1, 1, .99] }} transition={{ duration: 2.12, times: [0, .15, .72, 1] }}>
             <span>IDEA 无限大厦 / DESTINATION</span><strong>{target.title}</strong><small>{target.subtitle}</small>
           </motion.div>
-          <motion.div className="transition-floor-opening" initial={{ opacity: 0, scaleX: .02 }} animate={{ opacity: [0, 0, .9, 0], scaleX: [.02, .02, 1, 1] }} transition={{ duration: 2.28, times: [0, .76, .92, 1], ease: [.22, 1, .36, 1] }} />
+          <motion.div className="transition-floor-opening" initial={{ opacity: 0, scaleX: .02 }} animate={{ opacity: [0, 0, 1, 0], scaleX: [.02, .02, 1, 1] }} transition={{ duration: 2.38, times: [0, .75, .9, 1], ease: [.22, 1, .36, 1] }} />
         </motion.div>
       ) : null}
       </AnimatePresence>

@@ -72,11 +72,6 @@ export function Navigation3({
   const ctaBg = dark ? accent : "#0d0d0c";
   const ctaFg = "#090b08";
   const isActive = (href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);
-  const handleFloorNavigation = (event: ReactMouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href === "/" || isExternal(href) || href.startsWith("#") || isActive(href)) return;
-    event.preventDefault();
-    window.dispatchEvent(new CustomEvent("idea:navigate", { detail: { url: event.currentTarget.href } }));
-  };
 
   return (
     <nav className="relative z-50 w-full px-4 py-4 sm:px-7" style={{ color: ink }}>
@@ -117,7 +112,6 @@ export function Navigation3({
               <SmartLink
                 key={link.label}
                 href={link.href}
-                onClick={(event) => handleFloorNavigation(event, link.href)}
                 className={`nav-floor-tab px-5 py-2.5 text-base font-semibold transition-colors no-underline ${isActive(link.href) ? "is-active" : ""} ${pillHover}`}
                 style={{ color: isActive(link.href) ? "#090b08" : mutedInk, background: isActive(link.href) ? accent : undefined }}
               >
@@ -193,10 +187,7 @@ export function Navigation3({
                       <SmartLink
                         key={link.label}
                         href={link.href}
-                        onClick={(event) => {
-                          setMobileMenuOpen(false);
-                          handleFloorNavigation(event, link.href);
-                        }}
+                        onClick={() => setMobileMenuOpen(false)}
                         className={`nav-mobile-link block px-4 py-2.5 text-base font-medium transition-colors no-underline ${isActive(link.href) ? "is-active" : ""} ${pillHover}`}
                         style={{ color: isActive(link.href) ? "#090b08" : mutedInk, background: isActive(link.href) ? accent : undefined }}
                       >
