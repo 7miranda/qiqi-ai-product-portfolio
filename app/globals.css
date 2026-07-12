@@ -272,9 +272,9 @@ body { background:#070806; color:#f3f4ef; }
 .mast-action-primary:hover { background:#f3f4ef; }
 .elevator-heading,.project-floor { border-color:rgba(188,203,181,.18); }
 .project-floor { position:relative; }
-.project-floor::before { position:absolute; inset:12px auto 12px -26px; width:2px; background:var(--lime); opacity:0; content:""; transform:scaleY(.2); transition:.3s ease; }
+.project-floor::before { position:absolute; inset:0; border:2px solid var(--lime); border-radius:4px; opacity:0; content:""; pointer-events:none; transition:opacity .3s ease; }
 .project-floor:hover { background:rgba(188,203,181,.07); }
-.project-floor:hover::before { opacity:1; transform:scaleY(1); box-shadow:0 0 18px var(--lime); }
+.project-floor:hover::before { opacity:1; box-shadow:0 0 24px rgba(188,203,181,.18); }
 .project-floor:hover .floor-metric strong { color:var(--accent); transform:translateX(4px); }
 .project-floor:hover .floor-no { background:var(--lime); color:#090a08; box-shadow:0 0 28px rgba(188,203,181,.28); }
 .project-floor:active { background:var(--lime); color:#090a08; transform:scale(.985); box-shadow:inset 0 5px 0 rgba(255,255,255,.35),inset 0 -6px 0 rgba(0,0,0,.24); }
