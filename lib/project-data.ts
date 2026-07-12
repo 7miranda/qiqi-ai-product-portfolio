@@ -134,7 +134,7 @@ export const projects: Project[] = [
     summary: "主导奔达机车三端系统、渣土监管平台与车队管理系统，从体验设计转向产品架构。",
     thesis: "没有结构化的数据，就没有后续的 AI 产品化。",
     metric: "−65%",
-    metricLabel: "风险处置率",
+    metricLabel: "风险事件漏报率",
     metricUnit: "",
     metricExplanation: "通过动态风控规则与实时预警，上线首月工地事故率下降 65%",
     shortProof: "事故率下降 65%",
