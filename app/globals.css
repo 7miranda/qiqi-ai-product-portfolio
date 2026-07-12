@@ -625,7 +625,7 @@ body:has(.home-page) .current-floor { display:none; }
 .floor-metric { display:grid; grid-template-columns:auto 1fr; align-items:end; gap:2px 8px; }
 .floor-metric .metric-unit { grid-column:1 / -1; margin:0; color:var(--guide-red); font-size:16px; font-weight:800; }
 .floor-metric strong { grid-column:1 / -1; font-size:29px; white-space:nowrap; }
-.floor-metric small:last-child { display:none; font-size:16px; }
+.floor-metric small:last-child { display:block; font-size:16px; }
 .home-toolbelt { height:112px; border-top:1px solid rgba(255,255,255,.12); background:rgba(7,8,7,.95); box-shadow:0 -18px 56px rgba(0,0,0,.3); }
 .toolbelt-handle { height:26px; font-size:16px; }
 .tool-chip { height:34px; border-radius:6px; background:transparent; }
