@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 const contacts = [
   { label: "电话", value: "18586312570", href: "tel:18586312570", icon: Phone },
-  { label: "邮箱", value: "yourandrea77@gmail.com", href: "mailto:yourandrea77@gmail.com", icon: Mail },
+  { label: "邮箱", value: "hi@77miranda.com", href: "mailto:hi@77miranda.com", icon: Mail },
   { label: "社交 ID", value: "DJ_MIRANDA", href: null, icon: MessageCircle },
 ];
 

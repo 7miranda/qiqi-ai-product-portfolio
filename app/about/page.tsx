@@ -35,7 +35,7 @@ export default function AboutPage() {
           <div className="about-slogan-tags">{slogans.map((slogan) => <span key={slogan}>{slogan}</span>)}</div>
           <dl className="about-contacts">
             <div><dt>PHONE</dt><dd><a href="tel:18586312570">185 8631 2570</a></dd></div>
-            <div><dt>EMAIL</dt><dd><a href="mailto:yourandrea77@gmail.com">yourandrea77@gmail.com</a></dd></div>
+            <div><dt>EMAIL</dt><dd><a href="mailto:hi@77miranda.com">hi@77miranda.com</a></dd></div>
             <div><dt>SOCIAL ID</dt><dd>DJ_MIRANDA</dd></div>
           </dl>
         </div>

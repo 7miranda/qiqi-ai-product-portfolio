@@ -20,7 +20,7 @@ const answerFor = (question: string): Answer => {
   if (/商业|增长|变现|岗位|适合/.test(q)) return { title: "商业化产品能力", body: "Miranda 擅长把业务规则、Agent 能力、体验标准和增长路径组织成可交付系统，覆盖 AIGC 工具增长、大模型应用产品化与行业 AI 解决方案。", href: "/about", link: "查看主理人档案" };
   if (/设计|体验|审美|ui|ux/.test(q)) return { title: "设计侧 × 体验侧", body: "设计侧把专业维度拆成知识库、规范、组件和资产；体验侧把复杂 AI 能力翻译为任务流、反馈和评测标准，两侧最终汇合为可复用的产品生产系统。", href: "/about", link: "查看双侧能力系统" };
   if (/方法|怎么做|流程|判断/.test(q)) return { title: "从问题到可信交付", body: "行动路线是 Test、Iterate、See、Automate：先验证任务，迭代真实反馈，看见小结果，再把可靠路径系统化。", href: "/method", link: "查看方法归纳" };
-  if (/联系|电话|邮箱|合作/.test(q)) return { title: "联系 Miranda", body: "电话 185 8631 2570；邮箱 yourandrea77@gmail.com；社交 ID：DJ_MIRANDA。适合交流 AI 产品、Agent 商业化、AIGC 工作流与复杂体验系统。" };
+  if (/联系|电话|邮箱|合作/.test(q)) return { title: "联系 Miranda", body: "电话 185 8631 2570；邮箱 hi@77miranda.com；社交 ID：DJ_MIRANDA。适合交流 AI 产品、Agent 商业化、AIGC 工作流与复杂体验系统。" };
   return { title: "先从项目证据开始", body: "你的问题更适合从项目结果里寻找答案。建议先看内容生产中枢与狠人思维模型：前者展示系统化生产，后者展示人格 Agent 如何建立信任并完成商业承接。", href: "/projects", link: "打开项目展厅" };
 };
 

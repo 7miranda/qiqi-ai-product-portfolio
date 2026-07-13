@@ -108,7 +108,7 @@ export default function Home() {
         <div className="mast-contact-rail">
           <span><UserRound />祁宁 <i>Miranda</i></span>
           <a href="tel:18586312570"><Phone />185 8631 2570</a>
-          <a href="mailto:yourandrea77@gmail.com"><Mail />yourandrea77@gmail.com</a>
+          <a href="mailto:hi@77miranda.com"><Mail />hi@77miranda.com</a>
           <span><MessageCircle />DJ_MIRANDA</span>
         </div>
         <aside className="home-toolbelt">
