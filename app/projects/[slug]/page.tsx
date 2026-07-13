@@ -24,6 +24,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   if (!project) notFound();
   const currentIndex = projects.findIndex((item) => item.slug === project.slug);
   const next = projects[(currentIndex + 1) % projects.length];
+  const showThesisSection = project.slug !== "enterprise-agent";
   const approachItems: AnimatedListItem[] = project.approach.map((item, index) => ({
     id: `${project.slug}-${index}`,
     content: (
@@ -83,11 +84,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </div>
       </section>
 
-      <section className="project-thesis page-shell">
-        <span>PRODUCT THESIS</span>
-        <h2>{project.thesis}</h2>
-        <div className="fact-row">{project.facts.map((fact) => <span key={fact}>{fact}</span>)}</div>
-      </section>
+      {showThesisSection ? (
+        <section className="project-thesis page-shell">
+          <span>PRODUCT THESIS</span>
+          <h2>{project.thesis}</h2>
+          <div className="fact-row">{project.facts.map((fact) => <span key={fact}>{fact}</span>)}</div>
+        </section>
+      ) : null}
 
       <section className="project-system-layer">
         <div className="page-shell system-layer-head"><span className="case-index">SYSTEM ASSETS / 产品化资产层</span><h2>不止交付功能，<br />同时建立可复用的规则。</h2><p>把一次项目中的判断沉淀为知识、规范、组件、评测与 Agent 能力，让后续迭代不再从零开始。</p></div>

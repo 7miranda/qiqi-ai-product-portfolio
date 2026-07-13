@@ -15,7 +15,7 @@ const answerFor = (question: string): Answer => {
   const q = question.toLowerCase();
   if (/狠人|思维|人格|智能体/.test(q)) return { title: "狠人思维模型", body: "这是最集中体现 Agent 产品化与商业承接的案例。Miranda 参与了五阶段成长体系、智能体矩阵、人格一致性、行动任务、评测反馈与自研后台的系统化设计。", href: "/projects/persona-agent", link: "查看完整产品系统" };
   if (/内容|课程|生产|工作流/.test(q)) return { title: "AIGC 内容生产中枢", body: "项目把选题、脚本、视觉、封面、发布、复盘和转化组织成 66 条工作流，让零基础学员的稳定日产从 3 条提升到 20 条。", href: "/projects/bingo-coze", link: "查看内容生产证据" };
-  if (/招商|基金|企业|可信|评测/.test(q)) return { title: "招商银行 · 校友基金会经营小助手", body: "通过三档协作边界、业务心智工具层和 200 条真实样本回归，工具调用准确率由 71% 提升到 89%，重点解决企业用户是否敢把任务交给 Agent。", href: "/projects/enterprise-agent", link: "查看企业 Agent 案例" };
+  if (/招商|基金|企业|可信|评测/.test(q)) return { title: "招商银行 · 校友基金会经营小助手", body: "把高校、基金会、项目、协议与资金数据组织成可查询、可溯源、可协作的经营辅助 Agent。核心不是替人决策，而是在可信边界内把查、看、写、审做稳。", href: "/projects/enterprise-agent", link: "查看企业 Agent 案例" };
   if (/益电工|电工|网校|订单|履约/.test(q)) return { title: "益电工 · C 端履约与网校协同平台", body: "该项目串联 C 端下单、客服订单处理、电工技术支持和同方向网校学习，形成服务、知识与培训一体化的业务闭环。", href: "/projects/government-knowledge", link: "查看服务协同案例" };
   if (/商业|增长|变现|岗位|适合/.test(q)) return { title: "商业化产品能力", body: "Miranda 擅长把业务规则、Agent 能力、体验标准和增长路径组织成可交付系统，覆盖 AIGC 工具增长、大模型应用产品化与行业 AI 解决方案。", href: "/about", link: "查看主理人档案" };
   if (/设计|体验|审美|ui|ux/.test(q)) return { title: "设计侧 × 体验侧", body: "设计侧把专业维度拆成知识库、规范、组件和资产；体验侧把复杂 AI 能力翻译为任务流、反馈和评测标准，两侧最终汇合为可复用的产品生产系统。", href: "/about", link: "查看双侧能力系统" };
