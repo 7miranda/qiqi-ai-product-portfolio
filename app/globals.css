@@ -1829,3 +1829,110 @@ img, video, canvas, svg { max-width:100%; }
     margin-top:4px !important;
   }
 }
+
+@media (max-width:760px) {
+  .mast-actions {
+    display:flex !important;
+    grid-template-columns:none !important;
+    width:100%;
+    gap:8px !important;
+    margin-top:10px !important;
+    padding:0 2px 2px !important;
+    overflow-x:auto;
+    overflow-y:hidden;
+    border:0 !important;
+    border-radius:0 !important;
+    background:transparent !important;
+    box-shadow:none !important;
+    backdrop-filter:none !important;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+
+  .mast-actions::-webkit-scrollbar {
+    display:none;
+  }
+
+  .mast-action,
+  .mast-actions > a {
+    display:inline-flex !important;
+    grid-template-columns:none !important;
+    width:auto !important;
+    min-width:max-content !important;
+    min-height:34px !important;
+    flex:0 0 auto;
+    align-items:center;
+    justify-content:center;
+    gap:7px !important;
+    padding:7px 11px !important;
+    border:1px solid rgba(255,255,255,.14) !important;
+    border-radius:999px !important;
+    background:rgba(255,255,255,.06) !important;
+    box-shadow:none !important;
+    color:rgba(244,245,240,.88) !important;
+    transform:none !important;
+  }
+
+  .mast-action:hover,
+  .mast-action:focus-visible {
+    border-color:rgba(202,255,82,.32) !important;
+    background:rgba(202,255,82,.1) !important;
+    transform:none !important;
+    box-shadow:0 0 18px rgba(202,255,82,.08) !important;
+  }
+
+  .mast-action-primary,
+  .mast-action-primary:hover,
+  .mast-action-primary:focus-visible {
+    border-color:rgba(202,255,82,.56) !important;
+    background:var(--acid) !important;
+    color:#070807 !important;
+  }
+
+  .mast-action svg:first-child {
+    display:block !important;
+    width:14px !important;
+    height:14px !important;
+    flex:0 0 14px;
+  }
+
+  .mast-action > svg:last-child {
+    display:none !important;
+  }
+
+  .mast-action span {
+    display:inline-flex !important;
+    width:auto !important;
+    min-width:0 !important;
+    align-items:center;
+    white-space:nowrap !important;
+  }
+
+  .mast-action strong {
+    display:inline !important;
+    font-size:13px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+  }
+
+  .mast-action small {
+    display:none !important;
+  }
+}
+
+@media (max-width:430px) {
+  .mast-actions {
+    gap:7px !important;
+    margin-top:9px !important;
+  }
+
+  .mast-action,
+  .mast-actions > a {
+    min-height:32px !important;
+    padding:7px 10px !important;
+  }
+
+  .mast-action strong {
+    font-size:12px !important;
+  }
+}
