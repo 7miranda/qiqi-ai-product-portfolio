@@ -73,7 +73,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             </div>
             <div className="project-cover-proof">
               <span>CORE EVIDENCE</span><strong>{project.metric}{project.metricUnit ? <em>{project.metricUnit}</em> : null}</strong><small>{project.metricExplanation}</small>
-              <p>{project.thesis}</p>
             </div>
           </div>
           <div className="project-cover-meta">
