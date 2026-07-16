@@ -13,15 +13,16 @@ type Exchange = { question: string; answer: Answer };
 
 const answerFor = (question: string): Answer => {
   const q = question.toLowerCase();
-  if (/狠人|思维|人格|智能体/.test(q)) return { title: "狠人思维模型", body: "这是最集中体现 Agent 产品化与商业承接的案例。Miranda 参与了五阶段成长体系、智能体矩阵、人格一致性、行动任务、评测反馈与自研后台的系统化设计。", href: "/projects/persona-agent", link: "查看完整产品系统" };
-  if (/内容|课程|生产|工作流/.test(q)) return { title: "AIGC 内容生产中枢", body: "项目把选题、脚本、视觉、封面、发布、复盘和转化组织成 66 条工作流，让零基础学员的稳定日产从 3 条提升到 20 条。", href: "/projects/bingo-coze", link: "查看内容生产证据" };
-  if (/招商|基金|企业|可信|评测/.test(q)) return { title: "招商银行 · 校友基金会经营小助手", body: "把高校、基金会、项目、协议与资金数据组织成可查询、可溯源、可协作的经营辅助 Agent。核心不是替人决策，而是在可信边界内把查、看、写、审做稳。", href: "/projects/enterprise-agent", link: "查看企业 Agent 案例" };
-  if (/益电工|电工|网校|订单|履约/.test(q)) return { title: "益电工 · C 端履约与网校协同平台", body: "该项目串联 C 端下单、客服订单处理、电工技术支持和同方向网校学习，形成服务、知识与培训一体化的业务闭环。", href: "/projects/government-knowledge", link: "查看服务协同案例" };
+  if (/狠人|思维|人格|智能体/.test(q)) return { title: "狠人思维模型", body: "这是星辰维度把学习陪伴能力复用到个人成长场景的商业化 Agent。重点不是会聊天，而是用五阶段体系、50 个问题场景、人设知识、标准问答和 Bad Case 回流，让人格、判断和行动建议保持稳定。", href: "/projects/persona-agent", link: "查看完整产品系统" };
+  if (/内容|课程|生产|工作流|星辰/.test(q)) return { title: "星辰维度 · AI 学习与内容生产系统", body: "项目从用户“不知道学什么”和“学完交付不了结果”两个问题切入，建立学习规划、阶段陪伴、视觉/内容/直播三类生成能力和质量评测闭环，最终沉淀 66 条细分工作流。", href: "/projects/bingo-coze", link: "查看内容生产证据" };
+  if (/招商|基金|企业|可信|评测|金融/.test(q)) return { title: "招商银行 · 经营辅助 Agent", body: "这个项目把高校、基金会、项目、协议与资金经营数据，从记录系统升级为能查数据、看机会、写材料、做审核的 AI 经营助手。重点是数据溯源、工具调用、人机边界和八维评测。", href: "/projects/enterprise-agent", link: "查看企业 Agent 案例" };
+  if (/益电工|电工|网校|订单|履约|政企/.test(q)) return { title: "益电工 · 服务履约与网校协同", body: "这个案例体现复杂政企服务平台的产品基本功：把 C 端下单、客服订单处理、后台技术支持和同方向网校学习串成服务交付闭环。", href: "/projects/government-knowledge", link: "查看服务协同案例" };
+  if (/鸿泉|车联网|物联网|机车|多端/.test(q)) return { title: "鸿泉物联网 · 车联网多端产品系统", body: "这是早期产品基本功项目：从甲方模糊需求出发，拆解业务目标、用户路径、功能模块、字段规则和版本计划，推进 APP、小程序和后台的多端交付。", href: "/projects/iot-platform", link: "查看多端交付案例" };
   if (/商业|增长|变现|岗位|适合/.test(q)) return { title: "商业化产品能力", body: "Miranda 擅长把业务规则、Agent 能力、体验标准和增长路径组织成可交付系统，覆盖 AIGC 工具增长、大模型应用产品化与行业 AI 解决方案。", href: "/about", link: "查看主理人档案" };
   if (/设计|体验|审美|ui|ux/.test(q)) return { title: "设计侧 × 体验侧", body: "设计侧把专业维度拆成知识库、规范、组件和资产；体验侧把复杂 AI 能力翻译为任务流、反馈和评测标准，两侧最终汇合为可复用的产品生产系统。", href: "/about", link: "查看双侧能力系统" };
   if (/方法|怎么做|流程|判断/.test(q)) return { title: "从问题到可信交付", body: "行动路线是 Test、Iterate、See、Automate：先验证任务，迭代真实反馈，看见小结果，再把可靠路径系统化。", href: "/method", link: "查看方法归纳" };
   if (/联系|电话|邮箱|合作/.test(q)) return { title: "联系 Miranda", body: "电话 185 8631 2570；邮箱 hi@77miranda.com；社交 ID：DJ_MIRANDA。适合交流 AI 产品、Agent 商业化、AIGC 工作流与复杂体验系统。" };
-  return { title: "先从项目证据开始", body: "你的问题更适合从项目结果里寻找答案。建议先看内容生产中枢与狠人思维模型：前者展示系统化生产，后者展示人格 Agent 如何建立信任并完成商业承接。", href: "/projects", link: "打开项目展厅" };
+  return { title: "先从项目证据开始", body: "你的问题更适合从项目结果里寻找答案。建议先看星辰维度的学习与内容生产系统，再看狠人思维模型：前者展示 Agent + Workflow 如何稳定交付作品，后者展示人格 Agent 如何完成商业化复用。", href: "/projects", link: "打开项目展厅" };
 };
 
 export default function PortfolioAgent() {

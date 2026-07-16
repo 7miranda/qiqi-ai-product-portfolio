@@ -6,11 +6,11 @@ import { ArrowUpRight } from "lucide-react";
 import { projects } from "@/lib/project-data";
 
 const HOME_TITLES: Record<string, string> = {
-  "bingo-coze": "AIGC 内容生产 · 增长双引擎",
-  "persona-agent": "星辰维度 · 人格化商业 Agent",
-  "enterprise-agent": "招商银行 · 校友基金会经营 Agent",
-  "iot-platform": "车联网 · 多端风控系统",
-  "government-knowledge": "益电工 · 电工服务与网校协同",
+  "bingo-coze": "星辰维度 · 学习与内容生产系统",
+  "persona-agent": "狠人思维模型 · 人格化成长 Agent",
+  "enterprise-agent": "招商银行 · 经营辅助 Agent",
+  "iot-platform": "鸿泉物联网 · 车联网多端系统",
+  "government-knowledge": "益电工 · 服务履约与网校协同",
 };
 
 export default function ProjectElevator() {
