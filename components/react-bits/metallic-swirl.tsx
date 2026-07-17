@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useMemo, useCallback, useState } from "react";
+import React, { useRef, useMemo, useCallback, useEffect, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { cn } from "@/lib/utils";
 import * as THREE from "three";
@@ -289,6 +289,15 @@ const MetallicSwirl: React.FC<MetallicSwirlProps> = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [pointer, setPointer] = useState<[number, number]>([0.5, 0.5]);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => setReducedMotion(mediaQuery.matches);
+    updatePreference();
+    mediaQuery.addEventListener("change", updatePreference);
+    return () => mediaQuery.removeEventListener("change", updatePreference);
+  }, []);
 
   const handlePointerMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
@@ -311,6 +320,7 @@ const MetallicSwirl: React.FC<MetallicSwirlProps> = ({
     >
       <Canvas
         className="absolute inset-0 h-full w-full"
+        frameloop={reducedMotion ? "demand" : "always"}
         orthographic
         camera={{
           position: [0, 0, 1],
@@ -323,7 +333,7 @@ const MetallicSwirl: React.FC<MetallicSwirlProps> = ({
         gl={{ antialias: true, alpha: true }}
       >
         <SwirlScene
-          speed={speed}
+          speed={reducedMotion ? 0 : speed}
           zoom={zoom}
           iterations={iterations}
           sampleGap={sampleGap}
@@ -338,7 +348,7 @@ const MetallicSwirl: React.FC<MetallicSwirlProps> = ({
           bgRgb={bgRgb}
           opacity={opacity}
           pointer={pointer}
-          cursorInteraction={cursorInteraction}
+          cursorInteraction={cursorInteraction && !reducedMotion}
           cursorIntensity={cursorIntensity}
         />
       </Canvas>

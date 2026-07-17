@@ -15,11 +15,23 @@ const articles = [
     slug: "kimi-k3",
     number: "001",
     date: "2026.07.17",
+    dateTime: "2026-07-17",
     category: "模型观察",
     title: "Kimi K3 不是更大的聊天模型，而是一台正在成形的任务机器",
     summary: "从 K2.6、K2.7 Code 到 K3，拆解长上下文、Coding、原生多模态和知识工作如何汇成一个任务闭环。",
     tags: ["Kimi K3", "Agent", "AI 产品"],
     readingTime: "约 8 分钟",
+  },
+  {
+    slug: "gpt-5-6",
+    number: "002",
+    date: "2026.07.09",
+    dateTime: "2026-07-09",
+    category: "模型观察",
+    title: "GPT-5.6 不只是 Sol 更强，而是模型开始被组织成任务系统",
+    summary: "从 Sol、Terra、Luna 到 max、ultra，判断模型分层与多智能体调度如何改变 AI 产品设计。",
+    tags: ["GPT-5.6", "Multi-agent", "AI 产品"],
+    readingTime: "约 9 分钟",
   },
 ];
 
@@ -29,7 +41,7 @@ const articleItems = articles.map((article) => ({
     <Link className="news-card" href={`/insights/${article.slug}`}>
       <div className="news-card-meta">
         <span>MODEL NOTES / {article.number}</span>
-        <time dateTime="2026-07-17">{article.date}</time>
+        <time dateTime={article.dateTime}>{article.date}</time>
       </div>
       <div className="news-card-main">
         <span className="news-card-category">{article.category}</span>
