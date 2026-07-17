@@ -163,7 +163,7 @@ export function Navigation3({
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="nav-mobile-trigger flex h-12 w-12 items-center justify-center"
               style={{ background: dark ? "rgba(255,255,255,0.1)" : "#0d0d0c", color: "#ffffff" }}
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-label={mobileMenuOpen ? "关闭菜单" : "打开菜单"}
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
