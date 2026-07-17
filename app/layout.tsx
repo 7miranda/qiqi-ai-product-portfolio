@@ -20,7 +20,7 @@ const links = [
   { label: "总控层", href: "/" },
   { label: "项目展厅", href: "/projects" },
   { label: "方法归纳", href: "/method" },
-  { label: "模型观察", href: "/insights" },
+  { label: "最新资讯", href: "/insights" },
   { label: "主理人档案", href: "/about" },
 ];
 
