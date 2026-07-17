@@ -545,9 +545,11 @@ export const RadialLiquid = ({
 
     const startTime = performance.now();
     let lastTime = startTime;
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let reducedMotion = motionPreference.matches;
 
     const render = (time: number) => {
-      if (time - lastTime < 16) {
+      if (!reducedMotion && time - lastTime < 16) {
         animationFrameId = requestAnimationFrame(render);
         return;
       }
@@ -607,13 +609,33 @@ export const RadialLiquid = ({
       uniforms.uEdgeHighlight.value = edgeHighlight;
 
       renderer.render(scene, camera);
-      animationFrameId = requestAnimationFrame(render);
+      if (!reducedMotion) {
+        animationFrameId = requestAnimationFrame(render);
+      }
     };
 
-    animationFrameId = requestAnimationFrame(render);
+    const handleMotionPreference = (event: MediaQueryListEvent) => {
+      reducedMotion = event.matches;
+      cancelAnimationFrame(animationFrameId);
+
+      if (reducedMotion) {
+        render(startTime);
+      } else {
+        lastTime = performance.now();
+        animationFrameId = requestAnimationFrame(render);
+      }
+    };
+
+    motionPreference.addEventListener("change", handleMotionPreference);
+    if (reducedMotion) {
+      render(startTime);
+    } else {
+      animationFrameId = requestAnimationFrame(render);
+    }
 
     return () => {
       cancelAnimationFrame(animationFrameId);
+      motionPreference.removeEventListener("change", handleMotionPreference);
       resizeObserver.disconnect();
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("mouseleave", handleMouseLeave);
