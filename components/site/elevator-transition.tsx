@@ -14,6 +14,7 @@ const destinationFor = (href: string): Destination => {
   if (href.includes("government-knowledge")) return { title: "益电工", subtitle: "订单、履约、技术支持与网校协同" };
   if (href.includes("projects")) return { title: "项目展厅", subtitle: "五个完整案例 · 从结果进入方法" };
   if (href.includes("method")) return { title: "方法归纳", subtitle: "TEST → ITERATE → SEE → AUTOMATE" };
+  if (href.includes("insights")) return { title: "最新资讯", subtitle: "记录模型变化 · 判断产品方向" };
   if (href.includes("about")) return { title: "主理人档案", subtitle: "9 年数字化产品经验 · 近 3 年 AI 商业化落地" };
   return { title: "总控层", subtitle: "思 AI 所不能，见 AI 之所能" };
 };
