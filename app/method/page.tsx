@@ -36,6 +36,29 @@ export default function MethodPage() {
         ctaHref="/projects"
         footnote="方法并非抽象框架，五个项目分别展示了它在 AIGC、商业 Agent、企业 Agent、IoT 与政企服务中的落地。"
       />
+      <section className="w-full bg-[#090b08] px-5 py-20 text-[#f4f2ee] sm:px-8 sm:py-28 lg:px-12 lg:py-32">
+        <div className="mx-auto grid w-full max-w-[1400px] gap-10 border-t border-white/20 pt-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+          <div>
+            <p className="mono-label m-0 text-[#caff52]">INTERACTIVE METHOD DEMO / 01</p>
+            <h2 className="zh-heading mt-8 text-[clamp(42px,5vw,78px)] font-semibold leading-[1.05] tracking-[-0.04em]">
+              招行 AI 经营小助<br /><span className="text-[#ff3b30]">RAG 评测与归因</span>
+            </h2>
+          </div>
+          <div className="flex flex-col justify-between border-l border-white/20 pl-6 sm:pl-10">
+            <p className="zh-copy max-w-[680px] text-[17px] leading-[1.8] text-white/65 sm:text-[19px]">
+              从“南京大学基金会拜访 Brief”还原结构化接口、知识库召回、权限校验与 Bad Case 回归。可切换修复前后，观察旧制度误召回和 Chunk 过碎如何影响最终答案。
+            </p>
+            <div className="mt-10 flex flex-wrap gap-3 font-mono text-[12px] text-white/60">
+              <span className="border border-white/20 px-4 py-2">14 个工具</span>
+              <span className="border border-white/20 px-4 py-2">200 条样本</span>
+              <span className="border border-white/20 px-4 py-2">71% → 89%</span>
+            </div>
+            <a className="cursor-target mt-10 inline-flex min-h-14 w-fit items-center gap-10 bg-[#caff52] px-6 text-[14px] font-semibold text-[#090b08] no-underline transition-transform hover:translate-x-1" href="/method/rag-evaluation/">
+              打开交互 Demo <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </section>
       <Footer8 dense statement="Prompt to Product：先证明结果，再把可靠路径自动化。" actionLabel="查看项目" actionHref="/projects" />
     </main>
   );
