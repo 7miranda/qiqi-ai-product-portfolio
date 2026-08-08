@@ -96,6 +96,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </section>
       ) : null}
 
+      {project.slug !== "enterprise-agent" ? <>
       <section className="project-system-layer">
         <div className="page-shell system-layer-head"><span className="case-index">SYSTEM ASSETS / 产品化资产层</span><h2>不止交付功能，<br />同时建立可复用的规则。</h2><p>把一次项目中的判断沉淀为知识、规范、组件、评测与 Agent 能力，让后续迭代不再从零开始。</p></div>
         <div className="page-shell system-asset-grid">{systemAssets.map(([name, description], index) => <article key={name} className={index === 0 || index === 3 ? "is-key" : ""}><span>0{index + 1}</span><h3>{name}</h3><p>{description}</p></article>)}</div>
@@ -211,6 +212,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <div><h2>如果重来，会更早做什么。</h2><ol>{project.reflection.map((item) => <li key={item}>{item}</li>)}</ol><div className="next-note"><span>NEXT</span><p>{project.next}</p></div></div>
         </div>
       </section>
+      </> : null}
 
       <Link className="next-project" href={`/projects/${next.slug}`}>
         <span>下一个项目</span><strong>{next.title}</strong><ArrowUpRight />
