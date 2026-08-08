@@ -37,7 +37,7 @@ export default function MethodPage() {
               招行 AI 经营小助<br /><span className="text-[#ff3b30]">RAG 评测与归因</span>
             </h2>
             <p className="zh-copy mt-7 max-w-[720px] text-[16px] leading-[1.8] text-white/65 sm:text-[18px]">
-              从“南京大学基金会拜访 Brief”还原结构化接口、知识库召回、权限校验与 Bad Case 回归。切换修复前后，直接观察旧制度误召回与 Chunk 过碎如何影响最终答案。
+              评测回归已经并入“招商银行 AI 经营助手”完整项目，成为验证系统子项目。从业务建模、数据与知识、Agent 编排、工具权限一路下钻到 Bad Case 回归。
             </p>
           </div>
           <div className="flex flex-col justify-between border-t border-white/20 bg-white/[0.04] p-7 sm:p-10 lg:border-l lg:border-t-0 lg:p-14">
@@ -51,10 +51,10 @@ export default function MethodPage() {
             </div>
             <a
               className="cursor-target mt-9 inline-flex min-h-16 w-full items-center justify-between bg-[#caff52] px-6 text-[15px] font-bold no-underline transition-transform hover:-translate-y-1"
-              href="/method/rag-evaluation/"
+              href="/projects/enterprise-agent/"
               style={{ color: "#090b08" }}
             >
-              打开交互 Demo <span className="text-[20px]" aria-hidden="true">↗</span>
+              进入招商银行完整项目 <span className="text-[20px]" aria-hidden="true">↗</span>
             </a>
           </div>
         </div>

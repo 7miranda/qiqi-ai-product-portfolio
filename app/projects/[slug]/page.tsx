@@ -9,6 +9,7 @@ import Footer8 from "@/components/blocks/footer-8";
 import ClickStack from "@/components/react-bits/click-stack";
 import { assetPath } from "@/lib/asset-path";
 import { getProject, projects } from "@/lib/project-data";
+import EnterpriseAgentProject from "@/components/site/enterprise-agent-project";
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
@@ -81,8 +82,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             <div><span>TIME</span><strong>{project.timeframe}</strong></div>
             <div className="cover-evidence"><span>PROJECT SCALE</span><strong>{project.facts[0]}</strong><small>{project.facts.slice(1, 3).join(" · ")}</small></div>
           </div>
+          {project.slug === "enterprise-agent" ? <a className="enterprise-cover-link" href="#project-overview">查看项目全景 <ArrowUpRight /></a> : null}
         </div>
       </section>
+
+      {project.slug === "enterprise-agent" ? <EnterpriseAgentProject /> : null}
 
       {showThesisSection ? (
         <section className="project-thesis page-shell">
