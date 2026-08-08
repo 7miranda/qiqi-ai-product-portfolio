@@ -11,7 +11,7 @@ export type EnterpriseModule = {
   evidence: string[];
   flow: string[];
   related: string[];
-  externalLab?: boolean;
+  hasTraceLab?: boolean;
 };
 
 export const enterpriseModules: EnterpriseModule[] = [
@@ -86,7 +86,7 @@ export const enterpriseModules: EnterpriseModule[] = [
     evidence: ["单次迭代验证周期从约 2 周缩短至 3 天", "每次 Prompt、Tool 或知识策略变更均可全量回归", "问题可以落到责任层与修复动作"],
     flow: ["固定样本", "批量执行", "八维评分", "Trace 归因", "修复复测", "UAT 放行"],
     related: ["agent-orchestration", "bad-case"],
-    externalLab: true,
+    hasTraceLab: true,
   },
   {
     slug: "bad-case",
@@ -105,7 +105,7 @@ export const enterpriseModules: EnterpriseModule[] = [
     evidence: ["旧制度不再进入候选集", "开户材料完整覆盖且附带依据", "项目进度、制度与纪要三路结果统一进入 Brief"],
     flow: ["复合 Query", "实体与权限", "双路获取", "版本过滤", "父子 Chunk", "回归通过"],
     related: ["data-knowledge", "evaluation-regression"],
-    externalLab: true,
+    hasTraceLab: true,
   },
   {
     slug: "ai-pm-ownership",

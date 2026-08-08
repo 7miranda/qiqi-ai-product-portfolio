@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight, ArrowUpRight, CheckCircle2 } from "lucide-react"
 import Footer8 from "@/components/blocks/footer-8";
 import { enterpriseModules, getEnterpriseModule } from "@/lib/enterprise-agent-modules";
 
-const labUrl = "https://xingchen-rag-lab.yourandrea77.chatgpt.site/#trace";
+const labUrl = "/projects/enterprise-agent/trace-lab/#trace";
 
 export function generateStaticParams() {
   return enterpriseModules.map((item) => ({ module: item.slug }));
@@ -39,7 +39,7 @@ export default async function EnterpriseModulePage({ params }: { params: Promise
 
       <section className="enterprise-module-section enterprise-module-assets"><div className="page-shell"><header><span>03 / DELIVERABLES</span><h2>交付物与验收证据</h2></header><div className="enterprise-module-asset-grid"><div><strong>我交付的产品资产</strong>{item.deliverables.map(value => <p key={value}><ArrowRight />{value}</p>)}</div><div><strong>可以被验证的结果</strong>{item.evidence.map(value => <p key={value}><CheckCircle2 />{value}</p>)}</div></div></div></section>
 
-      {item.externalLab ? <section className="enterprise-module-lab"><div className="page-shell enterprise-module-lab-grid"><div><span>LIVE SUBPROJECT / TRACE LAB</span><h2>进入评测回归与 Bad Case 实验页</h2><p>查看完整 Trace、召回片段、版本过滤、Chunk 策略和修复前后对比。该实验页由独立站点承载，因此会在新窗口打开。</p></div><a href={labUrl} target="_blank" rel="noreferrer">打开 Trace 实验页 <ArrowUpRight /></a></div></section> : null}
+      {item.hasTraceLab ? <section className="enterprise-module-lab"><div className="page-shell enterprise-module-lab-grid"><div><span>INTERNAL SUBPROJECT / TRACE LAB</span><h2>进入招行评测回归与 Bad Case 实验页</h2><p>继续在招商银行项目内部查看完整 Trace、召回片段、版本过滤、Chunk 策略和修复前后对比。</p></div><Link href={labUrl}>打开招行 Trace 实验页 <ArrowUpRight /></Link></div></section> : null}
 
       <section className="enterprise-module-related"><div className="page-shell"><span>RELATED MODULES / 关联模块</span><div>{related.map(module => module ? <Link key={module.slug} href={`/projects/enterprise-agent/${module.slug}/`}><small>{module.index}</small><strong>{module.title}</strong><ArrowUpRight /></Link> : null)}</div></div></section>
       <Footer8 compact statement="返回项目全景，继续查看招行 AI 经营助手的完整交付链路。" actionLabel="返回项目全景" actionHref="/projects/enterprise-agent/" />
