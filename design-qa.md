@@ -87,3 +87,31 @@ Accepted deviations:
 - P3: replace `WENWO.STUDIO` and the anonymized case copy with the candidate's real name, role history, and evidence when available.
 
 final result: passed
+
+---
+
+## 招商银行模块二级页 · 2026-08-09
+
+- Source visual: `/var/folders/pb/g4ry1k6s07ncx5zpfyw21mj00000gn/T/codex-clipboard-01f18f46-f8a3-411f-b0b4-cca95fda6e84.png`
+- Existing design system: `http://77miranda.com/projects/enterprise-agent/`
+- Implementation: `http://localhost:3001/projects/enterprise-agent/evaluation-regression/`
+- Latest desktop capture: `/tmp/cmb-module-detail-qa.png`
+- Checked viewports: desktop default and `390 × 844` mobile.
+
+### Fidelity and hierarchy
+
+- Passed: six independent second-level routes preserve the site's near-black, signal-red, and fluorescent-lime system.
+- Passed: every page follows the same information hierarchy—problem, product judgment, AI PM ownership, decisions, deliverables, evidence, and related modules.
+- Passed: the large Chinese title, hard grid, square panels, red risk emphasis, and lime action state match the parent project's visual grammar.
+- Passed: no blue or white content blocks were introduced.
+
+### Interaction and responsive checks
+
+- Passed: all six overview module CTAs resolve to static exported detail routes.
+- Passed: evaluation and Bad Case pages link to `https://xingchen-rag-lab.yourandrea77.chatgpt.site/#trace` in a new window.
+- Passed: mobile measurement reports `scrollWidth === clientWidth` (`390 === 390`).
+- Passed: build generated all six routes and browser console contained no runtime errors; the only warning is Next.js's non-blocking smooth-scroll annotation.
+
+No actionable P0, P1, or P2 issues remain.
+
+final result: passed

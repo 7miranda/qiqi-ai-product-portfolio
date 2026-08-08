@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { ArrowRight, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import BlurHighlight from "@/components/react-bits/blur-highlight";
 import { Button } from "@/components/ui/button";
@@ -38,7 +39,7 @@ export default function EnterpriseAgentProject() {
       </section>
 
       <section className="enterprise-phase-section">
-        <div className="page-shell enterprise-section-head"><span>01 / DELIVERY MAP</span><h2>五个阶段，AI 产品经理分别做什么</h2><p>点击阶段查看我的关键动作、交付物与验收证据。</p></div>
+        <div className="page-shell enterprise-section-head"><span>01 / DELIVERY MAP</span><h2>五个阶段，AI 产品经理分别做什么</h2><div><p>点击阶段查看我的关键动作、交付物与验收证据。</p><Link className="enterprise-module-link" href="/projects/enterprise-agent/business-model/">进入业务诊断二级页 <ArrowUpRight /></Link></div></div>
         <div className="page-shell enterprise-phase-tabs" role="tablist" aria-label="项目阶段">
           {phases.map((item, index) => <Button key={item.no} role="tab" aria-selected={activePhase === index} className={activePhase === index ? "is-active" : ""} onClick={() => setActivePhase(index)}><span>{item.no}</span><strong>{item.title}</strong></Button>)}
         </div>
@@ -50,7 +51,7 @@ export default function EnterpriseAgentProject() {
       </section>
 
       <section className="enterprise-data-section">
-        <div className="page-shell enterprise-section-head enterprise-on-dark"><span>02 / DATA & KNOWLEDGE</span><h2>结构化事实与非结构化知识，双路融合。</h2><p>实时业务状态不能复制进知识库当作事实源；制度与纪要也不能交给普通接口按字段查询。</p></div>
+        <div className="page-shell enterprise-section-head enterprise-on-dark"><span>02 / DATA & KNOWLEDGE</span><h2>结构化事实与非结构化知识，双路融合。</h2><div><p>实时业务状态不能复制进知识库当作事实源；制度与纪要也不能交给普通接口按字段查询。</p><Link className="enterprise-module-link" href="/projects/enterprise-agent/data-knowledge/">进入数据与知识二级页 <ArrowUpRight /></Link></div></div>
         <div className="page-shell enterprise-data-grid">
           <article><span>STRUCTURED DATA</span><h3>回答“现在是什么状态”</h3><dl><dt>内容</dt><dd>客户、账户、资金、项目、协议、任务状态</dd><dt>查询</dt><dd>按 customer_id、日期和状态精确查询</dd><dt>来源</dt><dd>业务系统是 Source of Truth</dd><dt>调用</dt><dd>API / SQL / Business Tool</dd></dl></article>
           <article><span>KNOWLEDGE / RAG</span><h3>回答“规则是什么、该怎么做”</h3><dl><dt>内容</dt><dd>制度、产品手册、案例、拜访纪要、FAQ</dd><dt>查询</dt><dd>关键词 + 向量召回 + Rerank</dd><dt>来源</dt><dd>最新有效、当前客户、授权范围内的文档</dd><dt>调用</dt><dd>RAG Retrieval Tool</dd></dl></article>
@@ -59,7 +60,7 @@ export default function EnterpriseAgentProject() {
       </section>
 
       <section className="enterprise-capability-section">
-        <div className="page-shell enterprise-section-head"><span>03 / AGENT ORCHESTRATION</span><h2>Agent 决定调用谁，Workflow 保证怎么做。</h2><p>开放判断交给 Agent，强依赖和高风险步骤固化为 Workflow；Tool 是动作，Skill 是可复用业务能力。</p></div>
+        <div className="page-shell enterprise-section-head"><span>03 / AGENT ORCHESTRATION</span><h2>Agent 决定调用谁，Workflow 保证怎么做。</h2><div><p>开放判断交给 Agent，强依赖和高风险步骤固化为 Workflow；Tool 是动作，Skill 是可复用业务能力。</p><Link className="enterprise-module-link" href="/projects/enterprise-agent/agent-orchestration/">进入 Agent 编排二级页 <ArrowUpRight /></Link></div></div>
         <div className="page-shell enterprise-layer-grid">
           {[['AGENT','理解目标与选择能力','意图识别、任务拆解、开放性规划'],['WORKFLOW','固化可控业务路径','前置校验、串并行、人工确认'],['SKILL','复用业务能力','资金趋势、经营机会、拜访材料'],['TOOL','执行单一系统动作','查客户、资金、项目、制度、纪要']].map(([label,title,body])=><article key={label}><span>{label}</span><h3>{title}</h3><p>{body}</p></article>)}
         </div>
@@ -67,14 +68,14 @@ export default function EnterpriseAgentProject() {
       </section>
 
       <section className="enterprise-evaluation-section" id="evaluation-system">
-        <div className="page-shell enterprise-section-head enterprise-on-dark"><span>04 / EVALUATION SYSTEM</span><h2>评测不是算法附属，是产品上线标准。</h2><p>固定题库负责出题，执行结果表记录模型表现，Bad Case 表负责归因、负责人、修复方案和回归结果。</p></div>
+        <div className="page-shell enterprise-section-head enterprise-on-dark"><span>04 / EVALUATION SYSTEM</span><h2>评测不是算法附属，是产品上线标准。</h2><div><p>固定题库负责出题，执行结果表记录模型表现，Bad Case 表负责归因、负责人、修复方案和回归结果。</p><Link className="enterprise-module-link" href="/projects/enterprise-agent/evaluation-regression/">进入评测回归二级页 <ArrowUpRight /></Link></div></div>
         <div className="page-shell enterprise-samples"><div><strong>70</strong><span>正常高频场景</span></div><div><strong>60</strong><span>复杂 / 多意图</span></div><div><strong>40</strong><span>异常与越权</span></div><div><strong>30</strong><span>历史 Bad Case</span></div></div>
         <div className="page-shell enterprise-dimensions">{["任务完成","工具选择","参数准确","执行链路","数据溯源","权限合规","异常处理","输出格式"].map((item,index)=><div key={item}><span>0{index+1}</span><strong>{item}</strong></div>)}</div>
-        <a className="page-shell enterprise-demo-link" href="/method/rag-evaluation/"><div><span>SUBPROJECT 01 / INTERACTIVE EVALUATION LAB</span><h3>打开“RAG 评测与归因”交互 Demo</h3><p>切换修复前后，观察旧制度误召回、Chunk 过碎、版本过滤和父子 Chunk 如何影响最终答案。</p></div><ArrowUpRight /></a>
+        <Link className="page-shell enterprise-demo-link" href="/projects/enterprise-agent/evaluation-regression/"><div><span>SUBPROJECT 01 / INTERACTIVE EVALUATION LAB</span><h3>打开“RAG 评测与归因”模块详情</h3><p>先阅读评测体系、样本设计与 AI PM 职责，再进入完整 Trace 实验页。</p></div><ArrowUpRight /></Link>
       </section>
 
       <section className="enterprise-case-section">
-        <div className="page-shell enterprise-section-head"><span>05 / END-TO-END BAD CASE</span><h2>南京大学基金会拜访 Brief</h2><p>看似是模型漏答，真正根因却在版本过滤和 Chunk 策略。</p></div>
+        <div className="page-shell enterprise-section-head"><span>05 / END-TO-END BAD CASE</span><h2>南京大学基金会拜访 Brief</h2><div><p>看似是模型漏答，真正根因却在版本过滤和 Chunk 策略。</p><Link className="enterprise-module-link" href="/projects/enterprise-agent/bad-case/">进入 Bad Case 二级页 <ArrowUpRight /></Link></div></div>
         <div className="page-shell enterprise-query"><span>客户经理 Query</span><strong>“帮我准备明天拜访南京大学基金会项目的 Brief，重点说明开户材料和上次沟通的待办。”</strong></div>
         <div className="page-shell enterprise-case-toggle"><Button className={!fixed ? "is-active" : ""} onClick={() => setFixed(false)}>修复前 · Bad Case</Button><Button className={fixed ? "is-active" : ""} onClick={() => setFixed(true)}>修复后 · Regression Pass</Button></div>
         <div className={`page-shell enterprise-trace ${fixed ? "is-fixed" : "is-bad"}`}>
@@ -87,7 +88,7 @@ export default function EnterpriseAgentProject() {
       </section>
 
       <section className="enterprise-ownership-section">
-        <div className="page-shell enterprise-section-head"><span>06 / PRODUCT OWNERSHIP</span><h2>我负责定义标准，也负责让标准落地。</h2><p>不替算法拍参数、不替业务确认事实、不绕过合规；把跨团队协作变成可验收的交付链路。</p></div>
+        <div className="page-shell enterprise-section-head"><span>06 / PRODUCT OWNERSHIP</span><h2>我负责定义标准，也负责让标准落地。</h2><div><p>不替算法拍参数、不替业务确认事实、不绕过合规；把跨团队协作变成可验收的交付链路。</p><Link className="enterprise-module-link" href="/projects/enterprise-agent/ai-pm-ownership/">进入 AI PM 职责二级页 <ArrowUpRight /></Link></div></div>
         <div className="page-shell enterprise-ownership-grid">
           <article><span>我直接负责</span><p>问题定义 · 需求范围 · 业务建模 · 数据边界 · 产品方案 · 工具映射 · 评测标准 · UAT · 上线门槛</p></article>
           <article><span>我推动协同</span><p>算法策略 · 接口实现 · 知识加工 · 权限接入 · 前端交互 · 测试回归 · 分行运营</p></article>
