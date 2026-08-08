@@ -3,6 +3,7 @@ export type EnterpriseModule = {
   index: string;
   eyebrow: string;
   title: string;
+  titleLines: [string, string];
   thesis: string;
   problem: string;
   pmRole: string;
@@ -20,6 +21,7 @@ export const enterpriseModules: EnterpriseModule[] = [
     index: "01",
     eyebrow: "BUSINESS DIAGNOSIS / 业务诊断",
     title: "先把经营问题建模，再决定 AI 做什么。",
+    titleLines: ["先把经营问题建模，", "再决定 AI 做什么。"],
     thesis: "从高校、基金会、机构客户、项目、协议和资金六类对象出发，把“做助手”收敛为可验收任务。",
     problem: "客户经理的信息分散在客户、项目、协议、资金与沟通记录中。真正的瓶颈不是没有数据，而是缺少围绕经营任务组织数据、知识和动作的统一模型。",
     pmRole: "访谈总分行客户经理与业务专家，定义用户、场景、任务、对象、字段和成功标准；把查、看、写、审四类能力排出优先级，并明确必须人工确认的高风险动作。",
@@ -38,6 +40,7 @@ export const enterpriseModules: EnterpriseModule[] = [
     index: "02",
     eyebrow: "DATA & KNOWLEDGE / 数据与知识",
     title: "实时事实走工具，制度经验走 RAG。",
+    titleLines: ["实时事实走工具，", "制度经验走 RAG。"],
     thesis: "结构化数据回答“现在是什么状态”，非结构化知识回答“规则是什么、该怎么做”。",
     problem: "把实时业务数据复制进知识库会产生时效与口径风险；只依靠业务接口又无法理解制度、产品手册、案例和拜访纪要。两类信息必须分路获取、统一校验。",
     pmRole: "盘点数据源与知识源，定义 Source of Truth、更新时间、客户归属、文档版本、权限标签和引用格式；推动知识加工从“上传文件”升级为可治理的内容工程。",
@@ -56,6 +59,7 @@ export const enterpriseModules: EnterpriseModule[] = [
     index: "03",
     eyebrow: "AGENT ORCHESTRATION / 智能体编排",
     title: "Agent 负责判断，Workflow 负责稳定。",
+    titleLines: ["Agent 负责判断，", "Workflow 负责稳定。"],
     thesis: "开放理解交给 Agent，强依赖和高风险步骤固化为 Workflow，业务能力沉淀为 Skill，系统动作封装成 Tool。",
     problem: "经营任务通常同时包含意图识别、实体补全、多系统查询、知识检索、权限校验、模板生成和人工确认。单轮 Prompt 无法稳定承担整条链路。",
     pmRole: "把业务语言翻译成意图、实体、工具描述和输入输出 Schema；设计 Router、缺参追问、复合任务拆解、异常降级与人工确认节点，并联合研发梳理约 14 个行内工具。",
@@ -74,6 +78,7 @@ export const enterpriseModules: EnterpriseModule[] = [
     index: "04",
     eyebrow: "EVALUATION & REGRESSION / 评测回归",
     title: "评测不是算法附属，而是上线标准。",
+    titleLines: ["评测不是算法附属，", "而是上线标准。"],
     thesis: "固定题库负责出题，执行结果记录模型表现，Bad Case 表负责归因、修复、负责人和回归结果。",
     problem: "只看几个演示问题无法判断版本是否真的变好。Prompt、工具描述、知识切分或模型升级，都可能让旧场景悄悄退化。",
     pmRole: "建设 200 条脱敏真实样本，定义任务完成、工具选择、参数准确、执行链路、数据溯源、权限合规、异常处理和输出格式八维评分，并组织产品、业务、算法和研发联合归因。",
@@ -93,6 +98,7 @@ export const enterpriseModules: EnterpriseModule[] = [
     index: "05",
     eyebrow: "END-TO-END BAD CASE / 端到端归因",
     title: "答案看起来合理，也可能业务结果错误。",
+    titleLines: ["答案看起来合理，", "也可能业务结果错误。"],
     thesis: "南京大学基金会拜访 Brief 的漏答，根因不在表达，而在旧制度误召回与 Chunk 过碎。",
     problem: "客户经理要求同时获取项目进度、开户材料和上次沟通待办。旧版制度因关键词更强排在新版前，材料清单被切碎后又有一项没有进入 Top K。",
     pmRole: "把一次“回答不好”拆成意图、实体、知识、检索、排序、权限、工具、参数、生成和输出十层 Trace；协调知识与检索策略修复，并把原样本永久加入回归集。",
@@ -112,6 +118,7 @@ export const enterpriseModules: EnterpriseModule[] = [
     index: "06",
     eyebrow: "PRODUCT OWNERSHIP / AI 产品经理职责",
     title: "定义标准，也让标准真正落地。",
+    titleLines: ["定义标准，", "也让标准真正落地。"],
     thesis: "AI 产品经理不是替所有人做决定，而是把跨团队协作变成有边界、有负责人、有证据的交付链路。",
     problem: "企业级 AI 同时涉及业务、数据、知识、算法、研发、测试、合规与分行运营。如果职责不清，失败会被笼统归因给“模型不行”。",
     pmRole: "直接负责问题定义、需求范围、业务建模、数据边界、产品方案、工具映射、评测标准、UAT 和上线门槛；推动算法、接口、知识、权限、前端、测试和运营协同。",

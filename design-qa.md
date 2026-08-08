@@ -88,6 +88,17 @@ Accepted deviations:
 
 final result: passed
 
+### Layout refinement · 2026-08-09
+
+- Fixed six module-page H1s to use explicit two-line semantic breaks on desktop and mobile.
+- Removed negative Chinese tracking and increased Chinese heading line-height so glyphs no longer visually collide with grid rules.
+- Raised dense Trace body and metadata sizes, increased contrast, and expanded card padding.
+- Added an 80px anchor offset for `#trace`, keeping the section clear of the fixed navigation.
+- Verified all six routes at `390px`: every H1 renders in exactly two lines and every page reports `scrollWidth === clientWidth`.
+- Independent visual judge: PASS; no remaining P0/P1/P2 collision, alignment, or readability issue visible in the accepted screenshots.
+
+final result: passed
+
 ---
 
 ## 招商银行模块二级页 · 2026-08-09
