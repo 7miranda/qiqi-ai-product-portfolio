@@ -108,7 +108,7 @@ final result: passed
 ### Interaction and responsive checks
 
 - Passed: all six overview module CTAs resolve to static exported detail routes.
-- Passed: evaluation and Bad Case pages link to `https://xingchen-rag-lab.yourandrea77.chatgpt.site/#trace` in a new window.
+- Superseded: evaluation and Bad Case pages now open the branded internal route `/projects/enterprise-agent/trace-lab/#trace`; no external brand or website appears in the journey.
 - Passed: mobile measurement reports `scrollWidth === clientWidth` (`390 === 390`).
 - Passed: build generated all six routes and browser console contained no runtime errors; the only warning is Next.js's non-blocking smooth-scroll annotation.
 
