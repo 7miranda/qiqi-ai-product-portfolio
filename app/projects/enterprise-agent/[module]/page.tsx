@@ -27,7 +27,7 @@ export default async function EnterpriseModulePage({ params }: { params: Promise
         <div className="page-shell">
           <div className="enterprise-module-breadcrumb"><Link href="/projects/enterprise-agent/"><ArrowLeft /> 返回项目全景</Link><span>{item.index} / 06</span></div>
           <span className="enterprise-module-eyebrow">{item.eyebrow}</span>
-          <h1>{item.title}</h1>
+          <h1>{item.titleLines[0]}<br />{item.titleLines[1]}</h1>
           <p>{item.thesis}</p>
           <div className="enterprise-module-flow">{item.flow.map((step, index) => <div key={step}><span>0{index + 1}</span><strong>{step}</strong>{index < item.flow.length - 1 ? <ArrowRight /> : null}</div>)}</div>
         </div>
