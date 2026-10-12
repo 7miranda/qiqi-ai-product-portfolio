@@ -4,9 +4,9 @@ import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 
 const articles = [
-  ["agent-task-completion", "2026-10-12", "Agent 什么时候才算把一件运营工作做完？"],
-  ["ad-data-context", "2026-10-09", "把广告数据接进来，AI 就能给出可靠的投放建议吗？"],
-  ["agent-excel-workflows", "2026-10-06", "企业都在做 Agent，为什么 AI 产品经理还要盯着运营的 Excel？"],
+  ["agent-task-completion", "2026-10-12", "Agent 的最后一公里：谁来证明“已完成”？"],
+  ["ad-data-context", "2026-10-09", "同样的 ROI，为什么会得到相反的判断？"],
+  ["agent-excel-workflows", "2026-10-06", "企业 Agent 的第一道门槛，藏在 Excel 里"],
 ];
 
 test("news index lists all five articles with October 12 first", async () => {
