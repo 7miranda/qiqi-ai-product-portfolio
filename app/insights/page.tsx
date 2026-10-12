@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import AnimatedList from "@/components/react-bits/animated-list";
 import StaggeredText from "@/components/react-bits/staggered-text";
 import Footer8 from "@/components/blocks/footer-8";
+import { octoberInsights } from "@/lib/october-insights";
 
 export const metadata: Metadata = {
   title: "最新资讯",
@@ -11,6 +12,17 @@ export const metadata: Metadata = {
 };
 
 const articles = [
+  ...octoberInsights.map((article) => ({
+    slug: article.slug,
+    number: article.number,
+    date: article.date.replaceAll("-", "."),
+    dateTime: article.date,
+    category: "产品实践",
+    title: article.title,
+    summary: article.summary,
+    tags: article.tags,
+    readingTime: article.readingTime,
+  })),
   {
     slug: "kimi-k3",
     number: "001",
@@ -33,14 +45,14 @@ const articles = [
     tags: ["GPT-5.6", "Multi-agent", "AI 产品"],
     readingTime: "约 9 分钟",
   },
-];
+].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
 
 const articleItems = articles.map((article) => ({
   id: article.slug,
   content: (
     <Link className="news-card" href={`/insights/${article.slug}`}>
       <div className="news-card-meta">
-        <span>MODEL NOTES / {article.number}</span>
+        <span>{article.category === "产品实践" ? "PRODUCT NOTES" : "MODEL NOTES"} / {article.number}</span>
         <time dateTime={article.dateTime}>{article.date}</time>
       </div>
       <div className="news-card-main">
