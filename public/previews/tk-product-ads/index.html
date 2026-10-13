@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="TK 产品广告页面视觉优化 HTML，基于 2026-10-13 测试环境页面快照。">
+  <title>产品广告 · Commerce AI</title>
+  <style>
+    /* Visual proposal values for this standalone HTML; not approved TK brand tokens. */
+    :root{--page:#f5f6f8;--surface:#fff;--line:#e7e9ed;--text:#20242b;--muted:#707783;--green:#238360;--mint:#eef6f2;--accent:#238360;--hover:#f7f8fa;--red:#c95050;--down:#268565;--radius:16px;--sidebar:218px;--focus:#238360;--shadow:0 3px 15px rgba(20,30,45,.025)}
+    *{box-sizing:border-box}html{font-size:14px;scroll-behavior:smooth}body{margin:0;background:var(--page);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+    button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;color:#a6aca5;background:#f6f7f4}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--focus);outline-offset:3px}button{border:0;background:transparent;color:inherit}svg.icon{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:middle}a{color:inherit;text-decoration:none}[hidden]{display:none!important}
+    .sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar);background:#ffffff;border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:30;transition:width .18s ease}.brand{height:76px;display:flex;align-items:center;gap:10px;padding:0 20px;white-space:nowrap}.brand-mark{font-size:28px;font-weight:750;letter-spacing:-3px;color:#238360;margin-right:4px}.brand-name{font-size:17px;font-weight:650;letter-spacing:-.5px}.collapse-button{margin-left:auto;color:#7d8592;padding:4px;border-radius:6px}.collapse-button:hover{background:var(--mint)}
+    .navigation{overflow-y:auto;flex:1;padding:6px 12px 20px;scrollbar-width:thin;scrollbar-color:#e6e8ed transparent}.nav-group{margin:15px 12px 8px;font-size:10px;color:#858d99;letter-spacing:1.2px;font-weight:550}.nav-item{width:100%;min-height:40px;display:flex;align-items:center;gap:12px;text-align:left;padding:9px 12px;border-radius:10px;color:#667080;font-size:13px;margin-bottom:3px;white-space:nowrap}.nav-item:hover{background:#f5f6f8;color:var(--text)}.nav-item.parent{color:var(--green);font-weight:600}.nav-item .chevron{width:14px;height:14px;margin-left:auto}.subnav{margin:1px 0 8px 20px;padding-left:13px;border-left:1px solid #e7e9ed}.subnav .nav-item{padding-left:12px;min-height:36px;font-size:12px}.nav-item.current{background:#edf6f1;color:#227652;font-weight:650;position:relative}.sidebar-user{margin:0 14px;padding:18px 4px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px}.avatar{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:#f0f2f5;color:#5d6674;font-size:12px;font-weight:650}.user-copy strong{display:block;font-size:12px;font-weight:600}.user-copy small{display:block;color:var(--muted);font-size:10px}.sidebar-user .icon{margin-left:auto;color:#8e978d}
+    .workspace{margin-left:var(--sidebar);min-width:0;transition:margin-left .18s ease}.topbar{height:64px;display:flex;justify-content:space-between;align-items:center;padding:0 28px;background:rgba(255,255,255,.7);border-bottom:1px solid var(--line);gap:18px}.breadcrumb{font-size:12px;color:#8b929e;display:flex;align-items:center;gap:12px;white-space:nowrap}.breadcrumb strong{font-weight:500;color:#454d59}.breadcrumb .icon{width:12px;height:12px}.topbar-right{display:flex;align-items:center;gap:20px;min-width:0}.update-info{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px}.shop-selector{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid #e7e9ed;border-radius:10px;padding:8px 12px;font-size:12px;white-space:nowrap}.shop-selector .icon{width:15px;height:15px;color:#667080}.shop-selector .dept{color:#9098a5;padding-left:9px;border-left:1px solid var(--line);font-size:11px}.shop-selector:hover{border-color:#c3d7cc}
+    main{padding:25px 28px 22px;max-width:2200px;margin:auto}.page-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;gap:16px}h1{font-size:26px;line-height:1.2;letter-spacing:-.8px;margin:0 0 8px;font-weight:650}.subtitle{margin:0;color:#707987;font-size:12px}.preview-label{border:1px solid #e7e9ed;background:#ffffff;border-radius:7px;padding:5px 9px;font-size:10px;color:#848d9a;white-space:nowrap}
+    .filter-panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:17px 19px 0;margin-bottom:14px}.filters{display:grid;grid-template-columns:minmax(260px,1.5fr) minmax(110px,.8fr) minmax(110px,.8fr) minmax(100px,.65fr) minmax(135px,.8fr) auto;gap:15px;align-items:end}.filter-field{min-width:0;display:flex;flex-direction:column;gap:8px}.filter-field label{font-size:11px;color:#5c6574;font-weight:550}.control{height:38px;border:1px solid #e3e6eb;background:#fafbfc;border-radius:9px;display:flex;align-items:center;gap:7px;padding:0 10px;min-width:0}.control:hover{border-color:#c6ccd5}.control:focus-within{border-color:#6ea88d;box-shadow:0 0 0 3px #edf6f1}.control svg{width:15px;height:15px;color:#8b94a1}.control input{width:100%;min-width:0;border:0;background:transparent;outline:none;padding:0;color:#3d4653;font-size:12px}.control input::placeholder{color:#a0a7b2}.date-control{padding-right:7px;gap:7px}.date-control input{font-size:11px;width:111px;flex:1;min-width:96px}.date-control input::-webkit-calendar-picker-indicator{width:11px;opacity:.45}.date-separator{color:#99a1ad;font-size:11px}select{appearance:none;width:100%;height:38px;padding:0 30px 0 11px;border:1px solid #e3e6eb;border-radius:9px;background:#fafbfc;color:#3d4653;font-size:12px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b94a1' stroke-width='1.7'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}select:hover{border-color:#c6ccd5}.filter-actions{display:flex;gap:6px}.button{min-height:38px;padding:8px 16px;border-radius:9px;font-size:12px;display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;font-weight:550;transition:background .15s,border-color .15s}.button .icon{width:15px;height:15px}.button.primary{background:var(--accent);color:#ffffff;border:1px solid #238360}.button.primary:hover{background:#1d7353}.button.primary:active{background:#185e43}.button.secondary{background:#fff;border:1px solid #e1e5eb;color:#616b79}.button.secondary:hover{background:#f7f9fb;border-color:#c5cbd5}.button.text{color:#747f8c;background:transparent}.button.text:hover{background:#f4f6f8}
+    .context-bar{border-top:1px solid #eef0f3;margin-top:16px;padding:11px 0;display:flex;flex-wrap:wrap;align-items:center;gap:7px 19px;color:#7d8592;font-size:10px}.context-bar strong{color:#566071;font-weight:500}.context-bar .context-chip{display:inline-flex;align-items:center;gap:5px}.context-bar .icon{width:12px;height:12px}.context-bar .last-processed{margin-left:auto}
+    .metric-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:11px;margin-bottom:22px}.metric{min-width:0;padding:15px 17px 13px;border:1px solid var(--line);border-radius:13px;background:#fff;box-shadow:var(--shadow);position:relative}.metric-label{display:flex;align-items:center;gap:6px;color:#697382;font-size:11px;min-height:18px}.metric-value{font-size:25px;font-weight:620;letter-spacing:-1px;line-height:1.25;margin:11px 0 8px;font-variant-numeric:tabular-nums;white-space:nowrap}.metric-comparison{font-size:10px;color:#848d9a;display:flex;gap:6px;align-items:center}.metric-comparison .up{color:var(--red)}.metric-comparison .down{color:var(--down)}.metric.unavailable{background:#fafbfc;box-shadow:none}.metric.unavailable .metric-value{color:#87909b;font-weight:400;letter-spacing:0}.metric.featured{background:#ffffff;border-color:var(--line);color:var(--text)}.metric.featured .metric-label{color:#697382}.metric.featured .metric-comparison{color:#667180}.metric.featured .metric-comparison .up{color:#c95050}.metric.featured:after{display:none;content:"";position:absolute;right:16px;top:17px;width:5px;height:5px;background:#238360;border-radius:50%}.info-button{width:15px;height:15px;min-width:15px;padding:0;border-radius:50%;display:inline-grid;place-items:center;color:#8794a3;vertical-align:middle}.info-button .icon{width:13px;height:13px}.info-button:hover{color:#238360;background:#edf6f1}.metric .info-button{margin-left:auto}.metric.unavailable .info-button{color:#8794a3}
+    .table-panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);min-width:0;position:relative}.table-toolbar{padding:17px 19px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #edf0f3;gap:12px}.table-title{display:flex;align-items:center;gap:8px;min-width:0}.table-title h2{font-size:14px;font-weight:620;margin:0;letter-spacing:-.2px}.table-title .info-button{margin-left:2px}.table-count{font-size:10px;border-radius:6px;background:#f4f6f8;color:#7d8796;padding:3px 7px;margin-left:4px;white-space:nowrap}.table-toolbar .button{min-height:33px;padding:6px 11px;font-size:11px}.table-viewport{width:100%;overflow:auto;scrollbar-width:auto;scrollbar-color:#bdc4ce #f4f6f8;border-radius:0 0 10px 10px;max-height:520px}.table-viewport::-webkit-scrollbar{width:8px;height:8px}.table-viewport::-webkit-scrollbar-track{background:#f4f6f8}.table-viewport::-webkit-scrollbar-thumb{background:#bdc4ce;border-radius:6px;border:2px solid #f4f6f8}.ads-table{border-collapse:separate;border-spacing:0;table-layout:fixed;width:3224px;font-size:12px}.ads-table th{padding:13px 16px;text-align:left;color:#697382;font-weight:450;font-size:11px;background:#fafbfc;border-bottom:1px solid #e8ebf0;vertical-align:middle;position:sticky;top:0;z-index:10;line-height:1.5}.ads-table th.numeric{text-align:right}.ads-table td{padding:17px 16px;border-bottom:1px solid #edf0f3;vertical-align:middle;color:#414a58;background:#fff;line-height:1.6}.ads-table tbody tr:last-child td{border-bottom:0}.ads-table tbody tr:hover td{background:#fafbfc}.ads-table td.numeric{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.ads-table .sticky{position:sticky;left:0;z-index:12;box-shadow:9px 0 12px -12px #adb8c7}.ads-table th.sticky{z-index:15;background:#fafbfc}.campaign-name{display:block;font-size:12px;color:#2e3641;font-weight:550;overflow-wrap:anywhere;line-height:1.6}.subtext{display:block;color:#788291;font-size:10px;font-weight:400;margin-top:4px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.product-label{font-size:11px;color:#788291}.product-id{font-size:10px;color:#788291;white-space:nowrap}.pill{display:inline-flex;align-items:center;gap:5px;border-radius:6px;white-space:nowrap;background:#edf6f1;color:#227652;font-size:10px;line-height:1.5;padding:4px 7px}.pill .dot{width:4px;height:4px;background:#238360;border-radius:50%}.protection{color:#697382;font-size:10px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}.protection .icon{width:13px;height:13px;color:#6c9b82}.delta.up{color:var(--red)}.delta.down{color:var(--down)}.muted-value{color:#9aa3af}.schedule{font-size:10px;line-height:1.8;color:#788291}.roi-value{font-weight:650;color:#34404b}.judgment{display:flex;align-items:center;gap:7px;color:#788291;font-size:10px}.judgment .pill{background:#f7f3eb;color:#927545}.sort-button{display:inline-flex;align-items:center;gap:5px;padding:0;color:inherit;font-size:inherit;font-weight:inherit;text-align:inherit}.sort-button .sort-glyph{font-size:8px;color:#b0b9a5}.sort-button:hover{color:#526d40}.table-footer{padding:13px 19px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid #edf0f3;font-size:10px;color:#788291;flex-wrap:wrap}.scroll-help{display:flex;align-items:center;gap:5px;margin-left:auto;margin-right:24px;font-size:10px;color:#8993a1}.scroll-help .icon{width:12px;height:12px}.pagination{display:flex;align-items:center;gap:5px}.pagination button{height:27px;min-width:27px;border:1px solid #e6e9ee;border-radius:7px;padding:3px 7px;display:grid;place-items:center}.pagination .active{background:#edf6f1;border-color:#dae9e0;color:#227652}.pagination .icon{width:12px;height:12px}.page-footnote{display:flex;justify-content:space-between;gap:12px;margin-top:17px;font-size:9px;color:#8e98a6;flex-wrap:wrap}.page-footnote span{display:flex;align-items:center;gap:5px}.page-footnote .icon{width:11px;height:11px}
+    .fields-popover{position:absolute;top:61px;right:17px;width:300px;max-height:420px;overflow-y:auto;background:#fff;border:1px solid #e3e7ed;border-radius:12px;box-shadow:0 12px 40px rgba(20,30,45,.10);z-index:25;padding:14px}.fields-heading{font-size:13px;font-weight:600;margin:0 0 11px}.fields-options{display:grid;grid-template-columns:1fr 1fr;gap:5px}.fields-options label{display:flex;align-items:center;gap:7px;font-size:10px;padding:7px 4px;color:#626e7e;border-radius:6px}.fields-options label:hover{background:#f7f9fb}.fields-options input{accent-color:#238360;cursor:pointer}.info-popover{position:fixed;z-index:100;max-width:min(360px,calc(100vw - 28px));background:#fff;border:1px solid #e3e7ed;border-radius:11px;box-shadow:0 9px 35px rgba(20,30,45,.10);padding:14px 16px;color:#626e7e;font-size:11px;line-height:1.8}.info-popover p{margin:0}.toast{position:fixed;bottom:24px;left:calc(50% + var(--sidebar)/2);transform:translateX(-50%);z-index:150;background:#26313b;color:#f4f6f8;padding:12px 18px;border-radius:11px;font-size:12px;max-width:min(500px,90vw);box-shadow:0 8px 24px #26313b24}
+    body.sidebar-collapsed{--sidebar:72px}.sidebar-collapsed .brand{padding:0 17px}.sidebar-collapsed .brand-name,.sidebar-collapsed .brand-mark,.sidebar-collapsed .nav-group,.sidebar-collapsed .nav-label,.sidebar-collapsed .subnav,.sidebar-collapsed .chevron,.sidebar-collapsed .user-copy,.sidebar-collapsed .sidebar-user>.icon{display:none}.sidebar-collapsed .collapse-button{margin:0}.sidebar-collapsed .navigation{padding:8px 10px}.sidebar-collapsed .nav-item{justify-content:center;padding:11px}.sidebar-collapsed .sidebar-user{justify-content:center;margin:0 10px}.sidebar-collapsed .topbar,.sidebar-collapsed main{padding-left:26px;padding-right:26px}
+    .metric-value{font-size:clamp(18px,1.62vw,26px)}.metric-label{color:#626d7c;min-height:32px;align-items:flex-start}.metric-comparison{color:#667180}.metric.unavailable .metric-value{color:#7d8793}.subtext,.product-id,.product-label,.schedule,.protection{color:#667180}.ads-table th{color:#667180}.pill{color:#227652}.context-bar,.subtitle,.page-footnote,.breadcrumb{color:#6c7685}.nav-group{color:#858e9c}.table-footer,.scroll-help{color:#6c7685}.info-button{color:#8a96a5}
+    @media(min-width:1700px){.metric-value{font-size:29px}.metric{padding:19px 21px 16px}.filters{grid-template-columns:minmax(270px,1.25fr) 1fr 1fr .65fr .8fr auto}}
+    @media(max-width:1250px){:root{--sidebar:190px}.brand{padding:0 16px}.brand-name{font-size:15px}main,.topbar{padding-left:20px;padding-right:20px}.filters{grid-template-columns:minmax(260px,1.5fr) 1fr 1fr;gap:12px}.filter-actions{justify-content:flex-end}.metric-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.metric-value{font-size:24px}.update-info{font-size:10px}.update-info .update-detail{display:none}.context-bar .last-processed{margin-left:0}}
+    @media(max-width:900px){:root{--sidebar:172px}.brand-name{font-size:13px}.brand-mark{font-size:25px}.nav-item{font-size:12px;padding-left:9px;gap:9px}.subnav{margin-left:13px;padding-left:7px}.topbar-right{gap:8px}.update-info{display:none}.shop-selector .dept{display:none}.metric-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.filters{grid-template-columns:1fr 1fr}.filter-field.date-field{grid-column:1/-1}.filter-actions{align-self:end;justify-self:stretch}.filter-actions .primary{flex:1}.metric{padding:14px}.metric-value{font-size:23px}.preview-label{display:none}.scroll-help{display:none}}
+    @media(max-width:600px){:root{--sidebar:154px}main{padding:19px 13px}.topbar{padding:0 13px}.brand{padding:0 12px;gap:6px}.brand-name{font-size:12px}.navigation{padding:4px 8px}.nav-item{font-size:11px;gap:8px;padding-left:8px}.nav-item svg{width:15px;height:15px}.subnav .nav-item{font-size:10px;padding-left:7px}.subnav{margin-left:9px;padding-left:5px}.nav-group{font-size:9px;margin-left:8px}.brand .collapse-button{padding:0}.brand .icon{width:15px}.sidebar-user{margin:0 8px}.avatar{width:29px;height:29px;font-size:10px}.user-copy strong{font-size:10px}.sidebar-user .icon{display:none}.filters{grid-template-columns:1fr}.date-field{grid-column:auto}.filter-panel{padding:13px 12px 0}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metric-label{font-size:10px}.metric-value{font-size:18px;letter-spacing:-.7px}.metric{padding:12px 10px}.metric-comparison{font-size:9px;gap:3px}h1{font-size:23px}.subtitle{font-size:10px}.table-toolbar{padding:14px 12px}.table-title h2{font-size:12px}.table-count{display:none}.table-toolbar .button{padding:6px 8px;font-size:10px}.table-toolbar .button .icon{display:none}.context-bar{gap:5px}.fields-popover{right:7px;width:min(280px,calc(100% - 14px))}.fields-options{grid-template-columns:1fr}.topbar .breadcrumb{gap:5px;font-size:10px}.shop-selector{padding:7px;font-size:10px;gap:5px}.shop-selector .icon{width:12px}.shop-selector .chevron{display:none}.table-footer{padding:12px}.toast{left:50%}.page-heading{margin-bottom:18px}.page-footnote{font-size:8px}}
+    @media(max-width:440px){.metric-grid{grid-template-columns:1fr}.metric-value{font-size:23px}}
+    /* Refined visual proposal: tighter geometry, local atmosphere and clear data groups. */
+    :root{--radius:10px;--shadow:0 1px 2px rgba(24,35,48,.025),0 5px 15px rgba(24,35,48,.022)}
+    .workspace{background-image:radial-gradient(ellipse 170px 95px at 110px 78px,rgba(163,203,247,.14),rgba(163,203,247,.04) 48%,transparent 80%);background-repeat:no-repeat;background-size:360px 190px;background-position:-24px 30px}
+    .brand{height:52px;flex:none;padding:0 18px;gap:8px;border-bottom:1px solid #e8ecf0}.brand-mark{font-size:26px;letter-spacing:-2.5px;margin-right:1px}.brand-name{font-size:15px;font-weight:650;letter-spacing:-.45px}.collapse-button{width:28px;height:28px;flex:none;padding:5px;color:#7a8794}.collapse-button .icon{width:17px;height:17px}.collapse-button:hover{background:#f1f4f6;color:#415365}
+    .topbar{height:52px;background:#fff;border-bottom-color:#e8ecf0;gap:18px}.breadcrumb{font-size:13px;gap:10px;color:#687785}.breadcrumb strong{font-weight:600;color:#3c4a59}.breadcrumb .icon{width:11px;height:11px;color:#8a97a4}.topbar-right{gap:18px}.update-info{display:flex;align-items:center;gap:0;flex:none;min-height:26px;padding:4px 12px;border:0;border-radius:4px;background:#f3f5f7;color:#626d79;font-size:12px;line-height:18px;white-space:nowrap}.update-label{font:inherit;color:inherit}.update-date{margin-left:5px;font:inherit;color:inherit;font-variant-numeric:tabular-nums}.update-detail{font:inherit;color:inherit;display:inline}
+    .shop-selector{min-height:36px;padding:2px 8px;gap:8px;background:transparent;border:0;border-radius:4px}.shop-selector:hover{background:#f5f7f9}.shop-icon{width:24px;height:24px;background:transparent;display:grid;place-items:center;flex:none}.shop-icon .icon{width:20px;height:20px;color:#607383}.shop-copy{display:flex;flex-direction:column;align-items:flex-start;gap:0}.shop-name{font-size:12px;font-weight:600;color:#35485a;line-height:1.4}.shop-selector .dept{font-size:10px;line-height:1.4;padding:0;border:0;color:#69788a}.shop-selector .chevron{width:13px;height:13px;margin-left:9px;color:#8793a0}
+    .nav-item{border-radius:6px}.navigation .nav-item>.icon{width:20px;height:20px;color:#677887}.navigation .nav-item>.chevron{width:13px;height:13px}.navigation .nav-item>.nav-icon-filled{display:none}.navigation .nav-item.parent>.nav-icon-outline,.navigation .nav-item.current>.nav-icon-outline{display:none}.navigation .nav-item.parent>.nav-icon-filled,.navigation .nav-item.current>.nav-icon-filled{display:block;color:#287457}.subnav{margin:0 0 7px;padding:0;border:0}.subnav .nav-item{padding-left:56px;padding-right:8px;gap:10px;color:#697481;min-height:35px;font-size:12px}.subnav .nav-item.current{background:#eef4f0;color:#28664e;font-weight:600;box-shadow:none}.avatar{border-radius:6px}
+    h1{font-size:29px;letter-spacing:-.7px;font-weight:620}.subtitle{color:#697485;line-height:1.65}
+    .filter-panel{padding-top:18px;border:0;box-shadow:0 3px 16px rgba(26,40,58,.035)}.filter-field label{font-size:12px;color:#566272}.control,select,.button{border-radius:6px}.control,select{background:#fbfcfd;border-color:#dfe4eb}
+    .button.primary{box-shadow:0 2px 4px rgba(28,103,76,.12)}.button.secondary{color:#546171}.preview-label{border:0;border-radius:5px;background:rgba(255,255,255,.65);color:#768292}
+    .context-bar{font-size:10px;color:#6b7787}.context-bar strong{font-weight:550;color:#4d5a6a}
+    svg.icon.ph-icon{fill:currentColor;stroke:none}.metric-groups{margin:20px 0 23px}.metric-group+.metric-group{margin-top:12px}.metric-symbol{width:26px;height:26px;display:grid;place-items:center;color:#5b7183;background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(223,232,240,.58));border:0;border-radius:6px;box-shadow:0 2px 8px rgba(31,48,65,.045);-webkit-backdrop-filter:blur(8px) saturate(130%);backdrop-filter:blur(8px) saturate(130%);flex:none}.metric-symbol .icon{width:16px;height:16px}.key-metric .metric-symbol{color:#496779}.metric-label>span:first-child{flex:1;min-width:0}
+    .metric-group .metric-grid{gap:10px;margin-bottom:0}.monitoring .metric-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.results .metric-grid{grid-template-columns:1.1fr 1.2fr 1fr 1fr .85fr .85fr}
+    .metric{border-radius:8px;border:0;padding:14px 16px 12px;background:#fff;box-shadow:0 3px 12px rgba(25,37,52,.027)}.metric.unavailable{background:#fafbfd;border:0;box-shadow:0 2px 9px rgba(25,37,52,.02)}.metric-label{font-size:12px;min-height:38px;gap:8px;align-items:flex-start;color:#667386;line-height:1.55}.metric-comparison{font-size:11px;color:#697586;min-height:20px}.metric-comparison .info-button{margin-left:auto;margin-top:-2px;margin-bottom:-2px}.metric-value{font-size:clamp(19px,1.62vw,26px);margin:6px 0 7px;letter-spacing:-.65px;font-weight:650;color:#253040}
+    .metric.unavailable .metric-value{font-size:23px;font-weight:400;color:#7c899b}.metric.featured{border:0;box-shadow:0 3px 12px rgba(25,37,52,.027)}.key-metric .metric-label{color:#4f6074;font-weight:550}.metric.featured .metric-comparison{color:#697586}
+    .info-button{width:24px;height:24px;min-width:24px;border-radius:5px}.info-button .icon{width:14px;height:14px}.info-button:hover{background:#eef3f1;color:#38765c}
+    .table-panel{border:0;box-shadow:0 3px 16px rgba(25,37,52,.03)}.table-toolbar{padding:15px 18px}.table-title h2{font-size:15px;font-weight:600;letter-spacing:-.1px}.table-count{border-radius:4px;background:#f1f4f7;color:#647387;font-size:11px}.table-viewport{border-radius:0 0 7px 7px}
+    .ads-table th{background:#f6f8fa;border-bottom-color:#e1e6ec;font-size:12px;font-weight:500;color:#566579;padding-top:12px;padding-bottom:12px}.ads-table th.sticky{background:#f6f8fa}.ads-table td{padding-top:14px;padding-bottom:14px;font-size:13px;color:#394657}.campaign-name{font-size:13px;font-weight:550;color:#2a3747}.subtext,.product-id,.product-label,.schedule{font-size:11px;color:#68778a}.pill{border-radius:4px;font-size:11px}.table-footer{font-size:11px}.scroll-help{font-size:10px}
+    .fields-popover{border-radius:9px;padding:16px}.fields-heading{font-size:14px;color:#334357}.fields-options label{font-size:12px;border-radius:5px;padding:7px 4px}.info-popover{border-radius:8px;font-size:12px;color:#5b6b7f}.toast{border-radius:8px}
+    @media(max-width:1250px){.brand{padding:0 14px;gap:7px}.brand-name{font-size:14px}.collapse-button{width:24px;height:24px;padding:3px}.topbar-right{gap:18px}.subnav .nav-item{padding-left:44px;gap:8px;font-size:11.5px}}
+    @media(max-width:1150px){.results .metric-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.metric-value{font-size:24px}.metric-label{font-size:11px}.context-bar{gap:6px 12px}}
+    @media(max-width:900px){.monitoring .metric-grid{grid-template-columns:repeat(6,minmax(0,1fr))}.monitoring .metric{grid-column:span 2}.monitoring .metric:nth-child(n+4){grid-column:span 3}.metric-label{font-size:12px}.metric-value{font-size:23px}.subnav .nav-item{padding-left:37px;gap:7px;font-size:11px}.brand{padding:0 12px}.brand-name{font-size:12px}.brand-mark{font-size:24px}.shop-selector .dept,.update-info{display:none}.shop-selector{min-height:36px}.shop-icon{width:24px;height:24px}}
+    @media(max-width:600px){.monitoring .metric-grid,.results .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.monitoring .metric:nth-child(n){grid-column:auto}.monitoring .metric:last-child{grid-column:1/-1}.metric{padding:12px 11px}.metric-label{font-size:11px;gap:6px}.metric-comparison{font-size:10px}.metric-value{font-size:19px}.metric-symbol{width:26px;height:26px}.metric-symbol .icon{width:16px;height:16px}.workspace{background-size:360px 190px;background-position:-100px 8px}.subnav .nav-item{padding-left:30px;font-size:10px;gap:6px}.brand{gap:5px;padding:0 10px}.brand-name{font-size:11px}.shop-icon{display:none}.shop-selector{padding:5px 7px;gap:0}.shop-name{font-size:10px}}
+    @media(max-width:440px){.monitoring .metric-grid,.results .metric-grid{grid-template-columns:1fr}.metric-value{font-size:24px}}
+    /* Scoped custom menus; unenhanced native selects remain the no-JavaScript fallback. */
+.tk-select{position:relative;width:100%;min-width:0}
+.tk-select-native{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:0!important;border:0!important;opacity:0;clip-path:inset(50%);pointer-events:none}
+.tk-select-trigger{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;height:38px;padding:0 11px;border:1px solid #dce1e6;border-radius:7px;background:#fff;color:#3d4653;font-size:12px;font-weight:450;line-height:1.5;text-align:left;transition:border-color .15s,box-shadow .15s,background .15s}
+.tk-select-trigger:hover{border-color:#bac2cc;background:#fafbfc}
+.tk-select-trigger.is-open{border-color:#7fa48f;background:#fff;box-shadow:0 0 0 3px rgba(35,131,96,.07)}
+.tk-select-trigger:focus-visible{outline:2px solid #238360;outline-offset:3px}
+.tk-select-trigger:disabled{background:#f4f5f7;color:#727c89;border-color:#e5e8ec;cursor:not-allowed}
+.tk-select-value{min-width:0;overflow-wrap:anywhere}
+.tk-select-chevron{width:14px;height:14px;flex:none;fill:none;stroke:#7b8795;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+.tk-select-trigger.is-open .tk-select-chevron{transform:rotate(180deg)}
+.tk-select-menu{position:fixed;z-index:120;padding:5px;border:1px solid #e0e5ea;border-radius:8px;background:#fff;box-shadow:0 12px 32px rgba(25,35,48,.11),0 2px 6px rgba(25,35,48,.04);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#c6ced7 transparent}
+.tk-select-menu[hidden]{display:none!important}
+.tk-select-option{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:34px;padding:7px 9px;border-radius:6px;color:#3d4653;font-size:12px;line-height:1.5;cursor:pointer;user-select:none}
+.tk-select-option+.tk-select-option{margin-top:2px}
+.tk-select-option.is-active{background:#f3f5f7;color:#202a35}
+.tk-select-option[aria-selected="true"]{background:#edf5f0;color:#286247;font-weight:550}
+.tk-select-option[aria-selected="true"].is-active{background:#e5efe8}
+.tk-select-option[aria-disabled="true"]{color:#727c89;background:transparent;cursor:not-allowed}
+.tk-select-check{display:flex;align-items:center;flex:none;visibility:hidden;color:#286247}
+.tk-select-check svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.tk-select-option[aria-selected="true"] .tk-select-check{visibility:visible}
+@media(prefers-reduced-motion:reduce){.tk-select-trigger,.tk-select-chevron{transition:none}}
+
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <!-- Tabler Icons MIT license
+MIT License
+
+Copyright (c) 2020-2026 Paweł Kuna
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+-->
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <symbol id="layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 4h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" />
+      <path d="M5 16h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" />
+      <path d="M15 12h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" />
+      <path d="M15 4h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" />
+    </symbol>
+    <symbol id="building-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 21l18 0" />
+      <path d="M3 7v1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1h-18l2 -4h14l2 4" />
+      <path d="M5 21l0 -10.15" />
+      <path d="M19 21l0 -10.15" />
+      <path d="M9 21v-4a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v4" />
+    </symbol>
+    <symbol id="speakerphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8a3 3 0 0 1 0 6" />
+      <path d="M10 8v11a1 1 0 0 1 -1 1h-1a1 1 0 0 1 -1 -1v-5" />
+      <path d="M12 8l4.524 -3.77a.9 .9 0 0 1 1.476 .692v12.156a.9 .9 0 0 1 -1.476 .692l-4.524 -3.77h-8a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h8" />
+    </symbol>
+    <symbol id="video" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4" />
+      <path d="M3 8a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2l0 -8" />
+    </symbol>
+    <symbol id="users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+      <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+    </symbol>
+    <symbol id="package" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5" />
+      <path d="M12 12l8 -4.5" />
+      <path d="M12 12l0 9" />
+      <path d="M12 12l-8 -4.5" />
+      <path d="M16 5.25l-8 4.5" />
+    </symbol>
+    <symbol id="list-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3.5 5.5l1.5 1.5l2.5 -2.5" />
+      <path d="M3.5 11.5l1.5 1.5l2.5 -2.5" />
+      <path d="M3.5 17.5l1.5 1.5l2.5 -2.5" />
+      <path d="M11 6l9 0" />
+      <path d="M11 12l9 0" />
+      <path d="M11 18l9 0" />
+    </symbol>
+    <symbol id="robot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 6a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2l0 -4" />
+      <path d="M12 2v2" />
+      <path d="M9 12v9" />
+      <path d="M15 12v9" />
+      <path d="M5 16l4 -2" />
+      <path d="M15 14l4 2" />
+      <path d="M9 18h6" />
+      <path d="M10 8v.01" />
+      <path d="M14 8v.01" />
+    </symbol>
+    <symbol id="shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11.46 20.846a12 12 0 0 1 -7.96 -14.846a12 12 0 0 0 8.5 -3a12 12 0 0 0 8.5 3a12 12 0 0 1 -.09 7.06" />
+      <path d="M15 19l2 2l4 -4" />
+    </symbol>
+    <symbol id="chart-bar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -6" />
+      <path d="M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -10" />
+      <path d="M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -14" />
+      <path d="M4 20h14" />
+    </symbol>
+    <symbol id="target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+      <path d="M7 12a5 5 0 1 0 10 0a5 5 0 1 0 -10 0" />
+      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+    </symbol>
+    <symbol id="refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+      <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+    </symbol>
+    <symbol id="settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" />
+      <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+    </symbol>
+    <symbol id="layout-sidebar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12" />
+      <path d="M9 4l0 16" />
+    </symbol>
+    <symbol id="chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 9l6 6l6 -6" />
+    </symbol>
+    <symbol id="chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 6l-6 6l6 6" />
+    </symbol>
+    <symbol id="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 6l6 6l-6 6" />
+    </symbol>
+    <symbol id="calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12" />
+      <path d="M16 3v4" />
+      <path d="M8 3v4" />
+      <path d="M4 11h16" />
+      <path d="M11 15h1" />
+      <path d="M12 15v3" />
+    </symbol>
+    <symbol id="search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+      <path d="M21 21l-6 -6" />
+    </symbol>
+    <symbol id="adjustments-horizontal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+      <path d="M4 6l8 0" />
+      <path d="M16 6l4 0" />
+      <path d="M6 12a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+      <path d="M4 12l2 0" />
+      <path d="M10 12l10 0" />
+      <path d="M15 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+      <path d="M4 18l11 0" />
+      <path d="M19 18l1 0" />
+    </symbol>
+    <symbol id="info-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+      <path d="M12 9h.01" />
+      <path d="M11 12h1v4h1" />
+    </symbol>
+    <symbol id="alert-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+      <path d="M12 8v4" />
+      <path d="M12 16h.01" />
+    </symbol>
+    <symbol id="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12l5 5l10 -10" />
+    </symbol>
+    <symbol id="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 6l-12 12" />
+      <path d="M6 6l12 12" />
+    </symbol>
+    <symbol id="logout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+      <path d="M9 12h12l-3 -3" />
+      <path d="M18 15l3 -3" />
+    </symbol>
+    <symbol id="layout-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" />
+      <path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" />
+      <path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" />
+      <path d="M14 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" />
+    </symbol>
+    <symbol id="building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 21l18 0" />
+      <path d="M9 8l1 0" />
+      <path d="M9 12l1 0" />
+      <path d="M9 16l1 0" />
+      <path d="M14 8l1 0" />
+      <path d="M14 12l1 0" />
+      <path d="M14 16l1 0" />
+      <path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16" />
+    </symbol>
+    <symbol id="sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2m0 -12a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2m-7 12a6 6 0 0 1 6 -6a6 6 0 0 1 -6 -6a6 6 0 0 1 -6 6a6 6 0 0 1 6 6" />
+    </symbol>
+    <symbol id="chart-line" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 19l16 0" />
+      <path d="M4 15l4 -6l4 2l4 -5l4 4" />
+    </symbol>
+    <symbol id="database" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 6a8 3 0 1 0 16 0a8 3 0 1 0 -16 0" />
+      <path d="M4 6v6a8 3 0 0 0 16 0v-6" />
+      <path d="M4 12v6a8 3 0 0 0 16 0v-6" />
+    </symbol>
+    <symbol id="wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12" />
+      <path d="M20 12v4h-4a2 2 0 0 1 0 -4h4" />
+    </symbol>
+    <symbol id="currency-dollar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2" />
+      <path d="M12 3v3m0 12v3" />
+    </symbol>
+    <symbol id="chart-arrows" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 18l14 0" />
+      <path d="M9 9l3 3l-3 3" />
+      <path d="M14 15l3 3l-3 3" />
+      <path d="M3 3l0 18" />
+      <path d="M3 12l9 0" />
+      <path d="M18 3l3 3l-3 3" />
+      <path d="M3 6l18 0" />
+    </symbol>
+    <symbol id="shopping-bag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304" />
+      <path d="M9 11v-5a3 3 0 0 1 6 0v5" />
+    </symbol>
+    <symbol id="circle-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+      <path d="M9 12l2 2l4 -4" />
+    </symbol>
+    <symbol id="circle-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+      <path d="M10 10l4 4m0 -4l-4 4" />
+    </symbol>
+    <symbol id="stack-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4l-8 4l8 4l8 -4l-8 -4" />
+      <path d="M4 12l8 4l8 -4" />
+      <path d="M4 16l8 4l8 -4" />
+    </symbol>
+    <symbol id="shopping-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+      <path d="M15 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+      <path d="M17 17h-11v-14h-2" />
+      <path d="M6 5l14 1l-1 7h-13" />
+    </symbol>
+    <symbol id="player-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 4v16l13 -8l-13 -8" />
+    </symbol>
+    <symbol id="flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 10.941c2.333 -3.308 .167 -7.823 -1 -8.941c0 3.395 -2.235 5.299 -3.667 6.706c-1.43 1.408 -2.333 3.294 -2.333 5.588c0 3.704 3.134 6.706 7 6.706c3.866 0 7 -3.002 7 -6.706c0 -1.712 -1.232 -4.403 -2.333 -5.588c-2.084 3.353 -3.257 3.353 -4.667 2.235" />
+    </symbol>
+    <symbol id="bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+      <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+    </symbol>
+    <symbol id="video-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4" />
+      <path d="M3 8a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2l0 -8" />
+      <path d="M7 12l4 0" />
+      <path d="M9 10l0 4" />
+    </symbol>
+    <symbol id="basket-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 10l-2 -6" />
+      <path d="M7 10l2 -6" />
+      <path d="M11 20h-3.756a3 3 0 0 1 -2.965 -2.544l-1.255 -7.152a2 2 0 0 1 1.977 -2.304h13.999a2 2 0 0 1 1.977 2.304l-.479 2.729" />
+      <path d="M10 14a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path d="M15 19l2 2l4 -4" />
+    </symbol>
+    <symbol id="clock-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.942 13.021a9 9 0 1 0 -9.407 7.967" />
+      <path d="M12 7v5l3 3" />
+      <path d="M15 19l2 2l4 -4" />
+    </symbol>
+    <symbol id="arrow-down-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 7l10 10" />
+      <path d="M17 8l0 9l-9 0" />
+    </symbol>
+    <symbol id="ad-filled" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <path d="M19 4h-14a3 3 0 0 0 -3 3v10a3 3 0 0 0 3 3h14a3 3 0 0 0 3 -3v-10a3 3 0 0 0 -3 -3zm-10 4a3 3 0 0 1 2.995 2.824l.005 .176v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-1h-2v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-4a3 3 0 0 1 3 -3zm0 2a1 1 0 0 0 -.993 .883l-.007 .117v1h2v-1a1 1 0 0 0 -1 -1zm8 -2a1 1 0 0 1 .993 .883l.007 .117v6a1 1 0 0 1 -.883 .993l-.117 .007h-1.5a2.5 2.5 0 1 1 .326 -4.979l.174 .029v-2.05a1 1 0 0 1 .883 -.993l.117 -.007zm-1.41 5.008l-.09 -.008a.5 .5 0 0 0 -.09 .992l.09 .008h.5v-.5l-.008 -.09a.5 .5 0 0 0 -.318 -.379l-.084 -.023z" />
+    </symbol>
+    <symbol id="shopping-cart-filled" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <path d="M6 2a1 1 0 0 1 .993 .883l.007 .117v1.068l13.071 .935a1 1 0 0 1 .929 1.024l-.01 .114l-1 7a1 1 0 0 1 -.877 .853l-.113 .006h-12v2h10a3 3 0 1 1 -2.995 3.176l-.005 -.176l.005 -.176c.017 -.288 .074 -.564 .166 -.824h-5.342a3 3 0 1 1 -5.824 1.176l-.005 -.176l.005 -.176a3.002 3.002 0 0 1 1.995 -2.654v-12.17h-1a1 1 0 0 1 -.993 -.883l-.007 -.117a1 1 0 0 1 .883 -.993l.117 -.007h2zm0 16a1 1 0 1 0 0 2a1 1 0 0 0 0 -2m11 0a1 1 0 1 0 0 2a1 1 0 0 0 0 -2" />
+    </symbol>
+    <symbol id="ad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" />
+      <path d="M7 15v-4a2 2 0 0 1 4 0v4" />
+      <path d="M7 13l4 0" />
+      <path d="M17 9v6h-1.5a1.5 1.5 0 1 1 1.5 -1.5" />
+    </symbol>
+  </defs>
+</svg>
+
+  <!-- Phosphor Icons MIT license
+MIT License
+
+Copyright (c) 2023 Phosphor Icons
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+-->
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <symbol id="ph-squares-four" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M104,40H56A16,16,0,0,0,40,56v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,104,40Zm0,64H56V56h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,64H152V56h48v48Zm-96,32H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm0,64H56V152h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Zm0,64H152V152h48v48Z" />
+    </symbol>
+    <symbol id="ph-storefront" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M232,96a7.89,7.89,0,0,0-.3-2.2L217.35,43.6A16.07,16.07,0,0,0,202,32H54A16.07,16.07,0,0,0,38.65,43.6L24.31,93.8A7.89,7.89,0,0,0,24,96h0v16a40,40,0,0,0,16,32v72a8,8,0,0,0,8,8H208a8,8,0,0,0,8-8V144a40,40,0,0,0,16-32V96ZM54,48H202l11.42,40H42.61Zm50,56h48v8a24,24,0,0,1-48,0Zm-16,0v8a24,24,0,0,1-35.12,21.26,7.88,7.88,0,0,0-1.82-1.06A24,24,0,0,1,40,112v-8ZM200,208H56V151.2a40.57,40.57,0,0,0,8,.8,40,40,0,0,0,32-16,40,40,0,0,0,64,0,40,40,0,0,0,32,16,40.57,40.57,0,0,0,8-.8Zm4.93-75.8a8.08,8.08,0,0,0-1.8,1.05A24,24,0,0,1,168,112v-8h48v8A24,24,0,0,1,204.93,132.2Z" />
+    </symbol>
+    <symbol id="ph-megaphone-simple" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M228.54,86.66l-176.06-54A16,16,0,0,0,32,48V192a16,16,0,0,0,16,16,16,16,0,0,0,4.52-.65L136,181.73V192a16,16,0,0,0,16,16h32a16,16,0,0,0,16-16v-29.9l28.54-8.75A16.09,16.09,0,0,0,240,138V102A16.09,16.09,0,0,0,228.54,86.66ZM136,165,48,192V48l88,27Zm48,27H152V176.82L184,167Zm40-54-.11,0L152,160.08V79.92l71.89,22,.11,0v36Z" />
+    </symbol>
+    <symbol id="ph-cube" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M223.68,66.15,135.68,18h0a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,32h0l80.34,44L128,120,47.66,76ZM40,90l80,43.78v85.79L40,175.82Zm96,129.57V133.82L216,90v85.78Z" />
+    </symbol>
+    <symbol id="ph-play-circle" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm48.24-94.78-64-40A8,8,0,0,0,100,88v80a8,8,0,0,0,12.24,6.78l64-40a8,8,0,0,0,0-13.56ZM116,153.57V102.43L156.91,128Z" />
+    </symbol>
+    <symbol id="ph-fire-simple" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M143.38,17.85a8,8,0,0,0-12.63,3.41l-22,60.41L84.59,58.26a8,8,0,0,0-11.93.89C51,87.53,40,116.08,40,144a88,88,0,0,0,176,0C216,84.55,165.21,36,143.38,17.85ZM128,216a72.08,72.08,0,0,1-72-72c0-22,8.09-44.79,24.06-67.84l26.37,25.58a8,8,0,0,0,13.09-3l22.27-61.07C164.21,58.08,200,97.91,200,144A72.08,72.08,0,0,1,128,216Z" />
+    </symbol>
+    <symbol id="ph-bell-simple" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M168,224a8,8,0,0,1-8,8H96a8,8,0,1,1,0-16h64A8,8,0,0,1,168,224Zm53.85-32A15.8,15.8,0,0,1,208,200H48a16,16,0,0,1-13.8-24.06C39.75,166.38,48,139.34,48,104a80,80,0,1,1,160,0c0,35.33,8.26,62.38,13.81,71.94A15.89,15.89,0,0,1,221.84,192ZM208,184c-7.73-13.27-16-43.95-16-80a64,64,0,1,0-128,0c0,36.06-8.28,66.74-16,80Z" />
+    </symbol>
+    <symbol id="ph-video-camera" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M251.77,73a8,8,0,0,0-8.21.39L208,97.05V72a16,16,0,0,0-16-16H32A16,16,0,0,0,16,72V184a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V159l35.56,23.71A8,8,0,0,0,248,184a8,8,0,0,0,8-8V80A8,8,0,0,0,251.77,73ZM192,184H32V72H192V184Zm48-22.95-32-21.33V116.28L240,95Z" />
+    </symbol>
+    <symbol id="ph-users" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.7a8,8,0,0,1-11.07-2.33A79.83,79.83,0,0,0,172,168a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,55.53,105.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.14,206.7Z" />
+    </symbol>
+    <symbol id="ph-stack" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M230.91,172A8,8,0,0,1,228,182.91l-96,56a8,8,0,0,1-8.06,0l-96-56A8,8,0,0,1,36,169.09l92,53.65,92-53.65A8,8,0,0,1,230.91,172ZM220,121.09l-92,53.65L36,121.09A8,8,0,0,0,28,134.91l96,56a8,8,0,0,0,8.06,0l96-56A8,8,0,1,0,220,121.09ZM24,80a8,8,0,0,1,4-6.91l96-56a8,8,0,0,1,8.06,0l96,56a8,8,0,0,1,0,13.82l-96,56a8,8,0,0,1-8.06,0l-96-56A8,8,0,0,1,24,80Zm23.88,0L128,126.74,208.12,80,128,33.26Z" />
+    </symbol>
+    <symbol id="ph-clipboard-text" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M168,152a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,152Zm-8-40H96a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16Zm56-64V216a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V48A16,16,0,0,1,56,32H92.26a47.92,47.92,0,0,1,71.48,0H200A16,16,0,0,1,216,48ZM96,64h64a32,32,0,0,0-64,0ZM200,48H173.25A47.93,47.93,0,0,1,176,64v8a8,8,0,0,1-8,8H88a8,8,0,0,1-8-8V64a47.93,47.93,0,0,1,2.75-16H56V216H200Z" />
+    </symbol>
+    <symbol id="ph-sparkle" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M197.58,129.06,146,110l-19-51.62a15.92,15.92,0,0,0-29.88,0L78,110l-51.62,19a15.92,15.92,0,0,0,0,29.88L78,178l19,51.62a15.92,15.92,0,0,0,29.88,0L146,178l51.62-19a15.92,15.92,0,0,0,0-29.88ZM137,164.22a8,8,0,0,0-4.74,4.74L112,223.85,91.78,169A8,8,0,0,0,87,164.22L32.15,144,87,123.78A8,8,0,0,0,91.78,119L112,64.15,132.22,119a8,8,0,0,0,4.74,4.74L191.85,144ZM144,40a8,8,0,0,1,8-8h16V16a8,8,0,0,1,16,0V32h16a8,8,0,0,1,0,16H184V64a8,8,0,0,1-16,0V48H152A8,8,0,0,1,144,40ZM248,88a8,8,0,0,1-8,8h-8v8a8,8,0,0,1-16,0V96h-8a8,8,0,0,1,0-16h8V72a8,8,0,0,1,16,0v8h8A8,8,0,0,1,248,88Z" />
+    </symbol>
+    <symbol id="ph-shield-check" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.3,48,112l0-56,160,0ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z" />
+    </symbol>
+    <symbol id="ph-chart-line-up" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V48a8,8,0,0,1,16,0V156.69l50.34-50.35a8,8,0,0,1,11.32,0L128,132.69,180.69,80H160a8,8,0,0,1,0-16h40a8,8,0,0,1,8,8v40a8,8,0,0,1-16,0V91.31l-58.34,58.35a8,8,0,0,1-11.32,0L96,123.31l-56,56V200H224A8,8,0,0,1,232,208Z" />
+    </symbol>
+    <symbol id="ph-target" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M221.87,83.16A104.1,104.1,0,1,1,195.67,49l22.67-22.68a8,8,0,0,1,11.32,11.32l-96,96a8,8,0,0,1-11.32-11.32l27.72-27.72a40,40,0,1,0,17.87,31.09,8,8,0,1,1,16-.9,56,56,0,1,1-22.38-41.65L184.3,60.39a87.88,87.88,0,1,0,23.13,29.67,8,8,0,0,1,14.44-6.9Z" />
+    </symbol>
+    <symbol id="ph-database" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M128,24C74.17,24,32,48.6,32,80v96c0,31.4,42.17,56,96,56s96-24.6,96-56V80C224,48.6,181.83,24,128,24Zm80,104c0,9.62-7.88,19.43-21.61,26.92C170.93,163.35,150.19,168,128,168s-42.93-4.65-58.39-13.08C55.88,147.43,48,137.62,48,128V111.36c17.06,15,46.23,24.64,80,24.64s62.94-9.68,80-24.64ZM69.61,53.08C85.07,44.65,105.81,40,128,40s42.93,4.65,58.39,13.08C200.12,60.57,208,70.38,208,80s-7.88,19.43-21.61,26.92C170.93,115.35,150.19,120,128,120s-42.93-4.65-58.39-13.08C55.88,99.43,48,89.62,48,80S55.88,60.57,69.61,53.08ZM186.39,202.92C170.93,211.35,150.19,216,128,216s-42.93-4.65-58.39-13.08C55.88,195.43,48,185.62,48,176V159.36c17.06,15,46.23,24.64,80,24.64s62.94-9.68,80-24.64V176C208,185.62,200.12,195.43,186.39,202.92Z" />
+    </symbol>
+    <symbol id="ph-gear-six" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm109.94-52.79a8,8,0,0,0-3.89-5.4l-29.83-17-.12-33.62a8,8,0,0,0-2.83-6.08,111.91,111.91,0,0,0-36.72-20.67,8,8,0,0,0-6.46.59L128,41.85,97.88,25a8,8,0,0,0-6.47-.6A112.1,112.1,0,0,0,54.73,45.15a8,8,0,0,0-2.83,6.07l-.15,33.65-29.83,17a8,8,0,0,0-3.89,5.4,106.47,106.47,0,0,0,0,41.56,8,8,0,0,0,3.89,5.4l29.83,17,.12,33.62a8,8,0,0,0,2.83,6.08,111.91,111.91,0,0,0,36.72,20.67,8,8,0,0,0,6.46-.59L128,214.15,158.12,231a7.91,7.91,0,0,0,3.9,1,8.09,8.09,0,0,0,2.57-.42,112.1,112.1,0,0,0,36.68-20.73,8,8,0,0,0,2.83-6.07l.15-33.65,29.83-17a8,8,0,0,0,3.89-5.4A106.47,106.47,0,0,0,237.94,107.21Zm-15,34.91-28.57,16.25a8,8,0,0,0-3,3c-.58,1-1.19,2.06-1.81,3.06a7.94,7.94,0,0,0-1.22,4.21l-.15,32.25a95.89,95.89,0,0,1-25.37,14.3L134,199.13a8,8,0,0,0-3.91-1h-.19c-1.21,0-2.43,0-3.64,0a8.08,8.08,0,0,0-4.1,1l-28.84,16.1A96,96,0,0,1,67.88,201l-.11-32.2a8,8,0,0,0-1.22-4.22c-.62-1-1.23-2-1.8-3.06a8.09,8.09,0,0,0-3-3.06l-28.6-16.29a90.49,90.49,0,0,1,0-28.26L61.67,97.63a8,8,0,0,0,3-3c.58-1,1.19-2.06,1.81-3.06a7.94,7.94,0,0,0,1.22-4.21l.15-32.25a95.89,95.89,0,0,1,25.37-14.3L122,56.87a8,8,0,0,0,4.1,1c1.21,0,2.43,0,3.64,0a8.08,8.08,0,0,0,4.1-1l28.84-16.1A96,96,0,0,1,188.12,55l.11,32.2a8,8,0,0,0,1.22,4.22c.62,1,1.23,2,1.8,3.06a8.09,8.09,0,0,0,3,3.06l28.6,16.29A90.49,90.49,0,0,1,222.9,142.12Z" />
+    </symbol>
+    <symbol id="ph-sidebar-simple" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM40,56H80V200H40ZM216,200H96V56H216V200Z" />
+    </symbol>
+    <symbol id="ph-film-strip" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM40,88h80v80H40Zm96-16V56h32V72Zm-16,0H88V56h32Zm0,112v16H88V184Zm16,0h32v16H136Zm0-16V88h80v80Zm80-96H184V56h32ZM72,56V72H40V56ZM40,184H72v16H40Zm176,16H184V184h32v16Z" />
+    </symbol>
+    <symbol id="ph-plus-circle" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm48-88a8,8,0,0,1-8,8H136v32a8,8,0,0,1-16,0V136H88a8,8,0,0,1,0-16h32V88a8,8,0,0,1,16,0v32h32A8,8,0,0,1,176,128Z" />
+    </symbol>
+    <symbol id="ph-receipt" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M72,104a8,8,0,0,1,8-8h96a8,8,0,0,1,0,16H80A8,8,0,0,1,72,104Zm8,40h96a8,8,0,0,0,0-16H80a8,8,0,0,0,0,16ZM232,56V208a8,8,0,0,1-11.58,7.15L192,200.94l-28.42,14.21a8,8,0,0,1-7.16,0L128,200.94,99.58,215.15a8,8,0,0,1-7.16,0L64,200.94,35.58,215.15A8,8,0,0,1,24,208V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56Zm-16,0H40V195.06l20.42-10.22a8,8,0,0,1,7.16,0L96,199.06l28.42-14.22a8,8,0,0,1,7.16,0L160,199.06l28.42-14.22a8,8,0,0,1,7.16,0L216,195.06Z" />
+    </symbol>
+    <symbol id="ph-clock" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z" />
+    </symbol>
+    <symbol id="ph-trend-down" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M240,128v64a8,8,0,0,1-8,8H168a8,8,0,0,1,0-16h44.69L136,107.31l-34.34,34.35a8,8,0,0,1-11.32,0l-72-72A8,8,0,0,1,29.66,58.34L96,124.69l34.34-34.35a8,8,0,0,1,11.32,0L224,172.69V128a8,8,0,0,1,16,0Z" />
+    </symbol>
+    <symbol id="ph-wallet" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M216,64H56a8,8,0,0,1,0-16H192a8,8,0,0,0,0-16H56A24,24,0,0,0,32,56V184a24,24,0,0,0,24,24H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64Zm0,128H56a8,8,0,0,1-8-8V78.63A23.84,23.84,0,0,0,56,80H216Zm-48-60a12,12,0,1,1,12,12A12,12,0,0,1,168,132Z" />
+    </symbol>
+    <symbol id="ph-currency-dollar" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M152,120H136V56h8a32,32,0,0,1,32,32,8,8,0,0,0,16,0,48.05,48.05,0,0,0-48-48h-8V24a8,8,0,0,0-16,0V40h-8a48,48,0,0,0,0,96h8v64H104a32,32,0,0,1-32-32,8,8,0,0,0-16,0,48.05,48.05,0,0,0,48,48h16v16a8,8,0,0,0,16,0V216h16a48,48,0,0,0,0-96Zm-40,0a32,32,0,0,1,0-64h8v64Zm40,80H136V136h16a32,32,0,0,1,0,64Z" />
+    </symbol>
+    <symbol id="ph-shopping-bag-open" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V72H40V56Zm0,144H40V88H216V200Zm-40-88a48,48,0,0,1-96,0,8,8,0,0,1,16,0,32,32,0,0,0,64,0,8,8,0,0,1,16,0Z" />
+    </symbol>
+    <symbol id="ph-check-circle" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z" />
+    </symbol>
+    <symbol id="ph-x-circle" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z" />
+    </symbol>
+    <symbol id="ph-megaphone-simple-fill" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M228.54,86.66l-176.06-54A16,16,0,0,0,32,48V192a16,16,0,0,0,16,16,16,16,0,0,0,4.52-.65L136,181.73V192a16,16,0,0,0,16,16h32a16,16,0,0,0,16-16v-29.9l28.54-8.75A16.09,16.09,0,0,0,240,138V102A16.09,16.09,0,0,0,228.54,86.66ZM184,192H152V176.82L184,167Zm40-54-.11,0L152,160.08V79.91L223.89,102l.11,0v36Z" />
+    </symbol>
+    <symbol id="ph-cube-fill" viewBox="0 0 256 256" fill="currentColor" stroke="none">
+      <path d="M223.68,66.15,135.68,18a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,120,47.65,76,128,32l80.35,44Zm8,99.64V133.83l80-43.78v85.76Z" />
+    </symbol>
+  </defs>
+</svg>
+
+  <aside class="sidebar" aria-label="主导航">
+    <div class="brand"><span class="brand-mark">Ai</span><span class="brand-name">Commerce AI</span><button class="collapse-button" id="collapse-sidebar" aria-label="收起侧边栏" aria-expanded="true"><svg class="icon ph-icon" aria-hidden="true"><use href="#ph-sidebar-simple"></use></svg></button></div>
+    <nav class="navigation" aria-label="经营导航">
+      <p class="nav-group">经营工作台</p>
+      <button class="nav-item local-nav" aria-label="仪表盘"><svg class="icon ph-icon" aria-hidden="true"><use href="#ph-squares-four"></use></svg><span class="nav-label">仪表盘</span></button>
+      <button class="nav-item local-nav" aria-label="店铺经营"><svg class="icon ph-icon" aria-hidden="true"><use href="#ph-storefront"></use></svg><span class="nav-label">店铺经营</span></button>
+      <button class="nav-item parent" id="ads-menu" aria-expanded="true" aria-controls="ads-subnav" aria-label="广告"><svg class="icon nav-icon-outline ph-icon" aria-hidden="true"><use href="#ph-megaphone-simple"></use></svg><svg class="icon nav-icon-filled ph-icon" aria-hidden="true"><use href="#ph-megaphone-simple-fill"></use></svg><span class="nav-label">广告</span><svg class="icon chevron" aria-hidden="true"><use href="#chevron-down"></use></svg></button>
+      <div class="subnav" id="ads-subnav">
+        <button class="nav-item local-nav"><span>广告</span></button>
+        <button class="nav-item current" aria-current="page"><span>产品广告</span></button>
+        <button class="nav-item local-nav"><span>素材加热表现</span></button>
+        <button class="nav-item local-nav"><span>达人素材授权提醒</span></button>
+      </div>
+      <button class="nav-item local-nav" aria-label="内容运营"><svg class="icon ph-icon" aria-hidden="true"><use href="#ph-video-camera"></use></svg><span class="nav-label">内容运营</span></button>
+      <button class="nav-item local-nav" aria-label="达人管理"><svg class="icon ph-icon" aria-hidden="true"><use href="#ph-users"></use></svg><span class="nav-label">达人管理</span></button>
+      <button class="nav-item local-nav" aria-label="库存与供应"><svg class="icon ph-icon" aria-hidden="true"><use href="#ph-stack"></use></svg><span class="nav-label">库存与供应</span></button>
+      <button class="nav-item local-nav" aria-label="经营跟进"><svg class="icon ph-icon" aria-hidden="true"><use href="#ph-clipboard-text"></use></svg><span class="nav-label">经营跟进</span></button>
+      <p class="nav-group">智能协作</p>
+      <button class="nav-item local-nav" aria-label="智能分析任务"><svg class="icon ph-icon" aria-hidden="true"><use href="#ph-sparkle"></use></svg><span class="nav-label">智能分析任务</span></button>
+      <button class="nav-item local-nav" aria-label="行动审批"><svg class="icon ph-icon" aria-hidden="true"><use href="#ph-shield-check"></use></svg><span class="nav-label">行动审批</span></button>
+      <p class="nav-group">分析与计划</p>
+      <button class="nav-item local-nav" aria-label="经营报表"><svg class="icon ph-icon" aria-hidden="true"><use href="#ph-chart-line-up"></use></svg><span class="nav-label">经营报表</span></button>
+      <button class="nav-item local-nav" aria-label="经营目标"><svg class="icon ph-icon" aria-hidden="true"><use href="#ph-target"></use></svg><span class="nav-label">经营目标</span></button>
+      <p class="nav-group">数据管理</p>
+      <button class="nav-item local-nav" aria-label="数据与同步"><svg class="icon ph-icon" aria-hidden="true"><use href="#ph-database"></use></svg><span class="nav-label">数据与同步</span></button>
+      <button class="nav-item local-nav" aria-label="系统管理"><svg class="icon ph-icon" aria-hidden="true"><use href="#ph-gear-six"></use></svg><span class="nav-label">系统管理</span></button>
+    </nav>
+    <button class="sidebar-user local-nav" aria-label="平台管理员，打开账号操作"><span class="avatar">平台</span><span class="user-copy"><strong>平台管理员</strong><small>管理员</small></span><svg class="icon" aria-hidden="true"><use href="#chevron-down"></use></svg></button>
+  </aside>
+  <div class="workspace">
+    <header class="topbar">
+      <div class="breadcrumb"><span>广告</span><svg class="icon" aria-hidden="true"><use href="#chevron-right"></use></svg><strong>产品广告</strong></div>
+      <div class="topbar-right"><div class="update-info" aria-label="数据更新时间"><span class="update-label">数据截至</span><time class="update-date" datetime="2026-10-11">2026-10-11</time><span class="update-detail">，每日凌晨 3:00 更新，展示前一日完整数据</span></div><button class="shop-selector local-nav" aria-label="ModernMate，运营十六部"><span class="shop-icon"><svg class="icon ph-icon" aria-hidden="true"><use href="#ph-storefront"></use></svg></span><span class="shop-copy"><span class="shop-name">ModernMate</span><span class="dept">运营十六部</span></span><svg class="icon chevron" aria-hidden="true"><use href="#chevron-down"></use></svg></button></div>
+    </header>
+    <main>
+      <div class="page-heading"><div><h1>产品广告</h1><p class="subtitle">按广告计划查看 Product GMV Max 投入、成交与利润目标表现</p></div><span class="preview-label">HTML 视觉预览</span></div>
+      <section class="filter-panel" aria-label="产品广告筛选">
+        <form id="filters" class="filters">
+          <div class="filter-field date-field"><label for="start-date">统计日期</label><div class="control date-control"><input id="start-date" name="start" type="date" value="2026-10-05" aria-label="统计日期开始日期"><span class="date-separator">—</span><input id="end-date" name="end" type="date" value="2026-10-11" aria-label="统计日期结束日期（含）"></div></div>
+          <div class="filter-field"><label for="product-pid">产品 PID</label><div class="control"><input id="product-pid" name="pid" type="text" inputmode="numeric" autocomplete="off" aria-label="产品 PID"><svg class="icon" aria-hidden="true"><use href="#search"></use></svg></div></div>
+          <div class="filter-field"><label for="work-id">作品 ID</label><div class="control"><input id="work-id" name="work" type="text" inputmode="numeric" autocomplete="off" aria-label="作品 ID"><svg class="icon" aria-hidden="true"><use href="#search"></use></svg></div></div>
+          <div class="filter-field"><label for="margin-filter">毛利判断</label><select id="margin-filter" name="margin"><option>全部</option><option>达标</option><option>不达标</option><option>待补充</option></select></div>
+          <div class="filter-field"><label for="gmv-sort">GMV 排序</label><select id="gmv-sort" name="sort"><option value="desc">GMV 从高到低</option><option value="asc">GMV 从低到高</option><option value="custom" hidden>按列表列头排序</option></select></div>
+          <div class="filter-actions"><button class="button text" type="reset">重置</button><button class="button primary" type="submit"><svg class="icon" aria-hidden="true"><use href="#search"></use></svg>查询</button></div>
+        </form>
+        <div class="context-bar"><span>统计范围 <strong>2026-10-05 — 2026-10-11</strong></span><span>上期 <strong>2026-09-28 — 2026-10-04</strong></span><span class="context-chip"><svg class="icon" aria-hidden="true"><use href="#calendar"></use></svg>America/Los_Angeles</span><span>USD</span><span class="last-processed">最近成功处理：2026年10月12日 18:06</span></div>
+      </section>
+      <section id="metrics" class="metric-groups" aria-label="产品广告核心指标"></section>
+      <section class="table-panel" aria-label="商品 GMV Max 广告计划">
+        <div class="table-toolbar"><div class="table-title"><h2>商品 GMV Max 广告计划</h2><button class="info-button" data-info="plan" aria-label="广告计划计算口径说明"><svg class="icon" aria-hidden="true"><use href="#info-circle"></use></svg></button><span class="table-count">4 条计划</span></div><button id="field-settings" class="button secondary" aria-expanded="false" aria-controls="fields-popover"><svg class="icon" aria-hidden="true"><use href="#adjustments-horizontal"></use></svg>字段设置</button></div>
+        <div class="fields-popover" id="fields-popover" hidden><p class="fields-heading">字段设置</p><div class="fields-options" id="fields-options"></div></div>
+        <div class="table-viewport" id="table-viewport" tabindex="0" role="region" aria-label="产品广告计划列表，可横向滚动查看全部字段"><table class="ads-table" id="ads-table"><colgroup id="table-cols"></colgroup><thead><tr id="table-header"></tr></thead><tbody id="table-body"></tbody></table></div>
+        <div class="table-footer"><span>共 4 条 · 每页 20 条</span><span class="scroll-help"><svg class="icon" aria-hidden="true"><use href="#chevron-left"></use></svg>左右滚动查看全部字段<svg class="icon" aria-hidden="true"><use href="#chevron-right"></use></svg></span><nav class="pagination" aria-label="产品广告计划分页"><button disabled aria-label="上一页"><svg class="icon" aria-hidden="true"><use href="#chevron-left"></use></svg></button><button class="active" aria-current="page">1</button><button disabled aria-label="下一页"><svg class="icon" aria-hidden="true"><use href="#chevron-right"></use></svg></button></nav></div>
+      </section>
+      <footer class="page-footnote"><span><svg class="icon" aria-hidden="true"><use href="#shield-check"></use></svg>仅包含截至昨日的完整数据</span><span>2026-10-13 页面快照 · 视觉优化预览</span></footer>
+    </main>
+  </div>
+  <div id="info-popover" class="info-popover" role="tooltip" hidden><p></p></div>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <script type="application/json" id="snapshot">{"source_url": "https://commerce-test.aukeyvalue.com/advertising/products", "observed_date": "2026-10-13", "source_method": "Authenticated existing Chrome tab, native accessibility tree and screenshot via cua_repl", "source_scope": "Current product advertising page; no repository or Figma design source available", "store": "ModernMate", "department": "运营十六部", "period": ["2026-10-05", "2026-10-11"], "previous_period": ["2026-09-28", "2026-10-04"], "timezone": "America/Los_Angeles", "currency": "USD", "last_processed": "2026年10月12日 18:06", "design_status": "Standalone visual proposal based on user style references; concrete CSS values are draft and do not update the Skill's approved brand tokens", "interaction_scope": "Local field visibility, explanations, sidebar states and sorting demonstration only. Query does not access the original API or recompute metrics.", "metrics": [{"name": "可投放作品总数", "value": "—", "change": "—", "unavailable": true, "info": "available", "infoLabel": "可投放作品总数权限说明"}, {"name": "新增作品总数", "value": "—", "change": "—", "unavailable": true, "info": "newWorks", "infoLabel": "新增作品总数缺值说明"}, {"name": "新增作品出单量", "value": "—", "change": "—", "unavailable": true, "info": "workOrders", "infoLabel": "新增作品出单量缺值说明"}, {"name": "待授权视频数", "value": "—", "change": "—", "unavailable": true}, {"name": "低于 ROI 目标计划数", "value": "0", "change": "—", "info": "lowRoi", "infoLabel": "低于 ROI 目标计划数统计说明"}, {"name": "成本", "value": "US$941.75", "change": "↑12.7%"}, {"name": "收入", "value": "US$7,379.78", "change": "↑17.0%"}, {"name": "ROI", "value": "7.84", "change": "↑3.8%"}, {"name": "SKU 订单", "value": "22", "change": "↓4.3%"}, {"name": "达标 PID", "value": "0", "change": "—"}, {"name": "未达标 PID", "value": "0", "change": "—"}], "columns": [{"key": "plan", "name": "广告计划", "width": 268}, {"key": "product", "name": "产品 / PID", "width": 243}, {"key": "status", "name": "状态", "width": 98}, {"key": "budget", "name": "当前预算", "width": 124, "numeric": true, "sortable": true}, {"key": "change", "name": "较上期环比", "width": 125, "numeric": true, "sortable": true}, {"key": "cost", "name": "成本", "width": 120, "numeric": true, "sortable": true}, {"key": "protection", "name": "ROI 保护", "width": 135}, {"key": "schedule", "name": "排期时间", "width": 206}, {"key": "created", "name": "创建时间", "width": 180, "sortable": true}, {"key": "creativeBudget", "name": "创意作品加热预算", "width": 163, "numeric": true, "sortable": true}, {"key": "targetRoi", "name": "目标 ROI", "width": 124, "numeric": true, "info": "targetRoi", "infoLabel": "目标 ROI 说明"}, {"key": "netCost", "name": "净成本", "width": 126, "numeric": true, "sortable": true}, {"key": "orderCost", "name": "平均下单成本", "width": 147, "numeric": true, "sortable": true}, {"key": "revenue", "name": "总收入", "width": 136, "numeric": true, "sortable": true}, {"key": "orders", "name": "SKU 订单", "width": 118, "numeric": true, "sortable": true}, {"key": "roi", "name": "ROI", "width": 110, "numeric": true, "info": "roi", "infoLabel": "ROI经营判断说明"}, {"key": "targetMargin", "name": "目标毛利率", "width": 130, "numeric": true, "sortable": true}, {"key": "actualMargin", "name": "实际毛利率", "width": 141, "numeric": true, "info": "actualMargin", "infoLabel": "实际毛利率说明"}, {"key": "marginDelta", "name": "毛利差值（百分点）", "width": 175, "numeric": true, "sortable": true}, {"key": "judgment", "name": "毛利判断", "width": 248}], "rows": [{"plan": "床架类目-10-20-0716", "campaign": "1865779061606577", "pid": "1732307845154116396", "products": 10, "status": "投放中", "budget": "US$100.00", "change": "↑158.2%", "cost": "US$503.53", "protection": "符合保障资格", "schedule": "2026年5月22日 02:47 — 2036年5月19日 02:47", "created": "2026年5月21日 14:48", "creativeBudget": "—", "targetRoi": "—", "netCost": "US$469.09", "orderCost": "US$33.57", "revenue": "US$5,939.85", "orders": "15", "roi": "11.79", "targetMargin": "5%", "actualMargin": "—", "marginDelta": "—", "judgment": "毛利来源未选择"}, {"plan": "全店-0419-10", "campaign": "1862893873835041", "pid": "1729507065053746988", "products": 177, "status": "投放中", "budget": "US$200.00", "change": "↓64.1%", "cost": "US$353.95", "protection": "符合保障资格", "schedule": "2026年4月20日 07:00 — 2036年4月17日 07:00", "created": "2026年4月19日 18:21", "creativeBudget": "—", "targetRoi": "—", "netCost": "US$327.21", "orderCost": "US$50.56", "revenue": "US$1,439.93", "orders": "7", "roi": "4.06", "targetMargin": "5%", "actualMargin": "—", "marginDelta": "—", "judgment": "毛利来源未选择"}, {"plan": "[Auto-created] US SS Level Fall Deals For You Promotion_20260929094311", "campaign": "1877658407755122", "pid": "1732688870683808556", "products": 7, "status": "投放中", "budget": "US$10.00", "change": "—", "cost": "US$13.97", "protection": "符合保障资格", "schedule": "2026年10月5日 15:00 — 2038年1月1日 16:00", "created": "2026年9月29日 17:43", "creativeBudget": "—", "targetRoi": "—", "netCost": "US$12.44", "orderCost": "—", "revenue": "US$0.00", "orders": "0", "roi": "0.00", "targetMargin": "5%", "actualMargin": "—", "marginDelta": "—", "judgment": "毛利来源未选择"}, {"plan": "[Auto-created] US SS Level Fall Deals For You Promotion_20261005071524", "campaign": "1878191929929809", "pid": "1732470139639010092", "products": 2, "status": "投放中", "budget": "US$10.00", "change": "—", "cost": "US$70.30", "protection": "符合保障资格", "schedule": "2026年10月5日 22:15 — 2038年1月1日 16:00", "created": "2026年10月5日 15:15", "creativeBudget": "—", "targetRoi": "—", "netCost": "US$65.50", "orderCost": "—", "revenue": "US$0.00", "orders": "0", "roi": "0.00", "targetMargin": "5%", "actualMargin": "—", "marginDelta": "—", "judgment": "毛利来源未选择"}]}</script>
+  <script>
+    'use strict';
+    const snapshot = JSON.parse(document.getElementById('snapshot').textContent);
+    const icon = name => `<svg class="icon${name.startsWith('ph-') ? ' ph-icon' : ''}" aria-hidden="true"><use href="#${name}"></use></svg>`;
+    const escapeHtml = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const explanations = {
+      plan: 'ROI 和毛利分别判断，ROI 达标不代表毛利达标。ROI 无效或目标无法确定时，ROI 判断显示“待补充”；本期已成交 SKU 缺少毛利数据时，整个 PID 的毛利相关结果显示“待补充”。未成交 SKU 缺毛利不影响计算。',
+      available: '所选结束日没有完整的 TikTok 可投放作品快照。',
+      newWorks: '当前范围没有可用的店铺作品数据源。',
+      workOrders: '当前范围没有可用的店铺作品数据源。',
+      lowRoi: '当前范围没有具备有效消耗、平台实际 ROI 与飞书合理目标 ROI 的可比较计划。',
+      marginReason: '毛利来源未选择。',
+      targetRoi: '当前页面目标 ROI 显示为“—”。完整口径说明请在原系统查看。',
+      roi: 'ROI 和毛利分别判断，ROI 达标不代表毛利达标。ROI 无效或目标无法确定时，ROI 判断显示“待补充”。',
+      actualMargin: '当前页面实际毛利率显示为“—”。毛利来源未选择，保留缺值，不以零值代替。'
+    };
+    const infoButton = (key, label) => `<button class="info-button" data-info="${key}" aria-label="${escapeHtml(label)}">${icon('info-circle')}</button>`;
+    const metricIcons = {'可投放作品总数':'ph-film-strip','新增作品总数':'ph-plus-circle','新增作品出单量':'ph-receipt','待授权视频数':'ph-clock','低于 ROI 目标计划数':'ph-trend-down','成本':'ph-wallet','收入':'ph-currency-dollar','ROI':'ph-chart-line-up','SKU 订单':'ph-shopping-bag-open','达标 PID':'ph-check-circle','未达标 PID':'ph-x-circle'};
+    function metricCards(items) {
+      return items.map(m => `<article class="metric ${m.unavailable ? 'unavailable' : ''} ${m.name === '成本' ? 'featured' : ''} ${['成本','收入','ROI','SKU 订单'].includes(m.name) ? 'key-metric' : ''}" aria-label="${escapeHtml(m.name)}"><div class="metric-label"><span>${escapeHtml(m.name)}</span><span class="metric-symbol" aria-hidden="true">${icon(metricIcons[m.name])}</span></div><div class="metric-value">${escapeHtml(m.value)}</div><div class="metric-comparison"><span>较上期</span><span class="${m.change.startsWith('↑') ? 'up' : m.change.startsWith('↓') ? 'down' : ''}">${escapeHtml(m.change)}</span>${m.info ? infoButton(m.info,m.infoLabel) : ''}</div></article>`).join('');
+    }
+    document.getElementById('metrics').innerHTML = `<div class="metric-group monitoring" role="group" aria-label="素材与投放监控"><div class="metric-grid">${metricCards(snapshot.metrics.slice(0,5))}</div></div><div class="metric-group results" role="group" aria-label="投入与经营结果"><div class="metric-grid">${metricCards(snapshot.metrics.slice(5))}</div></div>`;
+    const columns = snapshot.columns;
+    const visible = new Set(columns.map(c => c.key));
+    let rows = [...snapshot.rows];
+    let sortState = null;
+    function sortValue(row,key) {
+      if(key==='created') {
+        const parts=row.created.match(/(\d+)年(\d+)月(\d+)日 (\d+):(\d+)/);
+        return parts ? Number(parts.slice(1).map((v,i)=>i===0?v:v.padStart(2,'0')).join('')) : NaN;
+      }
+      const value=parseFloat(String(row[key]).replace(/[^\d.-]/g,''));
+      return key==='change'&&row[key].startsWith('↓') ? -value : value;
+    }
+    function cell(row, key) {
+      if (key === 'plan') return `<strong class="campaign-name">${escapeHtml(row.plan)}</strong><small class="subtext">Campaign ${row.campaign}</small>`;
+      if (key === 'product') return `<span class="product-label">商品名称未同步</span><small class="subtext product-id">PID ${row.pid} · ${row.products} 个商品</small>`;
+      if (key === 'status') return `<span class="pill"><span class="dot"></span>${escapeHtml(row.status)}</span>`;
+      if (key === 'protection') return `<span class="protection">${icon('shield-check')}${escapeHtml(row.protection)}</span>`;
+      if (key === 'schedule') return `<span class="schedule">${escapeHtml(row.schedule).replace(' — ','<br>— ')}</span>`;
+      if (key === 'created') return `<span class="schedule">${escapeHtml(row.created)}</span>`;
+      if (key === 'judgment') return `<small class="subtext" style="margin-top:0;margin-bottom:6px">毛利取值 PID ${row.pid}</small><div class="judgment"><span class="pill">毛利来源未选择</span>${infoButton('marginReason','毛利判断原因')}</div>`;
+      const value = row[key];
+      if (value === '—') return '<span class="muted-value">—</span>';
+      if (key === 'change') return `<span class="delta ${value.startsWith('↑') ? 'up' : 'down'}">${escapeHtml(value)}</span>`;
+      if (key === 'roi') return `<span class="roi-value">${escapeHtml(value)}</span>`;
+      return escapeHtml(value);
+    }
+    function renderTable() {
+      const active = columns.filter(c => visible.has(c.key));
+      const width = active.reduce((sum,c) => sum + c.width,0);
+      document.getElementById('ads-table').style.width = `${width}px`;
+      document.getElementById('table-cols').innerHTML = active.map(c => `<col style="width:${c.width}px">`).join('');
+      document.getElementById('table-header').innerHTML = active.map(c => `<th scope="col" data-column="${c.key}" class="${c.numeric ? 'numeric' : ''} ${c.key==='plan' ? 'sticky' : ''}" ${sortState?.key===c.key ? `aria-sort="${sortState.asc ? 'ascending' : 'descending'}"` : ''}>${c.sortable ? `<button class="sort-button" data-sort="${c.key}" aria-label="按${escapeHtml(c.name)}排序">${escapeHtml(c.name)}<span class="sort-glyph">${sortState?.key===c.key ? (sortState.asc ? '↑' : '↓') : '↕'}</span></button>` : escapeHtml(c.name)}${c.info ? ' '+infoButton(c.info,c.infoLabel) : ''}</th>`).join('');
+      document.getElementById('table-body').innerHTML = rows.map(row => `<tr data-campaign="${row.campaign}">${active.map(c => `<td data-column="${c.key}" class="${c.numeric ? 'numeric' : ''} ${c.key==='plan' ? 'sticky' : ''}">${cell(row,c.key)}</td>`).join('')}</tr>`).join('');
+    }
+    document.getElementById('fields-options').innerHTML = columns.filter(c=>!['plan','product'].includes(c.key)).map(c=>`<label><input type="checkbox" data-column="${c.key}" checked>${escapeHtml(c.name)}</label>`).join('');
+    renderTable();
+    const fields = document.getElementById('fields-popover');
+    const fieldsButton = document.getElementById('field-settings');
+    function closeFields() { fields.hidden = true; fieldsButton.setAttribute('aria-expanded','false'); }
+    fieldsButton.addEventListener('click',()=>{fields.hidden=!fields.hidden;fieldsButton.setAttribute('aria-expanded',String(!fields.hidden));});
+    fields.addEventListener('change',event=>{const input=event.target;if(!input.matches('input[data-column]'))return;input.checked?visible.add(input.dataset.column):visible.delete(input.dataset.column);renderTable();});
+    const popover = document.getElementById('info-popover');
+    let infoAnchor = null;
+    function closeInfo() { popover.hidden=true; if(infoAnchor)infoAnchor.removeAttribute('aria-describedby');infoAnchor=null; }
+    let toastTimer;
+    function notify(message) { const toast=document.getElementById('toast');toast.textContent=message;toast.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{toast.hidden=true},3400); }
+    document.addEventListener('click',event=>{
+      const button=event.target.closest('[data-info]');
+      if(button) {
+        if(infoAnchor===button&&!popover.hidden){closeInfo();return;}
+        closeInfo();infoAnchor=button;popover.querySelector('p').textContent=explanations[button.dataset.info];popover.hidden=false;button.setAttribute('aria-describedby','info-popover');
+        const rect=button.getBoundingClientRect();const box=popover.getBoundingClientRect();
+        popover.style.left=`${Math.max(14,Math.min(rect.left-20,innerWidth-box.width-14))}px`;
+        popover.style.top=`${rect.bottom+box.height+20<innerHeight?rect.bottom+9:Math.max(14,rect.top-box.height-9)}px`;
+      } else if(!popover.contains(event.target))closeInfo();
+      if(!fields.contains(event.target)&&!fieldsButton.contains(event.target))closeFields();
+      const sortButton=event.target.closest('[data-sort]');
+      if(sortButton){const key=sortButton.dataset.sort;const asc=sortState?.key===key?!sortState.asc:false;sortState={key,asc};rows.sort((a,b)=>{const av=sortValue(a,key);const bv=sortValue(b,key);if(Number.isNaN(av)&&Number.isNaN(bv))return 0;if(Number.isNaN(av))return 1;if(Number.isNaN(bv))return -1;return asc?av-bv:bv-av});const sortSelect=document.getElementById('gmv-sort');sortSelect.value='custom';sortSelect.dispatchEvent(new Event('change',{bubbles:true}));renderTable();}
+      if(event.target.closest('.local-nav'))notify('此 HTML 仅展示产品广告页的视觉预览。');
+    });
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'){const wasOpen=!fields.hidden;closeInfo();closeFields();if(wasOpen)fieldsButton.focus();}});
+    document.getElementById('table-viewport').addEventListener('scroll',closeInfo);
+    window.addEventListener('resize',closeInfo);
+    document.getElementById('collapse-sidebar').addEventListener('click',()=>{const collapsed=document.body.classList.toggle('sidebar-collapsed');document.getElementById('collapse-sidebar').setAttribute('aria-expanded',String(!collapsed));document.getElementById('collapse-sidebar').setAttribute('aria-label',collapsed?'展开侧边栏':'收起侧边栏');});
+    document.getElementById('ads-menu').addEventListener('click',()=>{const subnav=document.getElementById('ads-subnav');subnav.hidden=!subnav.hidden;document.getElementById('ads-menu').setAttribute('aria-expanded',String(!subnav.hidden));});
+    document.getElementById('filters').addEventListener('submit',event=>{event.preventDefault();notify('视觉预览保留当前页面快照；其他日期和筛选结果需在原系统查询。');});
+    document.getElementById('filters').addEventListener('reset',()=>{rows=[...snapshot.rows];sortState=null;renderTable();});
+  </script>
+  <script>
+/* Visual enhancement only: native selects remain the form and value source. */
+(() => {
+  'use strict';
+  let opened = null;
+  const close = (restoreFocus = false) => {
+    if (!opened) return;
+    const widget = opened;
+    opened = null;
+    widget.panel.hidden = true;
+    widget.trigger.setAttribute('aria-expanded', 'false');
+    widget.trigger.removeAttribute('aria-activedescendant');
+    widget.trigger.classList.remove('is-open');
+    if (restoreFocus) widget.trigger.focus();
+  };
+
+  function enhance(select) {
+    const label = select.labels[0];
+    const wrapper = document.createElement('div');
+    wrapper.className = 'tk-select';
+    select.before(wrapper);
+    wrapper.append(select);
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'tk-select-trigger';
+    trigger.id = `${select.id}-trigger`;
+    trigger.setAttribute('role', 'combobox');
+    trigger.setAttribute('aria-haspopup', 'listbox');
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.setAttribute('aria-controls', `${select.id}-listbox`);
+    trigger.innerHTML = '<span class="tk-select-value"></span><svg class="tk-select-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>';
+    const value = trigger.querySelector('.tk-select-value');
+    value.id = `${select.id}-value`;
+    if (label) {
+      label.id ||= `${select.id}-label`;
+      trigger.setAttribute('aria-labelledby', `${label.id} ${value.id}`);
+      label.addEventListener('click', event => {
+        event.preventDefault();
+        trigger.focus();
+      });
+    } else {
+      trigger.setAttribute('aria-label', select.getAttribute('aria-label') || select.name);
+    }
+    wrapper.append(trigger);
+    const panel = document.createElement('div');
+    panel.className = 'tk-select-menu';
+    panel.id = `${select.id}-listbox`;
+    panel.setAttribute('role', 'listbox');
+    if (label) panel.setAttribute('aria-labelledby', label.id);
+    panel.hidden = true;
+    document.body.append(panel);
+    const options = Array.from(select.options).filter(option => !option.hidden);
+    const items = options.map((option, index) => {
+      const item = document.createElement('div');
+      item.className = 'tk-select-option';
+      item.id = `${select.id}-option-${index}`;
+      item.setAttribute('role', 'option');
+      item.setAttribute('aria-disabled', String(option.disabled));
+      const text = document.createElement('span');
+      text.textContent = option.label;
+      const check = document.createElement('span');
+      check.className = 'tk-select-check';
+      check.setAttribute('aria-hidden', 'true');
+      check.innerHTML = '<svg viewBox="0 0 16 16"><path d="m3 8 3 3 7-7"/></svg>';
+      item.append(text, check);
+      panel.append(item);
+      item.addEventListener('pointermove', () => {
+        if (!option.disabled) activate(index);
+      });
+      item.addEventListener('click', () => {
+        if (!option.disabled) commit(index);
+      });
+      return item;
+    });
+    const enabled = options.map((option, index) => option.disabled ? -1 : index)
+      .filter(index => index !== -1);
+    let active = -1;
+    const widget = { trigger, panel, position };
+
+    function sync() {
+      value.textContent = select.selectedOptions[0]?.label || '';
+      trigger.disabled = select.disabled;
+      items.forEach((item, index) => {
+        item.setAttribute('aria-selected', String(options[index].selected));
+      });
+    }
+    function activate(index) {
+      active = index;
+      items.forEach((item, current) => item.classList.toggle('is-active', current === index));
+      const item = items[index];
+      if (!item) return;
+      trigger.setAttribute('aria-activedescendant', item.id);
+      if (item.offsetTop < panel.scrollTop) panel.scrollTop = item.offsetTop;
+      if (item.offsetTop + item.offsetHeight > panel.scrollTop + panel.clientHeight) {
+        panel.scrollTop = item.offsetTop + item.offsetHeight - panel.clientHeight;
+      }
+    }
+    function position() {
+      const rect = trigger.getBoundingClientRect();
+      const edge = 12;
+      const gap = 6;
+      const width = Math.min(Math.max(160, rect.width), innerWidth - edge * 2);
+      const below = Math.max(0, innerHeight - edge - rect.bottom - gap);
+      const above = Math.max(0, rect.top - edge - gap);
+      panel.style.width = `${width}px`;
+      const height = Math.min(264, panel.scrollHeight);
+      const upward = below < height && above > below;
+      panel.style.maxHeight = `${Math.min(264, upward ? above : below)}px`;
+      panel.style.left = `${Math.max(edge, Math.min(rect.left, innerWidth - width - edge))}px`;
+      panel.style.top = `${upward ? rect.top - gap - panel.getBoundingClientRect().height : rect.bottom + gap}px`;
+    }
+    function open() {
+      if (select.disabled || !enabled.length) return;
+      close();
+      sync();
+      opened = widget;
+      panel.hidden = false;
+      trigger.setAttribute('aria-expanded', 'true');
+      trigger.classList.add('is-open');
+      position();
+      const selected = options.findIndex(option => option.selected && !option.disabled);
+      activate(selected === -1 ? enabled[0] : selected);
+    }
+    function commit(index) {
+      const option = options[index];
+      if (!option || option.disabled) return;
+      const changed = select.selectedIndex !== option.index;
+      select.selectedIndex = option.index;
+      sync();
+      if (changed) {
+        select.dispatchEvent(new Event('input', { bubbles: true }));
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      close(true);
+    }
+    trigger.addEventListener('click', () => opened === widget ? close(true) : open());
+    trigger.addEventListener('keydown', event => {
+      const key = event.key;
+      if (key === 'Tab') { if (opened === widget) close(); return; }
+      if (key === 'Escape') {
+        if (opened === widget) { event.preventDefault(); close(true); }
+        return;
+      }
+      if (!['ArrowDown', 'ArrowUp', 'Home', 'End', 'Enter', ' '].includes(key)) return;
+      event.preventDefault();
+      const wasOpen = opened === widget;
+      if (!wasOpen) open();
+      if (opened !== widget) return;
+      if (key === 'Home') activate(enabled[0]);
+      else if (key === 'End') activate(enabled[enabled.length - 1]);
+      else if (wasOpen && (key === 'Enter' || key === ' ')) commit(active);
+      else if (wasOpen && (key === 'ArrowDown' || key === 'ArrowUp')) {
+        const step = key === 'ArrowDown' ? 1 : -1;
+        const next = Math.max(0, Math.min(enabled.length - 1, enabled.indexOf(active) + step));
+        activate(enabled[next]);
+      }
+    });
+    select.addEventListener('change', sync);
+    select.addEventListener('input', sync);
+    select.form?.addEventListener('reset', () => {
+      if (opened === widget) close();
+      setTimeout(sync, 0);
+    });
+    sync();
+    select.classList.add('tk-select-native');
+    select.setAttribute('aria-hidden', 'true');
+    select.tabIndex = -1;
+  }
+
+  ['margin-filter', 'gmv-sort'].forEach(id => {
+    const select = document.getElementById(id);
+    if (select) enhance(select);
+  });
+  document.addEventListener('pointerdown', event => {
+    if (opened && !opened.trigger.contains(event.target) && !opened.panel.contains(event.target)) {
+      close();
+    }
+  });
+  document.addEventListener('focusin', event => {
+    if (opened && !opened.trigger.contains(event.target) && !opened.panel.contains(event.target)) {
+      close();
+    }
+  });
+  window.addEventListener('resize', () => opened?.position());
+  window.addEventListener('scroll', () => opened?.position(), true);
+})();
+
+</script>
+</body>
+</html>
