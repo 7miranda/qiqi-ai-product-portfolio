@@ -583,13 +583,13 @@ SOFTWARE.
       <g clip-path="url(#tk-metric-frost-clip-wallet)"><use href="#tk-metric-frost-shape-wallet" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
       <use href="#tk-metric-frost-shape-wallet" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
     </symbol>
-    <!-- Solid status glyph: official Phosphor warning-fill; shared metric glass material. -->
-    <g id="tk-metric-frost-shape-warning"><path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM120,104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm8,88a12,12,0,1,1,12-12A12,12,0,0,1,128,192Z" /></g><clipPath id="tk-metric-frost-clip-warning" clipPathUnits="userSpaceOnUse"><path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM120,104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm8,88a12,12,0,1,1,12-12A12,12,0,0,1,128,192Z" /></clipPath>
-    <symbol id="ph-glass-warning" viewBox="0 0 256 256" stroke="none" overflow="visible">
-      <use href="#tk-metric-frost-shape-warning" fill="var(--red)" opacity=".86"/>
-      <use href="#tk-metric-frost-shape-warning" fill="#fff" fill-opacity=".24"/>
-      <g clip-path="url(#tk-metric-frost-clip-warning)"><use href="#tk-metric-frost-shape-warning" fill="url(#tk-metric-frost-tint-red)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
-      <use href="#tk-metric-frost-shape-warning" fill="none" stroke="url(#tk-metric-frost-edge-red)" stroke-width="4.5" stroke-linejoin="round"/>
+    <!-- Status glyph composition: Phosphor check-square-fill outer body + warning-fill exclamation cutout (MIT); shared front-facing material. -->
+    <g id="tk-metric-frost-shape-warning-square"><path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM120,104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm8,88a12,12,0,1,1,12-12A12,12,0,0,1,128,192Z"/></g><clipPath id="tk-metric-frost-clip-warning-square" clipPathUnits="userSpaceOnUse"><path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM120,104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm8,88a12,12,0,1,1,12-12A12,12,0,0,1,128,192Z"/></clipPath>
+    <symbol id="ph-glass-warning-square" viewBox="0 0 256 256" stroke="none" overflow="visible">
+      <use href="#tk-metric-frost-shape-warning-square" fill="var(--red)" opacity=".86"/>
+      <use href="#tk-metric-frost-shape-warning-square" fill="#fff" fill-opacity=".24"/>
+      <g clip-path="url(#tk-metric-frost-clip-warning-square)"><use href="#tk-metric-frost-shape-warning-square" fill="url(#tk-metric-frost-tint-red)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
+      <use href="#tk-metric-frost-shape-warning-square" fill="none" stroke="url(#tk-metric-frost-edge-red)" stroke-width="4.5" stroke-linejoin="round"/>
     </symbol>
   </defs>
 </svg>
@@ -671,7 +671,7 @@ SOFTWARE.
       actualMargin: '当前页面实际毛利率显示为“—”。毛利来源未选择，保留缺值，不以零值代替。'
     };
     const infoButton = (key, label) => `<button class="info-button" data-info="${key}" aria-label="${escapeHtml(label)}">${icon('info-circle')}</button>`;
-    const metricIcons = {'可投放作品总数':'ph-glass-film-strip','新增作品总数':'ph-glass-plus-circle','新增作品出单量':'ph-glass-receipt','待授权视频数':'ph-glass-clock','低于 ROI 目标计划数':'ph-glass-warning','成本':'ph-glass-wallet','收入':'ph-glass-currency-dollar','ROI':'ph-glass-chart-line-up','SKU 订单':'ph-glass-shopping-bag-open','达标 PID':'ph-glass-check-square','未达标 PID':'ph-glass-warning'};
+    const metricIcons = {'可投放作品总数':'ph-glass-film-strip','新增作品总数':'ph-glass-plus-circle','新增作品出单量':'ph-glass-receipt','待授权视频数':'ph-glass-clock','低于 ROI 目标计划数':'ph-glass-warning-square','成本':'ph-glass-wallet','收入':'ph-glass-currency-dollar','ROI':'ph-glass-chart-line-up','SKU 订单':'ph-glass-shopping-bag-open','达标 PID':'ph-glass-check-square','未达标 PID':'ph-glass-warning-square'};
     function metricCards(items) {
       return items.map(m => `<article class="metric ${m.unavailable ? 'unavailable' : ''} ${m.name === '成本' ? 'featured' : ''} ${['成本','收入','ROI','SKU 订单'].includes(m.name) ? 'key-metric' : ''}" aria-label="${escapeHtml(m.name)}"><div class="metric-label"><span>${escapeHtml(m.name)}</span><span class="metric-symbol" aria-hidden="true">${icon(metricIcons[m.name])}</span></div><div class="metric-value">${escapeHtml(m.value)}</div><div class="metric-comparison"><span>较上期</span><span class="${m.change.startsWith('↑') ? 'up' : m.change.startsWith('↓') ? 'down' : ''}">${escapeHtml(m.change)}</span>${m.info ? infoButton(m.info,m.infoLabel) : ''}</div></article>`).join('');
     }
