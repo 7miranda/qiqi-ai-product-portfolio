@@ -488,7 +488,7 @@ SOFTWARE.
 
     <!-- Glass material adapted from vocweb/glass-icons, source commit cb2342cc3c282ee7cb7d0e99506f904ce7c1a0b7.
 Only its MIT-licensed glass treatment is reused; shapes are Phosphor Icons (MIT), not Font Awesome.
-2026-10-15: richer translucent bodies, narrower reflections and integral filled check-square refined from the user frosted reference; no external base.
+2026-10-15: front-facing filled glass treatment; no rotation, skew, projection or offset body copies. This is a 2D material treatment, not a 3D render.
 MIT License
 
 Copyright (c) 2026 Tien Chu
@@ -518,129 +518,78 @@ SOFTWARE.
     <radialGradient id="tk-metric-frost-shine" gradientUnits="userSpaceOnUse" cx="68" cy="56" r="110"><stop offset="0" stop-color="#fff" stop-opacity=".14"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
     <linearGradient id="tk-metric-frost-edge" gradientUnits="userSpaceOnUse" x1="32" y1="24" x2="208" y2="232"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".45" stop-color="#fff" stop-opacity=".75"/><stop offset=".72" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="var(--accent)" stop-opacity=".28"/></linearGradient>
     <linearGradient id="tk-metric-frost-edge-red" gradientUnits="userSpaceOnUse" x1="32" y1="24" x2="208" y2="232"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".45" stop-color="#fff" stop-opacity=".75"/><stop offset=".72" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="var(--red)" stop-opacity=".28"/></linearGradient>
-    <filter id="tk-metric-frost-glow" x="-45%" y="-45%" width="190%" height="190%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="7"/></filter>
     <filter id="tk-metric-frost-scatter" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="2.6"/></filter>
     <g id="tk-metric-frost-shape-chart-line-up"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM200,192H56a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v76.69l34.34-34.35a8,8,0,0,1,11.32,0L128,132.69,172.69,88H144a8,8,0,0,1,0-16h48a8,8,0,0,1,8,8v48a8,8,0,0,1-16,0V99.31l-50.34,50.35a8,8,0,0,1-11.32,0L104,131.31l-40,40V176H200a8,8,0,0,1,0,16Z"/></g><clipPath id="tk-metric-frost-clip-chart-line-up" clipPathUnits="userSpaceOnUse"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM200,192H56a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v76.69l34.34-34.35a8,8,0,0,1,11.32,0L128,132.69,172.69,88H144a8,8,0,0,1,0-16h48a8,8,0,0,1,8,8v48a8,8,0,0,1-16,0V99.31l-50.34,50.35a8,8,0,0,1-11.32,0L104,131.31l-40,40V176H200a8,8,0,0,1,0,16Z"/></clipPath>
     <symbol id="ph-glass-chart-line-up" viewBox="0 0 256 256" stroke="none" overflow="visible">
-      <g transform="matrix(.88 .16 -.04 .90 18 -2)">
-        <use href="#tk-metric-frost-shape-chart-line-up" fill="var(--accent)" opacity=".09" transform="translate(5 11)" filter="url(#tk-metric-frost-glow)"/>
-        <use href="#tk-metric-frost-shape-chart-line-up" fill="var(--accent)" opacity=".76" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-chart-line-up" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4" stroke-linejoin="round" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-chart-line-up" fill="var(--accent)" opacity=".30" transform="translate(7 -6)"/>
-        <use href="#tk-metric-frost-shape-chart-line-up" fill="#fff" fill-opacity=".24"/>
-        <g clip-path="url(#tk-metric-frost-clip-chart-line-up)"><use href="#tk-metric-frost-shape-chart-line-up" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
-        <use href="#tk-metric-frost-shape-chart-line-up" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
-      </g>
+      <use href="#tk-metric-frost-shape-chart-line-up" fill="var(--accent)" opacity=".86"/>
+      <use href="#tk-metric-frost-shape-chart-line-up" fill="#fff" fill-opacity=".24"/>
+      <g clip-path="url(#tk-metric-frost-clip-chart-line-up)"><use href="#tk-metric-frost-shape-chart-line-up" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
+      <use href="#tk-metric-frost-shape-chart-line-up" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
     </symbol>
     <!-- Solid status glyph: official Phosphor check-square-fill; shared metric glass material. -->
     <g id="tk-metric-frost-shape-check-square"><path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm-34.34,77.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></g><clipPath id="tk-metric-frost-clip-check-square" clipPathUnits="userSpaceOnUse"><path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm-34.34,77.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></clipPath>
     <symbol id="ph-glass-check-square" viewBox="0 0 256 256" stroke="none" overflow="visible">
-      <g transform="matrix(.88 .16 -.04 .90 18 -2)">
-        <use href="#tk-metric-frost-shape-check-square" fill="var(--accent)" opacity=".09" transform="translate(5 11)" filter="url(#tk-metric-frost-glow)"/>
-        <use href="#tk-metric-frost-shape-check-square" fill="var(--accent)" opacity=".76" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-check-square" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4" stroke-linejoin="round" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-check-square" fill="var(--accent)" opacity=".30" transform="translate(7 -6)"/>
-        <use href="#tk-metric-frost-shape-check-square" fill="#fff" fill-opacity=".24"/>
-        <g clip-path="url(#tk-metric-frost-clip-check-square)"><use href="#tk-metric-frost-shape-check-square" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
-        <use href="#tk-metric-frost-shape-check-square" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
-      </g>
+      <use href="#tk-metric-frost-shape-check-square" fill="var(--accent)" opacity=".86"/>
+      <use href="#tk-metric-frost-shape-check-square" fill="#fff" fill-opacity=".24"/>
+      <g clip-path="url(#tk-metric-frost-clip-check-square)"><use href="#tk-metric-frost-shape-check-square" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
+      <use href="#tk-metric-frost-shape-check-square" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
     </symbol>
     <g id="tk-metric-frost-shape-clock"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm56,112H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48a8,8,0,0,1,0,16Z"/></g><clipPath id="tk-metric-frost-clip-clock" clipPathUnits="userSpaceOnUse"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm56,112H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48a8,8,0,0,1,0,16Z"/></clipPath>
     <symbol id="ph-glass-clock" viewBox="0 0 256 256" stroke="none" overflow="visible">
-      <g transform="matrix(.88 .16 -.04 .90 18 -2)">
-        <use href="#tk-metric-frost-shape-clock" fill="var(--accent)" opacity=".09" transform="translate(5 11)" filter="url(#tk-metric-frost-glow)"/>
-        <use href="#tk-metric-frost-shape-clock" fill="var(--accent)" opacity=".76" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-clock" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4" stroke-linejoin="round" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-clock" fill="var(--accent)" opacity=".30" transform="translate(7 -6)"/>
-        <use href="#tk-metric-frost-shape-clock" fill="#fff" fill-opacity=".24"/>
-        <g clip-path="url(#tk-metric-frost-clip-clock)"><use href="#tk-metric-frost-shape-clock" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
-        <use href="#tk-metric-frost-shape-clock" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
-      </g>
+      <use href="#tk-metric-frost-shape-clock" fill="var(--accent)" opacity=".86"/>
+      <use href="#tk-metric-frost-shape-clock" fill="#fff" fill-opacity=".24"/>
+      <g clip-path="url(#tk-metric-frost-clip-clock)"><use href="#tk-metric-frost-shape-clock" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
+      <use href="#tk-metric-frost-shape-clock" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
     </symbol>
     <g id="tk-metric-frost-shape-currency-dollar"><path d="M160,152a16,16,0,0,1-16,16h-8V136h8A16,16,0,0,1,160,152Zm72-24A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-56,24a32,32,0,0,0-32-32h-8V88h4a16,16,0,0,1,16,16,8,8,0,0,0,16,0,32,32,0,0,0-32-32h-4V64a8,8,0,0,0-16,0v8h-4a32,32,0,0,0,0,64h4v32h-8a16,16,0,0,1-16-16,8,8,0,0,0-16,0,32,32,0,0,0,32,32h8v8a8,8,0,0,0,16,0v-8h8A32,32,0,0,0,176,152Zm-76-48a16,16,0,0,0,16,16h4V88h-4A16,16,0,0,0,100,104Z"/></g><clipPath id="tk-metric-frost-clip-currency-dollar" clipPathUnits="userSpaceOnUse"><path d="M160,152a16,16,0,0,1-16,16h-8V136h8A16,16,0,0,1,160,152Zm72-24A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-56,24a32,32,0,0,0-32-32h-8V88h4a16,16,0,0,1,16,16,8,8,0,0,0,16,0,32,32,0,0,0-32-32h-4V64a8,8,0,0,0-16,0v8h-4a32,32,0,0,0,0,64h4v32h-8a16,16,0,0,1-16-16,8,8,0,0,0-16,0,32,32,0,0,0,32,32h8v8a8,8,0,0,0,16,0v-8h8A32,32,0,0,0,176,152Zm-76-48a16,16,0,0,0,16,16h4V88h-4A16,16,0,0,0,100,104Z"/></clipPath>
     <symbol id="ph-glass-currency-dollar" viewBox="0 0 256 256" stroke="none" overflow="visible">
-      <g transform="matrix(.88 .16 -.04 .90 18 -2)">
-        <use href="#tk-metric-frost-shape-currency-dollar" fill="var(--accent)" opacity=".09" transform="translate(5 11)" filter="url(#tk-metric-frost-glow)"/>
-        <use href="#tk-metric-frost-shape-currency-dollar" fill="var(--accent)" opacity=".76" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-currency-dollar" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4" stroke-linejoin="round" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-currency-dollar" fill="var(--accent)" opacity=".30" transform="translate(7 -6)"/>
-        <use href="#tk-metric-frost-shape-currency-dollar" fill="#fff" fill-opacity=".24"/>
-        <g clip-path="url(#tk-metric-frost-clip-currency-dollar)"><use href="#tk-metric-frost-shape-currency-dollar" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
-        <use href="#tk-metric-frost-shape-currency-dollar" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
-      </g>
+      <use href="#tk-metric-frost-shape-currency-dollar" fill="var(--accent)" opacity=".86"/>
+      <use href="#tk-metric-frost-shape-currency-dollar" fill="#fff" fill-opacity=".24"/>
+      <g clip-path="url(#tk-metric-frost-clip-currency-dollar)"><use href="#tk-metric-frost-shape-currency-dollar" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
+      <use href="#tk-metric-frost-shape-currency-dollar" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
     </symbol>
     <g id="tk-metric-frost-shape-film-strip"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM184,56h32V72H184ZM72,200H40V184H72ZM72,72H40V56H72Zm48,128H88V184h32Zm0-128H88V56h32Zm48,128H136V184h32Zm0-128H136V56h32Zm48,128H184V184h32v16Z"/></g><clipPath id="tk-metric-frost-clip-film-strip" clipPathUnits="userSpaceOnUse"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM184,56h32V72H184ZM72,200H40V184H72ZM72,72H40V56H72Zm48,128H88V184h32Zm0-128H88V56h32Zm48,128H136V184h32Zm0-128H136V56h32Zm48,128H184V184h32v16Z"/></clipPath>
     <symbol id="ph-glass-film-strip" viewBox="0 0 256 256" stroke="none" overflow="visible">
-      <g transform="matrix(.88 .16 -.04 .90 18 -2)">
-        <use href="#tk-metric-frost-shape-film-strip" fill="var(--accent)" opacity=".09" transform="translate(5 11)" filter="url(#tk-metric-frost-glow)"/>
-        <use href="#tk-metric-frost-shape-film-strip" fill="var(--accent)" opacity=".76" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-film-strip" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4" stroke-linejoin="round" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-film-strip" fill="var(--accent)" opacity=".30" transform="translate(7 -6)"/>
-        <use href="#tk-metric-frost-shape-film-strip" fill="#fff" fill-opacity=".24"/>
-        <g clip-path="url(#tk-metric-frost-clip-film-strip)"><use href="#tk-metric-frost-shape-film-strip" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
-        <use href="#tk-metric-frost-shape-film-strip" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
-      </g>
+      <use href="#tk-metric-frost-shape-film-strip" fill="var(--accent)" opacity=".86"/>
+      <use href="#tk-metric-frost-shape-film-strip" fill="#fff" fill-opacity=".24"/>
+      <g clip-path="url(#tk-metric-frost-clip-film-strip)"><use href="#tk-metric-frost-shape-film-strip" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
+      <use href="#tk-metric-frost-shape-film-strip" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
     </symbol>
     <g id="tk-metric-frost-shape-plus-circle"><path d="M128,24A104,104,0,1,0,232,128,104.13,104.13,0,0,0,128,24Zm40,112H136v32a8,8,0,0,1-16,0V136H88a8,8,0,0,1,0-16h32V88a8,8,0,0,1,16,0v32h32a8,8,0,0,1,0,16Z"/></g><clipPath id="tk-metric-frost-clip-plus-circle" clipPathUnits="userSpaceOnUse"><path d="M128,24A104,104,0,1,0,232,128,104.13,104.13,0,0,0,128,24Zm40,112H136v32a8,8,0,0,1-16,0V136H88a8,8,0,0,1,0-16h32V88a8,8,0,0,1,16,0v32h32a8,8,0,0,1,0,16Z"/></clipPath>
     <symbol id="ph-glass-plus-circle" viewBox="0 0 256 256" stroke="none" overflow="visible">
-      <g transform="matrix(.88 .16 -.04 .90 18 -2)">
-        <use href="#tk-metric-frost-shape-plus-circle" fill="var(--accent)" opacity=".09" transform="translate(5 11)" filter="url(#tk-metric-frost-glow)"/>
-        <use href="#tk-metric-frost-shape-plus-circle" fill="var(--accent)" opacity=".76" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-plus-circle" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4" stroke-linejoin="round" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-plus-circle" fill="var(--accent)" opacity=".30" transform="translate(7 -6)"/>
-        <use href="#tk-metric-frost-shape-plus-circle" fill="#fff" fill-opacity=".24"/>
-        <g clip-path="url(#tk-metric-frost-clip-plus-circle)"><use href="#tk-metric-frost-shape-plus-circle" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
-        <use href="#tk-metric-frost-shape-plus-circle" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
-      </g>
+      <use href="#tk-metric-frost-shape-plus-circle" fill="var(--accent)" opacity=".86"/>
+      <use href="#tk-metric-frost-shape-plus-circle" fill="#fff" fill-opacity=".24"/>
+      <g clip-path="url(#tk-metric-frost-clip-plus-circle)"><use href="#tk-metric-frost-shape-plus-circle" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
+      <use href="#tk-metric-frost-shape-plus-circle" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
     </symbol>
     <g id="tk-metric-frost-shape-receipt"><path d="M216,40H40A16,16,0,0,0,24,56V208a8,8,0,0,0,11.58,7.15L64,200.94l28.42,14.21a8,8,0,0,0,7.16,0L128,200.94l28.42,14.21a8,8,0,0,0,7.16,0L192,200.94l28.42,14.21A8,8,0,0,0,232,208V56A16,16,0,0,0,216,40ZM176,144H80a8,8,0,0,1,0-16h96a8,8,0,0,1,0,16Zm0-32H80a8,8,0,0,1,0-16h96a8,8,0,0,1,0,16Z"/></g><clipPath id="tk-metric-frost-clip-receipt" clipPathUnits="userSpaceOnUse"><path d="M216,40H40A16,16,0,0,0,24,56V208a8,8,0,0,0,11.58,7.15L64,200.94l28.42,14.21a8,8,0,0,0,7.16,0L128,200.94l28.42,14.21a8,8,0,0,0,7.16,0L192,200.94l28.42,14.21A8,8,0,0,0,232,208V56A16,16,0,0,0,216,40ZM176,144H80a8,8,0,0,1,0-16h96a8,8,0,0,1,0,16Zm0-32H80a8,8,0,0,1,0-16h96a8,8,0,0,1,0,16Z"/></clipPath>
     <symbol id="ph-glass-receipt" viewBox="0 0 256 256" stroke="none" overflow="visible">
-      <g transform="matrix(.88 .16 -.04 .90 18 -2)">
-        <use href="#tk-metric-frost-shape-receipt" fill="var(--accent)" opacity=".09" transform="translate(5 11)" filter="url(#tk-metric-frost-glow)"/>
-        <use href="#tk-metric-frost-shape-receipt" fill="var(--accent)" opacity=".76" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-receipt" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4" stroke-linejoin="round" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-receipt" fill="var(--accent)" opacity=".30" transform="translate(7 -6)"/>
-        <use href="#tk-metric-frost-shape-receipt" fill="#fff" fill-opacity=".24"/>
-        <g clip-path="url(#tk-metric-frost-clip-receipt)"><use href="#tk-metric-frost-shape-receipt" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
-        <use href="#tk-metric-frost-shape-receipt" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
-      </g>
+      <use href="#tk-metric-frost-shape-receipt" fill="var(--accent)" opacity=".86"/>
+      <use href="#tk-metric-frost-shape-receipt" fill="#fff" fill-opacity=".24"/>
+      <g clip-path="url(#tk-metric-frost-clip-receipt)"><use href="#tk-metric-frost-shape-receipt" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
+      <use href="#tk-metric-frost-shape-receipt" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
     </symbol>
     <g id="tk-metric-frost-shape-shopping-bag-open"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM128,160a48.05,48.05,0,0,1-48-48,8,8,0,0,1,16,0,32,32,0,0,0,64,0,8,8,0,0,1,16,0A48.05,48.05,0,0,1,128,160ZM40,72V56H216V72Z"/></g><clipPath id="tk-metric-frost-clip-shopping-bag-open" clipPathUnits="userSpaceOnUse"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM128,160a48.05,48.05,0,0,1-48-48,8,8,0,0,1,16,0,32,32,0,0,0,64,0,8,8,0,0,1,16,0A48.05,48.05,0,0,1,128,160ZM40,72V56H216V72Z"/></clipPath>
     <symbol id="ph-glass-shopping-bag-open" viewBox="0 0 256 256" stroke="none" overflow="visible">
-      <g transform="matrix(.88 .16 -.04 .90 18 -2)">
-        <use href="#tk-metric-frost-shape-shopping-bag-open" fill="var(--accent)" opacity=".09" transform="translate(5 11)" filter="url(#tk-metric-frost-glow)"/>
-        <use href="#tk-metric-frost-shape-shopping-bag-open" fill="var(--accent)" opacity=".76" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-shopping-bag-open" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4" stroke-linejoin="round" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-shopping-bag-open" fill="var(--accent)" opacity=".30" transform="translate(7 -6)"/>
-        <use href="#tk-metric-frost-shape-shopping-bag-open" fill="#fff" fill-opacity=".24"/>
-        <g clip-path="url(#tk-metric-frost-clip-shopping-bag-open)"><use href="#tk-metric-frost-shape-shopping-bag-open" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
-        <use href="#tk-metric-frost-shape-shopping-bag-open" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
-      </g>
+      <use href="#tk-metric-frost-shape-shopping-bag-open" fill="var(--accent)" opacity=".86"/>
+      <use href="#tk-metric-frost-shape-shopping-bag-open" fill="#fff" fill-opacity=".24"/>
+      <g clip-path="url(#tk-metric-frost-clip-shopping-bag-open)"><use href="#tk-metric-frost-shape-shopping-bag-open" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
+      <use href="#tk-metric-frost-shape-shopping-bag-open" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
     </symbol>
     <g id="tk-metric-frost-shape-wallet"><path d="M216,64H56a8,8,0,0,1,0-16H192a8,8,0,0,0,0-16H56A24,24,0,0,0,32,56V184a24,24,0,0,0,24,24H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64Zm-36,80a12,12,0,1,1,12-12A12,12,0,0,1,180,144Z"/></g><clipPath id="tk-metric-frost-clip-wallet" clipPathUnits="userSpaceOnUse"><path d="M216,64H56a8,8,0,0,1,0-16H192a8,8,0,0,0,0-16H56A24,24,0,0,0,32,56V184a24,24,0,0,0,24,24H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64Zm-36,80a12,12,0,1,1,12-12A12,12,0,0,1,180,144Z"/></clipPath>
     <symbol id="ph-glass-wallet" viewBox="0 0 256 256" stroke="none" overflow="visible">
-      <g transform="matrix(.88 .16 -.04 .90 18 -2)">
-        <use href="#tk-metric-frost-shape-wallet" fill="var(--accent)" opacity=".09" transform="translate(5 11)" filter="url(#tk-metric-frost-glow)"/>
-        <use href="#tk-metric-frost-shape-wallet" fill="var(--accent)" opacity=".76" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-wallet" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4" stroke-linejoin="round" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-wallet" fill="var(--accent)" opacity=".30" transform="translate(7 -6)"/>
-        <use href="#tk-metric-frost-shape-wallet" fill="#fff" fill-opacity=".24"/>
-        <g clip-path="url(#tk-metric-frost-clip-wallet)"><use href="#tk-metric-frost-shape-wallet" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
-        <use href="#tk-metric-frost-shape-wallet" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
-      </g>
+      <use href="#tk-metric-frost-shape-wallet" fill="var(--accent)" opacity=".86"/>
+      <use href="#tk-metric-frost-shape-wallet" fill="#fff" fill-opacity=".24"/>
+      <g clip-path="url(#tk-metric-frost-clip-wallet)"><use href="#tk-metric-frost-shape-wallet" fill="url(#tk-metric-frost-tint)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
+      <use href="#tk-metric-frost-shape-wallet" fill="none" stroke="url(#tk-metric-frost-edge)" stroke-width="4.5" stroke-linejoin="round"/>
     </symbol>
     <!-- Solid status glyph: official Phosphor warning-fill; shared metric glass material. -->
     <g id="tk-metric-frost-shape-warning"><path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM120,104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm8,88a12,12,0,1,1,12-12A12,12,0,0,1,128,192Z" /></g><clipPath id="tk-metric-frost-clip-warning" clipPathUnits="userSpaceOnUse"><path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM120,104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm8,88a12,12,0,1,1,12-12A12,12,0,0,1,128,192Z" /></clipPath>
     <symbol id="ph-glass-warning" viewBox="0 0 256 256" stroke="none" overflow="visible">
-      <g transform="matrix(.88 .16 -.04 .90 18 -2)">
-        <use href="#tk-metric-frost-shape-warning" fill="var(--red)" opacity=".09" transform="translate(5 11)" filter="url(#tk-metric-frost-glow)"/>
-        <use href="#tk-metric-frost-shape-warning" fill="var(--red)" opacity=".76" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-warning" fill="none" stroke="url(#tk-metric-frost-edge-red)" stroke-width="4" stroke-linejoin="round" transform="translate(14 -12)"/>
-        <use href="#tk-metric-frost-shape-warning" fill="var(--red)" opacity=".30" transform="translate(7 -6)"/>
-        <use href="#tk-metric-frost-shape-warning" fill="#fff" fill-opacity=".24"/>
-        <g clip-path="url(#tk-metric-frost-clip-warning)"><use href="#tk-metric-frost-shape-warning" fill="url(#tk-metric-frost-tint-red)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
-        <use href="#tk-metric-frost-shape-warning" fill="none" stroke="url(#tk-metric-frost-edge-red)" stroke-width="4.5" stroke-linejoin="round"/>
-      </g>
+      <use href="#tk-metric-frost-shape-warning" fill="var(--red)" opacity=".86"/>
+      <use href="#tk-metric-frost-shape-warning" fill="#fff" fill-opacity=".24"/>
+      <g clip-path="url(#tk-metric-frost-clip-warning)"><use href="#tk-metric-frost-shape-warning" fill="url(#tk-metric-frost-tint-red)" filter="url(#tk-metric-frost-scatter)"/><rect width="256" height="256" fill="url(#tk-metric-frost-gloss)"/><rect width="256" height="256" fill="url(#tk-metric-frost-shine)"/></g>
+      <use href="#tk-metric-frost-shape-warning" fill="none" stroke="url(#tk-metric-frost-edge-red)" stroke-width="4.5" stroke-linejoin="round"/>
     </symbol>
   </defs>
 </svg>
