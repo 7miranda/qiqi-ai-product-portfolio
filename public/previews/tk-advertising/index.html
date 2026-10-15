@@ -539,7 +539,49 @@
 .overview-detail.button:hover { background: var(--mint); border-color: var(--accent); }
 .overview-empty { padding: 38px 22px !important; color: var(--muted) !important; }
 .overview-fields { right: 18px; top: 72px; }
-@media(max-width:2200px) { .overview-insights { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+/* Keep all four analysis modules in source order on one desktop row. */
+@media(min-width:1001px) {
+  .overview-insights {
+    grid-template-columns: minmax(280px,1.1fr) minmax(210px,.85fr) minmax(230px,.85fr) minmax(390px,1.6fr);
+    gap: 12px;
+    padding: 2px 0 10px;
+    overflow-x: auto;
+  }
+  .overview-insights .overview-panel { padding: 16px 14px; }
+  .overview-insights .overview-panel-header { min-height: 80px; margin-bottom: 16px; flex-wrap: wrap; align-content: flex-start; align-items: flex-start; gap: 8px; }
+  .overview-insights .overview-panel-header h2 { font-size: 21px; }
+  .overview-insights .overview-panel-header .tk-select,
+  .overview-insights .overview-panel-header select { width: 104px; }
+  .overview-insights .overview-panel-header .tk-select-trigger { height: 40px; min-height: 40px; }
+  .overview-trend-figure { grid-template-columns: 32px minmax(0,1fr); gap: 6px; padding-right: 12px; }
+  .overview-chart-legend { gap: 14px; }
+  .overview-chart-dates { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 0; margin: 12px 12px 0 0; padding-bottom: 28px; }
+  .overview-chart-dates > span { display: block; transform: rotate(-40deg); transform-origin: top right; text-align: right; }
+  .overview-bars { grid-template-columns: 24px minmax(0,1fr); gap: 6px; padding-top: 43px; }
+  .overview-bars-plot { gap: 6px; }
+  .overview-bar { min-width: 16px; }
+  .overview-profit-layout { flex-direction: column; justify-content: flex-start; gap: 18px; min-height: 0; }
+  .overview-donut { width: 132px; height: 132px; }
+  .overview-donut > div { width: 92px; height: 92px; }
+  .overview-donut strong { font-size: 30px; }
+  .overview-profit-legend { width: 100%; gap: 12px; }
+  .overview-profit-legend li { grid-template-columns: 9px auto minmax(0,1fr); gap: 7px; }
+  .overview-profit-legend li > span:last-child { text-align: right; }
+  .overview-risk-table { min-width: 0; table-layout: fixed; }
+  .overview-risk-table th { padding: 0 4px 12px; white-space: normal; }
+  .overview-risk-table td { padding: 9px 4px; white-space: normal; line-height: 1.5; overflow-wrap: anywhere; }
+  .overview-risk-table th:nth-child(1) { width: 7%; }
+  .overview-risk-table th:nth-child(2) { width: 34%; }
+  .overview-risk-table th:nth-child(3) { width: 42%; }
+  .overview-risk-table th:nth-child(4) { width: 17%; }
+  .overview-risk-table th:last-child,
+  .overview-risk-table td:last-child { text-align: right; }
+  .overview-risk-table td:last-child { white-space: nowrap; }
+  .overview-risk-product { gap: 4px; align-items: flex-start; }
+  .overview-image-placeholder { width: 20px; height: 20px; }
+  .overview-image-placeholder .icon { width: 16px; height: 16px; }
+}
+@media(min-width:1600px) { .overview-insights .overview-panel-header { min-height: 48px; } }
 @media(min-width:1501px) { .overview-page .overview-results .metric-value { font-size: clamp(26.5px,1.4vw,32px); } }
 @media(max-width:1500px) { .overview-page .overview-results .metric-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } }
 @media(max-width:1450px) { .overview-page .overview-filters { grid-template-columns: minmax(300px,1.4fr) repeat(2,minmax(170px,1fr)); } }
