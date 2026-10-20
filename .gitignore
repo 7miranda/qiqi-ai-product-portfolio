@@ -7,4 +7,5 @@ out
 .DS_Store
 qa
 .skill-state
+.playwright-mcp/
 *.log

@@ -1,0 +1,33 @@
+name: Crossbound checks
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: crossbound-checks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The adapter and regression fixtures use a pinned upstream baseline.
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run test:crossbound
+      - run: npm run build:crossbound
+      - name: Check generated previews are committed
+        run: git diff --exit-code -- public/previews/crossbound/index.html public/previews/crossbound/preview.html
+      - run: npm run build
+      - run: node --test tests/insights.test.mjs

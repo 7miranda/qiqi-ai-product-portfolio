@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
+    "build:crossbound": "node scripts/crossbound-v11/build.mjs",
+    "test:crossbound": "node --test tests/crossbound-v11.test.mjs tests/crossbound-v11-growth.test.mjs tests/crossbound-v2.test.mjs tests/crossbound-badge-celebration.test.mjs",
     "start": "next start"
   },
   "dependencies": {

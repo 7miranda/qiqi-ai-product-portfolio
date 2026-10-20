@@ -1,0 +1,5 @@
+# Keep preview generation identical on Windows and Linux.
+public/previews/crossbound/*.html text eol=lf
+public/previews/crossbound/v11/* text eol=lf
+public/previews/crossbound/v2/* text eol=lf
+scripts/crossbound-v11/* text eol=lf
