@@ -1,10 +1,20 @@
 import { TAX, taxQuote, PLATFORMS, FIRST_MILE, BIDS, TIME_SLOTS, OFFSITE, CONFIG_DEFAULTS, season } from './catalog.js';
 import { productFit } from './product-fit.js';
+import { GOAL_VERSION, goal, financeSnapshot } from './release.js';
 // Crossbound v1.1: pure operating rules. The bridge supplies the existing demo data.
 export const money = value => Math.round((value + Number.EPSILON) * 100) / 100;
 const copy = value => structuredClone(value);
 const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 const sum = values => money(values.reduce((a, b) => a + b, 0));
+function createIdentity() {
+  if (typeof globalThis.crypto.randomUUID === 'function') return globalThis.crypto.randomUUID();
+  // HTTP pages expose getRandomValues, but randomUUID requires a secure context.
+  const bytes = globalThis.crypto.getRandomValues(new Uint8Array(16));
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
 export function seededUnit(seed, round, key) {
   let h = 2166136261;
   for (const char of `${seed}:${round}:${key}`) h = Math.imul(h ^ char.charCodeAt(0), 16777619);
@@ -50,9 +60,9 @@ export function createV2Core(a) {
   const keys = ['marketId', 'productId', 'stockPlanId', 'trafficPlanId', 'fulfillmentPlanId', 'expansionPlanId'];
   const find = (rows, id) => rows.find(r => r.id === id);
   const valid = n => n?.engineVersion === 'v2';
-  const initialV2 = () => ({ identity: globalThis.crypto.randomUUID(), config: { ...CONFIG_DEFAULTS }, receivables: [], payables: [], loans: [],
+  const initialV2 = () => ({ identity: createIdentity(), config: { ...CONFIG_DEFAULTS }, receivables: [], payables: [], loans: [],
     events: [], eventHistory: [], actions: [], heat: {}, tests: [], openedPlatforms: [], entered: [], entryRewards: [],
-    trademark: false, seasonPrepared: 0, rivalEncounters: 0 });
+    trademark: false, trademarks: [], seasonPrepared: 0, rivalEncounters: 0 });
   const config = n => ({ ...CONFIG_DEFAULTS, ...n.v2?.config });
   const selected = (rows, id) => rows.find(r => r.id === id) || rows[0];
   const dueTotal = rows => sum(rows.filter(r => !r.paid).map(r => r.amount));
@@ -64,14 +74,14 @@ export function createV2Core(a) {
     n.ledger.push({ id: n.ledger.length + 1, round: n.round, category, label, cashDelta: money(cashDelta) });
   };
   function snapshot(n) {
-    return { ...old.snapshot(n), engineVersion: 'v2', runSeed: n.runSeed, round: n.round, v2: copy(n.v2),
+    return { ...old.snapshot(n), engineVersion: 'v2', goalVersion:n.goalVersion, runSeed: n.runSeed, round: n.round, v2: copy(n.v2),
       visitedMarkets: copy(n.visitedMarkets || []), ratings: copy(n.ratings || {}),
       contentTail: n.contentTail || 0, previousMarket: n.previousMarket || null,
       listingInvestments: copy(n.listingInvestments || []), clearanceEvents: copy(n.clearanceEvents || []) };
   }
   function create(seed) {
     const n = old.create();
-    Object.assign(n, { engineVersion: 'v2', runSeed: seed ?? globalThis.crypto.getRandomValues(new Uint32Array(1))[0],
+    Object.assign(n, { engineVersion: 'v2', goalVersion:GOAL_VERSION, runSeed: seed ?? globalThis.crypto.getRandomValues(new Uint32Array(1))[0],
       visitedMarkets: [], ratings: {}, contentTail: 0, previousMarket: null, listingInvestments: [], clearanceEvents: [], v2: initialV2() });
     n.roundStart = snapshot(n);
     return n;
@@ -98,7 +108,7 @@ export function createV2Core(a) {
   function upgrade(n) {
     if (valid(n) || n.stage !== 0) return n;
     const r = copy(n);
-    r.engineVersion = 'v2';
+    r.engineVersion = 'v2'; r.goalVersion=GOAL_VERSION;
     r.v2 = initialV2();
     // Already explored countries are not first-entry rewards a second time.
     r.v2.entered = [...(r.visitedMarkets || [])];
@@ -149,6 +159,9 @@ export function createV2Core(a) {
     }
     return { conversion, traffic, packaging, delayDays, active, priceFactor: active.some(e => e.kind === 'rival' && e.marketId === n.marketId && e.productId === n.productId && e.choice === 'pricewar') ? .9 : 1 };
   }
+  function hasTrademark(n,productId=n.productId) {
+    return Array.isArray(n.v2.trademarks)?n.v2.trademarks.includes(productId):!!n.v2.trademark;
+  }
   function act(n, input) {
     if (!valid(n) || !input) return n;
     const r = copy(n);
@@ -164,13 +177,13 @@ export function createV2Core(a) {
       r.v2.tests.push({ round: n.round, productId: n.productId, marketId: n.marketId, score, cost: 150 });
       entry(r, 'testing', '小预算测款（仅抽样信号，不保证订单）', -150);
     } else if (input.type === 'trademark') {
-      if (n.cash < 600 || r.v2.trademark || n.stage > 3) return n;
-      r.v2.trademark = true; entry(r, 'trademark', '模拟商标登记', -600);
+      if (n.cash < 600 || !n.productId || hasTrademark(n) || n.stage > 3) return n;
+      r.v2.trademarks=[...(r.v2.trademarks||[]),n.productId]; r.v2.trademark = true; entry(r, 'trademark', '模拟商标登记', -600);
     } else if (input.type === 'event') {
       const e = r.v2.events.find(e => e.id === input.id && e.dueRound === n.round && n.stage >= e.stage);
       if (!e || e.choice || !eventChoices(e).some(x => x.id === input.choice)) return n;
       const choice = eventChoices(e).find(x => x.id === input.choice);
-      if (choice.cost > n.cash || input.choice === 'complaint' && !n.v2.trademark) return n;
+      if (choice.cost > n.cash || input.choice === 'complaint' && !hasTrademark(n,e.productId)) return n;
       e.choice = input.choice;
       if (choice.cost) entry(r, 'events', `${e.title} · ${choice.name}`, -choice.cost);
       e.success = input.choice === 'complaint' && seededUnit(n.runSeed, n.round, e.id) < (n.currentListing?.score || 60) / 100;
@@ -427,7 +440,7 @@ export function createV2Core(a) {
     const stars = before.rating * before.reviews + p.keptOrders * 5 + (p.refunds - p.badReviews) * 5 + p.badReviews;
     const ratingAfter = Math.min(5, (p.orders > 0 && p.refunds === 0 ? Math.min(5, before.rating + .1) : reviews ? clamp(stars / reviews, 1, 5) : before.rating) + p.offsite.rating);
     n.ratings[n.productId] = { rating: money(ratingAfter), reviews };
-    Object.assign(r, { totalCosts: p.totalCosts, ratingAfter: money(ratingAfter), roundStart: copy(n.roundStart), modelVersion: 'v2',
+    Object.assign(r, { goalVersion:n.goalVersion, totalCosts: p.totalCosts, ratingAfter: money(ratingAfter), roundStart: copy(n.roundStart), modelVersion: 'v2',
       formula: '本轮先按来源形成访问机会，再由市场匹配、售价、商品页、配送、评分与波动计算购买意愿；超出市场容量的机会减半，库存和交期限制实际订单。退款与全部费用分别记账。',
       nextRatingImpact: 1 - Math.sqrt(ratingAfter / 5) });
     r.conclusions.push(p.delayedUnits ? `${p.leadDays}天备货使${p.delayedUnits}件新货错过本轮销售窗口，余货计入下轮库存。` : '现有库存及时衔接了本轮销售。');
@@ -459,7 +472,7 @@ export function createV2Core(a) {
     const d = normalize(n, input), p = d && preview(n, d);
     if (!d || !p?.affordable) return feedback(n, '方案暂时不能执行', p?.supplyBlockedReason || '请检查方案参数和可用现金。');
     const r = candidate(n, d), option = find(tables[n.stage], d.id);
-    r.decisions.push(copy(d));
+    r.decisions.push({ ...copy(d), ...(typeof input.used_default==='boolean'?{used_default:input.used_default}:{}) });
     let delta = p.cashDelta;
     if (n.stage === 0) {
       const platform = selected(PLATFORMS, config(r).platform), fee = platform.id === 'direct' && r.v2.openedPlatforms.includes('direct') ? 0 : platform.entry;
@@ -497,6 +510,8 @@ export function createV2Core(a) {
       entry(r, 'expansion', option.name, -option.cost);
       Object.assign(r.report, { expansionCost: option.cost, profit: money(r.report.profit - option.cost), contributionProfit: money(r.report.profit - option.cost), totalCosts: money(r.report.totalCosts + option.cost), cash: r.cash, cashChange: money(r.cash - r.roundStart.cash), assetChange: money(r.cash + r.report.inventoryValue - r.roundStart.cash - r.report.openingInventoryValue), decisions: copy(r.decisions) });
       Object.assign(r.report, balance(r));
+      r.report.financeEnd = financeSnapshot(r);
+      r.report.goal = goal(r.report);
       schedule(r);
       r.history.push(copy(r.report)); r.contentTail = r.report.nextContentTail;
       r.previousMarket = r.marketId;
@@ -559,6 +574,7 @@ export function createV2Core(a) {
       report.assetChange = money(r.cash + report.inventoryValue - r.roundStart.cash - report.openingInventoryValue);
       if (productId === r.productId) { report.inventoryRemaining = 0; report.inventoryCostRemaining = 0; }
       Object.assign(report, balance(r));
+      report.financeEnd = financeSnapshot(r);
       if (r.stage === 6) r.history[r.history.length - 1] = copy(report);
     }
     return feedback(r, '余货已清仓', `${quantity}件回款 $${cash.toFixed(2)}，清仓损失 $${loss.toFixed(2)}，已写入账本。`, { cash });
@@ -578,14 +594,17 @@ export function createV2Core(a) {
       if (typeof n.v2.identity !== 'string' || !n.v2.heat || Object.values(n.v2.heat).some(v => !Number.isFinite(v) || v < 0 || v > 1) || n.v2.tests.some(t => !Number.isFinite(t.score))) return null;
       const roundDelta = sum(n.ledger.filter(e => e.round === n.round).map(e => e.cashDelta));
       if (money(n.roundStart.cash + roundDelta) !== n.cash) return null;
-      return copy(n);
+      const restored=copy(n);
+      // Untouched rounds can adopt the new goals. Committed decisions and history keep their rules.
+      if(restored.stage===0&&!restored.goalVersion){restored.goalVersion=GOAL_VERSION;restored.roundStart.goalVersion=GOAL_VERSION;}
+      return restored;
     } catch { return null; }
   }
   function milestones(n) {
     const history = n.history;
     const defs = [
       ['first-profit', '第一桶金', '首次完成一轮并盈利', r => r.profit > 0],
-      ['first-goal', '第一站，站稳了', '首次完成订单目标且盈利', r => r.profit > 0 && r.keptOrders >= (r.round === 1 ? 300 : 500)],
+      ['first-goal', '第一站，站稳了', '首次完成本轮经营目标', r => goal(r).passed],
       ['steady-delivery', '稳稳交付', '单轮至少300单，退款率不高于5%', r => r.orders >= 300 && r.refunds / r.orders <= .05],
       ['profit-5000', '生意起势', '单轮贡献利润超过$5,000', r => r.profit > 5000],
       ['listing-master', '好商品，被看懂', '用95分及以上商品页完成一轮', r => r.listingScore >= 95],
@@ -595,5 +614,5 @@ export function createV2Core(a) {
     return defs.map(([id, name, description, predicate]) => { const found = history.find(predicate); return { id, name, description, earned: !!found, round: found?.round }; });
   }
   return { valid, create, migrate, upgrade, snapshot, listingProduct, listingQuote, publish, optimize, choice, normalize, simulate, preview, commit, rollback, next, previous, clearStock, serialize, deserialize, milestones, scale, products, markets, channels,
-    configure, config, supplyQuote, act, eventChoices, eventEffect, balance };
+    configure, config, supplyQuote, hasTrademark, act, eventChoices, eventEffect, balance };
 }

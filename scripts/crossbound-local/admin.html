@@ -1,0 +1,13 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Crossbound 本机数据</title>
+<style>body{max-width:960px;margin:48px auto;padding:24px;background:#061014;color:#d7eaf0;font:16px system-ui}button,input,select{background:#10252d;color:inherit;border:1px solid #355560;padding:12px;border-radius:10px;margin:8px 4px}button{cursor:pointer}pre{white-space:pre-wrap;background:#10252d;padding:24px;border-radius:16px}input{width:70%}</style>
+<h1>Crossbound 本机数据</h1><p>仅当前电脑可访问。记录不上传第三方，不展示公开排行榜。管理口令保存在项目的 <code>.crossbound-local/admin-token.txt</code>。</p>
+<label>管理口令 <input type="password" id="token" autocomplete="off"></label><button id="load">查看汇总</button>
+<pre id="result">输入口令后查看本机记录。</pre>
+<label>导出类型 <select id="table"><option value="leads">留资名单（评分降序）</option><option value="round_reports">战绩与退出阶段</option><option value="quiz_answers">全部答题尝试</option><option value="feedback">共建者建议</option><option value="events">行为事件</option></select></label><button id="export">导出 CSV</button>
+<script>
+const el=id=>document.getElementById(id);
+async function get(path){const response=await fetch('/api/admin/'+path,{headers:{'X-Admin-Token':el('token').value}});if(!response.ok)throw Error('口令不正确或本机服务不可用');return response.json()}
+const labels={rounds:'总轮次',completed:'完成轮次',incomplete:'未完成轮次',average_profit:'平均利润',pass_rate:'达标率',quiz_attempts:'答题次数',quiz_accuracy:'答题正确率',default_decisions:'使用默认次数',markets:'市场分布',products:'商品分布',channels:'渠道分布',exit_stages:'未完成时所在阶段'};
+el('load').onclick=async()=>{try{const data=await get('summary');el('result').textContent=Object.entries(data).map(([k,v])=>`${labels[k]||k}：${typeof v==='object'?JSON.stringify(v):v}`).join('\n')}catch(e){el('result').textContent=e.message}};
+el('export').onclick=async()=>{try{const rows=await get(el('table').value);const fields=[...new Set(rows.flatMap(Object.keys))],cell=v=>'"'+String(typeof v==='object'?JSON.stringify(v):v??'').replace(/^\s*[=+\-@]/,"'$&").replaceAll('"','""')+'"';const csv='\ufeff'+[fields,...rows.map(r=>fields.map(f=>r[f]))].map(r=>r.map(cell).join(',')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='crossbound-'+el('table').value+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}catch(e){el('result').textContent=e.message}};
+</script></html>

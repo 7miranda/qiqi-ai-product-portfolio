@@ -7,9 +7,12 @@ let v11LegacyDepth = 0;
 function v11Legacy(fn, ...args) { v11LegacyDepth++; try { return fn(...args); } finally { v11LegacyDepth--; } }
 const V11 = createCrossboundV2({ products: Zn, markets: ks, stocks: Tre, channels: Z_, fulfillment: J_, expansion: rG,
   supplier: sG, fit: Mre, old: v11Original });
+Wse=LEVELS; Tg=releaseRank;
+// Two optional development paths share the operating team as their root.
+r2.find(f=>f.id==='factory').requires='team';
 const V11Growth = createGrowth({ tasks: U5, facilities: r2, createOps: IG, commitOps: v11Original.opsCommit, purchase: Xse, rank: Tg, snapshot: $se, baseGrowth: v11Original.growth });
 const V11UI = createCrossboundUI({ React: li, Button: Ge, engine: V11, Passport: Fse, passportData: Cxe, growth: (n, e) => UG(n, e) });
-const V2UI = createV2UI({ React: li, Button: Ge, engine: V11, Base: V11UI, tasks: U5 });
+const V2UI = createV2UI({ React: li, Button: Ge, engine: V11, Base: V11UI, tasks: U5, facilities:r2 });
 Kse = [...Kse, { id: 'tariff', label: '预估关税' }, { id: 'clearance', label: '清仓回款' }];
 zxe.tariff = '预估关税'; zxe.clearance = '清仓回款';
 for (const [id, label] of [['importTax','进口税'],['firstMile','头程运输'],['payment','收款手续费'],['fx','换汇成本'],['warehouse','仓储费'],['offsite','站外推广'],['platformEntry','店铺费用'],['events','事件处理'],['testing','测款'],['trademark','模拟商标'],['season','旺季准备'],['packaging','差异化包装'],['loan','过桥贷款'],['loanRepayment','贷款还款'],['payables','到期采购款'],['receipts','平台回款'],['commissionRecovery','追回退货佣金']]) {

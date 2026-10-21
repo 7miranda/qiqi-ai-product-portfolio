@@ -74,6 +74,11 @@
 .enterprise-campus-v18__label[data-attention] strong::after { content: " ●"; color: #adff2f; font-size: 9px; }
 .v11-settlement-steps { margin: 12px 0 24px; }
 .v11-settlement-finished { grid-column: 1 / -1; color: #8faab4; }
+/* Auto alignment needs a minimum gap even when neither card has a task hint. */
+.result-next-v23 .result-next-actions { margin-top: auto; padding-top: 20px; row-gap: 12px; }
+.result-next-v23 > article > p { margin: 0; line-height: 1.8; }
+.result-next-v23 > article > small { margin: 8px 0 0; line-height: 1.8; }
+.result-next-v23 > article > h3 { white-space: normal; line-height: 1.45; }
 .v11-level-up { width: 100%; padding: 22px; border-radius: 12px; background: #142c25; color: #adff2f; animation: v11-promotion-rise .65s ease-out; }
 .v11-level-up h3 { margin: 10px 0; font-size: clamp(22px,4vw,38px); }
 .v11-level-up p { color: #c6d8de; line-height: 1.7; }

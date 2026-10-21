@@ -19,6 +19,36 @@ function stocked(config = {}, seed, market) {
   n = e.commit(n, { id: 'pilot', quantity: 1200, price: 45, supplierId: 'standard' });
   return e.publish(n, FULL);
 }
+
+test('HTTP without crypto.randomUUID can start and continue a saved round without losing progress', () => {
+  const completed = finish(e, stocked());
+  const original = globalThis.crypto.randomUUID;
+  globalThis.crypto.randomUUID = undefined;
+  try {
+    const fresh = e.create();
+    assert.match(fresh.v2.identity, /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+    assert.notEqual(fresh.v2.identity, e.create().v2.identity);
+    const restored = e.deserialize(e.serialize(completed));
+    const next = e.next(restored);
+    assert.equal(next.round, completed.round + 1);
+    assert.equal(next.stage, 0);
+    assert.equal(next.v2.identity, completed.v2.identity);
+    assert.equal(next.runSeed, completed.runSeed);
+    assert.deepEqual(next.inventory, completed.inventory);
+    assert.deepEqual(next.history, completed.history);
+    assert.deepEqual(next.listingAssets, completed.listingAssets);
+    assert.ok(next.cash >= completed.cash);
+    assert.ok(e.deserialize(e.serialize(next)));
+    const legacy = finish(f.engine, prepare(f.engine));
+    const upgraded = e.next(legacy);
+    assert.equal(upgraded.engineVersion, 'v2');
+    assert.equal(upgraded.round, legacy.round + 1);
+    assert.deepEqual(upgraded.history, legacy.history);
+    assert.ok(e.deserialize(e.serialize(upgraded)));
+  } finally {
+    globalThis.crypto.randomUUID = original;
+  }
+});
 test('100 products have explicit fit in every market; 12 countries have distinct tax and currency profiles', () => {
   assert.equal(Object.keys(productFit).length, 100); assert.equal(Object.keys(TAX).length, 12);
   for (const p of e.products) for (const m of e.markets) {

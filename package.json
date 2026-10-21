@@ -6,8 +6,9 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "build:crossbound": "node scripts/crossbound-v11/build.mjs",
-    "test:crossbound": "node --test tests/crossbound-v11.test.mjs tests/crossbound-v11-growth.test.mjs tests/crossbound-v2.test.mjs tests/crossbound-badge-celebration.test.mjs",
-    "start": "next start"
+    "test:crossbound": "node --test tests/crossbound-v11.test.mjs tests/crossbound-v11-growth.test.mjs tests/crossbound-v2.test.mjs tests/crossbound-badge-celebration.test.mjs tests/crossbound-release.test.mjs",
+    "start": "next start",
+    "preview:crossbound": "python scripts/crossbound-local/server.py"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
