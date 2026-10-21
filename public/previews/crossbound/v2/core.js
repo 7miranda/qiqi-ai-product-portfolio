@@ -5,6 +5,15 @@ export const money = value => Math.round((value + Number.EPSILON) * 100) / 100;
 const copy = value => structuredClone(value);
 const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 const sum = values => money(values.reduce((a, b) => a + b, 0));
+function companyIdentity() {
+  if (typeof globalThis.crypto.randomUUID === 'function') return globalThis.crypto.randomUUID();
+  // getRandomValues remains available on the existing HTTP deployment.
+  const bytes = globalThis.crypto.getRandomValues(new Uint8Array(16));
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
 export function seededUnit(seed, round, key) {
   let h = 2166136261;
   for (const char of `${seed}:${round}:${key}`) h = Math.imul(h ^ char.charCodeAt(0), 16777619);
@@ -50,7 +59,7 @@ export function createV2Core(a) {
   const keys = ['marketId', 'productId', 'stockPlanId', 'trafficPlanId', 'fulfillmentPlanId', 'expansionPlanId'];
   const find = (rows, id) => rows.find(r => r.id === id);
   const valid = n => n?.engineVersion === 'v2';
-  const initialV2 = () => ({ identity: globalThis.crypto.randomUUID(), config: { ...CONFIG_DEFAULTS }, receivables: [], payables: [], loans: [],
+  const initialV2 = () => ({ identity: companyIdentity(), config: { ...CONFIG_DEFAULTS }, receivables: [], payables: [], loans: [],
     events: [], eventHistory: [], actions: [], heat: {}, tests: [], openedPlatforms: [], entered: [], entryRewards: [],
     trademark: false, seasonPrepared: 0, rivalEncounters: 0 });
   const config = n => ({ ...CONFIG_DEFAULTS, ...n.v2?.config });
