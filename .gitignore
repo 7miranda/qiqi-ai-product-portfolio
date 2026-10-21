@@ -9,3 +9,6 @@ qa
 .skill-state
 .playwright-mcp/
 *.log
+
+.crossbound-local/
+__pycache__/

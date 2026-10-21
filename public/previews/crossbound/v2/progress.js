@@ -1,8 +1,9 @@
 import { seededUnit } from '../v11/model.js';
+import { goal } from './release.js';
 export function passport(company, markets) {
   const countries = markets.map(m => {
-    const wins = company.history.filter(r => r.marketId === m.id && r.profit > 0 && r.keptOrders >= (r.round === 1 ? 300 : 500));
-    const tier = wins.some(r => r.profit > 10000 || r.refunds === 0) ? 'gold' : wins.some(r => r.profit > 5000) ? 'silver' : wins.length ? 'bronze' : null;
+    const wins = company.history.filter(r => r.marketId === m.id && goal(r).passed);
+    const tier = wins.some(r => goal(r).tier === 'gold') ? 'gold' : wins.some(r => goal(r).tier === 'silver') ? 'silver' : wins.length ? 'bronze' : null;
     return { ...m, tier, wins: wins.length };
   });
   const regions = [...new Set(markets.map(m => m.region))].map(name => {
@@ -37,7 +38,8 @@ export function explorationAwards(company, markets) {
 }
 const clamp = n => Math.max(0, Math.min(100, Math.round(n)));
 export function assessment(company, ops, markets, tasks) {
-  const history = company.history, last = history.slice(-5), p = passport(company, markets);
+  const allHistory = company.history;
+  const history = allHistory.filter(r=>!r.decisions?.some(d=>d.used_default===true)), last = history.slice(-5), p = passport({...company,history}, markets);
   const best = Math.max(0, ...history.map(r => r.profit)), average = last.length ? last.reduce((s, r) => s + r.profit, 0) / last.length : 0;
   const orders = history.reduce((s, r) => s + r.orders, 0), refunds = history.reduce((s, r) => s + r.refunds, 0);
   const lossRounds = history.filter(r => r.profit < 0).length;
@@ -53,7 +55,7 @@ export function assessment(company, ops, markets, tasks) {
   const levels = ['出海新手', '探索者', '达人', '区域卖家之星', '全球经营合伙人'];
   const level = averageScore >= 85 && p.earned >= 10 && scores.every(s => s.value >= 60) ? 4 : averageScore >= 65 && p.earned >= 5 ? 3 : averageScore >= 45 && p.earned >= 2 ? 2 : history.length && averageScore >= 20 ? 1 : 0;
   const weakest = [...scores].sort((a, b) => a.value - b.value)[0];
-  return { title: levels[level], level, levels, scores, averageScore: clamp(averageScore), best, average, rounds: history.length,
+  return { title: levels[level], level, levels, scores, averageScore: clamp(averageScore), best, average, rounds: allHistory.length, evidenceRounds:history.length, assistedRounds:allHistory.length-history.length,
     number: `CB-${company.v2?.identity || `${company.runSeed ?? 'legacy'}`}`, passport: p,
     suggestion: { profit: '比较售价、商品成本和推广投入；用小预算验证后再扩大备货。', stability: '先看退款归因，核对商品页和交付，再增加流量。', breadth: '带上已有商品页，尝试一个尚未达标的市场。', knowledge: '到公司总部完成来电任务，把经营结果和判断依据连起来。' }[weakest.key] };
 }
