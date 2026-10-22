@@ -1,0 +1,215 @@
+{
+  "version": 1,
+  "tool": "Built-in image_gen",
+  "tiers": [
+    {
+      "id": "gold",
+      "name": "金章",
+      "stars": 3
+    },
+    {
+      "id": "silver",
+      "name": "银章",
+      "stars": 2
+    },
+    {
+      "id": "bronze",
+      "name": "铜章",
+      "stars": 1
+    }
+  ],
+  "countries": [
+    {
+      "marketId": "singapore",
+      "name": "新加坡",
+      "city": "新加坡",
+      "code": "SG",
+      "files": {
+        "gold": "gold/singapore.png",
+        "silver": "silver/singapore.png",
+        "bronze": "bronze/singapore.png"
+      },
+      "webFiles": {
+        "bronze": "web/bronze/singapore.webp",
+        "silver": "web/silver/singapore.webp",
+        "gold": "web/gold/singapore.webp"
+      }
+    },
+    {
+      "marketId": "london",
+      "name": "英国",
+      "city": "伦敦",
+      "code": "UK",
+      "files": {
+        "gold": "gold/london.png",
+        "silver": "silver/london.png",
+        "bronze": "bronze/london.png"
+      },
+      "webFiles": {
+        "bronze": "web/bronze/london.webp",
+        "silver": "web/silver/london.webp",
+        "gold": "web/gold/london.webp"
+      }
+    },
+    {
+      "marketId": "los-angeles",
+      "name": "美国",
+      "city": "洛杉矶",
+      "code": "US",
+      "files": {
+        "gold": "gold/los-angeles.png",
+        "silver": "silver/los-angeles.png",
+        "bronze": "bronze/los-angeles.png"
+      },
+      "webFiles": {
+        "bronze": "web/bronze/los-angeles.webp",
+        "silver": "web/silver/los-angeles.webp",
+        "gold": "web/gold/los-angeles.webp"
+      }
+    },
+    {
+      "marketId": "berlin",
+      "name": "德国",
+      "city": "柏林",
+      "code": "DE",
+      "files": {
+        "gold": "gold/berlin.png",
+        "silver": "silver/berlin.png",
+        "bronze": "bronze/berlin.png"
+      },
+      "webFiles": {
+        "bronze": "web/bronze/berlin.webp",
+        "silver": "web/silver/berlin.webp",
+        "gold": "web/gold/berlin.webp"
+      }
+    },
+    {
+      "marketId": "paris",
+      "name": "法国",
+      "city": "巴黎",
+      "code": "FR",
+      "files": {
+        "gold": "gold/paris.png",
+        "silver": "silver/paris.png",
+        "bronze": "bronze/paris.png"
+      },
+      "webFiles": {
+        "bronze": "web/bronze/paris.webp",
+        "silver": "web/silver/paris.webp",
+        "gold": "web/gold/paris.webp"
+      }
+    },
+    {
+      "marketId": "tokyo",
+      "name": "日本",
+      "city": "东京",
+      "code": "JP",
+      "files": {
+        "gold": "gold/tokyo.png",
+        "silver": "silver/tokyo.png",
+        "bronze": "bronze/tokyo.png"
+      },
+      "webFiles": {
+        "bronze": "web/bronze/tokyo.webp",
+        "silver": "web/silver/tokyo.webp",
+        "gold": "web/gold/tokyo.webp"
+      }
+    },
+    {
+      "marketId": "sydney",
+      "name": "澳大利亚",
+      "city": "悉尼",
+      "code": "AU",
+      "files": {
+        "gold": "gold/sydney.png",
+        "silver": "silver/sydney.png",
+        "bronze": "bronze/sydney.png"
+      },
+      "webFiles": {
+        "bronze": "web/bronze/sydney.webp",
+        "silver": "web/silver/sydney.webp",
+        "gold": "web/gold/sydney.webp"
+      }
+    },
+    {
+      "marketId": "toronto",
+      "name": "加拿大",
+      "city": "多伦多",
+      "code": "CA",
+      "files": {
+        "gold": "gold/toronto.png",
+        "silver": "silver/toronto.png",
+        "bronze": "bronze/toronto.png"
+      },
+      "webFiles": {
+        "bronze": "web/bronze/toronto.webp",
+        "silver": "web/silver/toronto.webp",
+        "gold": "web/gold/toronto.webp"
+      }
+    },
+    {
+      "marketId": "dubai",
+      "name": "阿联酋",
+      "city": "迪拜",
+      "code": "AE",
+      "files": {
+        "gold": "gold/dubai.png",
+        "silver": "silver/dubai.png",
+        "bronze": "bronze/dubai.png"
+      },
+      "webFiles": {
+        "bronze": "web/bronze/dubai.webp",
+        "silver": "web/silver/dubai.webp",
+        "gold": "web/gold/dubai.webp"
+      }
+    },
+    {
+      "marketId": "mexico-city",
+      "name": "墨西哥",
+      "city": "墨西哥城",
+      "code": "MX",
+      "files": {
+        "gold": "gold/mexico-city.png",
+        "silver": "silver/mexico-city.png",
+        "bronze": "bronze/mexico-city.png"
+      },
+      "webFiles": {
+        "bronze": "web/bronze/mexico-city.webp",
+        "silver": "web/silver/mexico-city.webp",
+        "gold": "web/gold/mexico-city.webp"
+      }
+    },
+    {
+      "marketId": "sao-paulo",
+      "name": "巴西",
+      "city": "圣保罗",
+      "code": "BR",
+      "files": {
+        "gold": "gold/sao-paulo.png",
+        "silver": "silver/sao-paulo.png",
+        "bronze": "bronze/sao-paulo.png"
+      },
+      "webFiles": {
+        "bronze": "web/bronze/sao-paulo.webp",
+        "silver": "web/silver/sao-paulo.webp",
+        "gold": "web/gold/sao-paulo.webp"
+      }
+    },
+    {
+      "marketId": "amsterdam",
+      "name": "荷兰",
+      "city": "阿姆斯特丹",
+      "code": "NL",
+      "files": {
+        "gold": "gold/amsterdam.png",
+        "silver": "silver/amsterdam.png",
+        "bronze": "bronze/amsterdam.png"
+      },
+      "webFiles": {
+        "bronze": "web/bronze/amsterdam.webp",
+        "silver": "web/silver/amsterdam.webp",
+        "gold": "web/gold/amsterdam.webp"
+      }
+    }
+  ]
+}

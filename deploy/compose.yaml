@@ -1,0 +1,43 @@
+name: crossbound
+services:
+  backend:
+    image: crossbound-backend:1.1.0
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      PORT: '8080'
+      CROSSBOUND_CONTEXT_PATH: /crossbound
+    ports:
+      - '127.0.0.1:8080:8080'
+    volumes:
+      - /data/logs/crossbound-backend:/app/logs
+      - /data/crossbound/backend:/app/data
+    security_opt: ['no-new-privileges:true']
+    cap_drop: ['ALL']
+    read_only: true
+    tmpfs: ['/tmp:size=64m,mode=1777']
+    logging:
+      driver: json-file
+      options: {max-size: '10m', max-file: '5'}
+  worker:
+    image: crossbound-backend:1.1.0
+    command: ['python', 'backend/worker.py']
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      backend:
+        condition: service_healthy
+    volumes:
+      - /data/crossbound/backend:/app/data
+      - /data/logs/crossbound-backend:/app/logs
+    security_opt: ['no-new-privileges:true']
+    cap_drop: ['ALL']
+    read_only: true
+    tmpfs: ['/tmp:size=32m,mode=1777']
+    healthcheck: {disable: true}
+    logging:
+      driver: json-file
+      options: {max-size: '10m', max-file: '5'}

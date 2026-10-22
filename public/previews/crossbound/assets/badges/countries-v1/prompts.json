@@ -1,0 +1,300 @@
+{
+  "tool": "Built-in image_gen",
+  "version": "countries-v1",
+  "date": "2026-10-20",
+  "transparent_background": true,
+  "records": [
+    {
+      "marketId": "singapore",
+      "country": "新加坡",
+      "tier": "gold",
+      "output": "gold/singapore.png",
+      "reference": null,
+      "origin": "../../../designs/gold-v1/singapore-gold.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: premium collectible GOLD-tier achievement badge icon for CROSSBOUND, a cross-border trade exploration game.\nCreate ONE isolated, beautifully art-directed game badge. The existing UI is near-black petrol blue with electric-lime accents. Cohesive collection design: compact vertical chamfered octagonal medallion, warm satin champagne-gold metal rim with polished beveled edge, deep petroleum-green enamel inset, a strong sculptural national landmark emblem taking 60% of the face, one understated orbital trade-route curve behind it, small accurate national flag enamel inset centered at the top, three small gold stars embedded along the lower rim to communicate gold tier, engraved two-letter country code at the very bottom. Same outline and material language for all countries. Use only the specified country code as text.\nStyle: sophisticated 2.5D sculpted metal and vitreous enamel, crisp geometrical silhouette, carefully controlled highlights from upper left, elegant contrast, not grungy, not childish. Subtle object contact shadow only. Straight-on front view with slight visible bevel depth, perfectly centered, full badge visible, generously padded. Square canvas. Icon readable at 96px; choose a bold national silhouette rather than tiny clutter. Real transparent alpha background outside badge; no scene, no card, no presentation background, no checkerboard painted into image. No crown, ribbon, excessive laurel, giant gems, extra logos or watermarks.\nCountry subject: sculpted Merlion head and a compact Marina Bay Sands silhouette; a small Singapore flag enamel inlay (red upper half, white lower half, white crescent and five small stars in the red canton). Engraved text (verbatim): \"SG\"."
+    },
+    {
+      "marketId": "singapore",
+      "country": "新加坡",
+      "tier": "silver",
+      "output": "silver/singapore.png",
+      "reference": "gold/singapore.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 新加坡 GOLD badge. Create its SILVER-tier variant for the same CROSSBOUND collection. Preserve its exact outline, framing, landmark composition, country flag and its original full colors, dark petroleum-green enamel background, engraved \"SG\" lettering, orbital motif and lighting direction. Change ONLY: (1) ALL gold metal surfaces, including frame, landmark relief, stars, orbital line and name plate, become cool neutral silver/platinum with polished highlights and satin midtones; no yellow or gold metal; (2) replace the three rank stars with EXACTLY TWO equally sized silver stars, centered as a pair. Do not add stars anywhere else, except stars already part of the national flag. Do not alter or desaturate flag colors. Keep same badge size and padding and real transparent alpha outside the badge. One isolated icon only; no labels, scene, background or watermark."
+    },
+    {
+      "marketId": "singapore",
+      "country": "新加坡",
+      "tier": "bronze",
+      "output": "bronze/singapore.png",
+      "reference": "gold/singapore.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 新加坡 GOLD badge. Create its BRONZE-tier variant for the same CROSSBOUND collection. Preserve its exact outline, framing, landmark composition, country flag and its original full colors, dark petroleum-green enamel background, engraved \"SG\" lettering, orbital motif and lighting direction. Change ONLY: (1) ALL gold metal surfaces, including frame, landmark relief, stars, orbital line and name plate, become warm copper-bronze, with reddish-brown satin midtones and restrained copper highlights; clearly darker and redder than gold; (2) replace the three rank stars with EXACTLY ONE centered copper-bronze five-pointed star. Do not add stars anywhere else, except stars already part of the national flag. Do not alter or desaturate flag colors. Keep same badge size and padding and real transparent alpha outside the badge. One isolated icon only; no labels, scene, background or watermark."
+    },
+    {
+      "marketId": "london",
+      "country": "英国",
+      "tier": "gold",
+      "output": "gold/london.png",
+      "reference": null,
+      "origin": "../../../designs/gold-v1/united-kingdom-gold.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: premium collectible GOLD-tier achievement badge icon for CROSSBOUND, a cross-border trade exploration game.\nCreate ONE isolated, beautifully art-directed game badge. The existing UI is near-black petrol blue with electric-lime accents. Cohesive collection design: compact vertical chamfered octagonal medallion, warm satin champagne-gold metal rim with polished beveled edge, deep petroleum-green enamel inset, a strong sculptural national landmark emblem taking 60% of the face, one understated orbital trade-route curve behind it, small accurate national flag enamel inset centered at the top, three small gold stars embedded along the lower rim to communicate gold tier, engraved two-letter country code at the very bottom. Same outline and material language for all countries. Use only the specified country code as text.\nStyle: sophisticated 2.5D sculpted metal and vitreous enamel, crisp geometrical silhouette, carefully controlled highlights from upper left, elegant contrast, not grungy, not childish. Subtle object contact shadow only. Straight-on front view with slight visible bevel depth, perfectly centered, full badge visible, generously padded. Square canvas. Icon readable at 96px; choose a bold national silhouette rather than tiny clutter. Real transparent alpha background outside badge; no scene, no card, no presentation background, no checkerboard painted into image. No crown, ribbon, excessive laurel, giant gems, extra logos or watermarks.\nCountry subject: sculpted Elizabeth Tower / Big Ben and two simplified Tower Bridge turrets; a small accurately proportioned Union Jack enamel inlay. Engraved text (verbatim): \"UK\"."
+    },
+    {
+      "marketId": "london",
+      "country": "英国",
+      "tier": "silver",
+      "output": "silver/london.png",
+      "reference": "gold/london.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 英国 GOLD badge. Create its SILVER-tier variant for the same CROSSBOUND collection. Preserve its exact outline, framing, landmark composition, country flag and its original full colors, dark petroleum-green enamel background, engraved \"UK\" lettering, orbital motif and lighting direction. Change ONLY: (1) ALL gold metal surfaces, including frame, landmark relief, stars, orbital line and name plate, become cool neutral silver/platinum with polished highlights and satin midtones; no yellow or gold metal; (2) replace the three rank stars with EXACTLY TWO equally sized silver stars, centered as a pair. Do not add stars anywhere else, except stars already part of the national flag. Do not alter or desaturate flag colors. Keep same badge size and padding and real transparent alpha outside the badge. One isolated icon only; no labels, scene, background or watermark."
+    },
+    {
+      "marketId": "london",
+      "country": "英国",
+      "tier": "bronze",
+      "output": "bronze/london.png",
+      "reference": "gold/london.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 英国 GOLD badge. Create its BRONZE-tier variant for the same CROSSBOUND collection. Preserve its exact outline, framing, landmark composition, country flag and its original full colors, dark petroleum-green enamel background, engraved \"UK\" lettering, orbital motif and lighting direction. Change ONLY: (1) ALL gold metal surfaces, including frame, landmark relief, stars, orbital line and name plate, become warm copper-bronze, with reddish-brown satin midtones and restrained copper highlights; clearly darker and redder than gold; (2) replace the three rank stars with EXACTLY ONE centered copper-bronze five-pointed star. Do not add stars anywhere else, except stars already part of the national flag. Do not alter or desaturate flag colors. Keep same badge size and padding and real transparent alpha outside the badge. One isolated icon only; no labels, scene, background or watermark."
+    },
+    {
+      "marketId": "los-angeles",
+      "country": "美国",
+      "tier": "gold",
+      "output": "gold/los-angeles.png",
+      "reference": "gold/singapore.png",
+      "prompt": "Use case: stylized-concept. Produce ONE transparent GOLD-tier country collectible icon for CROSSBOUND. Attached image is the APPROVED style reference, not the requested country. Maintain its premium gold beveled chamfered octagonal medallion, deep petroleum-green enamel, rich sculpted metal bas-relief, upper-left highlights, orbital trade-route curve, front-facing centered composition, scale and padding. This new badge represents 美国. REPLACE ALL Singapore-specific flag, buildings, Merlion and lettering with: the Statue of Liberty as the dominant recognizable national symbol, with a small stylized Los Angeles palm-and-skyline motif beneath; accurate United States flag enamel at top. The only text must be \"US\" engraved on the bottom plate. Exactly THREE gold five-pointed stars centered just above that plate. No trace of SG letters or Singapore imagery. Strong readable silhouettes at small icon size, restrained finer details. All metal remains warm champagne gold. Real transparent background outside the single badge, no scene or printed checkerboard, no extra typography, no watermark. Square canvas. Entire badge visible."
+    },
+    {
+      "marketId": "los-angeles",
+      "country": "美国",
+      "tier": "silver",
+      "output": "silver/los-angeles.png",
+      "reference": "gold/los-angeles.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 美国 GOLD badge. Create its SILVER-tier variant for the same CROSSBOUND collection. Preserve the EXACT silhouette, layout, national landmarks, their arrangement, country flag and its original full colors, dark petroleum-green enamel, engraved \"US\" lettering, orbital motif and light direction. Change ONLY (1) every gold metal surface (rim, sculpted landmarks, orbit, stars and bottom name plate) to cool neutral SILVER/platinum with satin midtones and polished white-metal highlights; no yellow or gold metal; (2) replace the three rank stars immediately above the country code with EXACTLY TWO equally sized silver five-pointed stars centered as a pair. No extra rank stars elsewhere. Preserve all national flag stars and colors unchanged. No new objects or lettering. Keep the same badge size, generous padding, square framing, and actual transparent alpha outside the badge. One icon only; no scene, no opaque background or watermark."
+    },
+    {
+      "marketId": "los-angeles",
+      "country": "美国",
+      "tier": "bronze",
+      "output": "bronze/los-angeles.png",
+      "reference": "gold/los-angeles.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 美国 GOLD badge. Create its BRONZE-tier variant for the same CROSSBOUND collection. Preserve the EXACT silhouette, layout, national landmarks, their arrangement, country flag and its original full colors, dark petroleum-green enamel, engraved \"US\" lettering, orbital motif and light direction. Change ONLY (1) every gold metal surface (rim, sculpted landmarks, orbit, stars and bottom name plate) to warm COPPER-BRONZE with reddish-brown satin midtones and copper highlights, distinctly darker and redder than gold; (2) replace the three rank stars immediately above the country code with EXACTLY ONE centered copper-bronze five-pointed star. No extra rank stars elsewhere. Preserve all national flag stars and colors unchanged. No new objects or lettering. Keep the same badge size, generous padding, square framing, and actual transparent alpha outside the badge. One icon only; no scene, no opaque background or watermark."
+    },
+    {
+      "marketId": "berlin",
+      "country": "德国",
+      "tier": "gold",
+      "output": "gold/berlin.png",
+      "reference": "gold/singapore.png",
+      "prompt": "Use case: stylized-concept. Produce ONE transparent GOLD-tier country collectible icon for CROSSBOUND. Attached image is the APPROVED style reference, not the requested country. Maintain its premium gold beveled chamfered octagonal medallion, deep petroleum-green enamel, rich sculpted metal bas-relief, upper-left highlights, orbital trade-route curve, front-facing centered composition, scale and padding. This new badge represents 德国. REPLACE ALL Singapore-specific flag, buildings, Merlion and lettering with: Berlin's Brandenburg Gate as the dominant sculpted landmark, with a small heraldic eagle relief; accurate German black-red-gold horizontal tricolor enamel at top. The only text must be \"DE\" engraved on the bottom plate. Exactly THREE gold five-pointed stars centered just above that plate. No trace of SG letters or Singapore imagery. Strong readable silhouettes at small icon size, restrained finer details. All metal remains warm champagne gold. Real transparent background outside the single badge, no scene or printed checkerboard, no extra typography, no watermark. Square canvas. Entire badge visible."
+    },
+    {
+      "marketId": "berlin",
+      "country": "德国",
+      "tier": "silver",
+      "output": "silver/berlin.png",
+      "reference": "gold/berlin.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 德国 GOLD badge. Create its SILVER-tier variant for the same CROSSBOUND collection. Preserve the EXACT silhouette, layout, national landmarks, their arrangement, country flag and its original full colors, dark petroleum-green enamel, engraved \"DE\" lettering, orbital motif and light direction. Change ONLY (1) every gold metal surface (rim, sculpted landmarks, orbit, stars and bottom name plate) to cool neutral SILVER/platinum with satin midtones and polished white-metal highlights; no yellow or gold metal; (2) replace the three rank stars immediately above the country code with EXACTLY TWO equally sized silver five-pointed stars centered as a pair. No extra rank stars elsewhere. Preserve all national flag stars and colors unchanged. No new objects or lettering. Keep the same badge size, generous padding, square framing, and actual transparent alpha outside the badge. One icon only; no scene, no opaque background or watermark."
+    },
+    {
+      "marketId": "berlin",
+      "country": "德国",
+      "tier": "bronze",
+      "output": "bronze/berlin.png",
+      "reference": "gold/berlin.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 德国 GOLD badge. Create its BRONZE-tier variant for the same CROSSBOUND collection. Preserve the EXACT silhouette, layout, national landmarks, their arrangement, country flag and its original full colors, dark petroleum-green enamel, engraved \"DE\" lettering, orbital motif and light direction. Change ONLY (1) every gold metal surface (rim, sculpted landmarks, orbit, stars and bottom name plate) to warm COPPER-BRONZE with reddish-brown satin midtones and copper highlights, distinctly darker and redder than gold; (2) replace the three rank stars immediately above the country code with EXACTLY ONE centered copper-bronze five-pointed star. No extra rank stars elsewhere. Preserve all national flag stars and colors unchanged. No new objects or lettering. Keep the same badge size, generous padding, square framing, and actual transparent alpha outside the badge. One icon only; no scene, no opaque background or watermark."
+    },
+    {
+      "marketId": "paris",
+      "country": "法国",
+      "tier": "gold",
+      "output": "gold/paris.png",
+      "reference": "gold/singapore.png",
+      "prompt": "Use case: stylized-concept. Produce ONE transparent GOLD-tier country collectible icon for CROSSBOUND. Attached image is the APPROVED style reference, not the requested country. Maintain its premium gold beveled chamfered octagonal medallion, deep petroleum-green enamel, rich sculpted metal bas-relief, upper-left highlights, orbital trade-route curve, front-facing centered composition, scale and padding. This new badge represents 法国. REPLACE ALL Singapore-specific flag, buildings, Merlion and lettering with: the Eiffel Tower as the dominant sculpted landmark with the Arc de Triomphe below; accurate French blue-white-red vertical tricolor enamel at top. The only text must be \"FR\" engraved on the bottom plate. Exactly THREE gold five-pointed stars centered just above that plate. No trace of SG letters or Singapore imagery. Strong readable silhouettes at small icon size, restrained finer details. All metal remains warm champagne gold. Real transparent background outside the single badge, no scene or printed checkerboard, no extra typography, no watermark. Square canvas. Entire badge visible."
+    },
+    {
+      "marketId": "paris",
+      "country": "法国",
+      "tier": "silver",
+      "output": "silver/paris.png",
+      "reference": "gold/paris.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 法国 GOLD badge. Create its SILVER-tier variant for the same CROSSBOUND collection. Preserve the EXACT silhouette, layout, national landmarks, their arrangement, country flag and its original full colors, dark petroleum-green enamel, engraved \"FR\" lettering, orbital motif and light direction. Change ONLY (1) every gold metal surface (rim, sculpted landmarks, orbit, stars and bottom name plate) to cool neutral SILVER/platinum with satin midtones and polished white-metal highlights; no yellow or gold metal; (2) replace the three rank stars immediately above the country code with EXACTLY TWO equally sized silver five-pointed stars centered as a pair. No extra rank stars elsewhere. Preserve all national flag stars and colors unchanged. No new objects or lettering. Keep the same badge size, generous padding, square framing, and actual transparent alpha outside the badge. One icon only; no scene, no opaque background or watermark."
+    },
+    {
+      "marketId": "paris",
+      "country": "法国",
+      "tier": "bronze",
+      "output": "bronze/paris.png",
+      "reference": "gold/paris.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 法国 GOLD badge. Create its BRONZE-tier variant for the same CROSSBOUND collection. Preserve the EXACT silhouette, layout, national landmarks, their arrangement, country flag and its original full colors, dark petroleum-green enamel, engraved \"FR\" lettering, orbital motif and light direction. Change ONLY (1) every gold metal surface (rim, sculpted landmarks, orbit, stars and bottom name plate) to warm COPPER-BRONZE with reddish-brown satin midtones and copper highlights, distinctly darker and redder than gold; (2) replace the three rank stars immediately above the country code with EXACTLY ONE centered copper-bronze five-pointed star. No extra rank stars elsewhere. Preserve all national flag stars and colors unchanged. No new objects or lettering. Keep the same badge size, generous padding, square framing, and actual transparent alpha outside the badge. One icon only; no scene, no opaque background or watermark."
+    },
+    {
+      "marketId": "tokyo",
+      "country": "日本",
+      "tier": "gold",
+      "output": "gold/tokyo.png",
+      "reference": null,
+      "origin": "../../../designs/gold-v1/japan-gold.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: premium collectible GOLD-tier achievement badge icon for CROSSBOUND, a cross-border trade exploration game.\nCreate ONE isolated, beautifully art-directed game badge. The existing UI is near-black petrol blue with electric-lime accents. Cohesive collection design: compact vertical chamfered octagonal medallion, warm satin champagne-gold metal rim with polished beveled edge, deep petroleum-green enamel inset, a strong sculptural national landmark emblem taking 60% of the face, one understated orbital trade-route curve behind it, small accurate national flag enamel inset centered at the top, three small gold stars embedded along the lower rim to communicate gold tier, engraved two-letter country code at the very bottom. Same outline and material language for all countries. Use only the specified country code as text.\nStyle: sophisticated 2.5D sculpted metal and vitreous enamel, crisp geometrical silhouette, carefully controlled highlights from upper left, elegant contrast, not grungy, not childish. Subtle object contact shadow only. Straight-on front view with slight visible bevel depth, perfectly centered, full badge visible, generously padded. Square canvas. Icon readable at 96px; choose a bold national silhouette rather than tiny clutter. Real transparent alpha background outside badge; no scene, no card, no presentation background, no checkerboard painted into image. No crown, ribbon, excessive laurel, giant gems, extra logos or watermarks.\nCountry subject: bold rising-sun red enamel disc behind a gold Mount Fuji silhouette and a small torii gate; a small Japanese flag enamel inlay (white field with central red disc). Engraved text (verbatim): \"JP\"."
+    },
+    {
+      "marketId": "tokyo",
+      "country": "日本",
+      "tier": "silver",
+      "output": "silver/tokyo.png",
+      "reference": "gold/tokyo.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 日本 GOLD badge. Create its SILVER-tier variant for the same CROSSBOUND collection. Preserve its exact outline, framing, landmark composition, country flag and its original full colors, dark petroleum-green enamel background, engraved \"JP\" lettering, orbital motif and lighting direction. Change ONLY: (1) ALL gold metal surfaces, including frame, landmark relief, stars, orbital line and name plate, become cool neutral silver/platinum with polished highlights and satin midtones; no yellow or gold metal; (2) replace the three rank stars with EXACTLY TWO equally sized silver stars, centered as a pair. Do not add stars anywhere else, except stars already part of the national flag. Do not alter or desaturate flag colors. Keep same badge size and padding and real transparent alpha outside the badge. One isolated icon only; no labels, scene, background or watermark."
+    },
+    {
+      "marketId": "tokyo",
+      "country": "日本",
+      "tier": "bronze",
+      "output": "bronze/tokyo.png",
+      "reference": "gold/tokyo.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 日本 GOLD badge. Create its BRONZE-tier variant for the same CROSSBOUND collection. Preserve its exact outline, framing, landmark composition, country flag and its original full colors, dark petroleum-green enamel background, engraved \"JP\" lettering, orbital motif and lighting direction. Change ONLY: (1) ALL gold metal surfaces, including frame, landmark relief, stars, orbital line and name plate, become warm copper-bronze, with reddish-brown satin midtones and restrained copper highlights; clearly darker and redder than gold; (2) replace the three rank stars with EXACTLY ONE centered copper-bronze five-pointed star. Do not add stars anywhere else, except stars already part of the national flag. Do not alter or desaturate flag colors. Keep same badge size and padding and real transparent alpha outside the badge. One isolated icon only; no labels, scene, background or watermark."
+    },
+    {
+      "marketId": "sydney",
+      "country": "澳大利亚",
+      "tier": "gold",
+      "output": "gold/sydney.png",
+      "reference": "gold/singapore.png",
+      "prompt": "Use case: stylized-concept. Produce ONE transparent GOLD-tier country collectible icon for CROSSBOUND. Attached image is the APPROVED style reference, not the requested country. Maintain its premium gold beveled chamfered octagonal medallion, deep petroleum-green enamel, rich sculpted metal bas-relief, upper-left highlights, orbital trade-route curve, front-facing centered composition, scale and padding. This new badge represents 澳大利亚. REPLACE ALL Singapore-specific flag, buildings, Merlion and lettering with: Sydney Opera House's sculpted sail roofs, with the Sydney Harbour Bridge behind; accurate Australian blue flag with Union Jack canton and white Commonwealth and Southern Cross stars at top. The only text must be \"AU\" engraved on the bottom plate. Exactly THREE gold five-pointed stars centered just above that plate. No trace of SG letters or Singapore imagery. Strong readable silhouettes at small icon size, restrained finer details. All metal remains warm champagne gold. Real transparent background outside the single badge, no scene or printed checkerboard, no extra typography, no watermark. Square canvas. Entire badge visible."
+    },
+    {
+      "marketId": "sydney",
+      "country": "澳大利亚",
+      "tier": "silver",
+      "output": "silver/sydney.png",
+      "reference": "gold/sydney.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 澳大利亚 GOLD badge. Create its SILVER-tier variant for the same CROSSBOUND collection. Preserve its exact outline, framing, landmark composition, country flag and original flag colors, dark petroleum-green enamel, engraved \"AU\" lettering, orbital motif and lighting direction. Change ONLY: (1) ALL gold metal surfaces, including rim, landmark relief, stars, orbital line and bottom name plate, become cool neutral silver/platinum with satin midtones and polished silver highlights; no gold or yellow metal; (2) replace the three rank stars above the name plate with EXACTLY TWO equally sized silver stars, centered as a pair. Do not add other rank stars, and keep any national flag stars unchanged. Keep same badge scale and padding, square canvas and real transparent alpha outside the badge. One isolated icon only, no scene or extra labels."
+    },
+    {
+      "marketId": "sydney",
+      "country": "澳大利亚",
+      "tier": "bronze",
+      "output": "bronze/sydney.png",
+      "reference": "gold/sydney.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 澳大利亚 GOLD badge. Create its BRONZE-tier variant for the same CROSSBOUND collection. Preserve its exact outline, framing, landmark composition, country flag and original flag colors, dark petroleum-green enamel, engraved \"AU\" lettering, orbital motif and lighting direction. Change ONLY: (1) ALL gold metal surfaces, including rim, landmark relief, stars, orbital line and bottom name plate, become warm copper-bronze with reddish-brown satin midtones and restrained copper highlights, clearly darker and redder than gold; (2) replace the three rank stars above the name plate with EXACTLY ONE centered copper-bronze five-pointed star. Do not add other rank stars, and keep any national flag stars unchanged. Keep same badge scale and padding, square canvas and real transparent alpha outside the badge. One isolated icon only, no scene or extra labels."
+    },
+    {
+      "marketId": "toronto",
+      "country": "加拿大",
+      "tier": "gold",
+      "output": "gold/toronto.png",
+      "reference": "gold/singapore.png",
+      "prompt": "Use case: stylized-concept. Produce ONE transparent GOLD-tier country collectible icon for CROSSBOUND. Attached image is the APPROVED style reference, not the requested country. Maintain its premium gold beveled chamfered octagonal medallion, deep petroleum-green enamel, rich sculpted metal bas-relief, upper-left highlights, orbital trade-route curve, front-facing centered composition, scale and padding. This new badge represents 加拿大. REPLACE ALL Singapore-specific flag, buildings, Merlion and lettering with: a bold sculptural Canadian maple leaf combined with Toronto's CN Tower and small skyline; accurate Canadian red-white-red flag with a single centered red maple leaf at top. The only text must be \"CA\" engraved on the bottom plate. Exactly THREE gold five-pointed stars centered just above that plate. No trace of SG letters or Singapore imagery. Strong readable silhouettes at small icon size, restrained finer details. All metal remains warm champagne gold. Real transparent background outside the single badge, no scene or printed checkerboard, no extra typography, no watermark. Square canvas. Entire badge visible."
+    },
+    {
+      "marketId": "toronto",
+      "country": "加拿大",
+      "tier": "silver",
+      "output": "silver/toronto.png",
+      "reference": "gold/toronto.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 加拿大 GOLD badge. Create its SILVER-tier variant for the same CROSSBOUND collection. Preserve its exact outline, framing, landmark composition, country flag and original flag colors, dark petroleum-green enamel, engraved \"CA\" lettering, orbital motif and lighting direction. Change ONLY: (1) ALL gold metal surfaces, including rim, landmark relief, stars, orbital line and bottom name plate, become cool neutral silver/platinum with satin midtones and polished silver highlights; no gold or yellow metal; (2) replace the three rank stars above the name plate with EXACTLY TWO equally sized silver stars, centered as a pair. Do not add other rank stars, and keep any national flag stars unchanged. Keep same badge scale and padding, square canvas and real transparent alpha outside the badge. One isolated icon only, no scene or extra labels."
+    },
+    {
+      "marketId": "toronto",
+      "country": "加拿大",
+      "tier": "bronze",
+      "output": "bronze/toronto.png",
+      "reference": "gold/toronto.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 加拿大 GOLD badge. Create its BRONZE-tier variant for the same CROSSBOUND collection. Preserve its exact outline, framing, landmark composition, country flag and original flag colors, dark petroleum-green enamel, engraved \"CA\" lettering, orbital motif and lighting direction. Change ONLY: (1) ALL gold metal surfaces, including rim, landmark relief, stars, orbital line and bottom name plate, become warm copper-bronze with reddish-brown satin midtones and restrained copper highlights, clearly darker and redder than gold; (2) replace the three rank stars above the name plate with EXACTLY ONE centered copper-bronze five-pointed star. Do not add other rank stars, and keep any national flag stars unchanged. Keep same badge scale and padding, square canvas and real transparent alpha outside the badge. One isolated icon only, no scene or extra labels."
+    },
+    {
+      "marketId": "dubai",
+      "country": "阿联酋",
+      "tier": "gold",
+      "output": "gold/dubai.png",
+      "reference": "gold/singapore.png",
+      "prompt": "Use case: stylized-concept. Produce ONE transparent GOLD-tier country collectible icon for CROSSBOUND. Attached image is the APPROVED style reference, not the requested country. Maintain its premium gold beveled chamfered octagonal medallion, deep petroleum-green enamel, rich sculpted metal bas-relief, upper-left highlights, orbital trade-route curve, front-facing centered composition, scale and padding. This new badge represents 阿联酋. REPLACE ALL Singapore-specific flag, buildings, Merlion and lettering with: Dubai's tall slender Burj Khalifa and a smaller sail-shaped Burj Al Arab above subtle desert dune curves; accurate United Arab Emirates flag, vertical red strip on the left and green-white-black horizontal bands, at top. The only text must be \"AE\" engraved on the bottom plate. Exactly THREE gold five-pointed stars centered just above that plate. No trace of SG letters or Singapore imagery. Strong readable silhouettes at small icon size, restrained finer details. All metal remains warm champagne gold. Real transparent background outside the single badge, no scene or printed checkerboard, no extra typography, no watermark. Square canvas. Entire badge visible."
+    },
+    {
+      "marketId": "dubai",
+      "country": "阿联酋",
+      "tier": "silver",
+      "output": "silver/dubai.png",
+      "reference": "gold/dubai.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 阿联酋 GOLD badge. Create its SILVER-tier variant for the same CROSSBOUND collection. Preserve its exact outline, framing, landmark composition, country flag and original flag colors, dark petroleum-green enamel, engraved \"AE\" lettering, orbital motif and lighting direction. Change ONLY: (1) ALL gold metal surfaces, including rim, landmark relief, stars, orbital line and bottom name plate, become cool neutral silver/platinum with satin midtones and polished silver highlights; no gold or yellow metal; (2) replace the three rank stars above the name plate with EXACTLY TWO equally sized silver stars, centered as a pair. Do not add other rank stars, and keep any national flag stars unchanged. Keep same badge scale and padding, square canvas and real transparent alpha outside the badge. One isolated icon only, no scene or extra labels."
+    },
+    {
+      "marketId": "dubai",
+      "country": "阿联酋",
+      "tier": "bronze",
+      "output": "bronze/dubai.png",
+      "reference": "gold/dubai.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 阿联酋 GOLD badge. Create its BRONZE-tier variant for the same CROSSBOUND collection. Preserve its exact outline, framing, landmark composition, country flag and original flag colors, dark petroleum-green enamel, engraved \"AE\" lettering, orbital motif and lighting direction. Change ONLY: (1) ALL gold metal surfaces, including rim, landmark relief, stars, orbital line and bottom name plate, become warm copper-bronze with reddish-brown satin midtones and restrained copper highlights, clearly darker and redder than gold; (2) replace the three rank stars above the name plate with EXACTLY ONE centered copper-bronze five-pointed star. Do not add other rank stars, and keep any national flag stars unchanged. Keep same badge scale and padding, square canvas and real transparent alpha outside the badge. One isolated icon only, no scene or extra labels."
+    },
+    {
+      "marketId": "mexico-city",
+      "country": "墨西哥",
+      "tier": "gold",
+      "output": "gold/mexico-city.png",
+      "reference": "gold/singapore.png",
+      "prompt": "Use case: stylized-concept. Produce ONE transparent GOLD-tier country collectible icon for CROSSBOUND. Attached image is the APPROVED style reference, not the requested country. Maintain its premium gold beveled chamfered octagonal medallion, deep petroleum-green enamel, rich sculpted metal bas-relief, upper-left highlights, orbital trade-route curve, front-facing centered composition, scale and padding. This new badge represents 墨西哥. REPLACE ALL Singapore-specific flag, buildings, Merlion and lettering with: Mexico City's Palacio de Bellas Artes with its distinctive dome and a bold Mexican eagle-and-cactus sculptural motif; accurate Mexican green-white-red vertical tricolor with a tiny central eagle emblem at top. The only text must be \"MX\" engraved on the bottom plate. Exactly THREE gold five-pointed stars centered just above that plate. No trace of SG letters or Singapore imagery. Strong readable silhouettes at small icon size, restrained finer details. All metal remains warm champagne gold. Real transparent background outside the single badge, no scene or printed checkerboard, no extra typography, no watermark. Square canvas. Entire badge visible."
+    },
+    {
+      "marketId": "mexico-city",
+      "country": "墨西哥",
+      "tier": "silver",
+      "output": "silver/mexico-city.png",
+      "reference": "gold/mexico-city.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 墨西哥 GOLD badge. Create its SILVER-tier variant for the same CROSSBOUND collection. Preserve the EXACT silhouette, layout, national landmarks, their arrangement, country flag and its original full colors, dark petroleum-green enamel, engraved \"MX\" lettering, orbital motif and light direction. Change ONLY (1) every gold metal surface (rim, sculpted landmarks, orbit, stars and bottom name plate) to cool neutral SILVER/platinum with satin midtones and polished white-metal highlights; no yellow or gold metal; (2) replace the three rank stars immediately above the country code with EXACTLY TWO equally sized silver five-pointed stars centered as a pair. No extra rank stars elsewhere. Preserve all national flag stars and colors unchanged. No new objects or lettering. Keep the same badge size, generous padding, square framing, and actual transparent alpha outside the badge. One icon only; no scene, no opaque background or watermark."
+    },
+    {
+      "marketId": "mexico-city",
+      "country": "墨西哥",
+      "tier": "bronze",
+      "output": "bronze/mexico-city.png",
+      "reference": "gold/mexico-city.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 墨西哥 GOLD badge. Create its BRONZE-tier variant for the same CROSSBOUND collection. Preserve the EXACT silhouette, layout, national landmarks, their arrangement, country flag and its original full colors, dark petroleum-green enamel, engraved \"MX\" lettering, orbital motif and light direction. Change ONLY (1) every gold metal surface (rim, sculpted landmarks, orbit, stars and bottom name plate) to warm COPPER-BRONZE with reddish-brown satin midtones and copper highlights, distinctly darker and redder than gold; (2) replace the three rank stars immediately above the country code with EXACTLY ONE centered copper-bronze five-pointed star. No extra rank stars elsewhere. Preserve all national flag stars and colors unchanged. No new objects or lettering. Keep the same badge size, generous padding, square framing, and actual transparent alpha outside the badge. One icon only; no scene, no opaque background or watermark."
+    },
+    {
+      "marketId": "sao-paulo",
+      "country": "巴西",
+      "tier": "gold",
+      "output": "gold/sao-paulo.png",
+      "reference": null,
+      "origin": "../../../designs/gold-v1/brazil-gold.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: premium collectible GOLD-tier achievement badge icon for CROSSBOUND, a cross-border trade exploration game.\nCreate ONE isolated, beautifully art-directed game badge. The existing UI is near-black petrol blue with electric-lime accents. Cohesive collection design: compact vertical chamfered octagonal medallion, warm satin champagne-gold metal rim with polished beveled edge, deep petroleum-green enamel inset, a strong sculptural national landmark emblem taking 60% of the face, one understated orbital trade-route curve behind it, small accurate national flag enamel inset centered at the top, three small gold stars embedded along the lower rim to communicate gold tier, engraved two-letter country code at the very bottom. Same outline and material language for all countries. Use only the specified country code as text.\nStyle: sophisticated 2.5D sculpted metal and vitreous enamel, crisp geometrical silhouette, carefully controlled highlights from upper left, elegant contrast, not grungy, not childish. Subtle object contact shadow only. Straight-on front view with slight visible bevel depth, perfectly centered, full badge visible, generously padded. Square canvas. Icon readable at 96px; choose a bold national silhouette rather than tiny clutter. Real transparent alpha background outside badge; no scene, no card, no presentation background, no checkerboard painted into image. No crown, ribbon, excessive laurel, giant gems, extra logos or watermarks.\nCountry subject: large central sculpted Christ the Redeemer silhouette above flowing Sugarloaf mountain contours; a small Brazilian flag enamel inlay (green field, yellow diamond, blue central disc). Engraved text (verbatim): \"BR\"."
+    },
+    {
+      "marketId": "sao-paulo",
+      "country": "巴西",
+      "tier": "silver",
+      "output": "silver/sao-paulo.png",
+      "reference": "gold/sao-paulo.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 巴西 GOLD badge. Create its SILVER-tier variant for the same CROSSBOUND collection. Preserve its exact outline, framing, landmark composition, country flag and its original full colors, dark petroleum-green enamel background, engraved \"BR\" lettering, orbital motif and lighting direction. Change ONLY: (1) ALL gold metal surfaces, including frame, landmark relief, stars, orbital line and name plate, become cool neutral silver/platinum with polished highlights and satin midtones; no yellow or gold metal; (2) replace the three rank stars with EXACTLY TWO equally sized silver stars, centered as a pair. Do not add stars anywhere else, except stars already part of the national flag. Do not alter or desaturate flag colors. Keep same badge size and padding and real transparent alpha outside the badge. One isolated icon only; no labels, scene, background or watermark."
+    },
+    {
+      "marketId": "sao-paulo",
+      "country": "巴西",
+      "tier": "bronze",
+      "output": "bronze/sao-paulo.png",
+      "reference": "gold/sao-paulo.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 巴西 GOLD badge. Create its BRONZE-tier variant for the same CROSSBOUND collection. Preserve its exact outline, framing, landmark composition, country flag and its original full colors, dark petroleum-green enamel background, engraved \"BR\" lettering, orbital motif and lighting direction. Change ONLY: (1) ALL gold metal surfaces, including frame, landmark relief, stars, orbital line and name plate, become warm copper-bronze, with reddish-brown satin midtones and restrained copper highlights; clearly darker and redder than gold; (2) replace the three rank stars with EXACTLY ONE centered copper-bronze five-pointed star. Do not add stars anywhere else, except stars already part of the national flag. Do not alter or desaturate flag colors. Keep same badge size and padding and real transparent alpha outside the badge. One isolated icon only; no labels, scene, background or watermark."
+    },
+    {
+      "marketId": "amsterdam",
+      "country": "荷兰",
+      "tier": "gold",
+      "output": "gold/amsterdam.png",
+      "reference": "gold/singapore.png",
+      "prompt": "Use case: stylized-concept. Produce ONE transparent GOLD-tier country collectible icon for CROSSBOUND. Attached image is the APPROVED style reference, not the requested country. Maintain its premium gold beveled chamfered octagonal medallion, deep petroleum-green enamel, rich sculpted metal bas-relief, upper-left highlights, orbital trade-route curve, front-facing centered composition, scale and padding. This new badge represents 荷兰. REPLACE ALL Singapore-specific flag, buildings, Merlion and lettering with: a bold Dutch windmill above Amsterdam canal houses and a small arched canal bridge; accurate Netherlands red-white-blue horizontal tricolor enamel at top. The only text must be \"NL\" engraved on the bottom plate. Exactly THREE gold five-pointed stars centered just above that plate. No trace of SG letters or Singapore imagery. Strong readable silhouettes at small icon size, restrained finer details. All metal remains warm champagne gold. Real transparent background outside the single badge, no scene or printed checkerboard, no extra typography, no watermark. Square canvas. Entire badge visible."
+    },
+    {
+      "marketId": "amsterdam",
+      "country": "荷兰",
+      "tier": "silver",
+      "output": "silver/amsterdam.png",
+      "reference": "gold/amsterdam.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 荷兰 GOLD badge. Create its SILVER-tier variant for the same CROSSBOUND collection. Preserve the EXACT silhouette, layout, national landmarks, their arrangement, country flag and its original full colors, dark petroleum-green enamel, engraved \"NL\" lettering, orbital motif and light direction. Change ONLY (1) every gold metal surface (rim, sculpted landmarks, orbit, stars and bottom name plate) to cool neutral SILVER/platinum with satin midtones and polished white-metal highlights; no yellow or gold metal; (2) replace the three rank stars immediately above the country code with EXACTLY TWO equally sized silver five-pointed stars centered as a pair. No extra rank stars elsewhere. Preserve all national flag stars and colors unchanged. No new objects or lettering. Keep the same badge size, generous padding, square framing, and actual transparent alpha outside the badge. One icon only; no scene, no opaque background or watermark."
+    },
+    {
+      "marketId": "amsterdam",
+      "country": "荷兰",
+      "tier": "bronze",
+      "output": "bronze/amsterdam.png",
+      "reference": "gold/amsterdam.png",
+      "prompt": "Use case: precise-object-edit. Attached image is the approved 荷兰 GOLD badge. Create its BRONZE-tier variant for the same CROSSBOUND collection. Preserve the EXACT silhouette, layout, national landmarks, their arrangement, country flag and its original full colors, dark petroleum-green enamel, engraved \"NL\" lettering, orbital motif and light direction. Change ONLY (1) every gold metal surface (rim, sculpted landmarks, orbit, stars and bottom name plate) to warm COPPER-BRONZE with reddish-brown satin midtones and copper highlights, distinctly darker and redder than gold; (2) replace the three rank stars immediately above the country code with EXACTLY ONE centered copper-bronze five-pointed star. No extra rank stars elsewhere. Preserve all national flag stars and colors unchanged. No new objects or lettering. Keep the same badge size, generous padding, square framing, and actual transparent alpha outside the badge. One icon only; no scene, no opaque background or watermark."
+    }
+  ]
+}

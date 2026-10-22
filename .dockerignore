@@ -1,0 +1,14 @@
+*
+!Dockerfile
+!backend/
+!backend/**
+!scripts/
+scripts/*
+!scripts/crossbound-local/
+!scripts/crossbound-local/**
+!database/
+database/*
+!database/mysql/
+!database/mysql/**
+**/__pycache__/
+**/*.pyc

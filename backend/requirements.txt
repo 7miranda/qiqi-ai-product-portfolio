@@ -1,0 +1,2 @@
+-r ../scripts/crossbound-local/requirements.txt
+gunicorn==23.0.0

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "singapore",
+    "tier": "silver",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-ebab2aef-d7c0-45e4-b535-2cb3712c1d83.png"
+  },
+  {
+    "id": "singapore",
+    "tier": "bronze",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-a21d0a5f-7e7b-40b0-9fe7-67a79a9a8fcb.png"
+  },
+  {
+    "id": "london",
+    "tier": "silver",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-f450c9e2-a6ef-462d-9839-45ed430eb095.png"
+  },
+  {
+    "id": "london",
+    "tier": "bronze",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-25018d93-02b1-4b37-904c-0a7b06fd0ca5.png"
+  },
+  {
+    "id": "los-angeles",
+    "tier": "silver",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-fec930ed-d802-4b80-8549-19dd9d5f78e9.png"
+  },
+  {
+    "id": "los-angeles",
+    "tier": "bronze",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-06261bcc-158a-4008-99d9-d17740cd3410.png"
+  },
+  {
+    "id": "berlin",
+    "tier": "silver",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-20fb9bca-529b-4faf-b076-9d042e7fb828.png"
+  },
+  {
+    "id": "berlin",
+    "tier": "bronze",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-5ab71f2d-6c75-4357-a931-aac001dc6b77.png"
+  },
+  {
+    "id": "paris",
+    "tier": "silver",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-f2c9ae56-9e7b-4269-961c-0d4e9556995d.png"
+  },
+  {
+    "id": "paris",
+    "tier": "bronze",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-7a665478-bdfe-42b2-92d3-c04cf86bc495.png"
+  },
+  {
+    "id": "tokyo",
+    "tier": "silver",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-1cb4cde9-655a-4d5e-8bdb-d664e11998cf.png"
+  },
+  {
+    "id": "tokyo",
+    "tier": "bronze",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-abc68e19-494a-442d-aaca-d4479269cf97.png"
+  },
+  {
+    "id": "sydney",
+    "tier": "silver",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-a45adac3-4c0b-41d4-93dd-ceb32d978b1f.png"
+  },
+  {
+    "id": "sydney",
+    "tier": "bronze",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-949de29e-10b7-4ecd-81aa-aa8c3672912e.png"
+  },
+  {
+    "id": "toronto",
+    "tier": "silver",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-d68c5b27-d458-4d32-a239-130ac19a6400.png"
+  },
+  {
+    "id": "toronto",
+    "tier": "bronze",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-ad0654b7-45b0-4bd0-b686-73a87bf5b2a8.png"
+  },
+  {
+    "id": "dubai",
+    "tier": "silver",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-ee5737e1-28e0-408c-b5b4-9e9a1bd6147a.png"
+  },
+  {
+    "id": "dubai",
+    "tier": "bronze",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-a2f3048f-5d9d-4234-9760-b5be21d8520d.png"
+  },
+  {
+    "id": "mexico-city",
+    "tier": "silver",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-31d04969-9ff5-4656-b119-9db254a2602d.png"
+  },
+  {
+    "id": "mexico-city",
+    "tier": "bronze",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-8f38efdd-2e57-4f88-af35-e0c4a327e7ad.png"
+  },
+  {
+    "id": "sao-paulo",
+    "tier": "silver",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-4a9731fa-58b5-4b72-86c1-9b44e33437e1.png"
+  },
+  {
+    "id": "sao-paulo",
+    "tier": "bronze",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-073b7687-4126-41c4-bea4-f96889f239fa.png"
+  },
+  {
+    "id": "amsterdam",
+    "tier": "silver",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-2c597d62-1f45-40d6-98f8-8d3a2041f6b5.png"
+  },
+  {
+    "id": "amsterdam",
+    "tier": "bronze",
+    "source": "C:\\Users\\CynthiaWong\\.codex\\generated_images\\01a1524d-4bd7-7210-bc4a-e5eb0f7dd098\\exec-db74d440-e289-4d29-813a-5bf095557f50.png"
+  }
+]
