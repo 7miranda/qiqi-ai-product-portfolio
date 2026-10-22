@@ -1,0 +1,37 @@
+# 企业经营服务 · 增量发布
+
+2026-10-22，基于主线 `3963c57`。
+
+## 用户路径
+
+首页增加“企业服务”导航和三个等宽服务介绍，共用“整理服务需求”入口。本轮战报末尾也可进入同一服务空间，返回与 Esc 恢复原战报及入口焦点。
+
+服务空间只有一层，依次确认问题、核对材料、形成需求清单。三项服务为商品出海快诊、首件上架资料包、企业岗位训练；页面说明成果、范围、参考试价和条件排期。服务卡片之外不增加新的经营任务或关卡。
+
+## 当前交付边界
+
+- 需求草稿保存在独立本机键 `crossbound-service-brief-v1`，支持复制和 TXT 下载。
+- 没有真实提交、账号采集、支付、CRM 或自动邮件；生成清单不代表下单或排期。
+- 按用户授权展示 `service@crossbound.example` 演示占位，明确标注，不可发送。正式联系渠道仍待替换。
+- 经营存档、现金、订单、奖励和徽章继续使用原有规则。战报只向服务页传递商品与国家名称作为练习背景，真实业务字段由用户另填。
+
+## 实现与发布
+
+`services/` 使用原应用 React 和已有 ReactBits CutButton，CSS 仅针对新增模块。通过现有 `build:crossbound` 适配器生成两份静态入口；UI、CSS 与嵌套 model import 使用内容 hash。后续应修改模块及构建适配器后重新生成，勿覆盖为旧预览源码。
+
+发布沿用仓库 main 分支的 GitHub Pages 工作流，不新增部署系统。
+
+## 验收
+
+- `npm run test:crossbound`：68/68，通过现有经营、HTTP 兼容、徽章和新增 19 项服务测试。
+- `npm run build:crossbound`：通过；连续生成两次 HTML SHA-256 一致。
+- `npm run build`：通过，25 个静态页面生成成功。
+- `node --test tests/insights.test.mjs`：4/4。
+- 实际浏览器：首页入口、三服务切换、必填错误和首错焦点、生成/复制/TXT 下载、刷新草稿恢复、首页返回/Esc 与焦点恢复通过。
+- 实际走完一轮经营，战报进入服务后点击返回或 Esc，原现金与余货不变，入口焦点恢复。
+- 1440px 桌面及 390px 手机实图审核；320px 检查无新增横向溢出。手机返回在左侧，三步说明为静态中性文字。
+- 本地测试页控制台无 error。独立代码及视觉审查无未解决 P1/P2。
+
+验收截图：[首页](screenshots/crossbound-services/home-desktop.jpg)、[桌面服务空间](screenshots/crossbound-services/workspace-desktop.jpg)、[手机服务空间](screenshots/crossbound-services/workspace-mobile.jpg)。表单为本机合成测试资料。
+
+本次为现有页面的局部功能交付，不代表全站 ReactBits 组件覆盖审计通过。公网部署状态与链接以对应 PR、GitHub Pages 工作流为准。
