@@ -1,0 +1,128 @@
+// Test backend deployment over SSH; registry authentication is provisioned on both hosts.
+pipeline {
+    agent any
+    options { disableConcurrentBuilds() }
+    // 定义变量（方便修改）
+    environment {
+        IMAGE_REPO = "172.16.1.40:8084/library/crossbound-test"  // 镜像仓库地址
+        TARGET_IP = "172.16.1.37"
+        CONTAINER_NAME = "crossbound-test"                       // 容器名
+        ENV_FILE = "/data/crossbound/.env-test"
+        PUBLIC_ORIGIN = "http://47.107.164.108:4007"
+    }
+    stages {
+        // 1. 拉取代码
+        stage('拉取代码') {
+            steps {
+                git url: 'https://codeup.aliyun.com/69a009d4b28d0aba0f5ea652/crossbound.git',
+                    credentialsId: 'codeup-https-token',
+                    branch: 'main'
+            }
+        }
+
+        stage('检查运行配置') {
+            steps {
+                sh '''
+                    ssh -i /root/.ssh/jenkins_rsa -o BatchMode=yes root@"$TARGET_IP" bash -s -- "$ENV_FILE" <<'REMOTE'
+set -eu
+if [ ! -s "$1" ]; then
+    echo "缺少后端配置文件: $1，请填写专用 MySQL 参数、管理口令和原有加密密钥。"
+    exit 1
+fi
+python3 - "$1" <<'PY'
+import sys
+from pathlib import Path
+values = dict(line.split('=', 1) for line in Path(sys.argv[1]).read_text().splitlines() if line.strip() and not line.lstrip().startswith('#') and '=' in line)
+required = ['CROSSBOUND_MYSQL_' + k for k in ('HOST','PORT','DATABASE','USER','PASSWORD')] + ['CROSSBOUND_ADMIN_TOKEN','CROSSBOUND_CONTACT_KEY']
+missing = [k for k in required if not values.get(k) or values[k].lower().startswith(('replace-', 'change-me', '<'))]
+if missing:
+    sys.exit('后端配置缺失: ' + ', '.join(missing))
+if values.get('CROSSBOUND_MYSQL_HOST') != 'rm-wz95q3ykydacm3q5b.mysql.rds.aliyuncs.com':
+    sys.exit('CROSSBOUND_MYSQL_HOST: 测试环境必须使用指定的 RDS 内网地址')
+if values.get('CROSSBOUND_MYSQL_DATABASE') != 'au-crossbound':
+    sys.exit('CROSSBOUND_MYSQL_DATABASE: 测试环境必须使用 au-crossbound')
+print('后端配置文件必填项与内网数据库检查通过')
+PY
+REMOTE
+                '''
+            }
+        }
+
+        // 3. 构建并推送Docker镜像
+        stage('构建Docker镜像') {
+            steps {
+                script {
+                    // 镜像标签：构建编号（自动递增）
+                    def imageTag = "${BUILD_NUMBER}"
+                    def fullImageName = "${IMAGE_REPO}:${imageTag}"
+
+                    // 构建镜像
+                    sh "docker build -t '${fullImageName}' ."
+                    // 使用构建节点已有的镜像仓库登录配置。
+                    sh """
+                        docker push ${fullImageName}
+                        docker rmi ${fullImageName}
+                    """
+                    // 保存镜像名到变量，供后续部署使用
+                    env.FULL_IMAGE_NAME = fullImageName
+                }
+            }
+        }
+
+        stage('部署到目标服务器') {
+            steps {
+                sh '''
+                    ssh -i /root/.ssh/jenkins_rsa -o BatchMode=yes root@"$TARGET_IP" bash -s -- "$ENV_FILE" "$PUBLIC_ORIGIN" "$CONTAINER_NAME" "$FULL_IMAGE_NAME" "$BUILD_NUMBER" <<'REMOTE'
+set -eu
+ENV_FILE=$1
+PUBLIC_ORIGIN=$2
+CONTAINER_NAME=$3
+IMAGE=$4
+BUILD_ID=$5
+LOG_DIR=/data/logs/crossbound
+
+docker pull "$IMAGE"
+# Validate settings before replacing the existing container. Never print secrets.
+docker run --rm --env-file "$ENV_FILE"     -e CROSSBOUND_PUBLIC_ORIGIN="$PUBLIC_ORIGIN"     -e CROSSBOUND_CONTEXT_PATH=/crossbound -e PORT=5017     "$IMAGE" python backend/check_config.py --schema --expected-database au-crossbound
+
+install -d -o 10001 -g 10001 -m 0750 "$LOG_DIR"
+# Preserve the existing data volume and retain the old container for recovery.
+DATA_VOLUME=$(docker inspect -f '{{range .Mounts}}{{if eq .Destination "/app/data"}}{{.Name}}{{end}}{{end}}' "$CONTAINER_NAME" 2>/dev/null || true)
+if [ -z "$DATA_VOLUME" ]; then
+    DATA_VOLUME=crossbound-test-data
+    docker volume create "$DATA_VOLUME" >/dev/null
+fi
+if docker container inspect "$CONTAINER_NAME" >/dev/null 2>&1; then
+    docker stop "$CONTAINER_NAME"
+    docker rename "$CONTAINER_NAME" "$CONTAINER_NAME-backup-$BUILD_ID"
+    docker update --restart=no "$CONTAINER_NAME-backup-$BUILD_ID" >/dev/null
+fi
+
+docker run -d --name "$CONTAINER_NAME"     --env-file "$ENV_FILE"     -e CROSSBOUND_PUBLIC_ORIGIN="$PUBLIC_ORIGIN"     -e CROSSBOUND_CONTEXT_PATH=/crossbound -e PORT=5017     -e CROSSBOUND_DATA_DIR=/app/data -e CROSSBOUND_LOG_DIR=/app/logs     -v "$DATA_VOLUME:/app/data" -v "$LOG_DIR:/app/logs"     --restart=always -p 5017:5017 "$IMAGE"
+
+attempt=0
+until curl -fsS --max-time 3 http://127.0.0.1:5017/crossbound/api/health; do
+    attempt=$((attempt + 1))
+    if [ "$attempt" -ge 20 ]; then
+        echo "后端健康检查失败；请查看 /data/logs/crossbound/error.log"
+        docker inspect -f 'status={{.State.Status}} exit={{.State.ExitCode}}' "$CONTAINER_NAME"
+        exit 1
+    fi
+    sleep 2
+done
+printf '\n后端健康检查通过\n'
+REMOTE
+                '''
+            }
+        }
+    }
+    // 构建后通知
+    post {
+        success {
+            echo "部署成功！"
+        }
+        failure {
+            echo "部署失败！请查看构建日志"
+        }
+    }
+}

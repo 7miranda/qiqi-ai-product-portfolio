@@ -1,5 +1,11 @@
 # Crossbound Jenkins 工程部署交接
 
+## 当前测试环境的 SSH 发布
+
+现有 `crossbound-test` 任务使用 `deploy/Jenkinsfile.test`，从构建节点通过 SSH 发布到 `172.16.1.37`，运行配置读取目标服务器 `/data/crossbound/.env-test`。构建节点和目标服务器需预先登录镜像仓库；流水线不包含仓库密码。
+
+测试数据库固定为 RDS 内网 `rm-wz95q3ykydacm3q5b.mysql.rds.aliyuncs.com` 的 `au-crossbound` 库。发布前校验配置、数据库和迁移，发布后验证 `5017/crossbound/api/health`。日志挂载为 `/data/logs/crossbound` → `/app/logs`，保留原数据卷及停止的旧容器。下方根目录 `Jenkinsfile` 是另一种部署主机 agent 方案。
+
 ## 现状与职责
 
 应用为静态前端 + Python/Gunicorn 后端 + Python worker + 公司 MySQL，非 Java 服务，不使用 application.yml。

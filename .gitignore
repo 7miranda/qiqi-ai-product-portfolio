@@ -6,6 +6,7 @@ dist/
 __pycache__/
 *.pyc
 .env
+.env-test
 .env.*
 !.env.example
 *.env
