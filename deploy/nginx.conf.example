@@ -3,13 +3,13 @@
 location = /crossbound { return 302 /crossbound/; }
 location /crossbound/api/ {
     client_max_body_size 2m;
-    proxy_pass http://127.0.0.1:8080; # Preserve /crossbound/api/...
+    proxy_pass http://127.0.0.1:5017; # Preserve /crossbound/api/...
     proxy_set_header Host $http_host;
     proxy_read_timeout 60s;
 }
 location = /crossbound/admin {
     # Restrict this endpoint to your company VPN in the real server configuration.
-    proxy_pass http://127.0.0.1:8080;
+    proxy_pass http://127.0.0.1:5017;
     proxy_set_header Host $http_host;
 }
 location = /crossbound/runtime-config.js {

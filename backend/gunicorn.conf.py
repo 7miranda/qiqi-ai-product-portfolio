@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-bind='0.0.0.0:'+os.environ.get('PORT','8080')
+bind='0.0.0.0:'+os.environ.get('PORT','5017')
 workers=2
 worker_class='gthread'
 threads=4

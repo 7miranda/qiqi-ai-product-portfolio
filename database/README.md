@@ -58,7 +58,7 @@ npm run preview -- --port 8765
 3. 固定配置 CROSSBOUND_CONTACT_KEY。迁移已有加密联系人时必须沿用原密钥，并独立备份；丢失密钥不能恢复联系方式。
 4. 执行 `python scripts/crossbound-local/server.py --migrate-only`，依次应用001–004并记录校验和。不要仅手工执行001后启动服务；手工安装需同步登记各迁移的校验和。首次安装使用迁移器即可。
 5. MySQL DDL 隐式提交；若安装中断，核对已执行语句及备份后恢复，不要删除正式库或盲目重跑。
-6. 本地预览服务绑定127.0.0.1并使用 `/api`。部署 Dockerfile 启动 Gunicorn，监听8080，正式 API 为同源 `/crossbound/api`。反向代理配置见 deploy/nginx.conf.example；Host/Origin 通过 CROSSBOUND_PUBLIC_ORIGIN 配置。
+6. 本地预览服务绑定127.0.0.1并使用 `/api`。部署 Dockerfile 启动 Gunicorn，监听5017，正式 API 为同源 `/crossbound/api`。反向代理配置见 deploy/nginx.conf.example；Host/Origin 通过 CROSSBOUND_PUBLIC_ORIGIN 配置。
 7. 管理操作需 X-Admin-Token；上线应接公司管理员认证，不把管理口令放入玩家网页。
 
 ## API

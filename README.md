@@ -7,7 +7,7 @@
 | 项目 | 配置 |
 | --- | --- |
 | 后端技术 | Python 3.12 + Gunicorn，非 Java / Spring 服务 |
-| 后端容器端口 | `8080`，监听 `0.0.0.0` |
+| 后端容器端口 | `5017`，监听 `0.0.0.0` |
 | Context path | `/crossbound` |
 | API | `/crossbound/api/...` |
 | 健康检查 | `GET /crossbound/api/health` |
@@ -34,11 +34,21 @@ npm run build
 
 ## 后端镜像与配置
 
+Dockerfile 按公司模板使用 `hub.aukeyvalue.com/library/python:3.12-slim`、阿里云 Debian/PyPI 源及 `Asia/Shanghai` 时区，依赖入口为根目录 `requirements.txt`。构建机需能访问公司镜像仓库，并具备拉取权限。数据库采集时间仍统一保存 UTC。
+
+本项目端口为 `5017`，使用 Gunicorn WSGI 入口。模板中的 `uvicorn run:app` 属于其他项目，不用于本服务。系统依赖只安装本项目需要的 `ca-certificates`、`tzdata`。数据与日志卷分别为 `/app/data`、`/app/logs`，宿主机挂载路径保持不变。
+
 在仓库根目录构建：
 
 ```sh
 docker build -t crossbound-backend:1.1.0 .
 cp deploy/.env.example deploy/.env
+```
+
+仅在本地无法访问公司镜像仓库时，可显式覆盖基础镜像验证构建；这不能替代公司镜像的部署验证：
+
+```sh
+docker build --build-arg PYTHON_IMAGE=python:3.12-slim -t crossbound-backend:1.1.0 .
 ```
 
 在服务器上填写 `deploy/.env` 中的公司 MySQL 连接信息、真实公网 origin（如 `https://game.company.com`，不带路径和尾斜杠）、管理口令与加密密钥。配置文件不进入 Git。
@@ -75,7 +85,7 @@ CREATE DATABASE crossbound CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 docker run --rm --env-file deploy/.env.migrate crossbound-backend:1.1.0 python scripts/crossbound-local/server.py --data-dir /tmp/crossbound-migration --migrate-only
 ```
 
-迁移账号需该库的 `CREATE, ALTER, INDEX, REFERENCES, CREATE VIEW, SELECT, INSERT, UPDATE, DELETE` 权限。不要手动执行一半 SQL 后跳过迁移记录。MySQL DDL 不支持整体回滚，已有环境升级前先备份，发生错误应排查具体迁移后恢复或修复，不能盲目重试失败的非幂等 DDL。
+迁移账号需该库的 `CREATE, ALTER, INDEX, REFERENCES, CREATE VIEW, DROP, SELECT, INSERT, UPDATE, DELETE` 权限。不要手动执行一半 SQL 后跳过迁移记录。MySQL DDL 不支持整体回滚，已有环境升级前先备份，发生错误应排查具体迁移后恢复或修复，不能盲目重试失败的非幂等 DDL。
 
 运行账号 `crossbound_app` 只需该库的 `SELECT, INSERT, UPDATE, DELETE`。账号来源限制由 DBA 按部署网络设置。`schema_migrations` 中必须有 4 个匹配校验和的版本；`backend/app.py` 在版本不匹配时拒绝启动。
 
@@ -85,7 +95,7 @@ docker run --rm --env-file deploy/.env.migrate crossbound-backend:1.1.0 python s
 
 ```sh
 docker compose -f deploy/compose.yaml up -d
-curl http://127.0.0.1:8080/crossbound/api/health
+curl http://127.0.0.1:5017/crossbound/api/health
 docker compose -f deploy/compose.yaml ps
 ```
 

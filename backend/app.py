@@ -46,7 +46,7 @@ def create_app(store=None, token=None, context=None, origin=None):
         store = Store(data_dir=data_dir, auto_migrate=False)
         verify_schema(store)
     api = context + '/api/'
-    local_health_hosts = {'127.0.0.1:' + os.environ.get('PORT','8080'), 'localhost:' + os.environ.get('PORT','8080')}
+    local_health_hosts = {'127.0.0.1:' + os.environ.get('PORT','5017'), 'localhost:' + os.environ.get('PORT','5017')}
 
     def app(environ, start_response):
         path = environ.get('PATH_INFO','')

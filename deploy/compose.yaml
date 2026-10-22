@@ -8,10 +8,10 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      PORT: '8080'
+      PORT: '5017'
       CROSSBOUND_CONTEXT_PATH: /crossbound
     ports:
-      - '127.0.0.1:8080:8080'
+      - '127.0.0.1:5017:5017'
     volumes:
       - /data/logs/crossbound-backend:/app/logs
       - /data/crossbound/backend:/app/data
