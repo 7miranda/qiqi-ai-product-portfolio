@@ -10,6 +10,8 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts/crossbound-lo
 from mail_delivery import deliver
 from server import Store
 from app import verify_schema
+from configuration import validate_environment
+validate_environment()
 log_dir=Path(os.environ.get('CROSSBOUND_LOG_DIR','/app/logs'))
 log_dir.mkdir(parents=True,exist_ok=True)
 logging.basicConfig(level=logging.INFO,format='%(asctime)s %(levelname)s %(message)s',

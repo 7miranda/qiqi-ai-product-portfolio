@@ -53,8 +53,10 @@ npm run preview -- --port 8765
 
 ## 公司 MySQL 接入
 
+生产库名为 **`au-crossbound`**，内网 RDS 地址已填入 `deploy/.env.example`；账号与密码由 DBA 提供并存入 Jenkins Credentials。首次建库使用 `database/create-database.sql`，Jenkins 部署步骤见 `deploy/JENKINS.md`。上面的本机库名 `crossbound` 仅是本地开发历史配置，不是生产库名。
+
 1. 准备 MySQL 8.0.21+ 专用空库、utf8mb4。生产建议按公司现有 MySQL 版本运行同一套集成测试。
-2. 安装 `scripts/crossbound-local/requirements.txt`；设置 CROSSBOUND_MYSQL_HOST、PORT、USER、PASSWORD、DATABASE，或使用私有 mysql.json。运行时支持 MySQL 驱动 ssl 配置（通过私有 JSON），按公司数据库连接策略配置。
+2. 安装 `scripts/crossbound-local/requirements.txt`；设置 CROSSBOUND_MYSQL_HOST、PORT、USER、PASSWORD、DATABASE，或使用私有 mysql.json。生产 TLS 使用 CROSSBOUND_MYSQL_SSL_CA（自动验证证书和主机名），可选成对设置 CROSSBOUND_MYSQL_SSL_CERT/KEY；路径为容器内挂载路径。按公司数据库连接策略配置。
 3. 固定配置 CROSSBOUND_CONTACT_KEY。迁移已有加密联系人时必须沿用原密钥，并独立备份；丢失密钥不能恢复联系方式。
 4. 执行 `python scripts/crossbound-local/server.py --migrate-only`，依次应用001–004并记录校验和。不要仅手工执行001后启动服务；手工安装需同步登记各迁移的校验和。首次安装使用迁移器即可。
 5. MySQL DDL 隐式提交；若安装中断，核对已执行语句及备份后恢复，不要删除正式库或盲目重跑。

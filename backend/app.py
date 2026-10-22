@@ -39,6 +39,8 @@ def create_app(store=None, token=None, context=None, origin=None):
     if len(token) < 32:
         raise ValueError('CROSSBOUND_ADMIN_TOKEN must have at least 32 characters')
     if store is None:
+        from configuration import validate_environment
+        validate_environment()
         if not os.environ.get('CROSSBOUND_CONTACT_KEY'):
             raise ValueError('Set and securely back up CROSSBOUND_CONTACT_KEY before deployment')
         data_dir = Path(os.environ.get('CROSSBOUND_DATA_DIR', '/app/data'))

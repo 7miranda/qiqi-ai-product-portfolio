@@ -2,6 +2,8 @@
 
 游戏、MySQL 采集服务及部署文件的独立仓库。前端沿用现有园区、六步经营和徽章 UI；无需旧 GitHub 仓库或历史提交即可构建。
 
+**Jenkins 工程部署从 [deploy/JENKINS.md](deploy/JENKINS.md) 开始。** 根目录 `Jenkinsfile` 提供构建、凭证注入、数据库检查/迁移、同主机发布及失败回退。默认只构建；公司 agent、正式域名和数据库账号待工程侧配置，尚未在公司 Jenkins 执行。
+
 ## 给部署同事的参数
 
 | 项目 | 配置 |
@@ -15,7 +17,7 @@
 | 管理入口 | `/crossbound/admin`，API 需管理口令；入口建议另加公司 VPN 限制 |
 | 日志挂载 | 宿主机 `/data/logs/crossbound-backend` → 容器 `/app/logs` |
 | 私有文件挂载 | 宿主机 `/data/crossbound/backend` → 容器 `/app/data` |
-| 数据库 | 公司 MySQL 8.0.21+，已在 MySQL 8.0.41 验证；InnoDB / utf8mb4 |
+| 数据库 | 公司 MySQL 8.0.21+，库名 `au-crossbound`；InnoDB / utf8mb4 |
 
 日志命名沿用 `/data/logs/服务名` 规范；因为当前后端是 Python，服务名不加 `java-`。`PORT` 和 `CROSSBOUND_CONTEXT_PATH` 可以配置；修改 context 时也必须同步前端 `runtime-config.js` 与 Nginx。
 
@@ -76,10 +78,12 @@ chmod 600 deploy/.env
 先由 DBA 建立专用库（不要使用公司其他业务库）：
 
 ```sql
-CREATE DATABASE crossbound CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS `au-crossbound` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 用有 DDL 权限的迁移账号填写临时 `deploy/.env.migrate`，连接同一库；执行以下命令建立全部表及视图：
+
+迁移凭证模板为 `deploy/migration.env.example`，运行凭证模板为 `deploy/.env.example`。Jenkins 中分别使用两个 Secret file。库名含连字符时 SQL 标识符须加反引号；环境变量值直接写 `au-crossbound`。
 
 ```sh
 docker run --rm --env-file deploy/.env.migrate crossbound-backend:1.1.0 python scripts/crossbound-local/server.py --data-dir /tmp/crossbound-migration --migrate-only
@@ -89,9 +93,11 @@ docker run --rm --env-file deploy/.env.migrate crossbound-backend:1.1.0 python s
 
 运行账号 `crossbound_app` 只需该库的 `SELECT, INSERT, UPDATE, DELETE`。账号来源限制由 DBA 按部署网络设置。`schema_migrations` 中必须有 4 个匹配校验和的版本；`backend/app.py` 在版本不匹配时拒绝启动。
 
-**本地测试库已验证执行；公司数据库没有提供连接信息，尚未执行。** 仓库不含任何本机数据备份。已有测试数据是否迁入生产由业务负责人决定，不能把测试用户混入正式采集。
+**本地测试库已验证执行；公司 RDS 地址已提供，账号、密码及网络权限尚待配置，未在公司数据库执行。** 仓库不含任何本机数据备份。已有测试数据是否迁入生产由业务负责人决定，不能把测试用户混入正式采集。
 
 ## 启动与验证
+
+需要 Docker Compose 2.30+，使用 raw 环境文件避免密码中的 `$` 被展开。不要在 env 值外额外加引号。
 
 ```sh
 docker compose -f deploy/compose.yaml up -d

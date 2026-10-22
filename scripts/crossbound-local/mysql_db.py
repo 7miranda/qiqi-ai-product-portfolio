@@ -48,6 +48,14 @@ def config(path=None):
             result[key] = int(value) if key == 'port' else value
     if not all(result.get(k) for k in ('host', 'user', 'password', 'database')):
         raise ValueError('Configure MySQL in .crossbound-local/mysql.json or CROSSBOUND_MYSQL_* environment variables')
+    result.setdefault('port', 3306)
+    if os.environ.get('CROSSBOUND_MYSQL_SSL_CA'):
+        result['ssl_ca'] = os.environ['CROSSBOUND_MYSQL_SSL_CA']
+        result['ssl_verify_cert'] = True
+        result['ssl_verify_identity'] = True
+        for field in ('cert', 'key'):
+            value = os.environ.get('CROSSBOUND_MYSQL_SSL_' + field.upper())
+            if value: result['ssl_' + field] = value
     return result
 
 @contextmanager

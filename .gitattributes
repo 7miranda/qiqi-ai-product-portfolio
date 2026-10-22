@@ -9,3 +9,5 @@
 *.yaml text eol=lf
 *.md text eol=lf
 Dockerfile text eol=lf
+Jenkinsfile text eol=lf
+*.env.example text eol=lf

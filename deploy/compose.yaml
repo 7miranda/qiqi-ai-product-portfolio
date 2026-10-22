@@ -1,12 +1,14 @@
 name: crossbound
 services:
   backend:
-    image: crossbound-backend:1.1.0
+    image: ${CROSSBOUND_IMAGE:-crossbound-backend:1.1.0}
     build:
       context: ..
       dockerfile: Dockerfile
     restart: unless-stopped
-    env_file: .env
+    env_file:
+      - path: ${CROSSBOUND_ENV_FILE:-.env}
+        format: raw
     environment:
       PORT: '5017'
       CROSSBOUND_CONTEXT_PATH: /crossbound
@@ -23,10 +25,12 @@ services:
       driver: json-file
       options: {max-size: '10m', max-file: '5'}
   worker:
-    image: crossbound-backend:1.1.0
+    image: ${CROSSBOUND_IMAGE:-crossbound-backend:1.1.0}
     command: ['python', 'backend/worker.py']
     restart: unless-stopped
-    env_file: .env
+    env_file:
+      - path: ${CROSSBOUND_ENV_FILE:-.env}
+        format: raw
     depends_on:
       backend:
         condition: service_healthy
