@@ -13,6 +13,11 @@ const marker = '/* Crossbound v1.1 bridge */';
 const uiVersion = createHash('sha256').update(fs.readFileSync(path.join(root, folder, 'v11/ui.js'))).digest('hex').slice(0, 10);
 const cssVersion = createHash('sha256').update(fs.readFileSync(path.join(root, folder, 'v11/styles.css'))).digest('hex').slice(0, 10);
 const v2Version = createHash('sha256').update(['core.js','model.js','catalog.js','progress.js','ui.js','styles.css'].map(f=>fs.readFileSync(path.join(root,folder,'v2',f))).join('')).digest('hex').slice(0,10);
+const servicesUIPath = path.join(root, folder, 'services/ui.js');
+const servicesModelVersion = createHash('sha256').update(fs.readFileSync(path.join(root, folder, 'services/model.js'))).digest('hex').slice(0, 10);
+const servicesUI = fs.readFileSync(servicesUIPath, 'utf8').replace(/from '\.\/model\.js(?:\?v=[^']*)?'/, `from './model.js?v=${servicesModelVersion}'`);
+fs.writeFileSync(servicesUIPath, servicesUI);
+const servicesVersion = createHash('sha256').update(['model.js', 'ui.js', 'styles.css'].map(f => fs.readFileSync(path.join(root, folder, 'services', f))).join('')).digest('hex').slice(0, 10);
 const encode = text => text.replace(/[\u0080-\uFFFF]/g, c => '\\u' + c.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0'));
 function replaceOne(source, from, to, label = from.slice(0, 80)) {
   const count = source.split(from).length - 1;
@@ -43,6 +48,7 @@ function replaceElement(script, className, change) {
 function patchMain(s) {
   const once = (from, to, label) => { s = replaceOne(s, from, to, label); };
   once('function Roe(){', 'function Roe(){const [v11Promotion,setV11Promotion]=li.useState({});');
+  once('function Roe(){', 'function Roe(){const [serviceReturn,setServiceReturn]=li.useState(null);const serviceTrigger=li.useRef(null);function openServices(){setServiceReturn(l);serviceTrigger.current=document.activeElement;u("services")}');
   once('Ng=t.listingAssets?.[`${t.marketId}:${t.productId}`]??null', 'Ng=t.listingAssets?.[V11.valid(t)?t.productId:`${t.marketId}:${t.productId}`]??null');
   once('Et===3?{budget:C,', 'Et===3?{budget:C,promotionChoice:v11Promotion[h],');
   // Hook after all original state declarations, before the first effect.
@@ -71,6 +77,7 @@ function patchMain(s) {
   once('l==="complete"?(0,re.jsxs)(re.Fragment,{children:[', 'l==="complete"?(0,re.jsxs)(re.Fragment,{children:[(0,re.jsx)(V2UI.BadgeCelebration,{company:t},`${t.runSeed}:${t.round}`),(0,re.jsx)(V2UI.HonorSummary,{company:t,ops:r}),(0,re.jsx)(V11UI.RoundAchievements,{company:t,onOpen:v11OpenAchievements}),');
   once('(0,re.jsx)(oN,{report:Pe,compact:!0}),', '(0,re.jsx)(oN,{report:Pe,compact:!0}),(0,re.jsx)(V11UI.Clearance,{company:t,onChange:i}),(0,re.jsx)(V11UI.GrowthSummary,{company:t,ops:r,onTask:As,onBuild:()=>u("build")}),');
   s = replaceElement(s, 'result-next-v23', () => '(0,re.jsx)(V11UI.SettlementActions,{company:t,ops:r,flow:v11Flow,onContinue:rs,onSkip:v11NextRound,onAdjust:()=>Ba(2),onHQ:()=>u("progress")})');
+  once('(0,re.jsx)(V11UI.SettlementActions,{company:t,ops:r,flow:v11Flow,onContinue:rs,onSkip:v11NextRound,onAdjust:()=>Ba(2),onHQ:()=>u("progress")})', '(0,re.jsxs)(re.Fragment,{children:[(0,re.jsx)(V11UI.SettlementActions,{company:t,ops:r,flow:v11Flow,onContinue:rs,onSkip:v11NextRound,onAdjust:()=>Ba(2),onHQ:()=>u("progress")}),(0,re.jsx)(ServicesUI.Review,{onOpen:openServices})]})');
   s = replaceElement(s, 'prize-actions', original => `v11Flow.active&&rt.kind!=="business"?(0,re.jsx)(V11UI.RewardActions,{reward:rt,ready:_s.facilities.some(f=>f.ready),onContinue:$s,onSkip:v11NextRound}):${original}`);
   once('rt.promotion&&(0,re.jsxs)("span",{children:["'+encode('晋升 / ')+'",rt.promotion]})', '(0,re.jsx)(V11UI.LevelUp,{reward:rt})');
   once('l&&(0,re.jsx)(Use,{view:l,inBusiness:o&&!n}),', 'l&&(0,re.jsx)(Use,{view:l,inBusiness:o&&!n}),(l==="complete"||v11Flow.active&&["operations","review-task","reward","build"].includes(l))&&(0,re.jsx)(V11UI.SettlementProgress,{view:l,flow:v11Flow}),');
@@ -94,6 +101,12 @@ function patchMain(s) {
   once('"'+encode('这批货已入库，接下来制作商品页并推广。')+'"', '"进货计划已确认，接下来制作商品页并推广。"');
   // Dialog title is also updated for screen readers.
   once('passport:', '"v2-events":"总部来电 · 经营事件","review-task":"总部来电 · 售后复盘",achievements:"出海成就",passport:');
+  once('passport:', 'services:"企业经营服务 · 需求准备",passport:');
+  once('onSupply:pu,onMarkets:z5})', 'onSupply:pu,onMarkets:z5,onServices:openServices})');
+  once('let kd=l===', 'let kd=l==="services"?serviceReturn:l===');
+  once('D7=kd===', 'D7=kd==="complete"?"本轮战报":kd===');
+  once('function L7(){', 'function L7(){if(l==="services"){u(serviceReturn);requestAnimationFrame(()=>{if(serviceReturn==="complete")xs.current?.querySelector("[data-service-review-trigger]")?.focus();else serviceTrigger.current?.focus()});return}');
+  once('l==="decision"?(0,re.jsxs)(re.Fragment,{children:[', 'l==="services"?(0,re.jsx)(ServicesUI.Workspace,{context:serviceReturn==="complete"?[ks.find(x=>x.id===t.marketId)?.countryLabel,Zn.find(x=>x.id===t.productId)?.name].filter(Boolean).join(" / "):null}):l==="decision"?(0,re.jsxs)(re.Fragment,{children:[');
   return s;
 }
 
@@ -106,6 +119,16 @@ for (const file of ['index.html', 'preview.html']) {
   if (!match) throw new Error(`Missing application script: ${file}`);
   let script = match[1];
   script = replaceFunction(script, 'Roe', patchMain);
+  script = replaceFunction(script, 'Rse', s => {
+    s = replaceOne(s, 'onSupply:o,onMarkets:a})', 'onSupply:o,onMarkets:a,onServices:serviceOpen})');
+    s = replaceOne(s, 'onExample:B,hasProgress:e})', 'onExample:B,hasProgress:e,onServices:serviceOpen})');
+    return replaceElement(s, 'portal-nav portal-nav-v21', () => '(0,on.jsx)(ServicesUI.Nav,{})');
+  });
+  script = replaceFunction(script, 'Cse', s => {
+    s = replaceOne(s, 'onExample:r,hasProgress:s})', 'onExample:r,hasProgress:s,onServices:serviceOpen})');
+    return replaceOne(s, '(0,yr.jsx)(Ese,{onStart:i,hasProgress:s})', '(0,yr.jsx)(ServicesUI.Home,{onOpen:serviceOpen}),(0,yr.jsx)(Ese,{onStart:i,hasProgress:s})');
+  });
+  script = replaceFunction(script, 'Ese', s => replaceOne(s, '03 / '+encode('真实出海故事'), '04 / '+encode('真实出海故事')));
   script = replaceFunction(script, 'Vse', s => {
     s = replaceOne(s, 'reducedMotion:s})', 'reducedMotion:s,headquartersStatus:v11HQ=""})');
     s = replaceOne(s, 'function Z(K){', 'function Z(K){if(K.id==="headquarters")return v11HQ||"任务与设施";');
@@ -130,14 +153,15 @@ for (const file of ['index.html', 'preview.html']) {
   });
   script = replaceFunction(script, 'R5', s => s.replace(encode('进价提高 8%；交期本轮不改变模拟销量'), encode('进价提高8%；新规则按交期计算本轮及时可售库存')));
   script = replaceOne(script, 'window.Globe=W8e;', `${marker}\n${bridge}\nwindow.Globe=W8e;`);
-  script = `import { HELP } from "./v11/model.js";\nimport { createCrossboundV2 } from "./v2/model.js?v=${v2Version}";\nimport { createV2UI, profitRows } from "./v2/ui.js?v=${v2Version}";\nimport { explorationAwards } from "./v2/progress.js";\nimport { createGrowth } from "./v11/growth.js?v=${v2Version}";\nimport { createCrossboundUI } from "./v11/ui.js?v=${uiVersion}";\n` + script;
+  script = `import { createServicesUI } from "./services/ui.js?v=${servicesVersion}";\nimport { HELP } from "./v11/model.js";\nimport { createCrossboundV2 } from "./v2/model.js?v=${v2Version}";\nimport { createV2UI, profitRows } from "./v2/ui.js?v=${v2Version}";\nimport { explorationAwards } from "./v2/progress.js";\nimport { createGrowth } from "./v11/growth.js?v=${v2Version}";\nimport { createCrossboundUI } from "./v11/ui.js?v=${uiVersion}";\n` + script;
+  script = replaceOne(script, 'const V2UI = createV2UI(', 'const ServicesUI = createServicesUI({ React: li, Button: Ge });\nconst V2UI = createV2UI(');
   const parsed = ts.createSourceFile(file, script, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
   if (parsed.parseDiagnostics.length) {
     const diagnostic = parsed.parseDiagnostics[0], position = diagnostic.start || 0;
     throw new Error(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n') + '\nNear: ' + script.slice(position - 140, position + 140));
   }
   html = html.slice(0, match.index) + match[0].replace(/^<script\b[^>]*>/, '<script type="module">').replace(match[1], () => script) + html.slice(match.index + match[0].length);
-  html = html.replace('</head>', `<link rel="stylesheet" href="./v11/styles.css?v=${cssVersion}">\n<link rel="stylesheet" href="./v2/styles.css?v=${v2Version}">\n</head>`);
+  html = html.replace('</head>', `<link rel="stylesheet" href="./v11/styles.css?v=${cssVersion}">\n<link rel="stylesheet" href="./v2/styles.css?v=${v2Version}">\n<link rel="stylesheet" href="./services/styles.css?v=${servicesVersion}">\n</head>`);
   fs.writeFileSync(path.join(root, relative), html);
   console.log(`${file}: v1.1 integrated; original campus and dialog layout retained.`);
 }
