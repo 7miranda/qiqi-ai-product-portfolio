@@ -32,4 +32,6 @@
 - 1440px 桌面及 390px 手机实图审核；320px 检查无新增横向溢出。手机返回在左侧，三步说明为静态中性文字。
 - 本地测试页控制台无 error。独立代码及视觉审查无未解决 P1/P2。
 
+验收截图：[首页](screenshots/crossbound-services/home-desktop.jpg)、[桌面服务空间](screenshots/crossbound-services/workspace-desktop.jpg)、[手机服务空间](screenshots/crossbound-services/workspace-mobile.jpg)。表单为本机合成测试资料。
+
 本次为现有页面的局部功能交付，不代表全站 ReactBits 组件覆盖审计通过。公网部署状态与链接以对应 PR、GitHub Pages 工作流为准。

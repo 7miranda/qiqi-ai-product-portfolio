@@ -36,7 +36,7 @@ export function createServicesUI({ React, Button }) {
     const persist = next => { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(normalizeDraft(next))); return true; } catch { return false; } };
     const change = next => { setDraft(next); setFormed(false); setMessage(persist(next) ? '' : '浏览器无法保存草稿；离开前请先形成清单并下载。'); };
     const update = (key, value) => { change({ ...draft, [key]: value }); setErrors(e => ({ ...e, [key]: undefined })); };
-    const changeService = id => change({ ...draft, serviceId: id, ready: [false, false, false] });
+    const changeService = id => { if (id !== draft.serviceId) change({ ...draft, serviceId: id, ready: [false, false, false] }); };
     const generate = e => {
       e.preventDefault(); const invalid = draftErrors(draft); setErrors(invalid);
       if (Object.keys(invalid).length) { form.current?.elements.namedItem(Object.keys(invalid)[0])?.focus(); return; }
