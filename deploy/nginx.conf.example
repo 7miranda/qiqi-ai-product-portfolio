@@ -1,0 +1,25 @@
+# Include these locations inside your existing HTTPS server block.
+# Copy dist/crossbound to /data/www/crossbound (do not copy repository sources).
+location = /crossbound { return 302 /crossbound/; }
+location /crossbound/api/ {
+    client_max_body_size 2m;
+    proxy_pass http://127.0.0.1:5017; # Preserve /crossbound/api/...
+    proxy_set_header Host $http_host;
+    proxy_read_timeout 60s;
+}
+location = /crossbound/admin {
+    # Restrict this endpoint to your company VPN in the real server configuration.
+    proxy_pass http://127.0.0.1:5017;
+    proxy_set_header Host $http_host;
+}
+location = /crossbound/runtime-config.js {
+    root /data/www;
+    add_header Cache-Control 'no-store';
+}
+location /crossbound/ {
+    root /data/www;
+    index index.html;
+    try_files $uri $uri/ =404;
+    # Hashed module URLs are already emitted; revalidate unversioned assets/HTML.
+    add_header Cache-Control 'no-cache';
+}

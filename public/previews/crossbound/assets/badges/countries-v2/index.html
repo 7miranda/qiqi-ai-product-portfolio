@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CROSSBOUND · 国家徽章收藏</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#050d11;color:#e5eff1;font:15px/1.7 system-ui,"Microsoft YaHei",sans-serif}
+main{max-width:1120px;margin:auto;padding:40px 28px}h1{font-size:30px;margin:6px 0 12px}header{margin-bottom:28px}
+header p,small{color:#91aeb9}header small{letter-spacing:.12em}a{color:#bce4e8;text-underline-offset:4px}
+nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:24px 0}select{font:inherit;color:#d9e9ed;background:#10242c;border:1px solid #34515b;border-radius:8px;padding:8px 12px}
+.country{margin:24px 0 36px}.country>h2{font-size:19px;font-weight:550;display:flex;gap:12px;align-items:baseline}.country>h2 small{font-size:12px;font-weight:400}
+.tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+figure{margin:0;background:#0d2028;border:1px solid #223b44;border-radius:16px;padding:18px;text-align:center}
+figure img{display:block;width:100%;height:220px;object-fit:contain;margin:auto}figcaption{margin:12px 0 4px;font-size:15px}
+.gold figcaption{color:#e8c777}.silver figcaption{color:#c9d5df}.bronze figcaption{color:#d6a087}figure a{font-size:12px}
+footer{border-top:1px solid #20363e;margin-top:36px;padding-top:20px;color:#8facb5;font-size:13px}
+@media(max-width:620px){main{padding:24px 16px}.tiers{gap:8px}figure{padding:10px 4px}figure img{height:128px}h1{font-size:25px}figcaption{font-size:13px}}
+</style>
+<main>
+  <header>
+    <small>CROSSBOUND / COUNTRY COLLECTION</small>
+    <h1>12 个国家 · 36 枚出海徽章</h1>
+    <p>国家配色融入水晶底板，地标成为金属浮雕。金章三星、银章二星、铜章一星；同一国家各等级保留相同的国旗配色。</p>
+    <nav><label for="country-filter">查看国家</label><select id="country-filter"><option value="all">全部国家</option></select>
+      <a href="../../../preview.html">返回游戏</a>
+    </nav>
+  </header>
+  <div id="collection"></div>
+  <footer>内置 imagegen 制作 · 透明 PNG 素材。<a href="manifest.json">素材清单</a> · <a href="prompts.json">完整制作提示词</a></footer>
+</main>
+<script type="module">
+const manifest=await fetch('./manifest.json').then(r=>r.json());
+const root=document.querySelector('#collection'),filter=document.querySelector('#country-filter');
+for(const country of manifest.countries){
+  const option=document.createElement('option');option.value=country.marketId;option.textContent=country.name;filter.append(option);
+  const section=document.createElement('section');section.className='country';section.dataset.country=country.marketId;
+  const title=document.createElement('h2');title.textContent=country.name;
+  const code=document.createElement('small');code.textContent=`${country.code} / ${country.city}`;title.append(code);section.append(title);
+  const grid=document.createElement('div');grid.className='tiers';
+  for(const tier of manifest.tiers){
+    const figure=document.createElement('figure');figure.className=tier.id;
+    const img=document.createElement('img');img.src=country.webFiles?.[tier.id]||country.files[tier.id];img.alt=`${country.name} · ${tier.name}`;img.loading='lazy';img.decoding='async';img.width=220;img.height=220;
+    const caption=document.createElement('figcaption');caption.textContent=`${tier.name} · ${'★'.repeat(tier.stars)}`;
+    const link=document.createElement('a');link.href=country.files[tier.id];link.download=`crossbound-${country.marketId}-${tier.id}.png`;link.textContent='下载 PNG';
+    figure.append(img,caption,link);grid.append(figure);
+  }
+  section.append(grid);root.append(section);
+}
+filter.addEventListener('change',()=>{for(const row of root.children)row.hidden=filter.value!=='all'&&row.dataset.country!==filter.value});
+</script>
+</html>

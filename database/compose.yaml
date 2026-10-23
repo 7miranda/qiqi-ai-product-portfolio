@@ -1,0 +1,22 @@
+services:
+  mysql:
+    image: mysql:8.0.41
+    container_name: crossbound-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: crossbound
+      MYSQL_USER: crossbound
+      MYSQL_PASSWORD: ${CROSSBOUND_MYSQL_PASSWORD:?Set local password}
+      MYSQL_ROOT_PASSWORD: ${CROSSBOUND_MYSQL_ROOT_PASSWORD:?Set root password}
+    ports:
+      - "127.0.0.1:23306:3306"
+    volumes:
+      - crossbound-mysql-data:/var/lib/mysql
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+volumes:
+  crossbound-mysql-data:

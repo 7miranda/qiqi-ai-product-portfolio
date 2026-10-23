@@ -1,0 +1,45 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Crossbound 本机数据</title>
+<style>body{max-width:960px;margin:48px auto;padding:24px;background:#061014;color:#d7eaf0;font:16px system-ui}button,input,select{background:#10252d;color:inherit;border:1px solid #355560;padding:12px;border-radius:10px;margin:8px 4px}button{cursor:pointer}pre{white-space:pre-wrap;background:#10252d;padding:24px;border-radius:16px}input{width:70%}</style>
+<h1>Crossbound 本机数据</h1><p>仅当前电脑可访问。记录不上传第三方，不展示公开排行榜。管理口令保存在项目的 <code>.crossbound-local/admin-token.txt</code>。</p>
+<label>管理口令 <input type="password" id="token" autocomplete="off"></label><button id="load">查看汇总</button>
+<pre id="result">输入口令后查看本机记录。</pre>
+<label>导出类型 <select id="table"><option value="leads">留资名单（深度共建优先，再按评分）</option><option value="round_reports">战绩与退出阶段</option><option value="quiz_answers">全部答题尝试</option><option value="feedback">共建者建议</option><option value="events">行为事件</option></select></label><button id="export">导出 CSV</button>
+<section><h2>共建建议审核</h2><p>先建立草稿版本，再采纳建议并填写公开摘要。发布后，玩家会在原来的「一起共建」卡片中看到公示。原始反馈、联系方式和内部备注不公开。</p>
+<button id="inbox">加载建议与版本</button><label>选择建议 <select id="feedback-choice"></select></label><pre id="feedback-text">选择一条建议查看内容。</pre>
+<label>审核状态 <select id="review-status"><option value="pending">待处理</option><option value="adopted">采纳</option><option value="rejected">暂不采纳</option></select></label>
+<label>所属草稿版本 <select id="review-release"><option value="">未关联</option></select></label>
+<label>公开摘要（请勿包含联系方式）<textarea id="public-summary" maxlength="200" rows="3"></textarea></label>
+<label>内部备注 <textarea id="internal-note" maxlength="1000" rows="3"></textarea></label><button id="save-review">保存审核</button>
+<h2>版本公示</h2><label>已有版本 <select id="release-choice"><option value="">新建版本</option></select></label>
+<label>版本号 <input id="release-version" maxlength="80" placeholder="例如 v1.1.1"></label><label>更新标题 <input id="release-title" maxlength="120"></label>
+<button id="save-draft">保存草稿／撤回公示</button><button id="publish-release">发布此版本公示</button><p id="admin-message" role="status"></p></section>
+<section><h2>名单跟进与数据管理</h2><p>普通列表隐藏完整联系方式；导出完整名单会记录管理审计。删除操作按匿名用户或邮箱清除关联数据，旧浏览器队列不会重新写回。</p>
+<button id="export-contacts">导出完整联系名单</button>
+<label>留资记录 ID <input id="lead-id"></label><label>跟进状态 <select id="lead-status"><option value="new">未跟进</option><option value="contacted">已联系</option><option value="cooperating">合作中</option><option value="invalid">无效</option></select></label><button id="save-lead">保存跟进状态</button>
+<button id="load-deliveries">查看报告交付状态</button><pre id="deliveries">尚未加载</pre><label>失败交付 ID <input id="delivery-id"></label><button id="retry-delivery">重试失败交付</button>
+<label>删除对象（匿名用户 ID 或邮箱）<input id="delete-user"></label><button id="delete-records">删除此用户关联记录</button><p id="data-message" role="status"></p></section>
+<style>section{margin-top:40px}section label{display:block;margin:16px 0}textarea{display:block;width:95%;padding:12px;background:#10252d;color:inherit;border:1px solid #355560;border-radius:10px;font:inherit;line-height:1.6}select{max-width:100%}</style>
+<script>
+const el=id=>document.getElementById(id);
+async function get(path){const response=await fetch('/api/admin/'+path,{headers:{'X-Admin-Token':el('token').value}});if(!response.ok)throw Error('口令不正确或本机服务不可用');return response.json()}
+const labels={rounds:'总轮次',completed:'完成轮次',incomplete:'未完成轮次',average_profit:'平均利润',pass_rate:'达标率',quiz_attempts:'答题次数',quiz_accuracy:'答题正确率',default_decisions:'使用默认次数',markets:'市场分布',products:'商品分布',channels:'渠道分布',exit_stages:'未完成时所在阶段'};
+el('load').onclick=async()=>{try{const data=await get('summary');el('result').textContent=Object.entries(data).map(([k,v])=>`${labels[k]||k}：${typeof v==='object'?JSON.stringify(v):v}`).join('\n')}catch(e){el('result').textContent=e.message}};
+el('export').onclick=async()=>{try{const rows=await get(el('table').value);const fields=[...new Set(rows.flatMap(Object.keys))],cell=v=>'"'+String(typeof v==='object'?JSON.stringify(v):v??'').replace(/^\s*[=+\-@]/,"'$&").replaceAll('"','""')+'"';const csv='\ufeff'+[fields,...rows.map(r=>fields.map(f=>r[f]))].map(r=>r.map(cell).join(',')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='crossbound-'+el('table').value+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}catch(e){el('result').textContent=e.message}};
+
+let feedback=[],releases=[];
+async function post(path,data){const response=await fetch('/api/admin/'+path,{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Token':el('token').value},body:JSON.stringify(data)});const body=await response.json();if(!response.ok)throw Error(body.error||'保存失败');return body}
+function option(select,value,label){const item=document.createElement('option');item.value=value;item.textContent=label;select.append(item)}
+function showFeedback(){const f=feedback.find(x=>x.record_id===el('feedback-choice').value);if(!f)return;el('feedback-text').textContent=`${f.badge_number} · ${f.deep?'第三轮回访':'首轮共建'}\n${f.comment||'未填写文字建议'}\n${f.answers?'选择：'+f.answers.join(' / '):''}`;el('review-status').value=f.review_status;el('review-release').value=f.release_version||'';el('public-summary').value=f.public_summary||'';el('internal-note').value=f.internal_note||''}
+async function reloadInbox(){const selected=el('feedback-choice').value;[feedback,releases]=await Promise.all([get('feedback'),get('releases')]);el('feedback-choice').replaceChildren();for(const f of feedback)option(el('feedback-choice'),f.record_id,`${f.badge_number} · ${f.deep?'深度回访':'首轮'} · ${f.review_status}`);el('review-release').replaceChildren();option(el('review-release'),'','未关联');el('release-choice').replaceChildren();option(el('release-choice'),'','新建版本');for(const r of releases){option(el('review-release'),r.version,`${r.version} · ${r.status==='draft'?'草稿':'已发布（先撤回再改）'}`);option(el('release-choice'),r.version,`${r.version} · ${r.title} · ${r.status}`)}if(feedback.some(f=>f.record_id===selected))el('feedback-choice').value=selected;showFeedback()}
+async function task(fn){try{await fn();el('admin-message').textContent='已保存。';}catch(e){el('admin-message').textContent=e.message}}
+el('inbox').onclick=()=>task(reloadInbox);el('feedback-choice').onchange=showFeedback;
+el('release-choice').onchange=()=>{const r=releases.find(r=>r.version===el('release-choice').value);el('release-version').value=r?.version||'';el('release-title').value=r?.title||''};
+el('save-review').onclick=()=>task(async()=>{await post('review',{feedback_id:el('feedback-choice').value,status:el('review-status').value,release_version:el('review-release').value,public_summary:el('public-summary').value,internal_note:el('internal-note').value});await reloadInbox()});
+for(const [id,status] of [['save-draft','draft'],['publish-release','published']])el(id).onclick=()=>task(async()=>{await post('release',{version:el('release-version').value,title:el('release-title').value,status});await reloadInbox()});
+async function dataTask(fn){try{await fn();el('data-message').textContent='已完成。'}catch(e){el('data-message').textContent=e.message}}
+el('export-contacts').onclick=()=>dataTask(async()=>{const rows=await post('export-leads',{});const fields=[...new Set(rows.flatMap(Object.keys))],cell=v=>'"'+String(typeof v==='object'?JSON.stringify(v):v??'').replace(/^\s*[=+\-@]/,"'$&").replaceAll('"','""')+'"';const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+[fields,...rows.map(r=>fields.map(f=>r[f]))].map(r=>r.map(cell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}));a.download='crossbound-contacts.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});
+el('save-lead').onclick=()=>dataTask(()=>post('lead-status',{id:el('lead-id').value,status:el('lead-status').value}));
+el('load-deliveries').onclick=()=>dataTask(async()=>{el('deliveries').textContent=JSON.stringify(await get('deliveries'),null,2)});
+el('retry-delivery').onclick=()=>dataTask(()=>post('retry-delivery',{id:el('delivery-id').value}));
+el('delete-records').onclick=()=>dataTask(async()=>{const identity=el('delete-user').value.trim();if(!identity)throw Error('请填写删除对象');if(!confirm('将删除此用户的游戏分析、反馈、留资和报告交付记录。此操作不能撤销，确认删除？'))return;await post('delete-user',identity.includes('@')?{email:identity}:{user_id:identity});el('delete-user').value=''});
+</script></html>

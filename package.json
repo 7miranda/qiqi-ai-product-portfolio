@@ -1,0 +1,16 @@
+{
+  "name": "crossbound",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/crossbound-v11/build.mjs && node scripts/package-frontend.mjs",
+    "build:crossbound": "node scripts/crossbound-v11/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "preview": "node scripts/crossbound-local/start.mjs"
+  },
+  "devDependencies": {
+    "sharp": "0.35.5",
+    "typescript": "5.9.3"
+  }
+}

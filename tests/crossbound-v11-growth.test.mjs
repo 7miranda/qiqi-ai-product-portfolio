@@ -1,0 +1,73 @@
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+import { fixture, prepare, finish } from './crossbound-v11-fixture.mjs';
+const { engine: e, legacy, growth: g } = fixture();
+const correct = task => task.choices.find(c => c.correct).id;
+
+test('first three rounds double base rewards and unlock facilities at the resulting XP', () => {
+  const task = legacy.U5[0], ops = g.commit(legacy.IG(), task.id, correct(task), 1);
+  assert.equal(ops.xp, 200);
+  assert.equal(ops.research, 40);
+  assert.equal(ops.feedback.levelUp.level, legacy.Tg(ops).level);
+  assert.deepEqual(ops.feedback.unlocked.map(f => f.id), legacy.r2.filter(f => f.minXp > 0 && f.minXp <= 200).map(f => f.id));
+  const built = legacy.Xse(ops, legacy.r2[0].id);
+  assert.equal(built.research, 40 - legacy.r2[0].cost);
+  assert.ok(g.deserialize(g.serialize(built)));
+  assert.equal(g.commit(ops, task.id, correct(task), 1).xp, ops.xp);
+  const normal = g.commit(legacy.IG(), task.id, correct(task), 4);
+  assert.equal(normal.xp, 100); assert.equal(normal.research, 20);
+});
+test('wrong answers, old saves, and mixed reward rules replay exactly', () => {
+  const task = legacy.U5[0], wrong = task.choices.find(c => !c.correct).id;
+  const old = legacy.jse(legacy.IG(), task.id, correct(task));
+  assert.equal(g.deserialize(JSON.stringify(legacy.$se(old))).xp, 100);
+  let ops = g.commit(legacy.IG(), task.id, wrong, 1);
+  assert.equal(ops.xp, 0); assert.equal(ops.history[0].round, 1);
+  ops = g.commit(ops, task.id, correct(task), 1);
+  assert.equal(g.deserialize(g.serialize(ops)).xp, 200);
+  const forged = JSON.parse(g.serialize(ops)); forged.xp += 200;
+  assert.equal(g.deserialize(forged), null);
+  assert.equal(g.commit(ops, legacy.U5[1].id, correct(legacy.U5[1]), -1), ops);
+});
+test('actual bad reviews trigger a task, carry forward, and award once across refresh and rollback', () => {
+  const company = finish(e, prepare(e), 'ads', 3600, { id: 'benefit' }, 'economy');
+  assert.ok(company.report.badReviews >= 10);
+  const before = e.serialize(company), task = g.reviewTask(company, legacy.IG());
+  assert.equal(task.evidence.badReviews, company.report.badReviews);
+  assert.equal(g.reviewTask(e.next(company), legacy.IG()).id, task.id);
+  let ops = g.reviewAnswer(legacy.IG(), task.evidence, 'erase', 1);
+  assert.equal(ops.xp, 0); assert.equal(ops.feedback.status, 'retry');
+  ops = g.reviewAnswer(ops, task.evidence, 'investigate', 1);
+  assert.equal(ops.xp, 200); assert.equal(ops.research, 40);
+  const restored = g.deserialize(g.serialize(ops));
+  assert.equal(restored.xp, 200);
+  assert.equal(g.reviewTask(company, restored), null);
+  assert.equal(g.reviewAnswer(restored, task.evidence, 'investigate', 1), restored);
+  let replayed = e.rollback(company, 3);
+  for (const decision of company.decisions.slice(3)) replayed = e.commit(replayed, decision);
+  assert.equal(g.reviewTask(replayed, restored), null);
+  assert.equal(e.serialize(company), before);
+  assert.equal(g.reviewAnswer(ops, { ...task.evidence, badReviews: 2 }, 'investigate', 1), ops);
+});
+test('growth plan uses doubled XP and retains a single pending review after regular tasks finish', () => {
+  const company = finish(e, prepare(e), 'ads', 3600, { id: 'benefit' }, 'economy');
+  let ops = legacy.IG();
+  for (const task of legacy.U5) ops = g.commit(ops, task.id, correct(task), 1);
+  const result = g.growth(company, ops);
+  assert.equal(result.completed, legacy.U5.length);
+  assert.equal(result.nextTask.type, 'review');
+  assert.equal(result.nextTask.xp, 200);
+  const initial = g.growth(e.create(123), legacy.IG());
+  assert.equal(initial.upgradeTasks.length, 1);
+  assert.equal(initial.upgradeTasks[0].xp, 200);
+});
+test('delivery milestone is attainable, excludes tiny samples, and keeps historical zero-refund badges', () => {
+  const company = finish(e, prepare(e));
+  assert.ok(e.milestones(company).find(m => m.id === 'steady-delivery').earned);
+  assert.ok(!e.milestones(company).some(m => m.id === 'zero-refunds'));
+  const tiny = { history: [{ orders: 20, refunds: 1, profit: 0, round: 1 }] };
+  assert.equal(e.milestones(tiny).find(m => m.id === 'steady-delivery').earned, false);
+  const old = { history: [{ orders: 20, refunds: 0, profit: 10, round: 1 }] };
+  const retained = e.milestones(old).find(m => m.id === 'zero-refunds');
+  assert.equal(retained.earned, true); assert.equal(retained.round, 1);
+});
