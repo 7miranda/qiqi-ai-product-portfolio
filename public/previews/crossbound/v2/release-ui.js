@@ -47,8 +47,8 @@ export function createReleaseUI({React,Button,engine,tasks,profitRows}) {
       !f.legacy&&panel('三表核对',h('ul',null,['资产＝负债＋净资产','净资产变动＝本轮净利润','期末现金＝资产负债表现金＝实际现金'].map((label,i)=>h('li',{key:label,className:f.checks[i]?'signal-text':'v3-warning'},`${f.checks[i]?'✓':'核对异常'} ${label}`)))),
       f.reason&&h('p',null,f.reason));
   }
-  const communityBadge='./assets/badges/community-v2/co-builder.webp';
-  const badgeArt=(className='')=>h('img',{className:`v3-community-badge ${className}`,src:communityBadge,alt:'共建者徽章：金色桂冠与翡翠地球，三根相连的立柱',width:240,height:240});
+  const communityBadge='./assets/badges/community-v3/co-creator-star.webp';
+  const badgeArt=(className='')=>h('img',{className:`v3-community-badge ${className}`,src:communityBadge,alt:'共建者徽章：淡黄色珠光四角星，香槟金曲线与 CO-CREATOR 铭文',width:240,height:240});
   function Community({company,onReward,onDone}) {
     const saved=feedbackState(company);
     // Keep the entry mode stable when saving the first survey causes a parent render.
