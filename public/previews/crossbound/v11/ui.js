@@ -44,7 +44,7 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
     return h('div', { className: 'result-next-v23' },
       h('article', null, h('span', null, '继续经营 / 现金与余货保留'), h('h3', null, '下一轮，带着经验出发'),
         h('p', null, `现有现金${cash(company.cash)}和余货会保留。${!flow.done && g.nextTask?.available ? '总部还有一条经营线索，看看再出发。' : '可以继续经营原市场，也可以去下一站。'}`),
-        h('div', { className: 'result-next-actions' }, button(label + ' →', onContinue, { variant: 'solid' }),
+        h('div', { className: 'result-next-actions' }, button(label + ' →', onContinue, { variant: 'solid', 'data-guide':'next-round' }),
           button('调整本轮方案', onAdjust))),
       h('article', null, h('span', null, '公司成长 / 游戏奖励'), h('h3', null, ready ? '公司有设施可以建设' : g.nextTask?.available ? '总部有一条新线索' : '每一步，都算数'),
         h('p', { className: 'v11-growth-gap' }, g.gap ? `距离 LV.${g.rank.level + 1} 还差${g.gap}经验。现有建设点${ops.research}。` : `已达到本季最高等级。现有建设点${ops.research}。`),

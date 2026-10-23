@@ -71,7 +71,7 @@ export function createV2UI({ React, Button, engine, Base, tasks, facilities=[] }
       h('button', { type: 'button', className: 'v2-badge-continue', onClick: dismiss }, '继续查看本轮战报', h('span', { 'aria-hidden': true }, '→')));
   }
   function Choices({ label, options, value, onChange }) {
-    return h('fieldset', { className: 'v2-choices' }, h('legend', null, label), h('div', { className: 'decision-choice-list' },
+    return h('fieldset', { className: 'v2-choices', 'data-guide':({'经营平台':'platform','头程运输':'first-mile','工厂谈判方案':'credit'})[label] }, h('legend', null, label), h('div', { className: 'decision-choice-list' },
       options.map(o => button(h(React.Fragment, null, h('strong', null, o.name), o.detail && h('small', null, o.detail)), () => onChange(o.id),
         { key: o.id, 'aria-pressed': value === o.id }))));
   }

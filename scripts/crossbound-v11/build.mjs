@@ -10,7 +10,7 @@ const marker = '/* Crossbound v1.1 bridge */';
 // Refresh edited UI assets even when the browser retains a cached module.
 const uiVersion = createHash('sha256').update(fs.readFileSync(path.join(root, folder, 'v11/ui.js'))).digest('hex').slice(0, 10);
 const cssVersion = createHash('sha256').update(fs.readFileSync(path.join(root, folder, 'v11/styles.css'))).digest('hex').slice(0, 10);
-const v2Version = createHash('sha256').update(['../v11/balance.js','../v11/model.js','../v11/growth.js','core.js','model.js','catalog.js','progress.js','ui.js','release.js','release-ui.js','records.js','questionnaire.js','tutorial.js','styles.css'].map(f=>fs.readFileSync(path.join(root,folder,'v2',f))).join('')).digest('hex').slice(0,10);
+const v2Version = createHash('sha256').update(['../v11/balance.js','../v11/model.js','../v11/growth.js','core.js','model.js','catalog.js','progress.js','ui.js','release.js','release-ui.js','records.js','questionnaire.js','tutorial.js','walkthrough.js','styles.css'].map(f=>fs.readFileSync(path.join(root,folder,'v2',f))).join('')).digest('hex').slice(0,10);
 const encode = text => text.replace(/[\u0080-\uFFFF]/g, c => '\\u' + c.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0'));
 function replaceOne(source, from, to, label = from.slice(0, 80)) {
   const count = source.split(from).length - 1;
@@ -115,6 +115,10 @@ function patchMain(s) {
   once('"data-tutorial-trigger":!0,onClick:Ss','"data-tutorial-trigger":!0,onClick:()=>u("tutorial-guide")');
   once('l&&(0,re.jsx)(Use,{view:l,inBusiness:o&&!n}),','l&&(0,re.jsx)(Use,{view:l,inBusiness:o&&!n}),o&&!n&&l&&l!=="tutorial-guide"&&(0,re.jsx)(V2UI.Tutorial,{guide:v4Guide,company:t}),');
   once('l==="community"?', 'l==="tutorial-guide"?(0,re.jsx)(V2UI.Tutorial,{guide:v4Guide,company:t,checklistOnly:true,onResume:()=>u(t.stage===6?"complete":"decision")}):l==="community"?');
+  // Replace the old click-through campus tour with the action-driven tutorial.
+  once('Te||jt(0)', 'void Te');
+  once('onClick:cr,title:', '"data-guide":"commit",onClick:cr,title:');
+  once('!l&&(0,re.jsx)(V11UI.NotificationDock,', '!l&&(0,re.jsx)(V2UI.Tutorial,{guide:v4Guide,company:t}),!l&&(0,re.jsx)(V11UI.NotificationDock,');
   return s;
 }
 
@@ -145,6 +149,7 @@ for (const file of ['index.html', 'preview.html']) {
     for (const name of ['tG', 'nG', 'iG']) s = replaceOne(s, `options:${name},`, `options:${name}.map(x=>({...x,cost:x.cost*(V11.valid(v11Company)?V11.scale(n):1)})),`);
     s = replaceOne(s, '(0,Jt.jsxs)("section",{className:"listing-buyer-preview"', '(0,Jt.jsx)(V11UI.ListingOptimization,{company:v11Company,product:n,published:a,onOptimize:v11Optimize}),(0,Jt.jsxs)("section",{className:"listing-buyer-preview"');
     s=s.replace('children:"'+encode('确认上架商品')+'"','children:"继续"');
+    s=replaceOne(s,'onClick:u,children:"继续"','"data-guide":"publish",onClick:u,children:"继续"');
     s = replaceOne(s, 'children:" / 95"', 'children:a?.score>95?"（原规则）":" / 95"');
     return s;
   });

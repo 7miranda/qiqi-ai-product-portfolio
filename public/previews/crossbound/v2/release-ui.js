@@ -10,7 +10,7 @@ export function createReleaseUI({React,Button,engine,tasks,profitRows}) {
   const panel=(title,...children)=>h('section',{className:'report-insights-panel v2-panel'},h('h3',null,title),...children);
   const download=(data,name,type='text/plain')=>{const url=URL.createObjectURL(new Blob([data],{type}));const link=document.createElement('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
   function ReportTabs({active='report',onSelect}) {
-    return h('nav',{className:'clarity-switches','aria-label':'结算内容'},[['report','本轮战报'],['financials','财报'],['assessment','经营评估']].map(([id,label])=>button(label,()=>onSelect(id),{key:id,'aria-pressed':active===id})));
+    return h('nav',{className:'clarity-switches','aria-label':'结算内容'},[['report','本轮战报'],['financials','财报'],['assessment','经营评估']].map(([id,label])=>button(label,()=>onSelect(id),{key:id,'aria-pressed':active===id,'data-guide':id})));
   }
   function GoalCard({company}) {
     const report=company.report, g=goal(report||company);
@@ -28,7 +28,7 @@ export function createReleaseUI({React,Button,engine,tasks,profitRows}) {
     const reports=company.history.length?company.history:company.report?[company.report]:[];
     const [number,setNumber]=React.useState(reports.at(-1)?.round),[tab,setTab]=React.useState('income');
     const report=reports.find(r=>r.round===Number(number))||reports.at(-1), f=financialStatements(company,report);
-    const table=(title,rows)=>h('div',{className:'v3-table-wrap'},h('table',null,h('caption',null,title),h('thead',null,h('tr',null,h('th',null,'科目'),h('th',null,'本期'),h('th',null,'较期初变化'))),h('tbody',null,rows.map(([label,amount,delta,note])=>h('tr',{key:label},h('th',{scope:'row'},label,note&&h('small',null,note)),h('td',null,money(amount)),h('td',null,delta==null?'—':`${delta>0?'↑ ':delta<0?'↓ ':''}${money(Math.abs(delta))}`))))));
+    const table=(title,rows)=>h('div',{className:'v3-table-wrap','data-guide':tab==='balance'?'balance-table':'income-table'},h('table',null,h('caption',null,title),h('thead',null,h('tr',null,h('th',null,'科目'),h('th',null,'本期'),h('th',null,'较期初变化'))),h('tbody',null,rows.map(([label,amount,delta,note])=>h('tr',{key:label},h('th',{scope:'row'},label,note&&h('small',null,note)),h('td',null,money(amount)),h('td',null,delta==null?'—':`${delta>0?'↑ ':delta<0?'↓ ':''}${money(Math.abs(delta))}`))))));
     if(!f)return panel('财报',h('p',null,'完成发货与本轮安排后生成财报。'));
     const c=f.closing,o=f.opening;
     const rows=!f.legacy?[
@@ -38,7 +38,7 @@ export function createReleaseUI({React,Button,engine,tasks,profitRows}) {
     const income=profitRows(report),net=report.netRevenue||0,gross=report.grossRevenue??net+(report.refundAmount||0);
     return h(React.Fragment,null,h(ReportTabs,{active:'financials',onSelect}),h('h2',{id:'campaign-dialog-title'},'经营财报'),
       h('label',{className:'v3-report-round'},'查看轮次 ',h('select',{value:report.round,onChange:e=>setNumber(e.target.value)},reports.map(r=>h('option',{key:r.round,value:r.round},`第${r.round}轮`)))),
-      h('nav',{className:'clarity-switches','aria-label':'三大财报'},[['income','利润表'],['balance','资产负债表'],['cash','现金流量表']].filter(([id])=>!f.legacy||id==='income').map(([id,label])=>button(label,()=>setTab(id),{key:id,'aria-pressed':tab===id}))),
+      h('nav',{className:'clarity-switches','aria-label':'三大财报'},[['income','利润表'],['balance','资产负债表'],['cash','现金流量表']].filter(([id])=>!f.legacy||id==='income').map(([id,label])=>button(label,()=>setTab(id),{key:id,'aria-pressed':tab===id,'data-guide':id}))),
       tab==='income'||f.legacy?panel('利润表',table('本轮收入与费用',[
         ['销售收入',gross],['退款',-(gross-net)],['净销售收入',net],
         ['已售货品成本',-(report.cogs||0)],['毛利',net-(report.cogs||0)],...income.filter(r=>!['netRevenue','cogs'].includes(r.id)).map(r=>[r.label,r.amount]),['净利润',report.profit]]),h('p',null,`本轮赚了${money(report.profit)}；采购形成的未售库存不重复扣为费用。`)):
