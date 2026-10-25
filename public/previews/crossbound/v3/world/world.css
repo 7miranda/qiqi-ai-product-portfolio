@@ -1,0 +1,100 @@
+/* REQ-051 walkable world (3D 方案 v2). Active only while <html data-v3-world> is set by world/main.js. */
+html[data-v3-world], html[data-v3-world] body { overflow: hidden; overscroll-behavior: none; }
+/* In the world, guidance comes from the receptionist + light pillar (3D-083); the flat coach overlay is hidden. */
+html[data-v3-world] .v5-walkthrough, html[data-v3-world] .v5-spotlight, html[data-v3-world] .v5-coach { display: none !important; }
+
+#v3-world { position: fixed; inset: 0; z-index: 60; background: #070b14; color: #f2f6f8; user-select: none; -webkit-user-select: none;
+  font-family: Inter, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif; touch-action: none; }
+#v3-world canvas.v3-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; cursor: grab; }
+#v3-world canvas.v3-canvas:active { cursor: grabbing; }
+#v3-world .v3-layer { position: absolute; inset: 0; pointer-events: none; }
+#v3-world button { font: inherit; pointer-events: auto; cursor: pointer; }
+
+/* HUD: exactly four items (3D-063). Dark translucent + neon edge (3D-064). */
+.v3-hud-money { position: absolute; top: 18px; left: 18px; padding: 10px 14px; min-width: 150px; border: 1px solid #52cadd88; border-radius: 12px;
+  background: #070b14c4; box-shadow: 0 0 18px #52cadd22, inset 0 0 12px #52cadd14; display: grid; gap: 2px; }
+.v3-hud-money small { font-size: 11px; color: #8fa6b8; letter-spacing: .04em; }
+.v3-hud-money strong { font-size: 22px; font-weight: 600; color: #c9ff9f; font-variant-numeric: tabular-nums; }
+.v3-hud-money .v3-profit { font-size: 13px; color: #52cadd; font-variant-numeric: tabular-nums; }
+.v3-hud-task { position: absolute; top: 18px; left: 50%; transform: translateX(-50%); max-width: min(520px, calc(100% - 380px));
+  padding: 10px 20px 10px 34px; border: 1px solid #ffd34d99; border-radius: 999px; background: #070b14d0; box-shadow: 0 0 22px #ffd34d33;
+  font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v3-hud-task::before { content: "!"; position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: #ffd34d; font-weight: 800; }
+.v3-hud-task.is-new { animation: v3-task-in .5s cubic-bezier(.22,1,.36,1); }
+@keyframes v3-task-in { from { transform: translate(-50%, -10px); opacity: 0; } to { transform: translateX(-50%); opacity: 1; } }
+.v3-minimap { position: absolute; top: 14px; right: 14px; width: 150px; height: 150px; border-radius: 50%; border: 2px solid #52cadd99;
+  background: #070b14d8; box-shadow: 0 0 20px #52cadd33; overflow: hidden; }
+.v3-minimap canvas { width: 100%; height: 100%; display: block; }
+.v3-prompt { position: absolute; transform: translate(-50%, -100%); padding: 7px 12px; border-radius: 10px; border: 1px solid #ffd34d;
+  background: #070b14e6; font-size: 14px; font-weight: 600; white-space: nowrap; pointer-events: auto; display: flex; align-items: center; gap: 8px; }
+.v3-prompt kbd { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 6px; background: #ffd34d; color: #111; font: 700 13px Inter, sans-serif; }
+.v3-prompt[hidden] { display: none; }
+
+/* Pokémon-style bottom dialog (3D-051). */
+.v3-dialog { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); width: min(760px, calc(100% - 28px)); pointer-events: auto;
+  border: 2px solid #52cadd; border-radius: 16px; background: #0a1220f2; box-shadow: 0 0 30px #52cadd33; padding: 16px 18px 14px 96px; min-height: 112px; }
+.v3-dialog[hidden] { display: none; }
+.v3-dialog .v3-avatar { position: absolute; left: 16px; top: 16px; width: 64px; height: 64px; border-radius: 14px; display: grid; place-items: center;
+  font-size: 28px; font-weight: 700; color: #070b14; background: linear-gradient(135deg, #52cadd, #c9ff9f); }
+.v3-dialog .v3-name { font-size: 13px; color: #52cadd; font-weight: 700; letter-spacing: .06em; margin-bottom: 4px; }
+.v3-dialog .v3-text { font-size: 17px; line-height: 1.6; min-height: 28px; }
+.v3-dialog .v3-options { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.v3-btn { min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1px solid #52cadd88; background: #0f1d2c; color: #f2f6f8; font-weight: 600; }
+.v3-btn:hover, .v3-btn:focus-visible { border-color: #ffd34d; outline: none; box-shadow: 0 0 12px #ffd34d55; }
+.v3-btn.is-primary { background: #c9ff9f; color: #071008; border-color: #c9ff9f; }
+.v3-btn:disabled { opacity: .45; cursor: not-allowed; }
+.v3-dialog .v3-next { position: absolute; right: 16px; bottom: 10px; font-size: 12px; color: #8fa6b8; }
+
+/* In-world screen panel (terminal / product board): holographic style, not a system modal. */
+.v3-panel { position: absolute; right: 24px; top: 50%; transform: translateY(-50%); width: min(420px, calc(100% - 28px)); max-height: calc(100% - 200px);
+  overflow: auto; pointer-events: auto; border: 1px solid #52cadd; border-radius: 14px; padding: 18px; background: linear-gradient(180deg, #0b1a2af0, #070b14f0);
+  box-shadow: 0 0 34px #52cadd40, inset 0 0 40px #52cadd14; }
+.v3-panel[hidden] { display: none; }
+.v3-panel::before { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: repeating-linear-gradient(180deg, #ffffff06 0 1px, transparent 1px 4px); }
+.v3-panel .v3-kicker { font-size: 11px; color: #52cadd; letter-spacing: .14em; }
+.v3-panel h3 { margin: 4px 0 12px; font-size: 22px; font-weight: 700; }
+.v3-panel .v3-body { font-size: 14px; color: #c7d3dc; line-height: 1.7; margin: 0 0 12px; }
+.v3-panel dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0 0 14px; font-size: 14px; }
+.v3-panel dt { color: #8fa6b8; } .v3-panel dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.v3-panel .v3-list { display: grid; gap: 6px; margin-bottom: 14px; }
+.v3-panel .v3-item { text-align: left; display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; min-height: 52px; padding: 8px 12px; border-radius: 10px;
+  border: 1px solid #29414a; background: #0d1826; color: #f2f6f8; }
+.v3-panel .v3-item small { grid-column: 1 / -1; color: #8fa6b8; font-size: 12px; }
+.v3-panel .v3-item.is-selected { border-color: #c9ff9f; box-shadow: 0 0 12px #c9ff9f44; }
+.v3-panel .v3-item:disabled { opacity: .45; }
+.v3-panel .v3-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+.v3-panel .v3-close { position: absolute; right: 10px; top: 10px; min-height: 32px; padding: 0 10px; font-size: 12px; }
+
+.v3-bubble { position: absolute; transform: translate(-50%, -100%); max-width: 260px; padding: 8px 12px; border-radius: 12px; background: #f2f6f8; color: #0a1220;
+  font-size: 14px; font-weight: 600; line-height: 1.5; box-shadow: 0 6px 20px #0008; animation: v3-pop .25s ease-out; }
+.v3-bubble.is-edge { left: 50% !important; top: auto !important; bottom: 150px; transform: translateX(-50%); }
+@keyframes v3-pop { from { transform: translate(-50%, -80%) scale(.9); opacity: 0; } }
+.v3-notice { position: absolute; top: 70px; left: 50%; transform: translateX(-50%); padding: 6px 14px; border-radius: 999px; background: #0a1220e6;
+  border: 1px solid #8fa6b8; font-size: 13px; color: #c7d3dc; }
+.v3-fade { position: absolute; inset: 0; background: #000; opacity: 0; transition: opacity .3s; pointer-events: none; }
+.v3-fade.is-on { opacity: 1; }
+.v3-flash { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle, #ffd34d55, transparent 65%); opacity: 0; }
+.v3-flash.is-on { animation: v3-flash .7s ease-out; }
+@keyframes v3-flash { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+/* Mobile: joystick (left) + interact button; HUD compacts (3D-075). */
+.v3-stick { position: absolute; left: 22px; bottom: 26px; width: 128px; height: 128px; border-radius: 50%; border: 2px solid #52cadd77; background: #070b1488;
+  pointer-events: auto; touch-action: none; display: none; }
+.v3-stick i { position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px; border-radius: 50%; background: #52caddaa; box-shadow: 0 0 14px #52cadd; }
+html[data-v3-touch] .v3-stick { display: block; }
+/* While a dialog or screen panel is open, movement controls and the task line step aside. */
+.v3-layer.is-busy .v3-stick, .v3-layer.is-busy .v3-hud-task, .v3-layer.is-busy .v3-prompt { display: none !important; }
+@media (max-width: 760px) {
+  .v3-hud-money { top: 10px; left: 10px; padding: 6px 10px; min-width: 0; }
+  .v3-hud-money strong { font-size: 17px; }
+  .v3-hud-task { top: auto; bottom: 168px; max-width: calc(100% - 24px); font-size: 13px; padding: 8px 14px 8px 28px; }
+  .v3-minimap { width: 105px; height: 105px; top: 10px; right: 10px; }
+  .v3-dialog { padding-left: 18px; bottom: 12px; } .v3-dialog .v3-avatar { display: none; }
+  .v3-panel { right: 12px; left: 12px; width: auto; top: auto; bottom: 12px; transform: none; max-height: 62%; }
+}
+@media (prefers-reduced-motion: reduce) { #v3-world * { animation: none !important; transition: none !important; } }
+
+/* Classic mode return button (3D-076): only shown when the player opted out of the world. */
+.v3-classic-return { position: fixed; right: 18px; bottom: 18px; z-index: 30; min-height: 44px; padding: 0 16px; border-radius: 999px;
+  border: 1px solid #52cadd; background: #070b14e6; color: #c9ff9f; font: 600 14px Inter, "PingFang SC", "Microsoft YaHei", sans-serif; cursor: pointer; }
