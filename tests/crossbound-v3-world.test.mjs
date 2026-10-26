@@ -6,15 +6,15 @@ import { execFileSync } from 'node:child_process';
 import {
   WORLDS, BUILT, parseMode, variantFor, qualityFor, QUALITY, downgrade, createFpsMonitor,
   currentWorld, doorStates, taskFor, resolveCollisions, nearestInteractable, pickShowcase, fitStars,
-  decideMode, recommend2D, comfortFrom, COMFORT_DEFAULTS, restoreSpot, archetypeFor,
+  decideMode, recommend2D, comfortFrom, COMFORT_DEFAULTS, restoreSpot, archetypeFor, crateLayout, settlementSplit,
 } from '../public/previews/crossbound/v3/world/logic.js';
 
 const folder = 'public/previews/crossbound';
 const snap = (stage, extra = {}) => ({ company: { stage, ...extra } });
 
-test('seven worlds in engine order; P0 builds only W1', () => {
+test('seven worlds in engine order; P1 so far builds W1, W2 and W5', () => {
   assert.deepEqual(WORLDS.map(w => w.name), ['选品展厅', '定价财务室', '商品页工作室', '推广室', '物流仓', '财报结算厅', '荣誉墙展厅']);
-  assert.deepEqual([...BUILT], ['w1']);
+  assert.deepEqual([...BUILT], ['w1', 'w2', 'w5']);
 });
 
 test('stage -> current world (corrected 3D-079 mapping; stage 3 splits listing/promotion)', () => {
@@ -136,6 +136,26 @@ test('refresh restore (B-003): same run + round only, interiors only while their
   assert.equal(restoreSpot({ key: '7:2', scene: 'hub', x: NaN, z: 1 }, s), null);
   assert.equal(restoreSpot({ key: '7:2', scene: 'w9', x: 1, z: 1 }, s), null);
   assert.equal(restoreSpot({ key: '7:2', scene: 'hub', x: 1, z: 1 }, s).yaw, 0);
+  assert.equal(restoreSpot({ key: '7:2', scene: 'w2', x: 1, z: 2 }, { company: { runSeed: 7, round: 2, stage: 2 } }).scene, 'w2');
+  assert.equal(restoreSpot({ key: '7:2', scene: 'w5', x: 1, z: 2 }, { company: { runSeed: 7, round: 2, stage: 4 } }).scene, 'w5');
+  assert.equal(restoreSpot({ key: '7:2', scene: 'w5', x: 1, z: 2 }, { company: { runSeed: 7, round: 2, stage: 5 } }), null, 'W5 already settled');
+});
+
+test('W2 / W5 tasks and crates: 100 units per stack, 12 stacks max then taller; REQ-052 split', () => {
+  const at = stage => ({ company: { stage } });
+  assert.equal(taskFor(at(2), { inside: 'w2' }), '拉动备货拉杆，选一档备货');
+  assert.equal(taskFor(at(2), { inside: 'w2', planned: true }), '到中央控制台确认定价与备货');
+  assert.equal(taskFor(at(4), { inside: 'w5' }), '走到一条出货传送带前，选履约方式发货');
+  assert.equal(taskFor(at(4)), '去物流仓选履约方式');
+  assert.deepEqual(crateLayout(0), { stacks: 0, height: 0 });
+  assert.deepEqual(crateLayout(400), { stacks: 4, height: 3 });
+  assert.deepEqual(crateLayout(800), { stacks: 8, height: 3 });
+  assert.deepEqual(crateLayout(1200), { stacks: 12, height: 3 });
+  assert.deepEqual(crateLayout(1600), { stacks: 12, height: 4 });
+  assert.deepEqual(settlementSplit(4, 400, 110), { shipped: 3, returned: 1 });
+  assert.deepEqual(settlementSplit(4, 400, 0), { shipped: 4, returned: 0 }, 'sold out: everything ships');
+  assert.deepEqual(settlementSplit(4, 400, 3), { shipped: 3, returned: 1 }, 'any return keeps one stack to show it');
+  assert.deepEqual(settlementSplit(0, 0, 0), { shipped: 0, returned: 0 });
 });
 
 test('product models (F-001): every catalog product maps to a recognisable archetype, none fall back to a parcel', () => {
@@ -160,7 +180,7 @@ test('build output: hooks applied once, world wired locally (no CDN), classic co
     const html = fs.readFileSync(`${folder}/${file}`, 'utf8');
     assert.equal(html.split('$=!L&&!C&&P&&!v3Paused,').length - 1, 1, `${file}: campus pause hook`);
     assert.equal(html.split('window.CrossboundView?.publish?.(').length - 1, 1, `${file}: snapshot hook`);
-    assert.match(html, /actions:\{select:A,setSupplier:qe,commit:cr,/, 'world drives the engine through its own commit');
+    assert.match(html, /actions:\{select:A,choose:id=>\{const o=La\.find\(x=>x\.id===id\);o&&ur\(o\)\},setSupplier:qe,commit:cr,/, 'world drives the engine through its own card handler and commit');
     assert.match(html, /<script type="module" src="\.\/v3\/world\/boot\.js\?v=[0-9a-f]{10}"><\/script>/);
     const map = html.match(/<script type="importmap">([\s\S]*?)<\/script>/)[1];
     assert.match(map, /"three":"\.\/vendor\/three\/three\.module\.min\.js\?v=[0-9a-f]{10}"/);

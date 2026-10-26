@@ -14,7 +14,7 @@ const uiVersion = createHash('sha256').update(read(path.join(root, folder, 'v11/
 const cssVersion = createHash('sha256').update(read(path.join(root, folder, 'v11/styles.css'))).digest('hex').slice(0, 10);
 const v2Version = createHash('sha256').update(['../v11/balance.js','../v11/model.js','../v11/growth.js','core.js','model.js','catalog.js','progress.js','ui.js','release.js','release-ui.js','records.js','questionnaire.js','tutorial.js','walkthrough.js','styles.css'].map(f=>read(path.join(root,folder,'v2',f))).join('')).digest('hex').slice(0,10);
 // REQ-051 walkable world (3D 方案 v2): own version hash so world edits refresh without touching v1.1/v2 caches.
-const worldFiles = ['logic.js','kit.js','ui.js','hub.js','showroom.js','products.js','world.js','boot.js','world.css'].map(f => `v3/world/${f}`).concat(['vendor/three/three.module.min.js','vendor/three/three.core.min.js']);
+const worldFiles = ['logic.js','kit.js','ui.js','hub.js','showroom.js','rooms.js','products.js','world.js','boot.js','world.css'].map(f => `v3/world/${f}`).concat(['vendor/three/three.module.min.js','vendor/three/three.core.min.js']);
 const worldVersion = createHash('sha256').update(worldFiles.map(f=>read(path.join(root,folder,f))).join('')).digest('hex').slice(0,10);
 const encode = text => text.replace(/[\u0080-\uFFFF]/g, c => '\\u' + c.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0'));
 function replaceOne(source, from, to, label = from.slice(0, 80)) {
@@ -126,7 +126,7 @@ function patchMain(s) {
   once('!l&&(0,re.jsx)(V11UI.NotificationDock,', '!l&&(0,re.jsx)(V2UI.Tutorial,{guide:v4Guide,company:t}),!l&&(0,re.jsx)(V11UI.NotificationDock,');
   // REQ-051 patch 2/2: after each render, publish a snapshot plus the engine's own actions for the 3D world.
   // The world only selects options and calls the original commit (cr); forecasts go out pre-formatted as ranges.
-  once('ji=!!l;const v11Flow=', 'ji=!!l;(0,li.useLayoutEffect)(()=>{window.CrossboundView?.publish?.({inBusiness:!!(o&&!n),company:t,research:r.research,level:qi,stage:Et,settled:ms,view:l,options:La,choice:Ia||null,market:ec||null,recommendedId:(()=>{try{return recommend(V11,t)?.choice?.id??null}catch{return null}})(),supplier:Dt,quotes:id=>{const p=Zn.find(x=>x.id===id);return p?R5(p):[]},preview:pr,profitText:ms?(t.report?ps(t.report.profit,!0):null):pr?V11UI.range(pr,"profit",true):null,actions:{select:A,setSupplier:qe,commit:cr,open:()=>u(ms?"complete":"decision"),close:()=>u(null),panel:u}})});const v11Flow=');
+  once('ji=!!l;const v11Flow=', 'ji=!!l;(0,li.useLayoutEffect)(()=>{window.CrossboundView?.publish?.({inBusiness:!!(o&&!n),company:t,research:r.research,level:qi,stage:Et,settled:ms,view:l,options:La,choice:Ia||null,market:ec||null,recommendedId:(()=>{try{return recommend(V11,t)?.choice?.id??null}catch{return null}})(),supplier:Dt,quotes:id=>{const p=Zn.find(x=>x.id===id);return p?R5(p):[]},preview:pr,profitText:ms?(t.report?ps(t.report.profit,!0):null):pr?V11UI.range(pr,"profit",true):null,actions:{select:A,choose:id=>{const o=La.find(x=>x.id===id);o&&ur(o)},setSupplier:qe,commit:cr,open:()=>u(ms?"complete":"decision"),close:()=>u(null),panel:u}})});const v11Flow=');
   return s;
 }
 

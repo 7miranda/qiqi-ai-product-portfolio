@@ -41,8 +41,8 @@ export function restoreSpot(saved, snapshot) {
   const c = snapshot?.company;
   if (!saved || !c || saved.key !== `${c.runSeed}:${c.round}`) return null;
   if (!Number.isFinite(saved.x) || !Number.isFinite(saved.z)) return null;
-  if (saved.scene === 'w1' && currentWorld(snapshot) !== 'w1') return null;
-  if (saved.scene !== 'hub' && saved.scene !== 'w1') return null;
+  if (INTERIORS.includes(saved.scene) && currentWorld(snapshot) !== saved.scene) return null;
+  if (saved.scene !== 'hub' && !INTERIORS.includes(saved.scene)) return null;
   return { scene: saved.scene, x: saved.x, z: saved.z, yaw: Number.isFinite(saved.yaw) ? saved.yaw : 0 };
 }
 
@@ -85,8 +85,9 @@ export const WORLDS = Object.freeze([
   { id: 'w6', name: '财报结算厅', step: '安排下轮并结算', stages: [5, 6] },
   { id: 'w7', name: '荣誉墙展厅', step: '看成就、交反馈', stages: [] },
 ]);
-// P0 builds the hub (stage 0 terminal) and W1. Other worlds fall back to the classic panel.
-export const BUILT = new Set(['w1']);
+// P0 builds the hub (stage 0 terminal) and W1; P1 adds W2 and W5 (REQ-052 crates). Other worlds fall back to the classic panel.
+export const BUILT = new Set(['w1', 'w2', 'w5']);
+const INTERIORS = ['w1', 'w2', 'w5'];
 
 export function parseMode(config, search = '') {
   let override = null;
@@ -180,8 +181,26 @@ export function taskFor(snapshot, local = {}) {
     if (!local.supplier) return '跟供应商谈谈，选一家';
     return '都选好了，正在前往定价财务室';
   }
+  if (world === 'w2' && local.inside === 'w2') return local.planned ? '到中央控制台确认定价与备货' : '拉动备货拉杆，选一档备货';
+  if (world === 'w5' && local.inside === 'w5') return '走到一条出货传送带前，选履约方式发货';
   const w = WORLDS.find(x => x.id === world);
   return `去${w.name}${w.step}`;
+}
+
+// 3D-025: one stack = 100 units; at most 12 stacks, beyond that the stacks only grow taller.
+export const CRATE_UNITS = 100;
+export function crateLayout(units) {
+  const n = Math.max(0, Math.floor(units || 0));
+  if (!n) return { stacks: 0, height: 0 };
+  const stacks = Math.min(12, Math.ceil(n / CRATE_UNITS));
+  return { stacks, height: n <= 12 * CRATE_UNITS ? 3 : Math.ceil(3 * n / (12 * CRATE_UNITS)) };
+}
+
+// REQ-052 settlement animation: how many of the visible stacks ship out vs. return at cost.
+export function settlementSplit(stacks, unitsBefore, returnedUnits) {
+  if (!stacks || !unitsBefore) return { shipped: 0, returned: 0 };
+  const returned = returnedUnits > 0 ? Math.max(1, Math.min(stacks, Math.round(stacks * returnedUnits / unitsBefore))) : 0;
+  return { shipped: stacks - returned, returned };
 }
 
 // Circle-vs-AABB push-out on the XZ plane (3D-014: no walking through walls, people or crates).
