@@ -6,6 +6,8 @@ import { TAX, taxQuote, PLATFORMS, FIRST_MILE } from '../public/previews/crossbo
 import { productFit } from '../public/previews/crossbound/v2/product-fit.js';
 import { explorationAwards, assessment } from '../public/previews/crossbound/v2/progress.js';
 import { profitRows } from '../public/previews/crossbound/v2/ui.js';
+import { goal, goalChannelText, GOAL_VERSION } from '../public/previews/crossbound/v2/release.js';
+import { BALANCE_VERSION } from '../public/previews/crossbound/v11/balance.js';
 const f = fixture(), e = createCrossboundV2(f.adapter);
 const money = n => Math.round(n * 100) / 100;
 function staged(config = {}, seed = 12345, market = 'singapore') {
@@ -162,7 +164,7 @@ test('rival story appears after promotion, complaint needs trademark, outcome an
   n = e.commit(n, { id: 'pilot', quantity: 1200, price: 45, supplierId: 'standard' });
   n = e.publish(n, { mode: 'reuse' }); n = e.commit(n, { id: 'ads', budget: 3600 });
   const rival = n.v2.events.find(e => e.kind === 'rival');
-  assert.equal(e.eventEffect(n).conversion, .7);
+  assert.equal(e.eventEffect(n).conversion, .8, 'REQ-053: one event cuts at most 20%');
   n = e.act(n, { type: 'event', id: rival.id, choice: 'complaint' });
   assert.ok(n.v2.eventHistory.some(x => x.kind === 'rival'));
   assert.deepEqual(e.deserialize(e.serialize(n)).v2.eventHistory, n.v2.eventHistory);
@@ -186,17 +188,17 @@ test('v1.1 saves keep current-round outcomes and promote only at a boundary', ()
   assert.equal(next.history[0].profit, old.report.profit);
   assert.equal(e.previous(next).engineVersion, 'v11');
 });
-test('season preparation survives rounds, heat decays, and a held stock is charged storage only once per round', () => {
+test('season preparation survives rounds, heat grows while the product stays, and storage is free under REQ-052', () => {
   let n = finish(e, stocked({ seasonPrep: true }));
   assert.equal(n.report.seasonPrepCost, 300);
   assert.equal(n.report.warehouseCost, n.report.inventoryRemaining * .5);
   n = e.next(n);
-  assert.equal(n.v2.heat.tech, .95); assert.equal(n.v2.seasonPrepared, 1);
+  assert.equal(n.v2.heat.tech, 1.05); assert.equal(n.v2.seasonPrepared, 1);
   for (const d of [{ id: 'singapore' }, { id: 'tech' }, { id: 'pilot', quantity: 1200, price: 45, supplierId: 'standard' }]) n = e.commit(n, d);
   n = finish(e, e.publish(n, { mode: 'reuse' }));
   assert.equal(n.stage, 6); assert.equal(n.report.profit, n.report.assetChange);
   n = e.next(n);
-  assert.equal(n.round, 3); assert.equal(n.v2.heat.tech, .95 ** 2);
+  assert.equal(n.round, 3); assert.equal(n.v2.heat.tech, 1.1);
   for (const d of [{ id: 'singapore' }, { id: 'tech' }]) n = e.commit(n, d);
   const prepared = e.simulate(n, 'mean'), unprepared = e.simulate({ ...n, v2: { ...n.v2, seasonPrepared: 0 } }, 'mean');
   assert.equal(prepared.seasonFactor, 1.3); assert.equal(unprepared.seasonFactor, 1.1);
@@ -207,11 +209,13 @@ test('REQ-052 settlement returns unsold stock at cost without touching profit or
   const actual = e.simulate({ ...promoted, fulfillmentPlanId: 'express' }), n = finish(e, ready);
   assert.ok(actual.inventoryRemaining > 0, 'fixture should leave unsold stock');
   assert.equal(n.report.stockReturnUnits, actual.inventoryRemaining);
-  assert.equal(n.report.stockReturn, actual.inventoryCostRemaining);
-  assert.ok(Math.abs(n.report.stockReturn - actual.inventoryRemaining * actual.availableCost / actual.totalUnits) < .02, 'units × unit cost');
+  assert.equal(n.report.stockReturnCost, actual.inventoryCostRemaining);
+  assert.equal(n.report.stockReturnFee, money(actual.inventoryCostRemaining * .05));
+  assert.equal(n.report.stockReturn, money(actual.inventoryCostRemaining - n.report.stockReturnFee));
+  assert.ok(Math.abs(n.report.stockReturnCost - actual.inventoryRemaining * actual.availableCost / actual.totalUnits) < .02, 'units × unit cost');
   assert.ok(Object.values(n.inventory).every(q => q === 0));
   assert.equal(n.report.inventoryRemaining, 0); assert.equal(n.report.warehouseCost, 0);
-  assert.equal(n.ledger.filter(row => row.category === 'stockReturn').reduce((s, row) => s + row.cashDelta, 0), actual.inventoryCostRemaining);
+  assert.equal(n.ledger.filter(row => row.category === 'stockReturn').reduce((s, row) => s + row.cashDelta, 0), n.report.stockReturn);
   assert.equal(n.report.profit, n.report.assetChange);
   assert.equal(n.report.receivables, money(actual.netRevenue + actual.commissionRecovery));
   // Nothing is left for the manual half-price clearance.
@@ -241,4 +245,39 @@ test('customs preparation is a real lead-time event, and switching away escapes 
   n.v2.events = [{ id: 'rival:1', kind: 'rival', marketId: 'london', productId: 'tech', encounter: 1, dueRound: 1, stage: 0, choice: 'pricewar' }];
   assert.equal(e.eventEffect(n).conversion, 1);
   assert.equal(e.eventEffect(n).priceFactor, 1);
+});
+
+test('REQ-053: a failed round keeps the target; a pass raises it by 50', () => {
+  const g = (passes, extra = {}) => goal({ goalVersion: GOAL_VERSION, balanceVersion: BALANCE_VERSION, round: 4, goalPasses: passes, ...extra });
+  assert.equal(g(0).target, 250);
+  assert.equal(g(2).target, 350);
+  // Old saves without the field recount passes from history: two passes and one failure → 350.
+  const pass = { goalVersion: GOAL_VERSION, balanceVersion: BALANCE_VERSION, round: 1, keptOrders: 300, profit: 6000 };
+  const fail = { goalVersion: GOAL_VERSION, balanceVersion: BALANCE_VERSION, round: 2, keptOrders: 10, profit: -100 };
+  assert.equal(goal({ goalVersion: GOAL_VERSION, balanceVersion: BALANCE_VERSION, round: 4, history: [pass, fail, { ...pass, round: 3 }] }).target, 350);
+  // After settlement the history already holds this round's report; it must not raise this round's own target.
+  assert.equal(goal({ goalVersion: GOAL_VERSION, balanceVersion: BALANCE_VERSION, round: 1, history: [pass] }).target, 250);
+  const settled = finish(e, stocked());
+  assert.equal(goal(settled).target, goal(settled.report).target, 'result page and report agree');
+  assert.equal(goalChannelText(goal({ ...pass, goalPasses: 0 })), '双过：订单和利润都达标，金章');
+  assert.match(goalChannelText(goal({ ...fail, goalPasses: 1 })), /目标不变/);
+});
+test('REQ-053: creator luck stays within 0.8–1.3 and a matched creator is worth +30%', () => {
+  const ready = staged();
+  let n = e.commit(ready, { id: 'pilot', quantity: 1200, price: 45, supplierId: 'standard' });
+  n = e.publish(n, FULL);
+  const pick = id => ({ ...n, trafficPlanId: 'creator', trafficBudget: 1800, promotionChoice: { id, category: 'electronics' } });
+  const low = e.simulate(pick('vertical'), 'low'), high = e.simulate(pick('vertical'), 'high');
+  // low/high also apply the general ±10% traffic variation, so the creator share of the swing is 1.3/0.8 (was 2/0.5).
+  assert.ok(high.visitors / low.visitors <= (1.3 / .8) * (1.1 / .9) + .01, 'creator swing narrowed');
+  assert.equal(e.choice('creator', { id: 'vertical', category: 'electronics' }, { category: 'electronics' }).conversionFactor, 1.3);
+  assert.equal(e.choice('creator', { id: 'vertical', category: 'home' }, { category: 'electronics' }).conversionFactor, 1);
+});
+test('REQ-053: heat rewards staying with a product and resets on a switch', () => {
+  let n = finish(e, stocked());
+  n = e.next(n);
+  assert.deepEqual(n.v2.heat, { tech: 1.05 });
+  n.v2.heat = { tech: 1.15 }; n.productId = 'tech'; n.stage = 6;
+  assert.equal(e.next(n).v2.heat.tech, 1.15, 'capped at 1.15');
+  assert.ok(e.deserialize(e.serialize(e.next(n))), 'saves with heat above 1 stay valid');
 });

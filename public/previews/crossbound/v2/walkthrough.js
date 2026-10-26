@@ -9,7 +9,7 @@ export function walkthroughPlan(id,view){
     '1:return':[{target:'[data-guide="report"]',title:'你已经读懂第一份财报',body:'点击「本轮战报」返回，就可以开启下一轮。',wait:true}],
     '1:market':[choice('#market-choice','先选卖到哪个国家','点开国家列表选择市场。第一次可以保留新加坡；确认后会扣除市场进入费。','保留当前市场'),commit('点击页面里的「继续」，确定市场并进入选品。现在还不会采购商品。')],
     '1:product':[{...choice('.room-controls > .catalog-products button[aria-pressed="true"]','挑一件你想卖的商品','点击商品卡选择商品，看看进货价和建议售价。第一次也可以先试当前选中的商品。','就选当前商品'),event:'click',listen:'.room-controls > .catalog-products button'},commit('点击「继续」确定商品。下一步才会决定买多少、卖多少钱。')],
-    '1:stock':[choice('label[for="campaign-price"]','这件商品卖多少钱？','拖动售价滑块，比较售价与进货成本。价格太高会影响购买意愿；也可以先保留推荐价。','保留当前售价'),choice('label[for="campaign-quantity"]','先买多少件来试？','拖动库存滑块调整备货量。备得多会占用更多现金，第一次可以保留推荐数量。','保留当前数量'),commit('核对下面的现金变化，再点击「继续」确认进货。进货要花钱，余货会保留到下一轮。')],
+    '1:stock':[choice('label[for="campaign-price"]','这件商品卖多少钱？','拖动售价滑块，比较售价与进货成本。价格太高会影响购买意愿；也可以先保留推荐价。','保留当前售价'),choice('label[for="campaign-quantity"]','先买多少件来试？','拖动库存滑块调整备货量。备得多会占用更多现金，第一次可以保留推荐数量。','保留当前数量'),commit('核对下面的现金变化，再点击「继续」确认进货。进货要花钱；没卖完的货结算时按成本退回（扣5%手续费）。')],
     '1:listing':[
       {...choice('.listing-edit-panel:first-child .listing-choice-group:first-of-type button[aria-pressed="true"]','标题先告诉买家：卖什么','点击标题选项，决定是否补充用途或关键规格。当前已经选了推荐方案，也可以直接保留。','保留当前标题'),event:'click',listen:'.listing-edit-panel:first-child .listing-choice-group:first-of-type button'},
       {...choice('.listing-edit-panel:first-child .listing-choice-group:nth-of-type(2) button[aria-pressed="true"]','再选一张买家能看清的主图','点击主图选项，比较完整商品、放大主体和规格标注。制作费用会显示在每个选项旁。','保留当前主图'),event:'click',listen:'.listing-edit-panel:first-child .listing-choice-group:nth-of-type(2) button'},

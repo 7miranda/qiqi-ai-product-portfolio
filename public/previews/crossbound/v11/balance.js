@@ -4,6 +4,13 @@ export const friendly = state => state?.balanceVersion === BALANCE_VERSION;
 // REQ-052 (interim): settlement returns unsold stock at cost, so nothing carries into the next round.
 // Restoring carry-over needs a new product decision; do not flip this silently.
 export const STOCK_CARRYOVER = false;
+// REQ-053 §4.3: unsold stock returns at 95% of cost; the 5% is the price of over-buying. Set 0 to refund in full.
+export const STOCK_RETURN_FEE = 0.05;
+// REQ-053 §4.5: creator luck narrowed (was 0.5–2.0) and a matched creator worth +30% (was +15%).
+export const CREATOR_RANGE = [0.8, 1.3];
+export const CREATOR_MATCH = 1.3;
+// REQ-053 §4.9: one event never cuts more than 20%.
+export const EVENT_FLOOR = 0.8;
 export const balanceRules = state => friendly(state)
   ? { conversion: .036, elasticity: 1.1, arrivalFloor: .75, priceRefundSlope: .12, maxPrice: 2 }
   : { conversion: .025, elasticity: 1.4, arrivalFloor: 0, priceRefundSlope: .02, maxPrice: 1.5 };

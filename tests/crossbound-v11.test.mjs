@@ -74,7 +74,7 @@ test('cross-market listing reuses product asset and charges localization once', 
   n=e.commit(n,{id:'london'});n=e.commit(n,{id:'tech'});n=e.commit(n,{id:'pilot',quantity:1200,price:45,supplierId:'standard'});
   assert.equal(e.listingQuote(n,{...FULL,mode:'reuse'}).cost,100);
   n=e.publish(n,{...FULL,mode:'reuse'});assert.equal(n.currentListing.score,95);
-  n=e.next(finish(e,n));n=e.commit(n,{id:'london'});assert.equal(n.ledger.at(-1).cashDelta,-300);
+  n=e.next(finish(e,n));n=e.commit(n,{id:'london'});assert.equal(n.ledger.at(-1).cashDelta,0,'REQ-053: staying in a visited market is free');
   n=e.commit(n,{id:'tech'});n=e.commit(n,{id:'pilot',quantity:1200,price:45,supplierId:'standard'});
   assert.equal(e.listingQuote(n,{...FULL,mode:'reuse'}).cost,0);
 });

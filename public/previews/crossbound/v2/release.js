@@ -2,14 +2,28 @@ import { friendly, balanceOptions } from '../v11/balance.js';
 // October 21 rules. Historical reports retain their recorded rule version.
 export const GOAL_VERSION = 'dual-20261021';
 export const orderTarget = round => Math.min(450, 250 + Math.max(0, round - 1) * 50);
+// REQ-053 §4.9: the target rises with rounds passed, not rounds played; a failed round keeps the same target.
+export const passTarget = passes => Math.min(450, 250 + Math.max(0, passes) * 50);
+// Rounds passed before this one. Older saves without the field are recounted from their history; after settlement the
+// history already holds this round's report, which must not count towards its own target.
+export function goalPasses(result) {
+  if (Number.isInteger(result?.goalPasses)) return result.goalPasses;
+  return Array.isArray(result?.history) ? result.history.filter(h => h.round < result.round && goal(h).passed).length : null;
+}
 export function goal(result) {
   const modern = result.goalVersion === GOAL_VERSION;
-  const target = modern ? friendly(result) ? orderTarget(result.round) : Math.min(500,300+Math.max(0,result.round-1)*50) : result.round === 1 ? 300 : 500;
+  const passes = modern && friendly(result) ? goalPasses(result) : null;
+  const target = modern ? friendly(result) ? passes != null ? passTarget(passes) : orderTarget(result.round) : Math.min(500,300+Math.max(0,result.round-1)*50) : result.round === 1 ? 300 : 500;
   const orders = (result.keptOrders || 0) >= target;
   const profit = (result.profit || 0) >= 5000;
   const passed = modern ? orders || profit : orders && result.profit > 0;
   const tier = !passed ? null : modern ? orders && profit ? 'gold' : profit ? 'silver' : 'bronze' : result.profit > 10000 || result.refunds === 0 ? 'gold' : result.profit > 5000 ? 'silver' : 'bronze';
-  return { target, orders, profit, passed, tier, modern };
+  return { target, orders, profit, passed, tier, modern, channel: !passed ? null : orders && profit ? 'both' : profit ? 'profit' : 'orders' };
+}
+// REQ-053 §4.7: say which lane passed the round.
+export function goalChannelText(g) {
+  if (!g?.passed) return '本轮未达标：目标不变，下一轮还是这个目标';
+  return g.channel === 'both' ? '双过：订单和利润都达标，金章' : g.channel === 'profit' ? '靠利润过的：贡献利润达到 $5,000' : `靠订单过的：未退款订单达到 ${g.target} 单`;
 }
 export const LEVELS = [
   [0,'新晋创始人'],[100,'市场开拓者'],[300,'增长领航者'],[600,'跨境掌舵人'],[1000,'品牌经营者'],
