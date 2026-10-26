@@ -121,7 +121,7 @@ export function createV2Core(a) {
     if (!valid(n) || n.stage > 4) return n;
     const r = copy(n), c = config(n);
     const rules = {
-      platform: [0, PLATFORMS.map(x => x.id)], firstMile: [2, FIRST_MILE.map(x => x.id)],
+      platform: [0, PLATFORMS.map(x => x.id)], firstMile: [4, FIRST_MILE.map(x => x.id)],
       terms: [2, ['cash', 'credit']], negotiation: [2, ['none', 'volume', 'credit']],
       bid: [3, BIDS.map(x => x.id)], timeSlot: [3, TIME_SLOTS.map(x => x.id)], offsite: [3, OFFSITE.map(x => x.id)],
       seasonPrep: [2, [true, false]],
@@ -419,9 +419,11 @@ export function createV2Core(a) {
     const c = config(r), platform = selected(PLATFORMS, c.platform);
     const entryFee = platform.id === 'direct' && n.v2.openedPlatforms.includes('direct') ? 0 : platform.entry;
     if (n.stage === 0) cashDelta = -money((n.visitedMarkets.includes(d.id) ? 0 : find(options(n, 'markets'), option.id).launchCost) + entryFee);
-    if (n.stage === 2) { cashDelta = -(c.terms === 'credit' ? 0 : mean.purchaseCost) - mean.firstMileCost - mean.seasonPrepCost; inventoryDelta = mean.unitsToBuy; }
+    if (n.stage === 2) { cashDelta = -(c.terms === 'credit' ? 0 : mean.purchaseCost) - mean.seasonPrepCost; inventoryDelta = mean.unitsToBuy; }
     if (n.stage === 3) cashDelta = -d.budget - mean.offsiteCost - (n.currentListing ? 0 : r.currentListing?.cost || 0);
-    const settlement = p => -sum([p.shippingCost, p.platformFees, p.commissionGross, p.returnHandlingCost, p.tariff, p.importTax, p.paymentFee, p.fxFee, p.packagingCost, p.warehouseCost]);
+    // REQ-053 §4.6: first mile is paid at shipping; saves that paid it at stocking (old rule) are not charged twice.
+    const firstMileDue = p => expenses(n, 'firstMile') ? 0 : p.firstMileCost;
+    const settlement = p => -sum([p.shippingCost, p.platformFees, p.commissionGross, p.returnHandlingCost, p.tariff, p.importTax, p.paymentFee, p.fxFee, p.packagingCost, p.warehouseCost, firstMileDue(p)]);
     if (n.stage === 4) { cashDelta = settlement(mean); inventoryDelta = STOCK_CARRYOVER ? -mean.orders + mean.returnRestocked : -Object.values(n.inventory).reduce((s, v) => s + v, 0); }
     if (n.stage === 5) cashDelta = -option.cost;
     const overdue = [...n.v2.payables, ...n.v2.loans].some(b => !b.paid && b.dueRound <= n.round);
@@ -495,7 +497,6 @@ export function createV2Core(a) {
       r.inventory[r.productId] += p.unitsToBuy; r.inventoryCosts[r.productId] = p.availableCost;
       if (config(r).terms === 'credit' && p.purchaseCost) r.v2.payables.push({ round: r.round, dueRound: r.round + 1, amount: p.purchaseCost, paid: false });
       else entry(r, 'procurement', `${p.supplierName} · 采购补货`, -p.purchaseCost);
-      entry(r, 'firstMile', `${p.firstMile.name} · 头程运输`, -p.firstMileCost);
       if (p.seasonPrepCost) { entry(r, 'season', '大卖季提前备战', -p.seasonPrepCost); r.v2.seasonPrepared = Math.ceil(r.round / 3); }
     }
     if (n.stage === 3) { entry(r, 'marketing', `${option.name} · ${p.promotionChoice.name}`, -d.budget); if (p.offsiteCost) entry(r, 'offsite', p.offsite.name, -p.offsiteCost); }
@@ -503,7 +504,8 @@ export function createV2Core(a) {
       const actual = simulate(r);
       const settlementCosts = [['shipping', '跨境履约', actual.shippingCost], ['platform', '模拟平台佣金', actual.platformFees], ['commission', '达人佣金（毛收入计提）', actual.commissionGross], ['returnHandling', '退件检验与处理', actual.returnHandlingCost],
         ['tariff', `${actual.tax.country}预估关税`, actual.tariff], ['importTax', actual.tax.taxName, actual.importTax],
-        ['payment', '收款手续费3.5%', actual.paymentFee], ['fx', '换汇成本', actual.fxFee], ['packaging', '差异化包装', actual.packagingCost], ['warehouse', '余货仓储费 $0.5/件/轮', actual.warehouseCost]];
+        ['payment', '收款手续费3.5%', actual.paymentFee], ['fx', '换汇成本', actual.fxFee], ['packaging', '差异化包装', actual.packagingCost], ['warehouse', '余货仓储费 $0.5/件/轮', actual.warehouseCost],
+        ['firstMile', `${actual.firstMile.name} · 头程运输`, expenses(n, 'firstMile') ? 0 : actual.firstMileCost]];
       if (money(n.cash - sum(settlementCosts.map(row => row[2]))) < 0) return feedback(n, '交付前现金不足', '平台货款将在交付后14天回款。可先使用资金时间线中的过桥方案，或调整履约和备货。');
       r.inventory[r.productId] = actual.inventoryRemaining; r.inventoryCosts[r.productId] = actual.inventoryCostRemaining;
       r.v2.receivables.push({ round: r.round, dueRound: r.round + 1, days: 14, amount: actual.netRevenue, kind: 'sales', paid: false });
