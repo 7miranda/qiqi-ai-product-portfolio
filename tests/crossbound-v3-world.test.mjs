@@ -200,12 +200,13 @@ test('build output: hooks applied once, world wired locally (no CDN), classic co
   assert.ok(fs.existsSync(`${folder}/vendor/three/LICENSE`));
 });
 
-test('deployments keep the 3D world off unless CROSSBOUND_WORLD is set', () => {
+test('deployments turn the 3D world on unless CROSSBOUND_WORLD overrides it', () => {
   const run = env => {
     execFileSync(process.execPath, ['scripts/package-frontend.mjs'], { env: { ...process.env, ...env }, stdio: 'pipe' });
     return fs.readFileSync('dist/crossbound/runtime-config.js', 'utf8');
   };
-  assert.match(run({ CROSSBOUND_WORLD: '' }), /CROSSBOUND_WORLD = "off"/);
+  assert.match(run({ CROSSBOUND_WORLD: '' }), /CROSSBOUND_WORLD = "on"/);
+  assert.match(run({ CROSSBOUND_WORLD: 'off' }), /CROSSBOUND_WORLD = "off"/);
   assert.match(run({ CROSSBOUND_WORLD: 'split' }), /CROSSBOUND_WORLD = "split"/);
   assert.throws(() => run({ CROSSBOUND_WORLD: 'yes' }));
   assert.match(fs.readFileSync('dist/crossbound/runtime-config.js', 'utf8'), /\/crossbound\/api/);
