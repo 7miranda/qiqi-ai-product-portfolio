@@ -2,7 +2,7 @@ import { feedbackState } from '../v2/records.js';
 import { HELP, PROMOTIONS } from './model.js';
 import { countryBadgeAsset } from './badges.js?v=2';
 import { explorationAwards } from '../v2/progress.js';
-import { goal } from '../v2/release.js';
+import { goal, goalChannelText } from '../v2/release.js';
 import { STOCK_CARRYOVER } from './balance.js';
 
 // Reuse the demo's React instance, buttons, panels and visual classes.
@@ -46,11 +46,19 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
       h('article', null, h('span', null, STOCK_CARRYOVER ? '继续经营 / 现金与余货保留' : '继续经营 / 现金保留'), h('h3', null, '下一轮，带着经验出发'),
         h('p', null, `现有现金${cash(company.cash)}${STOCK_CARRYOVER ? '和余货会保留' : '会保留，下一轮重新备货'}。${!flow.done && g.nextTask?.available ? '总部还有一条经营线索，看看再出发。' : '可以继续经营原市场，也可以去下一站。'}`),
         h('div', { className: 'result-next-actions' }, button(label + ' →', onContinue, { variant: 'solid', 'data-guide':'next-round' }),
-          button('调整本轮方案', onAdjust))),
-      h('article', null, h('span', null, '公司成长 / 游戏奖励'), h('h3', null, ready ? '公司有设施可以建设' : g.nextTask?.available ? '总部有一条新线索' : '每一步，都算数'),
-        h('p', { className: 'v11-growth-gap' }, g.gap ? `距离 LV.${g.rank.level + 1} 还差${g.gap}经验。现有建设点${ops.research}。` : `已达到本季最高等级。现有建设点${ops.research}。`),
-        g.nextTask?.available && h('small', null, `${g.nextTask.title}：完成可得${g.nextTask.xp}经验、${g.nextTask.research}建设点。`),
-        h('div', { className: 'result-next-actions' }, button('查看公司总部 →', onHQ, { variant: 'solid' }))));
+          button('调整本轮方案', onAdjust))));
+  }
+  // REQ-053 §4.7: target once, the lane that passed, one money line, one link to HQ (growth, achievements, 四维评估 moved there).
+  function SettlementGoal({ company, onOpen }) {
+    const r = company.report;
+    if (!r) return null;
+    const g = goal(r);
+    return h('section', { className: 'listing-confirmed-v23 v11-round-achievements v11-settlement-goal', 'aria-label': '本轮目标' },
+      g.passed && h(CountryBadge, { marketId: r.marketId, tier: g.tier }),
+      h('div', null, h('span', null, `本轮目标 / ${g.target} 单未退款，或贡献利润 $5,000`),
+        h('p', { className: g.passed ? 'signal-text' : '' }, goalChannelText(g)),
+        h('p', null, `收入 ${cash(r.netRevenue)} · 成本 ${cash(r.totalCosts)} · 利润 ${cash(r.profit)} · 现金变化 ${cash(r.cashChange)}${r.receivables > 0 ? `（货款 ${cash(r.receivables)} 下一轮开局到账）` : ''}`)),
+      button('成长、成就与四维评估在总部 →', onOpen));
   }
   function ReviewTask({ task, onSubmit, feedback }) {
     const [selected, setSelected] = React.useState('');
@@ -125,14 +133,14 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
         { key: option.id, 'aria-pressed': selected.id === option.id }))),
       channel === 'creator' && selected.id === 'vertical' && h('label', { className: 'market-select-label' }, '达人擅长的领域',
         h('select', { value: selected.category, onChange: e => onChange({ id: selected.id, category: e.target.value }) }, categories.map(([id, name]) => h('option', { key: id, value: id }, name)))),
-      h('p', { className: 'panel-note', role: 'status' }, channel === 'creator' ? `当前成交分佣${pct(selected.commission)}。${selected.matched ? '达人领域对口，购买意愿+15%。' : '触达仍有爆单或翻车波动。'}` : selected.matched ? channel === 'ads' ? '素材与品类匹配，购买意愿+10%。' : '选题与品类匹配，到访+10%，其中10%可延续到下轮。' : channel === 'ads' ? '素材与品类不匹配，购买意愿-5%。可以换个讲法。' : '这个选题没有品类加成，仍保留内容长尾。'),
+      h('p', { className: 'panel-note', role: 'status' }, channel === 'creator' ? `当前成交分佣${pct(selected.commission)}。${selected.matched ? '达人领域对口，购买意愿+30%。' : '触达仍有爆单或翻车波动。'}` : selected.matched ? channel === 'ads' ? '素材与品类匹配，购买意愿+10%。' : '选题与品类匹配，到访+10%，其中10%可延续到下轮。' : channel === 'ads' ? '素材与品类不匹配，购买意愿-5%。可以换个讲法。' : '这个选题没有品类加成，仍保留内容长尾。'),
     );
   }
   function MarketFacts({ company, market }) {
     if (!engine.valid(company) || !market) return null;
-    const retained = company.previousMarket === market.id;
-    const cold = company.previousMarket && !retained && !company.roundStart.visitedMarkets.includes(market.id);
-    return h('p', { className: 'panel-note' }, retained ? '继续经营原市场，本轮运营费减半。' : cold ? '首次进入这一新市场，本轮购买意愿按90%冷启动估算。' : '首次建立市场业务，按进入费核算。');
+    const visited = company.roundStart.visitedMarkets.includes(market.id);
+    const cold = company.previousMarket && company.previousMarket !== market.id && !visited;
+    return h('p', { className: 'panel-note' }, visited ? '这个市场进过了，留下来不再收进入费。' : cold ? '首次进入这一新市场：收一次进入费，本轮购买意愿按90%冷启动估算。' : '首次进入这个市场，收一次进入费；以后留下来经营不再收。');
   }
   function CountryBadge({ marketId, tier }) {
     const asset = countryBadgeAsset(marketId, tier);
@@ -209,7 +217,7 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
         h('span', { className: 'report-insights-step' }, h('small', null, `0${i + 1}`), name), h('strong', null, number),
         h('details', { className: 'v11-help' }, h('summary', null, '? 这一步怎么算'), h('p', null, note))))),
       r.stockReturnUnits > 0 && h('section', { className: 'report-insights-panel v11-stock-return' }, h('h4', null, `未售出清仓返现 +${cash(r.stockReturn)}`),
-        h('p', null, `${count(r.stockReturnUnits)}件 × 单件成本 $${(r.stockReturn / r.stockReturnUnits).toFixed(2)}。没卖完的货已按成本退回，钱回到你手里，下一轮重新备货。`), h(Help, { id: 'inventory' })),
+        h('p', null, `${count(r.stockReturnUnits)}件 × 单件成本 $${((r.stockReturnCost ?? r.stockReturn) / r.stockReturnUnits).toFixed(2)}${r.stockReturnFee ? `，扣5%清仓手续费 ${cash(r.stockReturnFee)}` : ''}。没卖完的货已按成本退回，钱回到你手里，下一轮重新备货。`), h(Help, { id: 'inventory' })),
       r.round < 4 ? h('details', { className: 'decision-optional' }, h('summary', null, '想知道订单从哪里来？展开看看'), attribution) : attribution,
       h('div', { className: 'report-insights-pair' },
         h('section', { className: 'report-insights-panel' }, h('h4', null, '退款与交付'), h('ul', { className: 'report-insights-reasons' }, r.refundReasons.map(s => h('li', { key: s.id }, h('span', null, s.label), h('b', null, `${s.count}单`)))),
@@ -293,5 +301,5 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
       h('span', { className: 'v11-call-avatar', 'aria-hidden': true }, '林'), h('b', null, '总部来电 · 运营伙伴'),
       h('p', null, title || '有一条经营线索，想和你一起拿个主意。')), h('strong', { className: 'signal-text' }, round <= 3 ? '+200经验 · +40建设点' : '+100经验 · +20建设点'));
   }
-  return { range, Help, useSettlement, SettlementProgress, SettlementActions, ReviewTask, LevelUp, RewardActions, NotificationDock, ListingOptimization, Promotion, MarketFacts, CountryBadge, AchievementHall, useAchievements, RoundAchievements, Report, Clearance, History, Cockpit, GrowthSummary, CallIntro };
+  return { range, Help, useSettlement, SettlementProgress, SettlementActions, SettlementGoal, ReviewTask, LevelUp, RewardActions, NotificationDock, ListingOptimization, Promotion, MarketFacts, CountryBadge, AchievementHall, useAchievements, RoundAchievements, Report, Clearance, History, Cockpit, GrowthSummary, CallIntro };
 }

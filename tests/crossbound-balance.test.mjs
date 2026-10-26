@@ -32,7 +32,9 @@ test('new fees, default budgets, goals and first-mile choice are visible and cha
     let n=e.create(12);
     assert.equal(n.balanceVersion,BALANCE_VERSION);
     assert.equal(goal(n).target,250);
-    assert.equal(goal({...n,round:5}).target,450);
+    assert.equal(goal({...n,round:5}).target,250,'REQ-053: no passes yet, so round 5 still aims at 250');
+    assert.equal(goal({...n,round:5,goalPasses:4}).target,450);
+    assert.equal(goal({...n,round:5,goalPasses:9}).target,450,'capped at 450');
     assert.equal(goal({...n,round:3,balanceVersion:undefined}).target,400);
     assert.equal(e.options(n,'markets').find(m=>m.id==='los-angeles').launchCost,720);
     assert.equal(e.options(n,'fulfillment').find(m=>m.id==='express').costPerOrder,6.5);

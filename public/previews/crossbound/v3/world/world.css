@@ -169,10 +169,13 @@ html[data-v3-gate="on"] body > :not(.v3-gate):not(#v3-world) { visibility: hidde
 .v3-layer.is-busy .v3-inbox { display: none; }
 
 /* 2D campus: the 3D entry sits left of 园区导览 (positioned by boot.js from the guide's width). */
-.v3-campus-3d { position: absolute; top: 8px; right: calc(var(--v3-guide-w, 96px) + 26px); z-index: 2; min-height: 34px; padding: 0 14px;
-  border-radius: 8px; border: 1px solid #8a7dff; background: #0b1020e6; color: #c9c2ff; font: 700 13px Inter, "PingFang SC", "Microsoft YaHei", sans-serif;
-  cursor: pointer; box-shadow: 0 0 14px #8a7dff33; white-space: nowrap; }
-.v3-campus-3d:hover, .v3-campus-3d:focus-visible { border-color: #c9ff9f; color: #f2f6f8; outline: none; }
+/* Same pill as 园区导览's summary (size, font, colours, top edge), with its green accent for the arrow. */
+.v3-campus-3d { position: absolute; top: 12px; right: calc(var(--v3-guide-w, 96px) + 26px); z-index: 2; padding: 9px 12px;
+  border: 0; border-radius: 7px; background: #10191fe8; color: #b2c3cf; font: 400 11px/1.5 Inter, "PingFang SC", "Microsoft YaHei", sans-serif;
+  cursor: pointer; white-space: nowrap; transition: background .2s, color .2s; }
+.v3-campus-3d > span { padding-left: 17px; color: #a6ff32; font-size: 15px; line-height: 1; display: inline-block; }
+.v3-campus-3d:hover { color: #f1f6f9; background: #1b2932; }
+.v3-campus-3d:focus-visible { outline: 2px solid #a6ff32; outline-offset: 4px; }
 
 /* M-006 comfort fields inside the terminal panel. */
 .v3-panel .v3-fields { display: grid; gap: 12px; margin: 4px 0 16px; }

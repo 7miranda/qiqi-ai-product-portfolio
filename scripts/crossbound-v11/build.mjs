@@ -71,8 +71,8 @@ function patchMain(s) {
   once('l==="operations"&&mn?', 'l==="v2-events"?(0,re.jsx)(V2UI.Events,{company:t,onChange:i}):l==="review-task"?(0,re.jsx)(V11UI.ReviewTask,{key:_s.reviewTask?.id,task:_s.reviewTask?{..._s.reviewTask,rewardRound:t.round}:null,onSubmit:v11ReviewAnswer,feedback:Gn}):l==="operations"&&mn?');
   once('Et===3&&(0,re.jsx)("div",{className:"campaign-parameters"', 'Et===3&&(0,re.jsx)(V11UI.Promotion,{company:t,channel:Ia?.id||"content",selection:v11Promotion[Ia?.id||"content"],onChange:choice=>setV11Promotion({...v11Promotion,[Ia?.id||"content"]:choice}),onBudget:N}),Et===3&&(0,re.jsx)("div",{className:"campaign-parameters"');
   once('Et===3&&(0,re.jsx)(V11UI.Promotion,', '(0,re.jsx)(V2UI.StageOptions,{company:t,onChange:i,market:ec,product:Ju,preview:pr,channel:Ia?.id||"content"}),Et===3&&(0,re.jsx)(V11UI.Promotion,');
-  once('l==="complete"?(0,re.jsxs)(re.Fragment,{children:[', 'l==="complete"?(0,re.jsxs)(re.Fragment,{children:[(0,re.jsx)(V2UI.BadgeCelebration,{company:t},`${t.runSeed}:${t.round}`),(0,re.jsx)(V2UI.HonorSummary,{company:t,ops:r}),(0,re.jsx)(V11UI.RoundAchievements,{company:t,onOpen:v11OpenAchievements}),');
-  once('(0,re.jsx)(oN,{report:Pe,compact:!0}),', '(0,re.jsx)(oN,{report:Pe,compact:!0}),(0,re.jsx)(V11UI.Clearance,{company:t,onChange:i}),(0,re.jsx)(V11UI.GrowthSummary,{company:t,ops:r,onTask:As,onBuild:()=>u("build")}),');
+  once('l==="complete"?(0,re.jsxs)(re.Fragment,{children:[', 'l==="complete"?(0,re.jsxs)(re.Fragment,{children:[(0,re.jsx)(V2UI.BadgeCelebration,{company:t},`${t.runSeed}:${t.round}`),(0,re.jsx)(V11UI.SettlementGoal,{company:t,onOpen:()=>u("progress")}),');
+  once('(0,re.jsx)(oN,{report:Pe,compact:!0}),', '(0,re.jsx)(oN,{report:Pe,compact:!0}),(0,re.jsx)(V11UI.Clearance,{company:t,onChange:i}),');
   s = replaceElement(s, 'result-next-v23', () => '(0,re.jsx)(V11UI.SettlementActions,{company:t,ops:r,flow:v11Flow,onContinue:rs,onSkip:v11NextRound,onAdjust:()=>Ba(2),onHQ:()=>u("progress")})');
   s = replaceElement(s, 'prize-actions', original => `v11Flow.active&&rt.kind!=="business"?(0,re.jsx)(V11UI.RewardActions,{reward:rt,ready:_s.facilities.some(f=>f.ready),onContinue:$s,onSkip:v11NextRound}):${original}`);
   once('rt.promotion&&(0,re.jsxs)("span",{children:["'+encode('晋升 / ')+'",rt.promotion]})', '(0,re.jsx)(V11UI.LevelUp,{reward:rt})');
@@ -113,6 +113,8 @@ function patchMain(s) {
   once('onAchievements:v11OpenAchievements,onTask:As,onHQ:()=>u("progress")','onAchievements:v11OpenAchievements,onTask:As,onHQ:()=>u("progress"),onCommunity:()=>u("community")');
   once('l==="complete"?(0,re.jsxs)(re.Fragment,{children:[','l==="community"?(0,re.jsx)(V2UI.Community,{company:t,onReward:ev=>s(cur=>V11Growth.claimCommunity(cur,ev)),onDone:()=>u(null)}):l==="financials"?(0,re.jsx)(V2UI.Financials,{company:t,onSelect:key=>u(key==="report"?"complete":key)}):l==="assessment"?(0,re.jsx)(V2UI.Assessment,{company:t,ops:r,onSelect:key=>u(key==="report"?"complete":key)}):l==="complete"?(0,re.jsxs)(re.Fragment,{children:[(0,re.jsx)(V2UI.ReportTabs,{onSelect:key=>u(key==="report"?"complete":key)}),(0,re.jsx)(V2UI.GoalCard,{company:t}),releaseRank(r).level===10&&(0,re.jsx)(V2UI.GrowthProgress,{ops:r}),');
   s=s.replace('fe=t.round===1?300:500','fe=releaseGoal(t).target').replace('ut=!!(Pe&&Pe.keptOrders>=fe&&Pe.profit>0)','ut=!!(Pe&&releaseGoal(Pe).passed)');
+  // REQ-053 §4.7: the target is stated once, in V11UI.SettlementGoal; drop the base report's second goal line.
+  once('(0,re.jsxs)("span",{className:`round-goal ${ut?"goal-met":""}`,children:[ut?"'+encode('本轮目标达成')+'":"'+encode('六关完成，经营目标尚未达成')+'"," \\xB7 ",Pe?.keptOrders||0," / ",fe," '+encode('单未退款')+'"]}),','');
   // Use state-specific data in the original controls; old rounds retain old displayed fees.
   s=s.replace(/\bks\b/g,'v11Markets').replace(/\bZ_\b/g,'v11Channels').replace(/\bJ_\b/g,'v11Fulfillment');
   once('[t,i]=(0,li.useState)(dmt),','[t,i]=(0,li.useState)(dmt),v11Markets=balanceOptions(t,"markets",ks),v11Channels=balanceOptions(t,"channels",Z_),v11Fulfillment=balanceOptions(t,"fulfillment",J_),');
@@ -150,7 +152,7 @@ for (const file of ['index.html', 'preview.html']) {
     s = replaceOne(s, 'headquartersStatus:v11HQ=""}){', 'headquartersStatus:v11HQ=""}){let [v3Paused,v3SetPaused]=(0,Gi.useState)(()=>!!window.CrossboundView?.campusPaused);(0,Gi.useEffect)(()=>{let f=e=>v3SetPaused(!!e.detail);window.addEventListener("crossbound:campus-pause",f);return()=>window.removeEventListener("crossbound:campus-pause",f)},[]);');
     s = replaceOne(s, '$=!L&&!C&&P,', '$=!L&&!C&&P&&!v3Paused,');
     // REQ-051 M-002: the 2D → 3D entry lives on the campus, just left of 园区导览.
-    s = replaceOne(s, '(0,ke.jsxs)("details",{className:"enterprise-campus-v17__guide"', 'window.CrossboundView?.dualMode&&(0,ke.jsx)("button",{type:"button",className:"v3-campus-3d","aria-label":"切换到 3D 世界",onClick:()=>window.CrossboundView.switchMode("3d","campus"),children:"进入 3D 世界"}),(0,ke.jsxs)("details",{className:"enterprise-campus-v17__guide"');
+    s = replaceOne(s, '(0,ke.jsxs)("details",{className:"enterprise-campus-v17__guide"', 'window.CrossboundView?.dualMode&&(0,ke.jsxs)("button",{type:"button",className:"v3-campus-3d","aria-label":"切换到 3D 世界",onClick:()=>window.CrossboundView.switchMode("3d","campus"),children:["进入 3D 世界",(0,ke.jsx)("span",{"aria-hidden":"true",children:"↗"})]}),(0,ke.jsxs)("details",{className:"enterprise-campus-v17__guide"');
     return s;
   });
   script = replaceFunction(script, 'foe', s => {

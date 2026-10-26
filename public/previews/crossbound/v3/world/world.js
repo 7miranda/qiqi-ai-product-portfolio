@@ -691,12 +691,16 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
   function syncInbox() {
     if (store.dialogOpen || ui.busy) return;   // the campus hides its dock while a panel is open
     const rows = [...document.querySelectorAll('.v11-notification-dock .v11-notification-row')];
+    const keyOf = row => { const link = row.querySelector('.v11-notification-link'); return `${link?.querySelector('strong')?.textContent || ''}|${link?.querySelector('small')?.textContent || ''}`; };
+    // React replaces the dock's nodes on re-render, so find the live row at click time (a stored node may be detached).
+    // The game's Button renders <span class=…><button>…</button></span>: the click must go to the inner button.
+    const press = (row, cls) => { const el = row?.querySelector(cls); (el?.matches('button') ? el : el?.querySelector('button'))?.click(); };
+    const live = id => [...document.querySelectorAll('.v11-notification-dock .v11-notification-row')].find(row => keyOf(row) === id);
     const items = rows.map(row => {
-      const link = row.querySelector('.v11-notification-link');
-      const x = row.querySelector('.v11-notification-dismiss');
-      const title = link?.querySelector('strong')?.textContent || '';
-      const detail = link?.querySelector('small')?.textContent || '';
-      return { id: `${title}|${detail}`, title, detail, open: () => { store.send('world_inbox_open', { title }); link?.click(); }, dismiss: x ? () => x.click() : null };
+      const id = keyOf(row), [title, detail] = id.split('|');
+      return { id, title, detail,
+        open: () => { store.send('world_inbox_open', { title }); press(live(id), '.v11-notification-link'); },
+        dismiss: row.querySelector('.v11-notification-dismiss') ? () => press(live(id), '.v11-notification-dismiss') : null };
     });
     const fresh = ui.setMessages(items);
     if (inboxReady && fresh.length) {
