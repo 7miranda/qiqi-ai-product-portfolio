@@ -159,7 +159,9 @@ export function doorStates(snapshot) {
   const at = current === 'hub' ? -1 : order.indexOf(current);
   return Object.fromEntries(WORLDS.map((w, i) => {
     if (w.id === 'w7') return [w.id, 'open'];
-    if (settled || i < at) return [w.id, 'completed'];
+    // Settled rounds still point at the settlement hall: the report there is what starts the next round.
+    if (settled) return [w.id, w.id === 'w6' ? 'current' : 'completed'];
+    if (i < at) return [w.id, 'completed'];
     if (i === at) return [w.id, 'current'];
     return [w.id, 'locked'];
   }));
@@ -169,14 +171,14 @@ export function doorStates(snapshot) {
 export function taskFor(snapshot, local = {}) {
   const c = snapshot?.company;
   if (!c) return '';
-  if (c.stage >= 6) return '本轮已结算，去荣誉墙展厅看看成就';
+  if (c.stage >= 6) return '本轮已结算，去财报结算厅看战报、开启下一轮';
   const world = currentWorld(snapshot);
   if (world === 'hub') return '去世界地图终端，选一个市场';
   if (world === 'w1') {
     if (local.inside !== 'w1') return '去选品展厅挑 1 件商品';
     if (!local.product) return '走到展位前，挑 1 件商品';
     if (!local.supplier) return '跟供应商谈谈，选一家';
-    return '从出口离开展厅';
+    return '都选好了，正在前往定价财务室';
   }
   const w = WORLDS.find(x => x.id === world);
   return `去${w.name}${w.step}`;

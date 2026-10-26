@@ -350,7 +350,20 @@ const dialogObserver = new MutationObserver(() => {
   for (const fn of [...listeners]) fn(state.snapshot);
   evaluate();
 });
+// The campus "进入 3D 世界" button sits left of 园区导览, whose width changes when it opens.
+const guideObserver = typeof ResizeObserver === 'function'
+  ? new ResizeObserver(entries => { for (const e of entries) root.style.setProperty('--v3-guide-w', `${Math.round(e.target.offsetWidth)}px`); })
+  : null;
+function watchGuide() {
+  // Measure the visible 「园区导览 ＋」 pill (the summary), not the wider details box.
+  const g = document.querySelector('.enterprise-campus-v17__guide > summary') || document.querySelector('.enterprise-campus-v17__guide');
+  if (!g || g === state.guide || !guideObserver) return;
+  if (state.guide) guideObserver.unobserve(state.guide);
+  state.guide = g;
+  guideObserver.observe(g);
+}
 function watchDialog() {
+  watchGuide();
   const d = document.querySelector('dialog.campaign-dialog');
   if (d === state.dialog) return;
   dialogObserver.disconnect();

@@ -137,7 +137,7 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
   function spawnPoint() {
     const s = store.snapshot();
     const world = currentWorld(s);
-    if (world === 'hub' || (s?.company?.stage ?? 0) >= 6) return hub.spawn;  // 3D-011
+    if (world === 'hub') return hub.spawn;  // 3D-011; a settled round spawns at the settlement hall
     return hub.doorFront(world);
   }
 
@@ -155,12 +155,13 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
       return store.waitFor(s => s.choice?.id === id, 1500);
     },
     // Commits the current stage with the engine's own validation; closes the classic panel it opens.
-    async commit() {
+    // keepOpen: leave the next step's panel (opened by the engine after commit) on screen.
+    async commit({ keepOpen = false } = {}) {
       const before = store.snapshot()?.company?.stage;
       engine.act()?.commit();
       const after = await store.waitFor(s => s.company?.stage !== before, 2500);
       await nextFrame();
-      if (after) store.snapshot()?.actions?.close();
+      if (after && !keepOpen) store.snapshot()?.actions?.close();
       return after;
     },
     // The engine resets the supplier when stage 2 starts, so re-apply until it sticks.
@@ -274,12 +275,19 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
     }
     const options = s?.options || [];
     const list = options.map(o => ({ id: o.id, title: o.countryLabel || o.name, badge: o.launchCost != null ? `进入费 ${money(o.preview?.cashDelta != null ? -o.preview.cashDelta : o.launchCost)}` : '', detail: o.summary || o.name, disabled: o.disabled }));
-    const result = await ui.screen({ kicker: 'WORLD MAP · 世界地图终端', title: '选一个销售国家', body: '确认后扣除市场进入费，然后去选品展厅挑商品。', list, selected: s?.choice?.id || s?.recommendedId, actions: [{ label: '确认进入这个市场', value: 'confirm', primary: true, needsSelection: true }] });
+    const result = await ui.screen({ kicker: 'WORLD MAP · 世界地图终端', title: '选一个销售国家', body: '确认后扣除市场进入费，直接进入选品展厅挑商品。', list, selected: s?.choice?.id || s?.recommendedId, actions: [{ label: '确认进入这个市场', value: 'confirm', primary: true, needsSelection: true }] });
     if (result?.action !== 'confirm' || !result.id) return;
     await engine.select(result.id);
     const after = await engine.commit();
     if (!after) { sound.error(); bubbleAt('这个市场暂时进不去，换一个试试', -6, -4); return; }
-    complete(`市场已选定：${after.market?.name || ''}`);
+    complete(`市场已选定：${after.market?.name || ''}，直接进入选品展厅`);
+    // Straight into the next step instead of walking to the W1 door.
+    await new Promise(r => setTimeout(r, 900));
+    if (store.snapshot()?.company?.stage === 1 && !inside) {
+      store.send('world_door_enter', { world: 'w1', source: 'auto' });
+      enteredAt = performance.now();
+      await travel(buildW1(), { x: 0, z: 6.8, yaw: 0 });
+    }
   }
 
   async function helpTerminal() {
@@ -354,10 +362,16 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
     }
     if (!BUILT.has(w.id)) {
       // P0 scope: unbuilt worlds use the existing classic panel for this step (P1 builds them).
-      store.send('world_classic_step', { world: w.id, stage });
-      ui.notice(`${w.name}还在建设中，先用经典面板完成「${w.step}」`, 3600);
-      engine.openPanel();
+      openStepPanel(w);
     }
+  }
+
+  // P0: unbuilt worlds open the engine's own panel straight at the step to do (or the round report once settled).
+  function openStepPanel(w) {
+    const stage = store.snapshot()?.company?.stage ?? 0;
+    store.send('world_classic_step', { world: w.id, stage });
+    ui.notice(stage >= 6 ? '打开本轮战报，看完就能开启下一轮' : `${w.name}还在建设中，先用面板完成「${w.step}」`, 3600);
+    engine.openPanel();
   }
 
   let enteredAt = 0;
@@ -387,6 +401,10 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
     }
     refresh();   // selection ring / ×1.2 first, so the model flies back to its final size
     await returnProduct();
+    if (r?.action === 'pick') {
+      if (picks.supplier) await finishShowroom();
+      else bubbleAt('选好了！再去左边跟供应商谈谈', -8, -1.5, 3);
+    }
   }
 
   async function supplierTalk(supplierId) {
@@ -400,7 +418,10 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
       ? [`我是${quote.name}。`, `单价 $${quote.unitCost}，起订 ${quote.moq} 件，交期 ${quote.leadDays} 天。`, quote.benefit]
       : [`我是${meta.name}，报价稍后给你。`];
     const choice = await ui.talk({ speaker: `供应商 · ${meta.name}`, lines, choices: [{ label: '再看看', value: 'later' }, { label: '选他', value: 'pick', primary: true }] });
-    if (choice === 'pick') { picks.supplier = supplierId; savePicks(); sound.confirm(); refresh(); }
+    if (choice === 'pick') {
+      picks.supplier = supplierId; savePicks(); sound.confirm(); refresh();
+      if (picks.product) await finishShowroom();
+    }
   }
 
   async function leaveShowroom() {
@@ -411,9 +432,18 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
       return;
     }
     if (stage !== 1) { await travel(hub, hub.doorFront(currentWorld(store.snapshot()))); return; }
+    await finishShowroom();
+  }
+
+  // Product + supplier chosen → commit right away and go straight on to the next step (no walk back to the exit).
+  async function finishShowroom() {
+    if (transitioning || store.snapshot()?.company?.stage !== 1) return;
+    ui.notice('商品和供应商都选好了，前往下一站…', 1800);
+    await new Promise(r => setTimeout(r, 700));
     transitioning = true;
     await engine.select(picks.product);
-    const after = await engine.commit();
+    // W2 isn't built yet: keep the engine's 定价备货 panel it opens after the commit, so play continues straight on.
+    const after = await engine.commit({ keepOpen: !BUILT.has('w2') });
     if (!after) {
       transitioning = false;
       sound.error();
@@ -425,7 +455,8 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
     transitioning = false;
     // 3D-067: completion teleports straight to the next world's door.
     await travel(hub, hub.doorFront('w2'));
-    complete('选品展厅完成！下一站：定价财务室');
+    complete('选品展厅完成！直接进入定价备货');
+    if (!BUILT.has('w2')) store.send('world_classic_step', { world: 'w2', stage: 2, source: 'auto' });
   }
 
   function complete(message) {   // 3D-057: gold flash + chime + task update
@@ -457,7 +488,6 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
     const s = store.snapshot();
     if (!s?.company) return null;
     if (inside === 'w1') return active.targetFor(picks);
-    if ((s.company.stage ?? 0) >= 6) return hub.targetFor('door:w7');
     const world = currentWorld(s);
     return hub.targetFor(world === 'hub' ? 'map' : `door:${world}`);
   }
@@ -471,7 +501,15 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
     const k = e.key.toLowerCase();
     if (e.type === 'keydown') {
       if (k === 'escape') { ui.closeActive(); return; }
-      if (ui.busy && (k === 'enter' || k === 'e' || k === ' ')) { ui.advance(); return; }
+      if (ui.busy && (k === 'enter' || k === 'e' || k === ' ')) {
+        // Choice buttons showing: let Enter/Space activate the focused button natively.
+        if (ui.hasChoices) return;
+        // Otherwise advance the line, and stop this same keypress from also "clicking" the button
+        // that gets focus when the choices appear (it used to pick 「再看看」 and close the talk).
+        e.preventDefault();
+        ui.advance();
+        return;
+      }
       if ((k === 'e' || k === 'enter') && !ui.busy && !store.dialogOpen) { interact(focus); e.preventDefault(); return; }
       if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'shift'].includes(k)) { keys.add(k); mark(); }
     } else keys.delete(k);
@@ -534,7 +572,27 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
   // ---------- Loop ----------
   const clock = new THREE.Clock();
   const fps = createFpsMonitor();
-  let focus = null, raf = 0, mapTimer = 0, saveTimer = 0, last = performance.now();
+  let focus = null, raf = 0, mapTimer = 0, saveTimer = 0, inboxTimer = 0, inboxReady = false, last = performance.now();
+  // Mirror the 2D campus 消息提醒 (same rules, same dismiss state, same actions) so 3D players see
+  // 总部来电 / 新成就 / 售后提醒 / 可建设 too. Clicking a row runs the original button, which opens the engine panel.
+  function syncInbox() {
+    if (store.dialogOpen || ui.busy) return;   // the campus hides its dock while a panel is open
+    const rows = [...document.querySelectorAll('.v11-notification-dock .v11-notification-row')];
+    const items = rows.map(row => {
+      const link = row.querySelector('.v11-notification-link');
+      const x = row.querySelector('.v11-notification-dismiss');
+      const title = link?.querySelector('strong')?.textContent || '';
+      const detail = link?.querySelector('small')?.textContent || '';
+      return { id: `${title}|${detail}`, title, detail, open: () => { store.send('world_inbox_open', { title }); link?.click(); }, dismiss: x ? () => x.click() : null };
+    });
+    const fresh = ui.setMessages(items);
+    if (inboxReady && fresh.length) {
+      const m = items.find(i => i.id === fresh[0]);
+      ui.notice(`新消息：${m.title}`, 3000);
+      sound.confirm();
+    }
+    inboxReady = true;
+  }
   let markReady;
   const ready = new Promise(r => { markReady = r; });
   let rendered = 0;
@@ -599,6 +657,7 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
       ui.bubble(`接待员：${taskFor(store.snapshot(), { inside, ...picks })}，跟着金色光柱走`);
     }
     if (now - saveTimer > 1000) { saveTimer = now; saveSpot(); }
+    if (now - inboxTimer > 500) { inboxTimer = now; syncInbox(); }
 
     // Minimap at ~10 Hz.
     if (now - mapTimer > 100) {

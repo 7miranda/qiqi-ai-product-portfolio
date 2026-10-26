@@ -58,7 +58,7 @@ function patchMain(s) {
   once('function hu(){', 'function hu(){if(v11Flow.active)v11Flow.finish();');
   once('onClick:()=>u("progress"),children:"'+encode('成长奖励')+'"', 'onClick:()=>u("progress"),children:v11HQ?"公司总部 · "+v11HQ:"公司总部"');
   const tutorial = 'o&&!n&&!ms&&(0,re.jsx)(Ge,{variant:"outline",className:"company-tutorial-entry"';
-  once(tutorial, 'o&&!n&&!l&&(0,re.jsx)(V11UI.Cockpit,{company:t,ops:r,preview:pr,onOpen:nr,onBuild:()=>u("progress"),onTask:As}),(0,re.jsxs)(Ge,{variant:"outline",className:"v11-header-achievements",onClick:v11OpenAchievements,children:["出海成就",v11Achievements.unread.length>0&&(0,re.jsx)("span",{className:"v11-new-dot",children:"●"})]}),o&&!n&&window.CrossboundView?.dualMode&&(0,re.jsx)(Ge,{variant:"outline",className:"v3-mode-toggle","aria-label":"切换到 3D 世界",onClick:()=>window.CrossboundView.switchMode("3d"),children:"3D 世界"}),o&&!n&&(0,re.jsx)(Ge,{variant:"outline",className:"company-tutorial-entry"');
+  once(tutorial, 'o&&!n&&!l&&(0,re.jsx)(V11UI.Cockpit,{company:t,ops:r,preview:pr,onOpen:nr,onBuild:()=>u("progress"),onTask:As}),(0,re.jsxs)(Ge,{variant:"outline",className:"v11-header-achievements",onClick:v11OpenAchievements,children:["出海成就",v11Achievements.unread.length>0&&(0,re.jsx)("span",{className:"v11-new-dot",children:"●"})]}),o&&!n&&(0,re.jsx)(Ge,{variant:"outline",className:"company-tutorial-entry"');
   s = replaceElement(s, 'campus-world', original => original.replace('children:', 'children:[!l&&(0,re.jsx)(V11UI.NotificationDock,{company:t,ops:r,unread:v11Achievements.unread,onAchievements:v11OpenAchievements,onTask:As,onHQ:()=>u("progress")}),') .replace(/\}\)$/, ']} )'));
   once('(0,re.jsx)(Vse,{currentStepLabel:', '(0,re.jsx)(Vse,{headquartersStatus:v11HQ,currentStepLabel:');
   once('function vS(Te){', 'function vS(Te){if(Te==="headquarters"){d(Te);u("progress");return}');
@@ -149,6 +149,8 @@ for (const file of ['index.html', 'preview.html']) {
     // REQ-051 patch 1/2: render the campus on demand while the 3D world or any campaign dialog covers it.
     s = replaceOne(s, 'headquartersStatus:v11HQ=""}){', 'headquartersStatus:v11HQ=""}){let [v3Paused,v3SetPaused]=(0,Gi.useState)(()=>!!window.CrossboundView?.campusPaused);(0,Gi.useEffect)(()=>{let f=e=>v3SetPaused(!!e.detail);window.addEventListener("crossbound:campus-pause",f);return()=>window.removeEventListener("crossbound:campus-pause",f)},[]);');
     s = replaceOne(s, '$=!L&&!C&&P,', '$=!L&&!C&&P&&!v3Paused,');
+    // REQ-051 M-002: the 2D → 3D entry lives on the campus, just left of 园区导览.
+    s = replaceOne(s, '(0,ke.jsxs)("details",{className:"enterprise-campus-v17__guide"', 'window.CrossboundView?.dualMode&&(0,ke.jsx)("button",{type:"button",className:"v3-campus-3d","aria-label":"切换到 3D 世界",onClick:()=>window.CrossboundView.switchMode("3d","campus"),children:"进入 3D 世界"}),(0,ke.jsxs)("details",{className:"enterprise-campus-v17__guide"');
     return s;
   });
   script = replaceFunction(script, 'foe', s => {

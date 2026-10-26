@@ -149,7 +149,30 @@ html[data-v3-gate="on"] body > :not(.v3-gate):not(#v3-world) { visibility: hidde
 .v3-mode-pill:hover, .v3-mode-pill:focus-visible { border-color: #ffd34d; outline: none; }
 .v3-mode-pill[hidden] { display: none; }
 .v3-layer.is-busy .v3-mode-pill { display: none; }
-.v3-mode-toggle, .v3-mode-toggle button { color: #a99dff !important; font-weight: 700 !important; white-space: nowrap; }
+
+/* 消息提醒 mirrored from the 2D campus dock. */
+.v3-inbox { position: absolute; top: 220px; right: 14px; width: 280px; pointer-events: auto; display: grid; gap: 6px; }
+.v3-inbox[hidden] { display: none; }
+.v3-inbox-head { display: flex; justify-content: space-between; align-items: center; min-height: 34px; padding: 0 12px; border-radius: 10px;
+  border: 1px solid #52cadd66; background: #070b14d8; color: #c7d3dc; font-size: 13px; }
+.v3-inbox-head b { font-weight: 600; color: #8fa6b8; font-size: 12px; }
+.v3-inbox-list { display: grid; gap: 6px; max-height: 46vh; overflow: auto; }
+.v3-inbox.is-collapsed .v3-inbox-list { display: none; }
+.v3-inbox-row { position: relative; }
+.v3-inbox-link { width: 100%; display: grid; gap: 3px; text-align: left; padding: 10px 34px 10px 12px; border-radius: 10px; border: 1px solid #29414a;
+  background: #0b1624e8; color: #f2f6f8; box-shadow: 0 0 14px #52cadd1a; animation: v3-pop .25s ease-out; }
+.v3-inbox-link:hover, .v3-inbox-link:focus-visible { border-color: #ffd34d; outline: none; }
+.v3-inbox-link strong { font-size: 13px; font-weight: 700; }
+.v3-inbox-link small { font-size: 12px; color: #8fa6b8; }
+.v3-inbox-x { position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; border-radius: 6px; border: 0; background: transparent; color: #8fa6b8; font-size: 16px; }
+.v3-inbox-x:hover { color: #f2f6f8; background: #ffffff14; }
+.v3-layer.is-busy .v3-inbox { display: none; }
+
+/* 2D campus: the 3D entry sits left of 园区导览 (positioned by boot.js from the guide's width). */
+.v3-campus-3d { position: absolute; top: 8px; right: calc(var(--v3-guide-w, 96px) + 26px); z-index: 2; min-height: 34px; padding: 0 14px;
+  border-radius: 8px; border: 1px solid #8a7dff; background: #0b1020e6; color: #c9c2ff; font: 700 13px Inter, "PingFang SC", "Microsoft YaHei", sans-serif;
+  cursor: pointer; box-shadow: 0 0 14px #8a7dff33; white-space: nowrap; }
+.v3-campus-3d:hover, .v3-campus-3d:focus-visible { border-color: #c9ff9f; color: #f2f6f8; outline: none; }
 
 /* M-006 comfort fields inside the terminal panel. */
 .v3-panel .v3-fields { display: grid; gap: 12px; margin: 4px 0 16px; }
@@ -161,4 +184,5 @@ html[data-v3-gate="on"] body > :not(.v3-gate):not(#v3-world) { visibility: hidde
 @media (max-width: 760px) {
   .v3-mode-pill { top: 122px; right: 10px; min-height: 32px; padding: 0 10px; font-size: 12px; }
   .v3-panel.is-side { max-height: 46%; }
+  .v3-inbox { top: 162px; right: 10px; width: min(240px, calc(100% - 20px)); }
 }

@@ -31,7 +31,8 @@ test('door lights (3D-010): completed before, current, locked after; honour wall
   assert.deepEqual(doorStates(snap(0)), { w1: 'locked', w2: 'locked', w3: 'locked', w4: 'locked', w5: 'locked', w6: 'locked', w7: 'open' });
   assert.deepEqual(doorStates(snap(2)), { w1: 'completed', w2: 'current', w3: 'locked', w4: 'locked', w5: 'locked', w6: 'locked', w7: 'open' });
   assert.equal(doorStates(snap(3, { currentListing: {} })).w3, 'completed');
-  assert.ok(Object.entries(doorStates(snap(6))).every(([id, s]) => s === (id === 'w7' ? 'open' : 'completed')));
+  // A settled round keeps pointing at the settlement hall (report → next round), not the honour wall.
+  assert.deepEqual(doorStates(snap(6)), { w1: 'completed', w2: 'completed', w3: 'completed', w4: 'completed', w5: 'completed', w6: 'current', w7: 'open' });
 });
 
 test('one task sentence at a time (3D-055), following the W1 sub-steps', () => {
@@ -39,9 +40,9 @@ test('one task sentence at a time (3D-055), following the W1 sub-steps', () => {
   assert.equal(taskFor(snap(1)), '去选品展厅挑 1 件商品');
   assert.equal(taskFor(snap(1), { inside: 'w1' }), '走到展位前，挑 1 件商品');
   assert.equal(taskFor(snap(1), { inside: 'w1', product: 'tech' }), '跟供应商谈谈，选一家');
-  assert.equal(taskFor(snap(1), { inside: 'w1', product: 'tech', supplier: 'fast' }), '从出口离开展厅');
+  assert.equal(taskFor(snap(1), { inside: 'w1', product: 'tech', supplier: 'fast' }), '都选好了，正在前往定价财务室');
   assert.equal(taskFor(snap(2)), '去定价财务室定价与备货');
-  assert.equal(taskFor(snap(6)), '本轮已结算，去荣誉墙展厅看看成就');
+  assert.equal(taskFor(snap(6)), '本轮已结算，去财报结算厅看战报、开启下一轮');
   assert.equal(taskFor(null), '');
 });
 
@@ -169,7 +170,8 @@ test('build output: hooks applied once, world wired locally (no CDN), classic co
     const head = html.slice(0, html.indexOf('</head>'));
     assert.ok(head.includes('data-v3-gate') && head.includes('crossbound-view-mode-v1'), `${file}: pre-paint gate script`);
     assert.ok(head.indexOf('v3/world/boot.js') < html.indexOf('<script type="module">'), 'boot runs before the app module');
-    assert.equal(html.split('className:"v3-mode-toggle"').length - 1, 1, `${file}: 2D header switch`);
+    assert.equal(html.split('className:"v3-campus-3d"').length - 1, 1, `${file}: 3D entry on the campus, left of 园区导览`);
+    assert.ok(!html.includes('v3-mode-toggle'), 'old header entry removed');
   }
   const baseline = fs.readFileSync('src/baseline/index.html', 'utf8');
   for (const anchor of ['function Vse(', 'function R5(', '[Dt,qe]=(0,li.useState)("standard")', '[h,A]=(0,li.useState)("")']) assert.ok(baseline.includes(anchor), `baseline anchor ${anchor}`);

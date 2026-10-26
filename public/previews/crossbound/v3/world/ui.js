@@ -43,6 +43,16 @@ export function createUI(root, { touch }) {
   modeBtn.type = 'button';
   modeBtn.setAttribute('aria-label', '切换到 2D 经典模式');
   modeBtn.hidden = true;
+  // Same 消息提醒 as the 2D campus (总部来电、新成就、售后提醒、可建设…), mirrored into the HUD.
+  const inbox = el('aside', 'v3-inbox', layer);
+  inbox.setAttribute('aria-label', '消息提醒');
+  inbox.hidden = true;
+  const inboxHead = el('button', 'v3-inbox-head', inbox);
+  inboxHead.type = 'button';
+  const inboxList = el('div', 'v3-inbox-list', inbox);
+  let inboxOpen = !matchMedia('(max-width: 760px)').matches, inboxKey = '';   // phones start collapsed
+  inbox.classList.toggle('is-collapsed', !inboxOpen);
+  inboxHead.addEventListener('click', () => { inboxOpen = !inboxOpen; inbox.classList.toggle('is-collapsed', !inboxOpen); inboxHead.setAttribute('aria-expanded', String(inboxOpen)); if (inboxHead.lastChild) inboxHead.lastChild.textContent = inboxOpen ? '收起 −' : '展开 ＋'; });
 
   let onPrompt = null;
   prompt.addEventListener('click', () => onPrompt?.());
@@ -71,6 +81,8 @@ export function createUI(root, { touch }) {
   return {
     stick: vec,
     get busy() { return busy; },
+    // True while buttons are on screen (dialog choices or a screen panel): Enter then belongs to the focused button.
+    get hasChoices() { return !panel.hidden || options.childElementCount > 0; },
     setMoney(cashText, profitText) { cash.textContent = cashText; profit.textContent = profitText || ''; },
     setTask(value) {
       if (value === lastTask) return;
@@ -81,6 +93,31 @@ export function createUI(root, { touch }) {
       task.classList.add('is-new');
     },
     minimap: map,
+    // items: [{ id, title, detail, open(), dismiss?() }]. Returns ids that are new since the last call.
+    setMessages(items) {
+      const key = items.map(m => m.id).join('\n');
+      if (key === inboxKey) return [];
+      const before = new Set(inboxKey ? inboxKey.split('\n') : []);
+      inboxKey = key;
+      inbox.hidden = !items.length;
+      inboxHead.replaceChildren(el('span', '', null, `消息提醒 · ${items.length}`), el('b', '', null, inboxOpen ? '收起 −' : '展开 ＋'));
+      inboxList.replaceChildren();
+      for (const m of items) {
+        const row = el('div', 'v3-inbox-row', inboxList);
+        const open = el('button', 'v3-inbox-link', row);
+        open.type = 'button';
+        el('strong', '', open, m.title);
+        if (m.detail) el('small', '', open, m.detail);
+        open.addEventListener('click', () => m.open());
+        if (m.dismiss) {
+          const x = el('button', 'v3-inbox-x', row, '×');
+          x.type = 'button';
+          x.setAttribute('aria-label', `收起${m.title}`);
+          x.addEventListener('click', () => m.dismiss());
+        }
+      }
+      return items.filter(m => !before.has(m.id)).map(m => m.id);
+    },
     onModeToggle(handler) { modeBtn.hidden = !handler; modeBtn.onclick = handler || null; },
     // 3D-016 prompt above the interactable; touch shows "点一下", desktop shows the E key.
     showPrompt(label, x, y, handler) {
@@ -117,7 +154,7 @@ export function createUI(root, { touch }) {
               b.disabled = !!c.disabled;
               b.addEventListener('click', ev => { ev.stopPropagation(); finish(c.value); });
             }
-            options.querySelector('button:not(:disabled)')?.focus({ preventScroll: true });
+            (options.querySelector('.is-primary:not(:disabled)') || options.querySelector('button:not(:disabled)'))?.focus({ preventScroll: true });
           }
         };
         dialog.onclick = () => {
