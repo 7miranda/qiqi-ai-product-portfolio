@@ -11,6 +11,7 @@ import {
 import { createUI, createSounds } from './ui.js';
 import { buildHub } from './hub.js';
 import { buildShowroom, SUPPLIERS } from './showroom.js';
+import { buildFinance, buildWarehouse } from './rooms.js';
 import { character, lightPillar, PALETTE, disposeTree } from './kit.js';
 
 const WALK = 4.5, RUN = 7;          // 3D-014 m/s
@@ -70,8 +71,9 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
   // Scenes: the hub persists; interiors are rebuilt on entry from the current snapshot.
   const hub = buildHub({ quality: QUALITY[quality] });
   let active = null;
-  let inside = null;          // null = hub, 'w1' = showroom
+  let inside = null;          // null = hub, otherwise the interior id ('w1' / 'w2' / 'w5')
   let transitioning = false;
+  let roomBusy = false;       // W2 / W5 completion animation is playing
   const picks = loadPicks();
 
   function roundKey() { const c = store.snapshot()?.company; return c ? `${c.runSeed}:${c.round}` : null; }
@@ -146,12 +148,22 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
     const products = pickShowcase(s?.options || [], { recommendedId: s?.recommendedId, currentId: picks.product, limit: 15 });
     return buildShowroom({ products, recommendedId: s?.recommendedId, marketId: s?.company?.marketId, marketLabel: s?.market?.name });
   }
+  const buildW2 = () => buildFinance({ snapshot: store.snapshot() });
+  const buildW5 = () => buildWarehouse({ snapshot: store.snapshot() });
+  const ROOM_SPAWN = { x: 0, z: 6.8, yaw: 0 };
+  function localState() { return { inside, ...picks, planned: !!active?.planned }; }
 
   // ---------- Engine bridge ----------
   const engine = {
     act: () => store.snapshot()?.actions,
     async select(id) {
       engine.act()?.select(id);
+      return store.waitFor(s => s.choice?.id === id, 1500);
+    },
+    // Same as clicking the option card: also resets that option's quantity / price / budget defaults.
+    async choose(id) {
+      const a = engine.act();
+      (a?.choose || a?.select)?.(id);
       return store.waitFor(s => s.choice?.id === id, 1500);
     },
     // Commits the current stage with the engine's own validation; closes the classic panel it opens.
@@ -248,7 +260,7 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
   }
 
   async function interact(item) {
-    if (!item || ui.busy || transitioning || held) return;
+    if (!item || ui.busy || transitioning || held || roomBusy) return;
     mark();
     player.reach();
     const s = store.snapshot();
@@ -262,7 +274,11 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
       case 'door': return door(item, states[item.world], stage);
       case 'product': return productStand(item.productId);
       case 'supplier': return supplierTalk(item.supplierId);
-      case 'exit': return leaveShowroom();
+      case 'exit': return inside === 'w1' ? leaveShowroom() : travel(hub, hub.doorFront(inside));
+      case 'lever': return stockLever();
+      case 'console': return financeConsole();
+      case 'finetune': return fineTune();
+      case 'belt': return beltTalk(item.fulfillmentId);
       default: return undefined;
     }
   }
@@ -340,7 +356,7 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
     const s = store.snapshot();
     const first = !hub.talked;
     hub.markTalked();
-    const task = taskFor(s, { inside, ...picks });
+    const task = taskFor(s, localState());
     await ui.talk({ speaker: '接待员 · 小澜', lines: [first ? '欢迎来到总部街区！' : '有需要随时找我。', `现在要做的是：${task}。`, '地上的金色光柱会带你过去。'] });
   }
 
@@ -358,6 +374,12 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
       store.send('world_door_enter', { world: 'w1' });
       enteredAt = performance.now();
       await travel(buildW1(), { x: 0, z: 6.8, yaw: 0 });
+      return;
+    }
+    if ((w.id === 'w2' && stage === 2) || (w.id === 'w5' && stage === 4)) {
+      store.send('world_door_enter', { world: w.id });
+      enteredAt = performance.now();
+      await travel(w.id === 'w2' ? buildW2() : buildW5(), ROOM_SPAWN);
       return;
     }
     if (!BUILT.has(w.id)) {
@@ -442,8 +464,7 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
     await new Promise(r => setTimeout(r, 700));
     transitioning = true;
     await engine.select(picks.product);
-    // W2 isn't built yet: keep the engine's 定价备货 panel it opens after the commit, so play continues straight on.
-    const after = await engine.commit({ keepOpen: !BUILT.has('w2') });
+    const after = await engine.commit();
     if (!after) {
       transitioning = false;
       sound.error();
@@ -453,10 +474,102 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
     await engine.supplier(picks.supplier);
     store.send('world_complete', { world: 'w1', dwell_ms: Math.round(performance.now() - enteredAt) });
     transitioning = false;
-    // 3D-067: completion teleports straight to the next world's door.
-    await travel(hub, hub.doorFront('w2'));
-    complete('选品展厅完成！直接进入定价备货');
-    if (!BUILT.has('w2')) store.send('world_classic_step', { world: 'w2', stage: 2, source: 'auto' });
+    // 3D-067: straight on into the next world.
+    store.send('world_door_enter', { world: 'w2', source: 'auto' });
+    enteredAt = performance.now();
+    await travel(buildW2(), ROOM_SPAWN);
+    complete('选品展厅完成！进入定价财务室');
+  }
+
+  // ---------- W2 定价财务室 (3D-024 ~ 3D-027) ----------
+  async function stockLever() {
+    const s = store.snapshot();
+    if (s?.company?.stage !== 2) return;
+    const list = (s.options || []).map(o => ({ id: o.id, title: o.name, badge: o.preview ? `采购 ${money(-o.preview.cashDelta)}` : '', detail: `${o.summary || ''}${o.preview ? ` 预计利润 ${money(o.preview.profit)}` : ''}`, disabled: o.disabled || o.preview?.affordable === false }));
+    const r = await ui.screen({ kicker: 'STOCK LEVER · 备货拉杆', title: '这一轮备多少货？', body: '没卖完的货结算时按成本退回，但采购会先占用现金。', list, selected: s.choice?.id || s.recommendedId, actions: [{ label: '拉到这一档', value: 'set', primary: true, needsSelection: true }] });
+    if (r?.action !== 'set' || !r.id) return;
+    await engine.choose(r.id);
+    sound.confirm(); refresh();
+  }
+  async function financeConsole() {
+    let s = store.snapshot();
+    if (s?.company?.stage !== 2) return;
+    if (!s.choice?.id) { bubbleAt('先拉动右边的备货拉杆选一档', 4.2, -3, 2.6); return; }
+    // The engine resets the supplier when stage 2 starts; make sure the W1 pick is what gets priced.
+    if (picks.supplier && s.supplier !== picks.supplier) { await engine.supplier(picks.supplier); s = store.snapshot(); }
+    const pv = s.preview || {};
+    const r = await ui.screen({
+      kicker: 'CONSOLE · 中央控制台', title: '确认定价与备货',
+      body: pv.affordable === false ? (pv.supplyBlockedReason || '现金不够，换一档或用面板调整') : '确认后锁定本轮的售价和备货，不能再改。',
+      rows: [['售价', `$${pv.price ?? '-'}`], ['备货', `${pv.quantity ?? '-'} 件`], ['单件成本', `$${pv.unitCost ?? '-'}`], ['采购＋头程', money(-(pv.cashDelta || 0))], ['预计利润', money(pv.profit)]],
+      actions: [{ label: '再想想', value: 'back' }, { label: '确认', value: 'ok', primary: true }],
+    });
+    if (r?.action !== 'ok') return;
+    engine.act()?.commit();
+    if (!await store.waitFor(x => x.company?.stage !== 2, 2500)) { sound.error(); ui.notice(pv.supplyBlockedReason || '这一档暂时买不起，换一档或用面板调整', 3600); }
+  }
+  function fineTune() {
+    ui.notice('在面板里调好售价和数量并确认，会自动回到财务室', 3600);
+    engine.openPanel();
+  }
+
+  // ---------- W5 物流仓 (3D-038 / 3D-040) ----------
+  async function beltTalk(id) {
+    const s = store.snapshot();
+    if (s?.company?.stage !== 4) return;
+    const o = (s.options || []).find(x => x.id === id);
+    if (!o) return;
+    await engine.choose(id); refresh();
+    const pv = o.preview || {};
+    const r = await ui.screen({
+      side: true, kicker: `出货线 · ${o.english || ''}`, title: o.name, body: o.summary || '',
+      rows: [['运费', `$${o.costPerOrder} / 单`], ['时效', `${o.days} 天`], ['退款比例', `${Math.round((o.refundRate || 0) * 100)}%`], ['预计订单', `${pv.orders ?? '-'} 单`], ['预计利润', money(pv.profit)], ['没卖完的货', '结算时按成本退回']],
+      actions: [{ label: '再看看', value: 'back' }, { label: '选这条线发货', value: 'ship', primary: true }],
+    });
+    if (r?.action !== 'ship') return;
+    engine.act()?.commit();
+    if (!await store.waitFor(x => x.company?.stage !== 4, 2500)) { sound.error(); ui.notice('发货前现金不够，先打开面板看看资金方案', 3600); engine.openPanel(); }
+  }
+
+  // Stage changes can come from the world or from the classic panel; both finish the room the same way.
+  let lastStage = store.snapshot()?.company?.stage;
+  function watchStage() {
+    const s = store.snapshot(), stage = s?.company?.stage;
+    if (stage === lastStage) return;
+    const prev = lastStage; lastStage = stage;
+    if (inside === 'w2' && prev === 2 && stage === 3) financeDone(s);
+    if (inside === 'w5' && prev === 4 && stage >= 5) warehouseDone(s);
+  }
+  // The engine opens the next step's panel right after a commit; keep it shut while the room animation plays.
+  function closeNextPanel() { const s = store.snapshot(); if (s?.view) s.actions?.close(); }
+  function frameRoom() { const v = active?.viewSpot; if (!v) return; pos.x = v.x; pos.z = v.z; yaw = v.yaw; facing = v.yaw + Math.PI; zoom = 0; }
+  async function financeDone(s) {
+    roomBusy = true;
+    closeNextPanel();
+    const units = s.company.inventory?.[s.company.productId] || 0;
+    sound.confirm();
+    frameRoom();
+    await active.playStocked(units);
+    store.send('world_complete', { world: 'w2', dwell_ms: Math.round(performance.now() - enteredAt) });
+    complete(`备货已确认：${units} 件，前往商品页工作室`);
+    await new Promise(r => setTimeout(r, 900));
+    roomBusy = false;
+    await travel(hub, hub.doorFront('w3'));
+    openStepPanel(WORLDS.find(w => w.id === 'w3'));
+  }
+  async function warehouseDone(s) {
+    roomBusy = true;
+    closeNextPanel();
+    const report = s.company.report || {};
+    sound.door();
+    frameRoom();
+    await active.playSettlement({ beltId: s.choice?.id || s.company.fulfillmentPlanId, unitsBefore: active.units, returnedUnits: report.stockReturnUnits || 0, returnedCash: report.stockReturn || 0 });
+    store.send('world_complete', { world: 'w5', dwell_ms: Math.round(performance.now() - enteredAt) });
+    complete(report.stockReturn ? `已发货 ${report.orders ?? ''} 单，未售出 ${report.stockReturnUnits} 件按成本退回 ${money(report.stockReturn)}` : `已发货 ${report.orders ?? ''} 单`);
+    await new Promise(r => setTimeout(r, 1200));
+    roomBusy = false;
+    await travel(hub, hub.doorFront('w6'));
+    openStepPanel(WORLDS.find(w => w.id === 'w6'));
   }
 
   function complete(message) {   // 3D-057: gold flash + chime + task update
@@ -477,9 +590,9 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
     if (!s?.company) return;
     states = doorStates(s);
     hub.update(states);
-    if (active && active !== hub) active.update(picks);
+    if (active && active !== hub) active.update(picks, s);
     ui.setMoney(money(s.company.cash), s.profitText ? `本轮利润 ${s.profitText}` : '本轮利润 待结算');
-    ui.setTask(taskFor(s, { inside, ...picks }));
+    ui.setTask(taskFor(s, localState()));
     const target = currentTarget();
     pillar.visible = !!target;
     if (target) pillar.position.set(target.x, 0, target.z);
@@ -487,11 +600,11 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
   function currentTarget() {
     const s = store.snapshot();
     if (!s?.company) return null;
-    if (inside === 'w1') return active.targetFor(picks);
+    if (inside) return active.targetFor(picks);
     const world = currentWorld(s);
     return hub.targetFor(world === 'hub' ? 'map' : `door:${world}`);
   }
-  const unsubscribe = store.subscribe(() => refresh());
+  const unsubscribe = store.subscribe(() => { refresh(); watchStage(); if (roomBusy) closeNextPanel(); });
   ui.onModeToggle(() => { if (!transitioning) store.switchMode('2d', 'hud'); });
 
   // ---------- Input ----------
@@ -608,7 +721,7 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
       store.send('world_quality_down', { quality: q });
     }
     const t = clock.getElapsedTime();
-    const paused = ui.busy || store.dialogOpen || transitioning || !!held;
+    const paused = ui.busy || store.dialogOpen || transitioning || !!held || roomBusy;
 
     // Movement relative to the camera (3D-014).
     let f = 0, r = 0;
@@ -654,7 +767,7 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
     // 3D-058: 60 s without activity → receptionist pages a hint, at most twice per round.
     if (!paused && now - lastActivity > 60000 && idleHints < 2) {
       idleHints++; lastActivity = now;
-      ui.bubble(`接待员：${taskFor(store.snapshot(), { inside, ...picks })}，跟着金色光柱走`);
+      ui.bubble(`接待员：${taskFor(store.snapshot(), localState())}，跟着金色光柱走`);
     }
     if (now - saveTimer > 1000) { saveTimer = now; saveSpot(); }
     if (now - inboxTimer > 500) { inboxTimer = now; syncInbox(); }
@@ -684,7 +797,8 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
   // Start: restore the saved spot (B-003), otherwise spawn by engine stage (3D-011 / 3D-079).
   applyQuality(quality);
   const spot = restore ? restoreSpot(readJSON(STATE_KEY), store.snapshot()) : null;
-  if (spot?.scene === 'w1') { hub.update(doorStates(store.snapshot())); setScene(buildW1(), spot); enteredAt = performance.now(); }
+  const interiors = { w1: buildW1, w2: buildW2, w5: buildW5 };
+  if (interiors[spot?.scene]) { hub.update(doorStates(store.snapshot())); setScene(interiors[spot.scene](), spot); enteredAt = performance.now(); }
   else setScene(hub, spot || spawnPoint());
   player.root.rotation.y = facing;
   // Compile shaders up front so the first frame isn't a stall.
@@ -693,7 +807,7 @@ export function mountWorld({ store, quality: initialQuality, restore = true }) {
 
   // Test / QA hooks (read-only state + teleport); harmless in production.
   window.CrossboundWorld = {
-    get state() { return { scene: active?.id, pos: { ...pos }, picks: { ...picks }, quality, comfort: { ...comfort }, held: held ? { id: held.stand.p.id, phase: held.phase, open: held.open } : null, focus: focus?.id || null, task: taskFor(store.snapshot(), { inside, ...picks }), states, frames: rendered }; },
+    get state() { return { scene: active?.id, pos: { ...pos }, picks: { ...picks }, quality, comfort: { ...comfort }, held: held ? { id: held.stand.p.id, phase: held.phase, open: held.open } : null, focus: focus?.id || null, task: taskFor(store.snapshot(), localState()), states, frames: rendered, roomBusy }; },
     teleport(x, z) { pos.x = x; pos.z = z; },
     interact: () => interact(focus),
     interactWith: id => interact(active.interactables.find(i => i.id === id)),
