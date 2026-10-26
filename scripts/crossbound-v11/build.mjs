@@ -5,15 +5,17 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
+// Hash text with normalised line endings so Windows CRLF checkouts produce the same asset versions.
+const read = file => fs.readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
 const folder = 'public/previews/crossbound';
 const marker = '/* Crossbound v1.1 bridge */';
 // Refresh edited UI assets even when the browser retains a cached module.
-const uiVersion = createHash('sha256').update(fs.readFileSync(path.join(root, folder, 'v11/ui.js'))).digest('hex').slice(0, 10);
-const cssVersion = createHash('sha256').update(fs.readFileSync(path.join(root, folder, 'v11/styles.css'))).digest('hex').slice(0, 10);
-const v2Version = createHash('sha256').update(['../v11/balance.js','../v11/model.js','../v11/growth.js','core.js','model.js','catalog.js','progress.js','ui.js','release.js','release-ui.js','records.js','questionnaire.js','tutorial.js','walkthrough.js','styles.css'].map(f=>fs.readFileSync(path.join(root,folder,'v2',f))).join('')).digest('hex').slice(0,10);
+const uiVersion = createHash('sha256').update(read(path.join(root, folder, 'v11/ui.js'))).digest('hex').slice(0, 10);
+const cssVersion = createHash('sha256').update(read(path.join(root, folder, 'v11/styles.css'))).digest('hex').slice(0, 10);
+const v2Version = createHash('sha256').update(['../v11/balance.js','../v11/model.js','../v11/growth.js','core.js','model.js','catalog.js','progress.js','ui.js','release.js','release-ui.js','records.js','questionnaire.js','tutorial.js','walkthrough.js','styles.css'].map(f=>read(path.join(root,folder,'v2',f))).join('')).digest('hex').slice(0,10);
 // REQ-051 walkable world (3D 方案 v2): own version hash so world edits refresh without touching v1.1/v2 caches.
-const worldFiles = ['logic.js','kit.js','ui.js','hub.js','showroom.js','world.js','boot.js','world.css'].map(f => `v3/world/${f}`).concat(['vendor/three/three.module.min.js','vendor/three/three.core.min.js']);
-const worldVersion = createHash('sha256').update(worldFiles.map(f=>fs.readFileSync(path.join(root,folder,f))).join('')).digest('hex').slice(0,10);
+const worldFiles = ['logic.js','kit.js','ui.js','hub.js','showroom.js','products.js','world.js','boot.js','world.css'].map(f => `v3/world/${f}`).concat(['vendor/three/three.module.min.js','vendor/three/three.core.min.js']);
+const worldVersion = createHash('sha256').update(worldFiles.map(f=>read(path.join(root,folder,f))).join('')).digest('hex').slice(0,10);
 const encode = text => text.replace(/[\u0080-\uFFFF]/g, c => '\\u' + c.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0'));
 function replaceOne(source, from, to, label = from.slice(0, 80)) {
   const count = source.split(from).length - 1;
@@ -56,7 +58,7 @@ function patchMain(s) {
   once('function hu(){', 'function hu(){if(v11Flow.active)v11Flow.finish();');
   once('onClick:()=>u("progress"),children:"'+encode('成长奖励')+'"', 'onClick:()=>u("progress"),children:v11HQ?"公司总部 · "+v11HQ:"公司总部"');
   const tutorial = 'o&&!n&&!ms&&(0,re.jsx)(Ge,{variant:"outline",className:"company-tutorial-entry"';
-  once(tutorial, 'o&&!n&&!l&&(0,re.jsx)(V11UI.Cockpit,{company:t,ops:r,preview:pr,onOpen:nr,onBuild:()=>u("progress"),onTask:As}),(0,re.jsxs)(Ge,{variant:"outline",className:"v11-header-achievements",onClick:v11OpenAchievements,children:["出海成就",v11Achievements.unread.length>0&&(0,re.jsx)("span",{className:"v11-new-dot",children:"●"})]}),o&&!n&&(0,re.jsx)(Ge,{variant:"outline",className:"company-tutorial-entry"');
+  once(tutorial, 'o&&!n&&!l&&(0,re.jsx)(V11UI.Cockpit,{company:t,ops:r,preview:pr,onOpen:nr,onBuild:()=>u("progress"),onTask:As}),(0,re.jsxs)(Ge,{variant:"outline",className:"v11-header-achievements",onClick:v11OpenAchievements,children:["出海成就",v11Achievements.unread.length>0&&(0,re.jsx)("span",{className:"v11-new-dot",children:"●"})]}),o&&!n&&window.CrossboundView?.dualMode&&(0,re.jsx)(Ge,{variant:"outline",className:"v3-mode-toggle","aria-label":"切换到 3D 世界",onClick:()=>window.CrossboundView.switchMode("3d"),children:"3D 世界"}),o&&!n&&(0,re.jsx)(Ge,{variant:"outline",className:"company-tutorial-entry"');
   s = replaceElement(s, 'campus-world', original => original.replace('children:', 'children:[!l&&(0,re.jsx)(V11UI.NotificationDock,{company:t,ops:r,unread:v11Achievements.unread,onAchievements:v11OpenAchievements,onTask:As,onHQ:()=>u("progress")}),') .replace(/\}\)$/, ']} )'));
   once('(0,re.jsx)(Vse,{currentStepLabel:', '(0,re.jsx)(Vse,{headquartersStatus:v11HQ,currentStepLabel:');
   once('function vS(Te){', 'function vS(Te){if(Te==="headquarters"){d(Te);u("progress");return}');
@@ -124,7 +126,7 @@ function patchMain(s) {
   once('!l&&(0,re.jsx)(V11UI.NotificationDock,', '!l&&(0,re.jsx)(V2UI.Tutorial,{guide:v4Guide,company:t}),!l&&(0,re.jsx)(V11UI.NotificationDock,');
   // REQ-051 patch 2/2: after each render, publish a snapshot plus the engine's own actions for the 3D world.
   // The world only selects options and calls the original commit (cr); forecasts go out pre-formatted as ranges.
-  once('ji=!!l;const v11Flow=', 'ji=!!l;(0,li.useEffect)(()=>{window.CrossboundView?.publish?.({inBusiness:!!(o&&!n),company:t,research:r.research,level:qi,stage:Et,settled:ms,view:l,options:La,choice:Ia||null,market:ec||null,recommendedId:(()=>{try{return recommend(V11,t)?.choice?.id??null}catch{return null}})(),supplier:Dt,quotes:id=>{const p=Zn.find(x=>x.id===id);return p?R5(p):[]},preview:pr,profitText:ms?(t.report?ps(t.report.profit,!0):null):pr?V11UI.range(pr,"profit",true):null,actions:{select:A,setSupplier:qe,commit:cr,open:()=>u(ms?"complete":"decision"),close:()=>u(null),panel:u}})});const v11Flow=');
+  once('ji=!!l;const v11Flow=', 'ji=!!l;(0,li.useLayoutEffect)(()=>{window.CrossboundView?.publish?.({inBusiness:!!(o&&!n),company:t,research:r.research,level:qi,stage:Et,settled:ms,view:l,options:La,choice:Ia||null,market:ec||null,recommendedId:(()=>{try{return recommend(V11,t)?.choice?.id??null}catch{return null}})(),supplier:Dt,quotes:id=>{const p=Zn.find(x=>x.id===id);return p?R5(p):[]},preview:pr,profitText:ms?(t.report?ps(t.report.profit,!0):null):pr?V11UI.range(pr,"profit",true):null,actions:{select:A,setSupplier:qe,commit:cr,open:()=>u(ms?"complete":"decision"),close:()=>u(null),panel:u}})});const v11Flow=');
   return s;
 }
 
@@ -185,8 +187,11 @@ for (const file of ['index.html', 'preview.html']) {
   const imports = Object.fromEntries(['v11','v2'].flatMap(dir => fs.readdirSync(path.join(root,folder,dir)).filter(name=>name.endsWith('.js')).map(name=>[`./${dir}/${name}`,`./${dir}/${name}?v=${v2Version}`])));
   for (const name of worldFiles.filter(f => f.startsWith('v3/') && f.endsWith('.js'))) imports[`./${name}`] = `./${name}?v=${worldVersion}`;
   imports.three = `./vendor/three/three.module.min.js?v=${worldVersion}`;
-  html = html.replace('<head>', `<head>\n<script src="./runtime-config.js"></script>\n<script type="importmap">${JSON.stringify({imports})}</script>`);
-  html = html.replace('</head>', `<link rel="stylesheet" href="./v11/styles.css?v=${cssVersion}">\n<link rel="stylesheet" href="./v2/styles.css?v=${v2Version}">\n<link rel="stylesheet" href="./v3/world/world.css?v=${worldVersion}">\n<script type="module" src="./v3/world/boot.js?v=${worldVersion}"></script>\n</head>`);
+  // REQ-051 B-001/B-002: decide 3D vs 2D synchronously before the first paint. A returning 3D player with a save
+  // gets the loading gate immediately and skips the lobby (?start=1), so no flat UI flashes on refresh.
+  const worldGate = `<script>(function(){try{var q=new URLSearchParams(location.search),o=q.get("world"),f=(o==="on"||o==="off")?o:(window.CROSSBOUND_WORLD||"off");if(f!=="on"&&f!=="split")return;var s=localStorage;if(f==="split"&&s.getItem("crossbound-world-variant-v1")!=="world")return;if(s.getItem("crossbound-view-mode-v1")!=="3d"||!s.getItem("crossbound-company-v1"))return;var c=document.createElement("canvas");if(!(c.getContext("webgl2")||c.getContext("webgl")))return;document.documentElement.setAttribute("data-v3-gate","boot");if(q.get("start")!=="1"){q.set("start","1");history.replaceState(history.state,"",location.pathname+"?"+q.toString()+location.hash);}}catch(e){}})();</script>`;
+  html = html.replace('<head>', `<head>\n<script src="./runtime-config.js"></script>\n${worldGate}\n<script type="importmap">${JSON.stringify({imports})}</script>\n<link rel="stylesheet" href="./v3/world/world.css?v=${worldVersion}">\n<script type="module" src="./v3/world/boot.js?v=${worldVersion}"></script>`);
+  html = html.replace('</head>', `<link rel="stylesheet" href="./v11/styles.css?v=${cssVersion}">\n<link rel="stylesheet" href="./v2/styles.css?v=${v2Version}">\n</head>`);
   fs.writeFileSync(path.join(root, relative), html);
   console.log(`${file}: v1.1 integrated; original campus and dialog layout retained.`);
 }

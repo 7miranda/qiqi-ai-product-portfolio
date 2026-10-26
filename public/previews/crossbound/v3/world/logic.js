@@ -3,8 +3,77 @@
 
 export const MODES = ['off', 'on', 'split'];
 export const VARIANT_KEY = 'crossbound-world-variant-v1';
-export const CLASSIC_KEY = 'crossbound-world-classic-v1';
+export const CLASSIC_KEY = 'crossbound-world-classic-v1';   // P0 opt-out flag, migrated to MODE_KEY = '2d'
 export const QUALITY_KEY = 'crossbound-world-quality-v1';
+export const MODE_KEY = 'crossbound-view-mode-v1';          // '3d' | '2d' (M-001: remembered choice)
+export const STATE_KEY = 'crossbound-world-state-v1';       // 3D-078/080: scene + position per round
+export const COMFORT_KEY = 'crossbound-world-comfort-v1';   // M-006
+export const PICKS_KEY = 'crossbound-world-w1-v1';          // W1 product/supplier picks per round
+export const SAVE_KEY = 'crossbound-company-v1';            // engine save written by the original game
+
+// M-001 / M-007 / B-002: decide the view before the first frame.
+// Returns { choose: show the choice screen, mode: '3d' | '2d', autoStart: skip the lobby into the business view }.
+export function decideMode({ dual, stored, legacyClassic = false, hasSave = false, webgl = true }) {
+  if (!dual || !webgl) return { choose: false, mode: '2d', autoStart: false };
+  const mode = stored === '3d' || stored === '2d' ? stored : legacyClassic ? '2d' : null;
+  if (!mode) return { choose: true, mode: null, autoStart: false };
+  return { choose: false, mode, autoStart: mode === '3d' && hasSave };
+}
+
+// M-007: recommend (never force) 2D on weak devices or when the probe measures < 30 fps.
+export function recommend2D({ fps, quality }) {
+  return (Number.isFinite(fps) && fps < 30) || quality === 'low';
+}
+
+// M-006 comfort settings with clamped values.
+export const COMFORT_DEFAULTS = Object.freeze({ sensitivity: 50, headBob: false, fov: 55 });
+export function comfortFrom(raw) {
+  const c = { ...COMFORT_DEFAULTS, ...(raw && typeof raw === 'object' ? raw : {}) };
+  return {
+    sensitivity: Math.max(10, Math.min(100, Math.round(Number(c.sensitivity) || 50))),
+    headBob: c.headBob === true,
+    fov: Math.max(55, Math.min(75, Math.round(Number(c.fov) || 55))),
+  };
+}
+
+// B-003: restore the saved scene/position only for the same run+round and a scene that is still valid.
+export function restoreSpot(saved, snapshot) {
+  const c = snapshot?.company;
+  if (!saved || !c || saved.key !== `${c.runSeed}:${c.round}`) return null;
+  if (!Number.isFinite(saved.x) || !Number.isFinite(saved.z)) return null;
+  if (saved.scene === 'w1' && currentWorld(snapshot) !== 'w1') return null;
+  if (saved.scene !== 'hub' && saved.scene !== 'w1') return null;
+  return { scene: saved.scene, x: saved.x, z: saved.z, yaw: Number.isFinite(saved.yaw) ? saved.yaw : 0 };
+}
+
+// F-001: recognisable model archetype from the catalog entry. Order matters (most specific first).
+const ARCHETYPES = [
+  ['earbuds', /耳机|EARBUD|HEADPHONE/],
+  ['speaker', /音箱|SPEAKER/],
+  ['fan', /风扇|桌扇|DESK FAN|DESK AIR/],
+  ['powerbank', /POWER BANK|移动电源/],
+  ['table', /\bTABLES?\b|TRAY|ISLAND|茶几|餐桌|餐台|边几/],
+  ['organizer', /ORGANIZER|收纳套装|EVERYDAY READY/],
+  ['care', /CARE SET|个护/],
+  ['bottle', /TUMBLER|BOTTLE|杯/],
+  ['charger', /POWER KIT|POWER DOCK|快充|充电/],
+  ['mirror', /MIRROR|VANITY|镜/],
+  ['bed', /\bBED\b|SLEEP|床/],
+  ['desk', /DESK(?! LIGHT)|WORKSTATION|\bPOD\b|工位|工作台|拼装台/],
+  ['bench', /BENCH|长凳/],
+  ['lamp', /\bLIGHT\b|LAMP|灯/],
+  ['chair', /CHAIR|ROCKER|椅/],
+  ['sofa', /SOFA|LOUNGE|沙发/],
+  ['canopy', /CANOPY|遮阳/],
+  ['plant', /GROW STATION|种植/],
+  ['cart', /\bCART\b|推车/],
+  ['cabinet', /CABINET|SHELF|BOOKCASE|SIDEBOARD|WARDROBE|STORAGE|STATION|DOCK|RACK|WALL|柜|架/],
+];
+export function archetypeFor(product) {
+  const text = `${product?.name || ''} ${product?.english || ''} ${product?.baseCategory || ''}`.toUpperCase();
+  for (const [kind, re] of ARCHETYPES) if (re.test(text)) return kind;
+  return 'parcel';
+}
 
 // Seven interior worlds (3D 方案 v2 §3). `stages` are the engine stages each world completes.
 export const WORLDS = Object.freeze([
@@ -48,10 +117,11 @@ export function qualityFor({ webgl = true, coarse = false, memory, cores, width 
   if (coarse || width < 1024) return { quality: 'mid', classic: false, reason: null };
   return { quality: 'high', classic: false, reason: null };
 }
+// 3D-074 (revised 2026-10-25): no weather; tiers scale neon glow instead of rain.
 export const QUALITY = Object.freeze({
-  high: { shadows: true, rain: 1, pixelRatio: 1 },
-  mid: { shadows: false, rain: 0.5, pixelRatio: 0.9 },
-  low: { shadows: false, rain: 0, pixelRatio: 0.75 },
+  high: { shadows: true, glow: 1, pixelRatio: 1 },
+  mid: { shadows: false, glow: 0.5, pixelRatio: 0.9 },
+  low: { shadows: false, glow: 0, pixelRatio: 0.75 },
 });
 export function downgrade(quality) { return quality === 'high' ? 'mid' : 'low'; }
 

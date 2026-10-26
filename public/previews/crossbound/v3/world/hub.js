@@ -72,7 +72,7 @@ export function buildHub({ quality }) {
   interactables.push({ id: 'map', kind: 'map', x: -6, z: -3.1, y: 2.6, label: '使用世界地图终端', setHighlight: mapK.highlight });
   const helpK = kiosk(7, -4, P.lime, '帮助终端', '经营逻辑卡');
   interactables.push({ id: 'help', kind: 'help', x: 7, z: -3.1, y: 2.6, label: '查看帮助终端', setHighlight: helpK.highlight });
-  const setK = kiosk(-15, -10.6, P.violet, '设置终端', '画质 · 经典模式');
+  const setK = kiosk(-15, -10.6, P.violet, '设置终端', '画质 · 模式 · 舒适度');
   interactables.push({ id: 'settings', kind: 'settings', x: -15, z: -9.7, y: 2.6, label: '打开设置终端', setHighlight: setK.highlight });
 
   // Receptionist NPC at the HQ door (3D-011: within 3 m of the spawn).
@@ -134,30 +134,24 @@ export function buildHub({ quality }) {
     }
   });
 
-  // Rain (3D-070): streaks, scaled by quality; low turns it off.
-  const rainCount = Math.round(1600 * (quality?.rain ?? 1));
-  let rain = null;
-  if (rainCount > 0) {
-    const pos = new Float32Array(rainCount * 6);
-    for (let i = 0; i < rainCount; i++) {
-      const x = (Math.random() - 0.5) * 60, y = Math.random() * 14, z = -16 + Math.random() * 26;
-      pos.set([x, y, z, x + 0.03, y - 0.45, z], i * 6);
-    }
-    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    rain = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ color: 0x9fc6ff, transparent: true, opacity: 0.35, toneMapped: false }));
-    group.add(rain);
-    ticks.push((t, dt) => {
-      const a = geo.attributes.position.array;
-      for (let i = 0; i < a.length; i += 6) { a[i + 1] -= 16 * dt; a[i + 4] -= 16 * dt; if (a[i + 4] < 0) { a[i + 1] += 14; a[i + 4] += 14; } }
-      geo.attributes.position.needsUpdate = true;
-    });
+  // 3D-070: no weather. 3D-074: quality tiers scale neon glow halos instead (high 1 · mid .5 · low 0).
+  const halos = [];
+  const haloMat = color => new THREE.SpriteMaterial({ map: puddleTex, color, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
+  for (const [x, z] of lampSpots) { const h = new THREE.Sprite(haloMat(z < 0 ? P.cyan : P.magenta)); h.position.set(x, 4.6, z); h.scale.set(3, 3, 1); group.add(h); halos.push({ h, base: 0.55 }); }
+  [[0, 7.2, P.cyan, 14, 4]].forEach(([x, y, color, w, hgt]) => { const h = new THREE.Sprite(haloMat(color)); h.position.set(x, y, FACADE_Z + 0.4); h.scale.set(w, hgt, 1); group.add(h); halos.push({ h, base: 0.4 }); });
+  const puddles = group.children.filter(o => o.material?.map === puddleTex && !o.isSprite);
+  function setGlow(level) {
+    for (const { h, base } of halos) { h.material.opacity = base * level; h.visible = level > 0; }
+    for (const p of puddles) p.material.opacity = 0.08 + 0.14 * level;
   }
+  setGlow(quality?.glow ?? 1);
 
   let talked = false;
   return {
     id: 'hub', group, boxes, circles, occluders, interactables,
     spawn: { x: 0, z: -8, yaw: 0 },
     camera: { distance: 6 },
+    setGlow,
     // Far enough back that the door's name plate and status light stay in frame (still within 2.5 m reach).
     doorFront(worldId) { const d = doors[worldId]; return { x: d.x, z: d.z + 2.2, yaw: 0 }; },
     targetFor(id) {

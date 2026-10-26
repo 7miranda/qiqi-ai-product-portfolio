@@ -38,6 +38,11 @@ export function createUI(root, { touch }) {
   const fadeEl = el('div', 'v3-fade', layer);
   const stick = el('div', 'v3-stick', layer);
   const knob = el('i', '', stick);
+  // M-002: always-visible mode switch in the top bar.
+  const modeBtn = el('button', 'v3-mode-pill', layer, '▤ 2D 经典');
+  modeBtn.type = 'button';
+  modeBtn.setAttribute('aria-label', '切换到 2D 经典模式');
+  modeBtn.hidden = true;
 
   let onPrompt = null;
   prompt.addEventListener('click', () => onPrompt?.());
@@ -76,6 +81,7 @@ export function createUI(root, { touch }) {
       task.classList.add('is-new');
     },
     minimap: map,
+    onModeToggle(handler) { modeBtn.hidden = !handler; modeBtn.onclick = handler || null; },
     // 3D-016 prompt above the interactable; touch shows "点一下", desktop shows the E key.
     showPrompt(label, x, y, handler) {
       if (!label) { prompt.hidden = true; onPrompt = null; return; }
@@ -125,6 +131,8 @@ export function createUI(root, { touch }) {
       busy = true; layer.classList.add('is-busy');
       return new Promise(resolve => {
         let selected = spec.selected ?? null;
+        const values = { ...(spec.values || {}) };
+        panel.classList.toggle('is-side', !!spec.side);
         const finish = value => { clearPanel(); busy = false; layer.classList.remove('is-busy'); closeActive = null; resolve(value); };
         closeActive = () => finish({ action: null, id: selected });
         const draw = () => {
@@ -150,11 +158,28 @@ export function createUI(root, { touch }) {
               b.addEventListener('click', () => { selected = item.id; draw(); });
             }
           }
+          // M-006 fields: { id, type: 'range' | 'toggle', label, min, max, step, unit }; live changes go to spec.onChange.
+          if (spec.fields?.length) {
+            const box = el('div', 'v3-fields', panel);
+            for (const f of spec.fields) {
+              const row = el('label', `v3-field is-${f.type}`, box);
+              el('span', '', row, f.label);
+              const input = el('input', '', row);
+              if (f.type === 'toggle') {
+                input.type = 'checkbox'; input.checked = !!values[f.id];
+                input.addEventListener('change', () => { values[f.id] = input.checked; spec.onChange?.({ ...values }); });
+              } else {
+                input.type = 'range'; Object.assign(input, { min: f.min, max: f.max, step: f.step || 1 }); input.value = values[f.id];
+                const out = el('output', '', row, `${values[f.id]}${f.unit || ''}`);
+                input.addEventListener('input', () => { values[f.id] = Number(input.value); out.textContent = `${values[f.id]}${f.unit || ''}`; spec.onChange?.({ ...values }); });
+              }
+            }
+          }
           const actions = el('div', 'v3-actions', panel);
           for (const a of spec.actions || []) {
             const b = el('button', `v3-btn${a.primary ? ' is-primary' : ''}`, actions, a.label);
             b.disabled = a.needsSelection && !selected;
-            b.addEventListener('click', () => finish({ action: a.value, id: selected }));
+            b.addEventListener('click', () => finish({ action: a.value, id: selected, values: { ...values } }));
           }
           (actions.querySelector('.is-primary:not(:disabled)') || close).focus({ preventScroll: true });
         };

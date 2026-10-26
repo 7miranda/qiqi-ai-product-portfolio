@@ -6,6 +6,7 @@ import { execFileSync } from 'node:child_process';
 import {
   WORLDS, BUILT, parseMode, variantFor, qualityFor, QUALITY, downgrade, createFpsMonitor,
   currentWorld, doorStates, taskFor, resolveCollisions, nearestInteractable, pickShowcase, fitStars,
+  decideMode, recommend2D, comfortFrom, COMFORT_DEFAULTS, restoreSpot, archetypeFor,
 } from '../public/previews/crossbound/v3/world/logic.js';
 
 const folder = 'public/previews/crossbound';
@@ -91,7 +92,8 @@ test('quality tiers (3D-074): only missing WebGL forces classic; <45 fps for 5 s
   assert.equal(qualityFor({ coarse: true, width: 390 }).quality, 'mid');
   assert.equal(qualityFor({ cores: 2 }).quality, 'low');
   assert.equal(qualityFor({ stored: 'low', width: 1440 }).quality, 'low', 'player choice wins');
-  assert.deepEqual(QUALITY.low, { shadows: false, rain: 0, pixelRatio: 0.75 });
+  assert.deepEqual(QUALITY.low, { shadows: false, glow: 0, pixelRatio: 0.75 }, '3D-070/074: no weather; tiers scale neon glow');
+  assert.ok(QUALITY.high.glow > QUALITY.mid.glow && QUALITY.mid.glow > QUALITY.low.glow);
   assert.equal(downgrade('high'), 'mid');
   const fps = createFpsMonitor();
   let fired = false;
@@ -101,6 +103,55 @@ test('quality tiers (3D-074): only missing WebGL forces classic; <45 fps for 5 s
   let quiet = true;
   for (let t = 0; t <= 6000; t += 16) if (ok(t, 16)) quiet = false;
   assert.ok(quiet);
+});
+
+test('dual mode (M-001/M-007, B-002): first visit chooses, remembered choice skips the lobby only for 3D with a save', () => {
+  assert.deepEqual(decideMode({ dual: true, stored: null }), { choose: true, mode: null, autoStart: false }, 'no preselection');
+  assert.deepEqual(decideMode({ dual: true, stored: '3d', hasSave: true }), { choose: false, mode: '3d', autoStart: true });
+  assert.deepEqual(decideMode({ dual: true, stored: '3d', hasSave: false }), { choose: false, mode: '3d', autoStart: false });
+  assert.deepEqual(decideMode({ dual: true, stored: '2d', hasSave: true }), { choose: false, mode: '2d', autoStart: false });
+  assert.equal(decideMode({ dual: true, stored: null, legacyClassic: true }).mode, '2d', 'P0 classic opt-out migrates to 2D');
+  assert.equal(decideMode({ dual: false, stored: '3d', hasSave: true }).mode, '2d', 'flag off → 2D only');
+  assert.equal(decideMode({ dual: true, stored: '3d', hasSave: true, webgl: false }).mode, '2d', 'no WebGL → 2D');
+  assert.equal(recommend2D({ fps: 24, quality: 'high' }), true);
+  assert.equal(recommend2D({ fps: 58, quality: 'low' }), true);
+  assert.equal(recommend2D({ fps: 60, quality: 'mid' }), false);
+  assert.equal(recommend2D({ fps: null, quality: 'high' }), false, 'unknown fps never forces a recommendation');
+});
+
+test('comfort settings (M-006): sensitivity 50%, head bob off, FOV clamped to 55–75', () => {
+  assert.deepEqual(COMFORT_DEFAULTS, { sensitivity: 50, headBob: false, fov: 55 });
+  assert.deepEqual(comfortFrom(null), COMFORT_DEFAULTS);
+  assert.deepEqual(comfortFrom({ sensitivity: 400, headBob: 'yes', fov: 120 }), { sensitivity: 100, headBob: false, fov: 75 });
+  assert.equal(comfortFrom({ fov: 40 }).fov, 55);
+  assert.equal(comfortFrom({ headBob: true }).headBob, true);
+});
+
+test('refresh restore (B-003): same run + round only, interiors only while their stage is current', () => {
+  const s = { company: { runSeed: 7, round: 2, stage: 1 } };
+  assert.deepEqual(restoreSpot({ key: '7:2', scene: 'w1', x: 3, z: 4, yaw: 0.5 }, s), { scene: 'w1', x: 3, z: 4, yaw: 0.5 });
+  assert.equal(restoreSpot({ key: '7:1', scene: 'hub', x: 1, z: 1 }, s), null, 'older round');
+  assert.equal(restoreSpot({ key: '7:2', scene: 'w1', x: 3, z: 4 }, { company: { runSeed: 7, round: 2, stage: 2 } }), null, 'W1 already done');
+  assert.equal(restoreSpot({ key: '7:2', scene: 'hub', x: NaN, z: 1 }, s), null);
+  assert.equal(restoreSpot({ key: '7:2', scene: 'w9', x: 1, z: 1 }, s), null);
+  assert.equal(restoreSpot({ key: '7:2', scene: 'hub', x: 1, z: 1 }, s).yaw, 0);
+});
+
+test('product models (F-001): every catalog product maps to a recognisable archetype, none fall back to a parcel', () => {
+  const t = fs.readFileSync('src/baseline/index.html', 'utf8');
+  const dec = s => s.replace(/\\u([0-9a-fA-F]{4})/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
+  const products = [];
+  for (const m of t.matchAll(/\{id:"([\w-]+)",name:"([^"]+)",english:"([^"]+)",category:"(\w+)"/g)) products.push({ name: dec(m[2]), english: m[3] });
+  for (const m of t.matchAll(/Ln\("([\w-]+)","([^"]+)","([^"]+)","(\w+)","([^"]*)"/g)) products.push({ name: dec(m[2]), english: m[3], baseCategory: dec(m[5]) });
+  assert.equal(products.length, 100);
+  const kinds = products.map(archetypeFor);
+  assert.ok(!kinds.includes('parcel'), products.filter(p => archetypeFor(p) === 'parcel').map(p => p.name).join('、'));
+  assert.ok(new Set(kinds).size >= 18, 'enough variety to tell products apart');
+  assert.equal(archetypeFor({ name: '降噪无线耳机', english: 'NOISE CANCELLING EARBUDS' }), 'earbuds');
+  assert.equal(archetypeFor({ name: '桌面循环风扇', english: 'DESK FAN' }), 'fan');
+  assert.equal(archetypeFor({ name: '可调光桌灯', english: 'DIMMABLE DESK LIGHT' }), 'lamp', 'DESK LIGHT is a lamp, not a desk');
+  const src = fs.readFileSync(`${folder}/v3/world/products.js`, 'utf8');
+  for (const kind of new Set(kinds)) assert.match(src, new RegExp(`\\n  ${kind}\\(c\\) \\{`), `builder for ${kind}`);
 });
 
 test('build output: hooks applied once, world wired locally (no CDN), classic coach hidden in world', () => {
@@ -113,6 +164,12 @@ test('build output: hooks applied once, world wired locally (no CDN), classic co
     const map = html.match(/<script type="importmap">([\s\S]*?)<\/script>/)[1];
     assert.match(map, /"three":"\.\/vendor\/three\/three\.module\.min\.js\?v=[0-9a-f]{10}"/);
     assert.ok(!/https?:/.test(map), 'import map stays same-origin');
+    // B-001/B-002: snapshot published before paint; mode decided in a blocking head script before the app module.
+    assert.match(html, /\(0,li\.useLayoutEffect\)\(\(\)=>\{window\.CrossboundView\?\.publish\?\.\(/);
+    const head = html.slice(0, html.indexOf('</head>'));
+    assert.ok(head.includes('data-v3-gate') && head.includes('crossbound-view-mode-v1'), `${file}: pre-paint gate script`);
+    assert.ok(head.indexOf('v3/world/boot.js') < html.indexOf('<script type="module">'), 'boot runs before the app module');
+    assert.equal(html.split('className:"v3-mode-toggle"').length - 1, 1, `${file}: 2D header switch`);
   }
   const baseline = fs.readFileSync('src/baseline/index.html', 'utf8');
   for (const anchor of ['function Vse(', 'function R5(', '[Dt,qe]=(0,li.useState)("standard")', '[h,A]=(0,li.useState)("")']) assert.ok(baseline.includes(anchor), `baseline anchor ${anchor}`);
