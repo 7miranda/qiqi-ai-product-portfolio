@@ -4,6 +4,18 @@
 
 ---
 
+## 0. 2026-10-26 之后的现状（以本节为准，下文第 2–4、7 节的行走 / 双模式描述已过时）
+
+- **单模式 2.5D**（REQ-053 P1）：园区就是总部地图，点当前步骤的楼进全屏场景。行走街区、小人、双模式选择页、加载门已删除。
+- **文件**（`public/previews/crossbound/v3/world/`）：
+  - `boot.js`：场景宿主。`window.CrossboundScenes.enter()` 被游戏的 `nr()` 调用（构建补丁），按当前阶段打开场景；提交后游戏自动打开的步骤面板也会被场景接管；给园区楼标签写 `data-v3-progress`。
+  - `world.js`：W1 / W2 / W5 的 3D 房间（固定斜视镜头、近墙剖开、悬停 + 点击）。
+  - `scenes.js`：W3 / W4 / W6 的 2D 场景。
+  - `showroom.js`、`rooms.js`、`products.js`、`kit.js`、`ui.js`：房间、商品模型与房间 HUD。`logic.js`：纯规则（阶段 → 场景、地图进度、预算曲线、货箱）。
+- **桥接**（`build.mjs` 发布钩子）：快照里有 `draft`（售价、数量、预算、商品页选择、打法）、`engine`，以及 `setPrice / setQuantity / setBudget / setPromotion / setListing / publishListing / setCompany / nextRound / report` 等动作；场景和原面板走同一个 `cr()` 提交。
+- **开关**：`CROSSBOUND_WORLD`，部署默认 `on`（打包脚本写入），`off` 时全部回到原面板。
+- **本地测试**：静态服务器同下；打开 `preview.html?start=1`，点当前步骤的楼。测试钩子 `window.CrossboundWorld`：`state`、`interactWith(id)`、`pointAt(id)`、`visibleIn(box)`。本机无头 Chromium 打开 3D 会崩溃（旧版也一样），实机验证用桌面版浏览器。
+
 ## 1. 项目与仓库
 
 - **项目**：傲基跨境大学 · Crossbound 跨境经营模拟游戏。已工程化，部署在公司内网。

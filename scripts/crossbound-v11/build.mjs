@@ -14,7 +14,7 @@ const uiVersion = createHash('sha256').update(read(path.join(root, folder, 'v11/
 const cssVersion = createHash('sha256').update(read(path.join(root, folder, 'v11/styles.css'))).digest('hex').slice(0, 10);
 const v2Version = createHash('sha256').update(['../v11/balance.js','../v11/model.js','../v11/growth.js','core.js','model.js','catalog.js','progress.js','ui.js','release.js','release-ui.js','records.js','questionnaire.js','tutorial.js','walkthrough.js','styles.css'].map(f=>read(path.join(root,folder,'v2',f))).join('')).digest('hex').slice(0,10);
 // REQ-051 walkable world (3D 方案 v2): own version hash so world edits refresh without touching v1.1/v2 caches.
-const worldFiles = ['logic.js','kit.js','ui.js','hub.js','showroom.js','rooms.js','products.js','world.js','boot.js','world.css'].map(f => `v3/world/${f}`).concat(['vendor/three/three.module.min.js','vendor/three/three.core.min.js']);
+const worldFiles = ['logic.js','kit.js','ui.js','showroom.js','rooms.js','products.js','world.js','scenes.js','boot.js','world.css'].map(f => `v3/world/${f}`).concat(['vendor/three/three.module.min.js','vendor/three/three.core.min.js']);
 const worldVersion = createHash('sha256').update(worldFiles.map(f=>read(path.join(root,folder,f))).join('')).digest('hex').slice(0,10);
 const encode = text => text.replace(/[\u0080-\uFFFF]/g, c => '\\u' + c.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0'));
 function replaceOne(source, from, to, label = from.slice(0, 80)) {
@@ -61,7 +61,8 @@ function patchMain(s) {
   once(tutorial, 'o&&!n&&!l&&(0,re.jsx)(V11UI.Cockpit,{company:t,ops:r,preview:pr,onOpen:nr,onBuild:()=>u("progress"),onTask:As}),(0,re.jsxs)(Ge,{variant:"outline",className:"v11-header-achievements",onClick:v11OpenAchievements,children:["出海成就",v11Achievements.unread.length>0&&(0,re.jsx)("span",{className:"v11-new-dot",children:"●"})]}),o&&!n&&(0,re.jsx)(Ge,{variant:"outline",className:"company-tutorial-entry"');
   s = replaceElement(s, 'campus-world', original => original.replace('children:', 'children:[!l&&(0,re.jsx)(V11UI.NotificationDock,{company:t,ops:r,unread:v11Achievements.unread,onAchievements:v11OpenAchievements,onTask:As,onHQ:()=>u("progress")}),') .replace(/\}\)$/, ']} )'));
   once('(0,re.jsx)(Vse,{currentStepLabel:', '(0,re.jsx)(Vse,{headquartersStatus:v11HQ,currentStepLabel:');
-  once('function vS(Te){', 'function vS(Te){if(Te==="headquarters"){d(Te);u("progress");return}');
+  // REQ-053 P1: from 安排下轮 on, 经营总部 is the W6 结算厅 scene when scenes are on; otherwise the HQ panel.
+  once('function vS(Te){', 'function vS(Te){if(Te==="headquarters"){if(Et>=5&&window.CrossboundScenes?.enter?.())return;d(Te);u("progress");return}');
   once('l==="passport"?(0,re.jsx)(Fse,{company:t,onContinue:nr})', '(l==="passport"||l==="achievements")?(0,re.jsx)(V2UI.AchievementHall,{company:t,ops:r,onContinue:nr})');
   once('affordable:!!(Dd&&Dd.cost<=t.cash),disabled:fn', 'affordable:!!(Dd&&Dd.cost<=t.cash),disabled:fn,company:t,onOptimize:()=>i(V11.optimize(t))');
   once('stock:t.inventory[Is.id]||0,', 'stock:V11.valid(t)?zve(t)?.units||0:t.inventory[Is.id]||0,');
@@ -112,6 +113,8 @@ function patchMain(s) {
   }`);
   once('onAchievements:v11OpenAchievements,onTask:As,onHQ:()=>u("progress")','onAchievements:v11OpenAchievements,onTask:As,onHQ:()=>u("progress"),onCommunity:()=>u("community")');
   once('l==="complete"?(0,re.jsxs)(re.Fragment,{children:[','l==="community"?(0,re.jsx)(V2UI.Community,{company:t,onReward:ev=>s(cur=>V11Growth.claimCommunity(cur,ev)),onDone:()=>u(null)}):l==="financials"?(0,re.jsx)(V2UI.Financials,{company:t,onSelect:key=>u(key==="report"?"complete":key)}):l==="assessment"?(0,re.jsx)(V2UI.Assessment,{company:t,ops:r,onSelect:key=>u(key==="report"?"complete":key)}):l==="complete"?(0,re.jsxs)(re.Fragment,{children:[(0,re.jsx)(V2UI.ReportTabs,{onSelect:key=>u(key==="report"?"complete":key)}),(0,re.jsx)(V2UI.GoalCard,{company:t}),releaseRank(r).level===10&&(0,re.jsx)(V2UI.GrowthProgress,{ops:r}),');
+  // REQ-053 P1: with scenes on, entering the current step opens its scene instead of the classic panel.
+  once('function nr(){dt!==null&&Bs(null),','function nr(){if(window.CrossboundScenes?.enter?.())return;dt!==null&&Bs(null),');
   s=s.replace('fe=t.round===1?300:500','fe=releaseGoal(t).target').replace('ut=!!(Pe&&Pe.keptOrders>=fe&&Pe.profit>0)','ut=!!(Pe&&releaseGoal(Pe).passed)');
   // REQ-053 §4.7: the target is stated once, in V11UI.SettlementGoal; drop the base report's second goal line.
   once('(0,re.jsxs)("span",{className:`round-goal ${ut?"goal-met":""}`,children:[ut?"'+encode('本轮目标达成')+'":"'+encode('六关完成，经营目标尚未达成')+'"," \\xB7 ",Pe?.keptOrders||0," / ",fe," '+encode('单未退款')+'"]}),','');
@@ -128,7 +131,7 @@ function patchMain(s) {
   once('!l&&(0,re.jsx)(V11UI.NotificationDock,', '!l&&(0,re.jsx)(V2UI.Tutorial,{guide:v4Guide,company:t}),!l&&(0,re.jsx)(V11UI.NotificationDock,');
   // REQ-051 patch 2/2: after each render, publish a snapshot plus the engine's own actions for the 3D world.
   // The world only selects options and calls the original commit (cr); forecasts go out pre-formatted as ranges.
-  once('ji=!!l;const v11Flow=', 'ji=!!l;(0,li.useLayoutEffect)(()=>{window.CrossboundView?.publish?.({inBusiness:!!(o&&!n),company:t,research:r.research,level:qi,stage:Et,settled:ms,view:l,options:La,choice:Ia||null,market:ec||null,recommendedId:(()=>{try{return recommend(V11,t)?.choice?.id??null}catch{return null}})(),supplier:Dt,quotes:id=>{const p=Zn.find(x=>x.id===id);return p?R5(p):[]},preview:pr,profitText:ms?(t.report?ps(t.report.profit,!0):null):pr?V11UI.range(pr,"profit",true):null,actions:{select:A,choose:id=>{const o=La.find(x=>x.id===id);o&&ur(o)},setSupplier:qe,commit:cr,open:()=>u(ms?"complete":"decision"),close:()=>u(null),panel:u}})});const v11Flow=');
+  once('ji=!!l;const v11Flow=', 'ji=!!l;(0,li.useLayoutEffect)(()=>{window.CrossboundView?.publish?.({inBusiness:!!(o&&!n),company:t,research:r.research,level:qi,stage:Et,settled:ms,view:l,options:La,choice:Ia||null,market:ec||null,recommendedId:(()=>{try{return recommend(V11,t)?.choice?.id??null}catch{return null}})(),supplier:Dt,quotes:id=>{const p=Zn.find(x=>x.id===id);return p?R5(p):[]},preview:pr,profitText:ms?(t.report?ps(t.report.profit,!0):null):pr?V11UI.range(pr,"profit",true):null,actions:{select:A,choose:id=>{const o=La.find(x=>x.id===id);o&&ur(o)},setSupplier:qe,commit:cr,open:()=>u(ms?"complete":"decision"),close:()=>u(null),panel:u,setPrice:w,setQuantity:M,setBudget:N,setPromotion:(c,choice)=>setV11Promotion({...v11Promotion,[c]:choice}),setListing:oi,publishListing:Un,reviseListing:ma,setCompany:i,nextRound:rs,report:()=>u("complete")},draft:{price:T,quantity:v,budget:C,listing:On,listingQuote:Dd,promotion:v11Promotion},engine:V11})});const v11Flow=');
   return s;
 }
 
@@ -151,8 +154,6 @@ for (const file of ['index.html', 'preview.html']) {
     // REQ-051 patch 1/2: render the campus on demand while the 3D world or any campaign dialog covers it.
     s = replaceOne(s, 'headquartersStatus:v11HQ=""}){', 'headquartersStatus:v11HQ=""}){let [v3Paused,v3SetPaused]=(0,Gi.useState)(()=>!!window.CrossboundView?.campusPaused);(0,Gi.useEffect)(()=>{let f=e=>v3SetPaused(!!e.detail);window.addEventListener("crossbound:campus-pause",f);return()=>window.removeEventListener("crossbound:campus-pause",f)},[]);');
     s = replaceOne(s, '$=!L&&!C&&P,', '$=!L&&!C&&P&&!v3Paused,');
-    // REQ-051 M-002: the 2D → 3D entry lives on the campus, just left of 园区导览.
-    s = replaceOne(s, '(0,ke.jsxs)("details",{className:"enterprise-campus-v17__guide"', 'window.CrossboundView?.dualMode&&(0,ke.jsxs)("button",{type:"button",className:"v3-campus-3d","aria-label":"切换到 3D 世界",onClick:()=>window.CrossboundView.switchMode("3d","campus"),children:["进入 3D 世界",(0,ke.jsx)("span",{"aria-hidden":"true",children:"↗"})]}),(0,ke.jsxs)("details",{className:"enterprise-campus-v17__guide"');
     return s;
   });
   script = replaceFunction(script, 'foe', s => {
@@ -177,6 +178,8 @@ for (const file of ['index.html', 'preview.html']) {
     s = s.replace(encode('这是模拟经营成就，不发放现金、经验、建设点、证书或真实合作权益。'), encode('这是模拟经营成就。探索与区域收集可获得游戏建设点；荣誉卡不代表职业资质或真实合作权益。'));
     return replaceElement(s, 'passport-stamp', () => '(0,mi.jsx)(V11UI.CountryBadge,{marketId:s.marketId,tier:s.tier})');
   });
+  // REQ-052: stock no longer carries over, so the cash-first plan must not promise leftover goods.
+  script = replaceOne(script, encode('先把钱留在手里，带着余货再做一轮。'), encode('先把钱留在手里，下一轮重新备货。'));
   script = replaceFunction(script, 'Tse', s=>s.replace(encode('首轮挑战：300 单未退款，扣掉费用后赚钱。'),encode('首轮挑战：250 单未退款，或贡献利润达到 $5,000。')));
   script = replaceFunction(script, 'R5', s => s.replace(encode('进价提高 8%；交期本轮不改变模拟销量'), encode('进价提高8%；新规则按交期计算本轮及时可售库存')));
   script = replaceOne(script, 'window.Globe=W8e;', `${marker}\n${bridge}\nwindow.Globe=W8e;`);
@@ -191,10 +194,7 @@ for (const file of ['index.html', 'preview.html']) {
   const imports = Object.fromEntries(['v11','v2'].flatMap(dir => fs.readdirSync(path.join(root,folder,dir)).filter(name=>name.endsWith('.js')).map(name=>[`./${dir}/${name}`,`./${dir}/${name}?v=${v2Version}`])));
   for (const name of worldFiles.filter(f => f.startsWith('v3/') && f.endsWith('.js'))) imports[`./${name}`] = `./${name}?v=${worldVersion}`;
   imports.three = `./vendor/three/three.module.min.js?v=${worldVersion}`;
-  // REQ-051 B-001/B-002: decide 3D vs 2D synchronously before the first paint. A returning 3D player with a save
-  // gets the loading gate immediately and skips the lobby (?start=1), so no flat UI flashes on refresh.
-  const worldGate = `<script>(function(){try{var q=new URLSearchParams(location.search),o=q.get("world"),f=(o==="on"||o==="off")?o:(window.CROSSBOUND_WORLD||"off");if(f!=="on"&&f!=="split")return;var s=localStorage;if(f==="split"&&s.getItem("crossbound-world-variant-v1")!=="world")return;if(s.getItem("crossbound-view-mode-v1")!=="3d"||!s.getItem("crossbound-company-v1"))return;var c=document.createElement("canvas");if(!(c.getContext("webgl2")||c.getContext("webgl")))return;document.documentElement.setAttribute("data-v3-gate","boot");if(q.get("start")!=="1"){q.set("start","1");history.replaceState(history.state,"",location.pathname+"?"+q.toString()+location.hash);}}catch(e){}})();</script>`;
-  html = html.replace('<head>', `<head>\n<script src="./runtime-config.js"></script>\n${worldGate}\n<script type="importmap">${JSON.stringify({imports})}</script>\n<link rel="stylesheet" href="./v3/world/world.css?v=${worldVersion}">\n<script type="module" src="./v3/world/boot.js?v=${worldVersion}"></script>`);
+  html = html.replace('<head>', `<head>\n<script src="./runtime-config.js"></script>\n\n<script type="importmap">${JSON.stringify({imports})}</script>\n<link rel="stylesheet" href="./v3/world/world.css?v=${worldVersion}">\n<script type="module" src="./v3/world/boot.js?v=${worldVersion}"></script>`);
   html = html.replace('</head>', `<link rel="stylesheet" href="./v11/styles.css?v=${cssVersion}">\n<link rel="stylesheet" href="./v2/styles.css?v=${v2Version}">\n</head>`);
   fs.writeFileSync(path.join(root, relative), html);
   console.log(`${file}: v1.1 integrated; original campus and dialog layout retained.`);

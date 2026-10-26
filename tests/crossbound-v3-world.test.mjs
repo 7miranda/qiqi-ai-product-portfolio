@@ -1,63 +1,56 @@
-// REQ-051 P0 walkable world (3D 世界需求文档 3D-xxx): pure rules, build hook points, deployment default.
+// REQ-053 single-mode 2.5D view (map + full-screen scenes): pure rules, build hook points, deployment default.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import {
-  WORLDS, BUILT, parseMode, variantFor, qualityFor, QUALITY, downgrade, createFpsMonitor,
-  currentWorld, doorStates, taskFor, resolveCollisions, nearestInteractable, pickShowcase, fitStars,
-  decideMode, recommend2D, comfortFrom, COMFORT_DEFAULTS, restoreSpot, archetypeFor, crateLayout, settlementSplit,
+  WORLDS, ROOMS_3D, parseMode, variantFor, qualityFor, QUALITY, downgrade, createFpsMonitor,
+  currentWorld, roomStates, zoneStates, taskFor, nearestInteractable, pickShowcase, fitStars,
+  archetypeFor, crateLayout, settlementSplit, budgetCurve,
 } from '../public/previews/crossbound/v3/world/logic.js';
 
 const folder = 'public/previews/crossbound';
 const snap = (stage, extra = {}) => ({ company: { stage, ...extra } });
 
-test('seven worlds in engine order; P1 so far builds W1, W2 and W5', () => {
-  assert.deepEqual(WORLDS.map(w => w.name), ['选品展厅', '定价财务室', '商品页工作室', '推广室', '物流仓', '财报结算厅', '荣誉墙展厅']);
-  assert.deepEqual([...BUILT], ['w1', 'w2', 'w5']);
+test('six step scenes in engine order: W1/W2/W5 are 3D rooms, W3/W4/W6 are 2D scenes', () => {
+  assert.deepEqual(WORLDS.map(w => w.name), ['选品展厅', '定价财务室', '商品页工作室', '推广室', '物流仓', '财报结算厅']);
+  assert.deepEqual([...ROOMS_3D], ['w1', 'w2', 'w5']);
+  assert.deepEqual(WORLDS.map(w => w.zone), ['product', 'supply', 'growth', 'growth', 'fulfillment', 'headquarters'], 'each scene opens from a campus building');
 });
 
-test('stage -> current world (corrected 3D-079 mapping; stage 3 splits listing/promotion)', () => {
+test('stage -> scene (stage 3 splits listing W3 / promotion W4; stage 0 stays on the map)', () => {
   assert.equal(currentWorld(snap(0)), 'hub');
   assert.equal(currentWorld(snap(1)), 'w1');
   assert.equal(currentWorld(snap(2)), 'w2');
   assert.equal(currentWorld(snap(3)), 'w3');
   assert.equal(currentWorld(snap(3, { currentListing: { id: 'x' } })), 'w4');
-  assert.equal(currentWorld(snap(4)), 'w5', 'stage 4 is fulfillment, i.e. the logistics warehouse');
-  assert.equal(currentWorld(snap(5)), 'w6', 'stage 5 (安排下轮) happens in the settlement hall');
+  assert.equal(currentWorld(snap(4)), 'w5');
+  assert.equal(currentWorld(snap(5)), 'w6');
+  assert.equal(currentWorld(snap(6)), 'w6', 'a settled round shows its result in the settlement hall');
 });
 
-test('door lights (3D-010): completed before, current, locked after; honour wall always open', () => {
-  assert.deepEqual(doorStates(snap(0)), { w1: 'locked', w2: 'locked', w3: 'locked', w4: 'locked', w5: 'locked', w6: 'locked', w7: 'open' });
-  assert.deepEqual(doorStates(snap(2)), { w1: 'completed', w2: 'current', w3: 'locked', w4: 'locked', w5: 'locked', w6: 'locked', w7: 'open' });
-  assert.equal(doorStates(snap(3, { currentListing: {} })).w3, 'completed');
-  // A settled round keeps pointing at the settlement hall (report → next round), not the honour wall.
-  assert.deepEqual(doorStates(snap(6)), { w1: 'completed', w2: 'completed', w3: 'completed', w4: 'completed', w5: 'completed', w6: 'current', w7: 'open' });
+test('map progress (REQ-053 §3): rooms and campus buildings are done / current / upcoming', () => {
+  assert.deepEqual(roomStates(snap(2)), { w1: 'done', w2: 'current', w3: 'upcoming', w4: 'upcoming', w5: 'upcoming', w6: 'upcoming' });
+  assert.equal(roomStates(snap(3, { currentListing: {} })).w3, 'done');
+  assert.deepEqual(zoneStates(snap(0)), { market: 'current', product: 'upcoming', supply: 'upcoming', growth: 'upcoming', fulfillment: 'upcoming', headquarters: 'upcoming' });
+  assert.equal(zoneStates(snap(3)).growth, 'current', 'listing in progress');
+  assert.equal(zoneStates(snap(3, { currentListing: {} })).growth, 'current', 'promotion still in the same building');
+  assert.deepEqual(zoneStates(snap(6)), { market: 'done', product: 'done', supply: 'done', growth: 'done', fulfillment: 'done', headquarters: 'current' });
 });
 
-test('one task sentence at a time (3D-055), following the W1 sub-steps', () => {
-  assert.equal(taskFor(snap(0)), '去世界地图终端，选一个市场');
-  assert.equal(taskFor(snap(1)), '去选品展厅挑 1 件商品');
-  assert.equal(taskFor(snap(1), { inside: 'w1' }), '走到展位前，挑 1 件商品');
-  assert.equal(taskFor(snap(1), { inside: 'w1', product: 'tech' }), '跟供应商谈谈，选一家');
-  assert.equal(taskFor(snap(1), { inside: 'w1', product: 'tech', supplier: 'fast' }), '都选好了，正在前往定价财务室');
-  assert.equal(taskFor(snap(2)), '去定价财务室定价与备货');
-  assert.equal(taskFor(snap(6)), '本轮已结算，去财报结算厅看战报、开启下一轮');
+test('one task sentence at a time (3D-055), click wording, following room sub-steps', () => {
+  assert.equal(taskFor(snap(0)), '点市场研究，选一个销售市场');
+  assert.equal(taskFor(snap(1)), '点一件商品拿起来看看，挑 1 件');
+  assert.equal(taskFor(snap(1), { product: 'tech' }), '点左边的供应商，谈一家');
+  assert.equal(taskFor(snap(1), { product: 'tech', supplier: 'fast' }), '都选好了，正在前往定价财务室');
+  assert.equal(taskFor(snap(2)), '点备货拉杆，选一档备货');
+  assert.equal(taskFor(snap(2), { planned: true }), '点中央控制台，调好售价和数量后确认');
+  assert.equal(taskFor(snap(4)), '点一条出货传送带，选履约方式发货');
+  assert.equal(taskFor(snap(6)), '本轮已结算，看完结果就能开启下一轮');
   assert.equal(taskFor(null), '');
 });
 
-test('collision (3D-014): no walking through walls, people or crates', () => {
-  const wall = [{ minX: -5, maxX: 5, minZ: -2, maxZ: 0 }];
-  const r = resolveCollisions({ x: 0, z: 0.2 }, 0.4, wall);
-  assert.ok(Math.abs(r.z - 0.4) < 1e-6, `pushed to the wall face, got ${r.z}`);
-  const inside = resolveCollisions({ x: 4.9, z: -1 }, 0.4, wall);
-  assert.ok(inside.x >= 5.4 - 1e-6, 'a centre inside a box leaves by the nearest face');
-  const person = resolveCollisions({ x: 0.3, z: 0 }, 0.4, [], [{ x: 0, z: 0, r: 0.45 }]);
-  assert.ok(Math.hypot(person.x, person.z) >= 0.85 - 1e-6);
-  assert.deepEqual(resolveCollisions({ x: 9, z: 9 }, 0.4, wall), { x: 9, z: 9 });
-});
-
-test('interaction reach is 2.5 m and picks the nearest enabled item (3D-016)', () => {
+test('pointer picks the nearest enabled item within reach', () => {
   const items = [{ id: 'a', x: 2, z: 0 }, { id: 'b', x: 1, z: 0 }, { id: 'c', x: 0.5, z: 0, enabled: false }, { id: 'd', x: 3, z: 0 }];
   assert.equal(nearestInteractable({ x: 0, z: 0 }, items).id, 'b');
   assert.equal(nearestInteractable({ x: 10, z: 0 }, items), null);
@@ -77,6 +70,14 @@ test('showroom puts the recommended product first, keeps the current pick, sprea
   assert.equal(fitStars({ fit: {} }, 'singapore'), 3);
 });
 
+test('budget curve (REQ-053 §4.5 ③): visits grow with √budget; the next $1,000 is spelled out', () => {
+  const c = budgetCurve(10000, 900);
+  assert.equal(c.extra, Math.round(10000 * Math.sqrt(1900 / 900)) - 10000);
+  assert.equal(c.points[0][0], 300); assert.equal(c.points.at(-1)[0], 8000);
+  assert.ok(budgetCurve(10000, 4000).extra < c.extra, 'diminishing returns');
+  assert.deepEqual(budgetCurve(0, 900), { extra: 0, points: [] });
+});
+
 test('rollout switch: off by default, URL override, stable 50/50 split', () => {
   assert.equal(parseMode(undefined, ''), 'off');
   assert.equal(parseMode('split', '?world=on'), 'on');
@@ -87,14 +88,13 @@ test('rollout switch: off by default, URL override, stable 50/50 split', () => {
   assert.ok(n > 900 && n < 1100, `split ${n}/2000`);
 });
 
-test('quality tiers (3D-074): only missing WebGL forces classic; <45 fps for 5 s steps down', () => {
+test('quality tiers (3D-074): missing WebGL has no room quality; <45 fps for 5 s steps down', () => {
   assert.deepEqual(qualityFor({ webgl: false }), { quality: null, classic: true, reason: 'no_webgl' });
   assert.equal(qualityFor({ width: 1440 }).quality, 'high');
   assert.equal(qualityFor({ coarse: true, width: 390 }).quality, 'mid');
   assert.equal(qualityFor({ cores: 2 }).quality, 'low');
   assert.equal(qualityFor({ stored: 'low', width: 1440 }).quality, 'low', 'player choice wins');
-  assert.deepEqual(QUALITY.low, { shadows: false, glow: 0, pixelRatio: 0.75 }, '3D-070/074: no weather; tiers scale neon glow');
-  assert.ok(QUALITY.high.glow > QUALITY.mid.glow && QUALITY.mid.glow > QUALITY.low.glow);
+  assert.deepEqual(QUALITY.low, { shadows: false, glow: 0, pixelRatio: 0.75 });
   assert.equal(downgrade('high'), 'mid');
   const fps = createFpsMonitor();
   let fired = false;
@@ -106,50 +106,9 @@ test('quality tiers (3D-074): only missing WebGL forces classic; <45 fps for 5 s
   assert.ok(quiet);
 });
 
-test('dual mode (M-001/M-007, B-002): first visit chooses, remembered choice skips the lobby only for 3D with a save', () => {
-  assert.deepEqual(decideMode({ dual: true, stored: null }), { choose: true, mode: null, autoStart: false }, 'no preselection');
-  assert.deepEqual(decideMode({ dual: true, stored: '3d', hasSave: true }), { choose: false, mode: '3d', autoStart: true });
-  assert.deepEqual(decideMode({ dual: true, stored: '3d', hasSave: false }), { choose: false, mode: '3d', autoStart: false });
-  assert.deepEqual(decideMode({ dual: true, stored: '2d', hasSave: true }), { choose: false, mode: '2d', autoStart: false });
-  assert.equal(decideMode({ dual: true, stored: null, legacyClassic: true }).mode, '2d', 'P0 classic opt-out migrates to 2D');
-  assert.equal(decideMode({ dual: false, stored: '3d', hasSave: true }).mode, '2d', 'flag off → 2D only');
-  assert.equal(decideMode({ dual: true, stored: '3d', hasSave: true, webgl: false }).mode, '2d', 'no WebGL → 2D');
-  assert.equal(recommend2D({ fps: 24, quality: 'high' }), true);
-  assert.equal(recommend2D({ fps: 58, quality: 'low' }), true);
-  assert.equal(recommend2D({ fps: 60, quality: 'mid' }), false);
-  assert.equal(recommend2D({ fps: null, quality: 'high' }), false, 'unknown fps never forces a recommendation');
-});
-
-test('comfort settings (M-006): sensitivity 50%, head bob off, FOV clamped to 55–75', () => {
-  assert.deepEqual(COMFORT_DEFAULTS, { sensitivity: 50, headBob: false, fov: 55 });
-  assert.deepEqual(comfortFrom(null), COMFORT_DEFAULTS);
-  assert.deepEqual(comfortFrom({ sensitivity: 400, headBob: 'yes', fov: 120 }), { sensitivity: 100, headBob: false, fov: 75 });
-  assert.equal(comfortFrom({ fov: 40 }).fov, 55);
-  assert.equal(comfortFrom({ headBob: true }).headBob, true);
-});
-
-test('refresh restore (B-003): same run + round only, interiors only while their stage is current', () => {
-  const s = { company: { runSeed: 7, round: 2, stage: 1 } };
-  assert.deepEqual(restoreSpot({ key: '7:2', scene: 'w1', x: 3, z: 4, yaw: 0.5 }, s), { scene: 'w1', x: 3, z: 4, yaw: 0.5 });
-  assert.equal(restoreSpot({ key: '7:1', scene: 'hub', x: 1, z: 1 }, s), null, 'older round');
-  assert.equal(restoreSpot({ key: '7:2', scene: 'w1', x: 3, z: 4 }, { company: { runSeed: 7, round: 2, stage: 2 } }), null, 'W1 already done');
-  assert.equal(restoreSpot({ key: '7:2', scene: 'hub', x: NaN, z: 1 }, s), null);
-  assert.equal(restoreSpot({ key: '7:2', scene: 'w9', x: 1, z: 1 }, s), null);
-  assert.equal(restoreSpot({ key: '7:2', scene: 'hub', x: 1, z: 1 }, s).yaw, 0);
-  assert.equal(restoreSpot({ key: '7:2', scene: 'w2', x: 1, z: 2 }, { company: { runSeed: 7, round: 2, stage: 2 } }).scene, 'w2');
-  assert.equal(restoreSpot({ key: '7:2', scene: 'w5', x: 1, z: 2 }, { company: { runSeed: 7, round: 2, stage: 4 } }).scene, 'w5');
-  assert.equal(restoreSpot({ key: '7:2', scene: 'w5', x: 1, z: 2 }, { company: { runSeed: 7, round: 2, stage: 5 } }), null, 'W5 already settled');
-});
-
-test('W2 / W5 tasks and crates: 100 units per stack, 12 stacks max then taller; REQ-052 split', () => {
-  const at = stage => ({ company: { stage } });
-  assert.equal(taskFor(at(2), { inside: 'w2' }), '拉动备货拉杆，选一档备货');
-  assert.equal(taskFor(at(2), { inside: 'w2', planned: true }), '到中央控制台确认定价与备货');
-  assert.equal(taskFor(at(4), { inside: 'w5' }), '走到一条出货传送带前，选履约方式发货');
-  assert.equal(taskFor(at(4)), '去物流仓选履约方式');
+test('W2 / W5 crates: 100 units per stack, 12 stacks max then taller; REQ-052 split', () => {
   assert.deepEqual(crateLayout(0), { stacks: 0, height: 0 });
   assert.deepEqual(crateLayout(400), { stacks: 4, height: 3 });
-  assert.deepEqual(crateLayout(800), { stacks: 8, height: 3 });
   assert.deepEqual(crateLayout(1200), { stacks: 12, height: 3 });
   assert.deepEqual(crateLayout(1600), { stacks: 12, height: 4 });
   assert.deepEqual(settlementSplit(4, 400, 110), { shipped: 3, returned: 1 });
@@ -168,39 +127,39 @@ test('product models (F-001): every catalog product maps to a recognisable arche
   const kinds = products.map(archetypeFor);
   assert.ok(!kinds.includes('parcel'), products.filter(p => archetypeFor(p) === 'parcel').map(p => p.name).join('、'));
   assert.ok(new Set(kinds).size >= 18, 'enough variety to tell products apart');
-  assert.equal(archetypeFor({ name: '降噪无线耳机', english: 'NOISE CANCELLING EARBUDS' }), 'earbuds');
-  assert.equal(archetypeFor({ name: '桌面循环风扇', english: 'DESK FAN' }), 'fan');
   assert.equal(archetypeFor({ name: '可调光桌灯', english: 'DIMMABLE DESK LIGHT' }), 'lamp', 'DESK LIGHT is a lamp, not a desk');
   const src = fs.readFileSync(`${folder}/v3/world/products.js`, 'utf8');
   for (const kind of new Set(kinds)) assert.match(src, new RegExp(`\\n  ${kind}\\(c\\) \\{`), `builder for ${kind}`);
 });
 
-test('build output: hooks applied once, world wired locally (no CDN), classic coach hidden in world', () => {
+test('build output: scenes take the step entry, bridge exposes the draft, no dual-mode leftovers', () => {
   for (const file of ['index.html', 'preview.html']) {
     const html = fs.readFileSync(`${folder}/${file}`, 'utf8');
     assert.equal(html.split('$=!L&&!C&&P&&!v3Paused,').length - 1, 1, `${file}: campus pause hook`);
     assert.equal(html.split('window.CrossboundView?.publish?.(').length - 1, 1, `${file}: snapshot hook`);
-    assert.match(html, /actions:\{select:A,choose:id=>\{const o=La\.find\(x=>x\.id===id\);o&&ur\(o\)\},setSupplier:qe,commit:cr,/, 'world drives the engine through its own card handler and commit');
+    assert.match(html, /\(0,li\.useLayoutEffect\)\(\(\)=>\{window\.CrossboundView\?\.publish\?\.\(/, 'published before paint');
+    assert.match(html, /actions:\{select:A,choose:id=>\{const o=La\.find\(x=>x\.id===id\);o&&ur\(o\)\},setSupplier:qe,commit:cr,/, 'scenes use the card handler and the same commit');
+    assert.match(html, /setPrice:w,setQuantity:M,setBudget:N,setPromotion:/, 'W2 fine pricing and W4 budget drive the game draft');
+    assert.match(html, /setListing:oi,publishListing:Un,/, 'W3 publishes with the game listing action');
+    assert.match(html, /draft:\{price:T,quantity:v,budget:C,listing:On,listingQuote:Dd,promotion:v11Promotion\},engine:V11/);
+    assert.equal(html.split('function nr(){if(window.CrossboundScenes?.enter?.())return;').length - 1, 1, `${file}: step entry opens the scene`);
+    assert.match(html, /if\(Te==="headquarters"\)\{if\(Et>=5&&window\.CrossboundScenes\?\.enter\?\.\(\)\)return;/, 'HQ is the settlement hall from 安排下轮 on');
+    assert.ok(!html.includes('v3-campus-3d') && !html.includes('crossbound-view-mode-v1') && !html.includes('data-v3-gate'), `${file}: dual mode removed`);
     assert.match(html, /<script type="module" src="\.\/v3\/world\/boot\.js\?v=[0-9a-f]{10}"><\/script>/);
     const map = html.match(/<script type="importmap">([\s\S]*?)<\/script>/)[1];
+    assert.match(map, /"\.\/v3\/world\/scenes\.js":"\.\/v3\/world\/scenes\.js\?v=[0-9a-f]{10}"/);
     assert.match(map, /"three":"\.\/vendor\/three\/three\.module\.min\.js\?v=[0-9a-f]{10}"/);
     assert.ok(!/https?:/.test(map), 'import map stays same-origin');
-    // B-001/B-002: snapshot published before paint; mode decided in a blocking head script before the app module.
-    assert.match(html, /\(0,li\.useLayoutEffect\)\(\(\)=>\{window\.CrossboundView\?\.publish\?\.\(/);
-    const head = html.slice(0, html.indexOf('</head>'));
-    assert.ok(head.includes('data-v3-gate') && head.includes('crossbound-view-mode-v1'), `${file}: pre-paint gate script`);
-    assert.ok(head.indexOf('v3/world/boot.js') < html.indexOf('<script type="module">'), 'boot runs before the app module');
-    assert.equal(html.split('className:"v3-campus-3d"').length - 1, 1, `${file}: 3D entry on the campus, left of 园区导览`);
-    assert.ok(!html.includes('v3-mode-toggle'), 'old header entry removed');
   }
   const baseline = fs.readFileSync('src/baseline/index.html', 'utf8');
-  for (const anchor of ['function Vse(', 'function R5(', '[Dt,qe]=(0,li.useState)("standard")', '[h,A]=(0,li.useState)("")']) assert.ok(baseline.includes(anchor), `baseline anchor ${anchor}`);
+  for (const anchor of ['function Vse(', 'function nr(){dt!==null&&Bs(null),', 'function Un(){', '[On,oi]=(0,li.useState)(']) assert.ok(baseline.includes(anchor), `baseline anchor ${anchor}`);
+  assert.ok(!fs.existsSync(`${folder}/v3/world/hub.js`), 'the walkable street is gone');
   const css = fs.readFileSync(`${folder}/v3/world/world.css`, 'utf8');
-  assert.match(css, /html\[data-v3-world\] \.v5-walkthrough/);
+  assert.match(css, /html\[data-v3-mode="scenes"\] \.campaign-missions \{ display: none !important; \}/, 'map progress replaces the step bar');
   assert.ok(fs.existsSync(`${folder}/vendor/three/LICENSE`));
 });
 
-test('deployments turn the 3D world on unless CROSSBOUND_WORLD overrides it', () => {
+test('deployments turn the scenes on unless CROSSBOUND_WORLD overrides it', () => {
   const run = env => {
     execFileSync(process.execPath, ['scripts/package-frontend.mjs'], { env: { ...process.env, ...env }, stdio: 'pipe' });
     return fs.readFileSync('dist/crossbound/runtime-config.js', 'utf8');

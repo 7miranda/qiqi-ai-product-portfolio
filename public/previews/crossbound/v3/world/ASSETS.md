@@ -3,7 +3,8 @@
 | 资产 | 来源 | 协议 | 版本 / 日期 | 用途 |
 |---|---|---|---|---|
 | three.js（`vendor/three/three.module.min.js`、`three.core.min.js`） | npm `three` | MIT（见 `vendor/three/LICENSE`） | 0.185.0 / 2026-10-25 | 渲染；本地放置，不走 CDN |
-| 街区、建筑、门、终端、展台、货架、角色、NPC、雨 | 程序化生成（`v3/world/*.js`） | 本项目自有 | 2026-10-25 | P0 全部几何体与动画 |
+| 房间、终端、展台、货箱、传送带、商品模型、供应商 NPC | 程序化生成（`v3/world/*.js`） | 本项目自有 | 2026-10-26 | 3D 房间（W1/W2/W5）全部几何体与动画；W3 商品图由同一商品模型渲染 |
+| 2D 场景（W3/W4/W6） | 纯 DOM + CSS（`v3/world/scenes.js`、`world.css`） | 本项目自有 | 2026-10-26 | 无外部图片 |
 
 规则：
 
