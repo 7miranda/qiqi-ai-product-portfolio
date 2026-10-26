@@ -128,10 +128,13 @@ export function createV2UI({ React, Button, engine, Base, tasks, facilities=[] }
         h(Choices, { label: '经营平台', options: PLATFORMS, value: c.platform, onChange: platform => change({ platform }) }),
         h('p', { className: 'panel-note' }, '这里模拟三种平台经营模式，不代表各平台已在所有国家开放入驻；费率也是游戏参数。')),
       [0, 1, 4].includes(company.stage) && h(TaxCard, { company, market, preview }),
+      // REQ-053 §4.6: first mile moved here from 定价备货; arrival is spelled out in plain words.
+      company.stage === 4 && panel('头程：货怎么运到海外仓',
+        h(Choices, { label: '头程运输', options: FIRST_MILE.map(f => ({ ...f, detail: `${f.detail} · ${arrival(company, f)}` })), value: c.firstMile, onChange: firstMile => change({ firstMile }) }),
+        h('p', { className: 'panel-note' }, '没到货的件：头程运费已付不退，货款结算时按成本退回（扣5%手续费）。')),
       company.stage === 1 && product && panel('这个商品，适合这个市场吗？', rows([['商品', product.name], ['本地匹配指数', (productFit[product.id]?.[market?.id] ?? 1).toFixed(3)]]),
         h('p', { className: 'panel-note' }, '100款商品与12个市场均有明确的游戏匹配值，进入购买意愿计算。它是游戏标定数据，不是实测销量；还需结合售价、税费和交期判断。')),
       company.stage === 2 && panel('备货前，再比较一次',
-        h(Choices, { label: '头程运输', options: FIRST_MILE, value: c.firstMile, onChange: firstMile => change({ firstMile }) }),
         details('采购阶梯与工厂谈判',
           h('p', null, '按本次新增采购量：400件起95折、800件起9折、1200件起85折。在供应商原报价上计算，已有库存不算新采购。'),
           h('p', null, '供应伙伴来信：可以接受更高起订量换价，也可以保持当前价格申请一轮账期。确认进货后记入经营决策。'),
@@ -153,6 +156,10 @@ export function createV2UI({ React, Button, engine, Base, tasks, facilities=[] }
         details('品牌保护', engine.hasTrademark(company) ? h('p', null, '这款商品的模拟商标已登记，遇到跟卖时可以准备投诉证据。') : button('登记模拟商标 $600', () => onChange(engine.act(company, { type: 'trademark' })), { disabled: company.cash < 600 }))),
       h(Events, { company, onChange }),
       h(Finance, { company, onChange, preview }));
+  }
+  function arrival(company, f) {
+    const p = engine.simulate(engine.configure(company, { firstMile: f.id }), 'mean');
+    return p ? `约${Math.round(p.arrivedUnits / Math.max(1, p.unitsToBuy) * 100)}%本轮到货（${p.leadDays}天）` : '';
   }
   function ReportExtras({ report: r }) {
     if (r?.modelVersion !== 'v2') return null;

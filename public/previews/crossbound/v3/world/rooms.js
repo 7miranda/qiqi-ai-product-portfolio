@@ -39,7 +39,7 @@ function shell(group, title, color) {
 // A crate yard: `stacks` piles laid out in rows of `cols`, each `height` crates tall.
 function crateYard(parent, { x, z, cols = 4 }) {
   const yard = new THREE.Group(); yard.position.set(x, 0, z); parent.add(yard);
-  const wood = toon(0xb98a4e), tape = toon(0xe8d9a8), ghost = new THREE.MeshBasicMaterial({ color: P.cyan, transparent: true, opacity: 0.22, depthWrite: false, toneMapped: false });
+  const wood = toon(0xb98a4e), tape = toon(0xe8d9a8), ghost = new THREE.MeshBasicMaterial({ color: 0x8ff0ff, transparent: true, opacity: 0.42, depthWrite: false, toneMapped: false });
   const geo = new THREE.BoxGeometry(CRATE, CRATE, CRATE), tapeGeo = new THREE.BoxGeometry(CRATE + 0.01, 0.08, CRATE * 0.3);
   let piles = [];
   const slot = i => [(i % cols) * (CRATE + GAP), Math.floor(i / cols) * (CRATE + GAP)];
@@ -74,14 +74,17 @@ function animator() {
 
 // ---------- W2 定价财务室 ----------
 const PLANS = ['pilot', 'scale', 'premium'];
-function costLines(preview, plan) {
+// extra: { base, cash } — reference price for the high-price warning (3D-024) and cash for the share line (REQ-053 §4.3 ④).
+function costLines(preview, plan, extra = {}) {
   if (!preview || !plan) return [{ text: '成本板 · COST BOARD', size: 0.16, color: '#52cadd' }, { text: '先拉动备货拉杆选一档', size: 0.13, color: '#c7d3dc', weight: 500 }];
+  const spend = -(preview.cashDelta || 0), share = extra.cash ? Math.round(spend / extra.cash * 100) : null;
+  const pricey = extra.base && preview.price >= extra.base * 1.5;
   return [
-    { text: `成本板 · ${plan.name}`, size: 0.15, color: '#52cadd' },
+    { text: `成本板 · ${plan.name}`, size: 0.14, color: '#52cadd' },
     { text: `售价 $${preview.price} · 备货 ${preview.quantity} 件`, size: 0.13, color: '#f2f6f8' },
-    { text: `单件成本 ${cash2(preview.unitCost)} · 交期 ${preview.leadDays ?? '-'} 天`, size: 0.12, color: '#c7d3dc', weight: 500 },
-    { text: `采购＋头程 ${money(-(preview.cashDelta || 0))}`, size: 0.12, color: '#ffd34d', weight: 500 },
-    { text: `预计利润 ${money(preview.profit)}`, size: 0.13, color: (preview.profit || 0) >= 0 ? '#5dff9a' : '#ff5a5a' },
+    { text: `单件成本 ${cash2(preview.unitCost)} · 交期 ${preview.leadDays ?? '-'} 天`, size: 0.11, color: '#c7d3dc', weight: 500 },
+    { text: `本单采购 ${money(spend)}${share != null ? ` · 占现金 ${share}%` : ''}`, size: 0.11, color: share > 60 ? '#ff5a5a' : '#ffd34d', weight: 500 },
+    pricey ? { text: '定太贵了，退货会变多', size: 0.12, color: '#ff5a5a' } : { text: `预计利润 ${money(preview.profit)}`, size: 0.13, color: (preview.profit || 0) >= 0 ? '#5dff9a' : '#ff5a5a' },
   ];
 }
 
@@ -110,10 +113,10 @@ export function buildFinance({ snapshot }) {
 
   // Fine-tune terminal: the classic panel keeps custom price / quantity available.
   const term = block(0.8, 1.4, 0.5, toon(0x2a3448), { x: -4.4, y: 0.7, z: -3, parent: group });
-  const termScreen = textPlane([{ text: '精细调价', size: 0.32, color: '#52cadd' }, { text: '自定售价与数量', size: 0.2, color: '#c7d3dc', weight: 500 }], { width: 0.9, height: 0.6, px: 160, bg: '#0a1220', border: '#52cadd' });
+  const termScreen = textPlane([{ text: '高级选项', size: 0.32, color: '#52cadd' }, { text: '账期·谈判·贷款', size: 0.2, color: '#c7d3dc', weight: 500 }], { width: 0.9, height: 0.6, px: 160, bg: '#0a1220', border: '#52cadd' });
   termScreen.position.set(-4.4, 1.75, -2.74); group.add(termScreen);
   boxes.push({ minX: -4.8, maxX: -4, minZ: -3.25, maxZ: -2.75 });
-  interactables.push({ id: 'finetune', kind: 'finetune', x: -4.4, z: -1.8, y: 2.2, label: '用面板微调售价和数量', setHighlight: addOutline(term) });
+  interactables.push({ id: 'finetune', kind: 'finetune', x: -4.4, z: -1.8, y: 2.2, label: '高级选项：账期、谈判、备战、贷款', setHighlight: addOutline(term) });
 
   // Corner crate yard (3D-023): ghost crates preview the chosen plan, solid crates once bought.
   const yard = crateYard(group, { x: -9.6, z: 3 });
@@ -136,9 +139,10 @@ export function buildFinance({ snapshot }) {
     update(local, s) {
       if (!s || s.company?.stage !== 2) return;
       const id = PLANS.includes(s.choice?.id) ? s.choice.id : null;
-      if (id === plan?.id && s.preview?.quantity === plan.quantity && s.preview?.price === plan.price) return;
-      plan = id ? { id, name: (s.options || []).find(o => o.id === id)?.name || '', quantity: s.preview?.quantity, price: s.preview?.price } : null;
-      board.userData.redraw(costLines(s.preview, plan));
+      if (id === plan?.id && s.preview?.quantity === plan.quantity && s.preview?.price === plan.price && s.company.cash === plan.cash) return;
+      plan = id ? { id, name: (s.options || []).find(o => o.id === id)?.name || '', quantity: s.preview?.quantity, price: s.preview?.price, cash: s.company.cash } : null;
+      const base = s.engine?.products?.find(p => p.id === s.company.productId)?.basePrice;
+      board.userData.redraw(costLines(s.preview, plan, { base, cash: s.company.cash }));
       lever.want = id ? (PLANS.indexOf(id) - 1) * 0.6 : 0;
       yard.set(s.preview?.quantity || 0, { ghosted: true });
     },
@@ -212,13 +216,20 @@ export function buildWarehouse({ snapshot }) {
   const yardTag = textPlane([{ text: `本轮库存 ${units} 件`, size: 0.36, color: '#ffd34d' }], { width: 2.6, height: 0.5, bg: '#0a1220', border: '#29414a' });
   yardTag.position.set(-0.05, 3.1, 1.4); group.add(yardTag);
 
+  // REQ-053 §4.6 first-mile terminal (east wall): sea / sea-air / air, picked here now that it is a fulfilment decision.
+  const fmTerm = block(1, 1.5, 0.6, toon(0x2a3448), { x: 9.6, y: 0.75, z: 3.2, parent: group });
+  const fmScreen = textPlane([{ text: '头程航线', size: 0.34, color: '#ffd34d' }, { text: '海运 · 海空 · 空运', size: 0.2, color: '#c7d3dc', weight: 500 }], { width: 1.2, height: 0.7, px: 160, bg: '#0a1220', border: '#ffd34d' });
+  fmScreen.position.set(9.6, 1.95, 3.52); group.add(fmScreen);
+  boxes.push({ minX: 9.1, maxX: 10.1, minZ: 2.9, maxZ: 3.5 });
+  const firstMileHighlight = addOutline(fmTerm);
+
   // REQ-052 counter: appears above the yard while the unsold stock returns at cost.
   const counter = textPlane([{ text: '', size: 0.5 }], { width: 4.2, height: 1.1, px: 200, glow: true });
   counter.position.set(-0.05, 4.2, 1.6); counter.visible = false; group.add(counter);
 
   let chosen = null, running = 0;
   return {
-    id: 'w5', group, boxes, circles, occluders, interactables, units,
+    id: 'w5', group, boxes, circles, occluders, interactables, units, firstMileHighlight,
     spawn: { x: 0, z: 6.8, yaw: 0 },
     viewSpot: { x: 4, z: 4.5, yaw: 0.9 },   // yard and belts both in frame for the settlement
     camera: { distance: 5.5 },

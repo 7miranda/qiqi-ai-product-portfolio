@@ -281,3 +281,23 @@ test('REQ-053: heat rewards staying with a product and resets on a switch', () =
   assert.equal(e.next(n).v2.heat.tech, 1.15, 'capped at 1.15');
   assert.ok(e.deserialize(e.serialize(e.next(n))), 'saves with heat above 1 stay valid');
 });
+test('REQ-053 §4.6: first mile is chosen at fulfilment and paid at shipping, once', () => {
+  let n = stocked();
+  assert.ok(!n.ledger.some(row => row.round === n.round && row.category === 'firstMile'), 'nothing charged at stocking');
+  n = e.commit(n, { id: 'ads', budget: 3600, promotionChoice: { id: 'benefit' } });
+  assert.equal(n.stage, 4);
+  const slow = e.simulate(e.configure(n, { firstMile: 'sea' }), 'mean'), fast = e.simulate(e.configure(n, { firstMile: 'air' }), 'mean');
+  assert.ok(fast.leadDays < slow.leadDays && fast.arrivedUnits >= slow.arrivedUnits, 'choice at stage 4 changes arrival');
+  n = e.configure(n, { firstMile: 'air' });
+  const expected = e.simulate(n).firstMileCost;
+  n = e.commit(n, { id: 'standard' });
+  const rows = n.ledger.filter(row => row.round === n.round && row.category === 'firstMile');
+  assert.equal(rows.length, 1); assert.equal(rows[0].cashDelta, -expected);
+  assert.equal(n.report.profit, money(profitRows(n.report).reduce((s, r) => s + r.amount, 0)));
+  // An old save that already paid at stocking is not charged again at shipping.
+  let old = e.commit(stocked(), { id: 'ads', budget: 3600, promotionChoice: { id: 'benefit' } });
+  old.ledger.push({ id: old.ledger.length + 1, round: old.round, category: 'firstMile', label: 'old rule', cashDelta: -100 });
+  old.cash = money(old.cash - 100);
+  old = e.commit(old, { id: 'standard' });
+  assert.equal(old.ledger.filter(row => row.round === old.round && row.category === 'firstMile').length, 1);
+});

@@ -1,4 +1,5 @@
-// DOM layer of the world: four HUD items, bottom dialog, in-world screen panel, bubbles, joystick, fades.
+// DOM layer of a 3D room scene: HUD (cash, task, room title, back to map), bottom dialog, in-world screen panel,
+// click prompts, bubbles, fades. REQ-053 §3: no joystick, no minimap — rooms are clicked, not walked.
 // All text is set with textContent; nothing here reads or writes engine state.
 
 function el(tag, className, parent, text) {
@@ -17,9 +18,9 @@ export function createUI(root, { touch }) {
   const profit = el('span', 'v3-profit', money, '');
   const task = el('div', 'v3-hud-task', layer, '');
   task.setAttribute('role', 'status');
-  const mapBox = el('div', 'v3-minimap', layer);
-  const map = el('canvas', '', mapBox);
-  map.width = map.height = 300;
+  const title = el('div', 'v3-room-title', layer);
+  const back = el('button', 'v3-back', layer, '← 返回总部地图');
+  back.type = 'button';
   const prompt = el('button', 'v3-prompt', layer);
   prompt.hidden = true;
   const dialog = el('div', 'v3-dialog', layer);
@@ -36,13 +37,6 @@ export function createUI(root, { touch }) {
   notice.hidden = true;
   const flashEl = el('div', 'v3-flash', layer);
   const fadeEl = el('div', 'v3-fade', layer);
-  const stick = el('div', 'v3-stick', layer);
-  const knob = el('i', '', stick);
-  // M-002: always-visible mode switch in the top bar.
-  const modeBtn = el('button', 'v3-mode-pill', layer, '▤ 2D 经典');
-  modeBtn.type = 'button';
-  modeBtn.setAttribute('aria-label', '切换到 2D 经典模式');
-  modeBtn.hidden = true;
   // Same 消息提醒 as the 2D campus (总部来电、新成就、售后提醒、可建设…), mirrored into the HUD.
   const inbox = el('aside', 'v3-inbox', layer);
   inbox.setAttribute('aria-label', '消息提醒');
@@ -60,26 +54,11 @@ export function createUI(root, { touch }) {
   let busy = false;
   let closeActive = null;
 
-  // Joystick (3D-075): returns a unit-ish vector in screen space.
-  const vec = { x: 0, y: 0, active: false };
-  let stickId = null;
-  function moveStick(e) {
-    const r = stick.getBoundingClientRect();
-    const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
-    const max = r.width / 2 - 10, d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / max);
-    vec.x = (dx / d) * k; vec.y = (dy / d) * k; vec.active = true;
-    knob.style.transform = `translate(${vec.x * max}px, ${vec.y * max}px)`;
-  }
-  stick.addEventListener('pointerdown', e => { stickId = e.pointerId; stick.setPointerCapture(e.pointerId); moveStick(e); });
-  stick.addEventListener('pointermove', e => { if (e.pointerId === stickId) moveStick(e); });
-  const release = e => { if (e.pointerId !== stickId) return; stickId = null; vec.x = vec.y = 0; vec.active = false; knob.style.transform = ''; };
-  stick.addEventListener('pointerup', release);
-  stick.addEventListener('pointercancel', release);
-
   function clearPanel() { panel.replaceChildren(); panel.hidden = true; }
 
   return {
-    stick: vec,
+    setTitle(kicker, name) { title.replaceChildren(el('small', '', null, kicker), el('strong', '', null, name)); },
+    onBack(handler) { back.onclick = handler; },
     get busy() { return busy; },
     // True while buttons are on screen (dialog choices or a screen panel): Enter then belongs to the focused button.
     get hasChoices() { return !panel.hidden || options.childElementCount > 0; },
@@ -92,7 +71,6 @@ export function createUI(root, { touch }) {
       void task.offsetWidth;
       task.classList.add('is-new');
     },
-    minimap: map,
     // items: [{ id, title, detail, open(), dismiss?() }]. Returns ids that are new since the last call.
     setMessages(items) {
       const key = items.map(m => m.id).join('\n');
@@ -118,14 +96,12 @@ export function createUI(root, { touch }) {
       }
       return items.filter(m => !before.has(m.id)).map(m => m.id);
     },
-    onModeToggle(handler) { modeBtn.hidden = !handler; modeBtn.onclick = handler || null; },
-    // 3D-016 prompt above the interactable; touch shows "点一下", desktop shows the E key.
+    // Hover / tap prompt above the thing under the pointer; clicking it acts.
     showPrompt(label, x, y, handler) {
       if (!label) { prompt.hidden = true; onPrompt = null; return; }
       onPrompt = handler;
       prompt.replaceChildren();
-      if (!touch) el('kbd', '', prompt, 'E');
-      el('span', '', prompt, touch ? `点一下 · ${label}` : label);
+      el('span', '', prompt, touch ? `点一下 · ${label}` : `点击 · ${label}`);
       prompt.style.left = `${x}px`;
       prompt.style.top = `${y}px`;
       prompt.hidden = false;
