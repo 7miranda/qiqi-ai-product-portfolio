@@ -5,7 +5,7 @@ const commit=(body)=>({target:'[data-guide="commit"]',title:'确认这一项决�
 export function walkthroughPlan(id,view){
   const plans={
     '1:enter':[{target:'.mission-guidance-actions button',title:'从这里开始你的第一单',body:'点击发光的「选择市场」。接下来我会带你选商品、备货、推广，再一起看这一轮赚了多少。',wait:true}],
-    '1:finish':[{target:'[data-guide="next-round"]',title:'第一轮完成，带着经验继续',body:'点击「开启下一轮」。现金和余货会保留；第二轮只会在新增玩法出现时提示你。',wait:true}],
+    '1:finish':[{target:'[data-guide="next-round"]',title:'第一轮完成，带着经验继续',body:'点击「开启下一轮」。现金会保留，没卖完的货已按成本退回；第二轮只会在新增玩法出现时提示你。',wait:true}],
     '1:return':[{target:'[data-guide="report"]',title:'你已经读懂第一份财报',body:'点击「本轮战报」返回，就可以开启下一轮。',wait:true}],
     '1:market':[choice('#market-choice','先选卖到哪个国家','点开国家列表选择市场。第一次可以保留新加坡；确认后会扣除市场进入费。','保留当前市场'),commit('点击页面里的「继续」，确定市场并进入选品。现在还不会采购商品。')],
     '1:product':[{...choice('.room-controls > .catalog-products button[aria-pressed="true"]','挑一件你想卖的商品','点击商品卡选择商品，看看进货价和建议售价。第一次也可以先试当前选中的商品。','就选当前商品'),event:'click',listen:'.room-controls > .catalog-products button'},commit('点击「继续」确定商品。下一步才会决定买多少、卖多少钱。')],

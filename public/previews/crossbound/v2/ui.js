@@ -94,7 +94,7 @@ export function createV2UI({ React, Button, engine, Base, tasks, facilities=[] }
     const amounts = [...new Set([2000, 5000, 10000, 20000, ...(need > 20000 ? [Math.min(200000, Math.ceil(need / 1000) * 1000)] : [])])];
     return details(preview?.cashShortfall ? `现金缺口 ${cash(preview.cashShortfall)} · 查看过桥方案` : '资金时间线 · 回款、账期与过桥方案',
       rows([['可用现金', cash(company.cash)], ['平台及佣金应收', cash(incoming.reduce((s, r) => s + r.amount, 0))], ['待付采购款与贷款', cash(debt.reduce((s, r) => s + r.amount, 0))]]),
-      h('ol', null, h('li', null, '备货：现款支付或记录下轮到期采购款。'), h('li', null, '发货：先付运输、税费、佣金与仓储费，销售净收入计入应收。'), h('li', null, '交付后14天：推进到下轮开局时回款，再支付到期采购款和贷款。')),
+      h('ol', null, h('li', null, '备货：现款支付或记录下轮到期采购款。'), h('li', null, '发货：先付运输、税费与佣金，销售净收入计入应收；没卖完的货按成本退回现金。'), h('li', null, '交付后14天：推进到下轮开局时回款，再支付到期采购款和贷款。')),
       incoming.map((r, i) => h('p', { key: `in${i}` }, `第${r.dueRound}轮开局到账：${r.kind === 'commission' ? '退货佣金追回' : '平台净销售款'} ${cash(r.amount)}`)),
       debt.map((r, i) => h('p', { key: `out${i}` }, `${r.dueRound <= company.round ? '已到期' : `第${r.dueRound}轮到期`}：${r.label} ${cash(r.amount)}`)),
       company.stage <= 4 && !company.v2.loans.some(l => l.round === company.round) && h(React.Fragment, null,
@@ -157,7 +157,7 @@ export function createV2UI({ React, Button, engine, Base, tasks, facilities=[] }
   function ReportExtras({ report: r }) {
     if (r?.modelVersion !== 'v2') return null;
     return panel('从销售额，到到账金额',
-      rows([['经营平台', r.platform.name], ['关税', cash(r.tariff)], [r.tax.taxName, cash(r.importTax)], ['收款手续费', cash(r.paymentFee)], ['换汇费用', cash(r.fxFee)], ['头程运输', cash(r.firstMileCost)], ['余货仓储', cash(r.warehouseCost)], ['达人毛佣金 / 下轮追回', `${cash(r.commissionGross)} / ${cash(r.commissionRecovery)}`], ['待到账款项', cash(r.receivables)], ['未付采购与贷款', cash(r.liabilities)]]),
+      rows([['经营平台', r.platform.name], ['关税', cash(r.tariff)], [r.tax.taxName, cash(r.importTax)], ['收款手续费', cash(r.paymentFee)], ['换汇费用', cash(r.fxFee)], ['头程运输', cash(r.firstMileCost)], r.stockReturn != null ? ['未售出清仓返现', '+' + cash(r.stockReturn)] : ['余货仓储', cash(r.warehouseCost)], ['达人毛佣金 / 下轮追回', `${cash(r.commissionGross)} / ${cash(r.commissionRecovery)}`], ['待到账款项', cash(r.receivables)], ['未付采购与贷款', cash(r.liabilities)]]),
       h('p', null, `当地币种净销售额 ${r.localRevenue.toLocaleString()} ${r.tax.currency}；固定演示汇率 1 USD = ${r.tax.fx} ${r.tax.currency}。`),
       details('完整利润对账', rows(profitRows(r).map(x => [x.label, cash(x.amount)])), h('p', null, `收入减全部成本：${cash(r.profit)}；净资产变化：${cash(r.assetChange)}。贷款本金、到期付款、应收到账不会重复计入利润。`)),
       r.attribution.some(a => a.id === 'ads' && a.spend > 0) && h('p', null, `${r.bid.name} · ${r.timeSlot.name}：本轮竞价系数${r.adVariation.toFixed(2)}，广告ACOS ${r.acos == null ? '暂无成交' : pct(r.acos)}。`),

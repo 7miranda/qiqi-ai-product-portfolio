@@ -202,14 +202,35 @@ test('season preparation survives rounds, heat decays, and a held stock is charg
   assert.equal(prepared.seasonFactor, 1.3); assert.equal(unprepared.seasonFactor, 1.1);
   assert.ok(prepared.visitors > unprepared.visitors);
 });
-test('V2 clearance leaves receivables intact and reconciles the half-cost inventory loss', () => {
-  const n = finish(e, stocked({ terms: 'credit' }));
-  const sold = e.clearStock(n, 'tech');
-  assert.equal(sold.report.receivables, n.report.receivables);
-  assert.equal(sold.report.profit, sold.report.assetChange);
-  assert.equal(sold.report.profit, money(n.report.profit - sold.report.clearanceLoss));
-  assert.equal(e.clearStock(sold, 'tech'), sold);
-  assert.ok(e.deserialize(e.serialize(sold)));
+test('REQ-052 settlement returns unsold stock at cost without touching profit or receivables', () => {
+  const ready = stocked({ terms: 'credit' }), promoted = e.commit(ready, { id: 'ads', budget: 3600, promotionChoice: { id: 'benefit' } });
+  const actual = e.simulate({ ...promoted, fulfillmentPlanId: 'express' }), n = finish(e, ready);
+  assert.ok(actual.inventoryRemaining > 0, 'fixture should leave unsold stock');
+  assert.equal(n.report.stockReturnUnits, actual.inventoryRemaining);
+  assert.equal(n.report.stockReturn, actual.inventoryCostRemaining);
+  assert.ok(Math.abs(n.report.stockReturn - actual.inventoryRemaining * actual.availableCost / actual.totalUnits) < .02, 'units × unit cost');
+  assert.ok(Object.values(n.inventory).every(q => q === 0));
+  assert.equal(n.report.inventoryRemaining, 0); assert.equal(n.report.warehouseCost, 0);
+  assert.equal(n.ledger.filter(row => row.category === 'stockReturn').reduce((s, row) => s + row.cashDelta, 0), actual.inventoryCostRemaining);
+  assert.equal(n.report.profit, n.report.assetChange);
+  assert.equal(n.report.receivables, money(actual.netRevenue + actual.commissionRecovery));
+  // Nothing is left for the manual half-price clearance.
+  assert.equal(e.clearStock(n, 'tech'), n);
+  assert.ok(e.deserialize(e.serialize(n)));
+});
+test('REQ-052 three rounds in a row: every round ends empty and restocks the full quantity', () => {
+  let n = stocked();
+  for (let round = 1; round <= 3; round++) {
+    n = finish(e, n);
+    assert.equal(n.stage, 6, `round ${round} settles`);
+    assert.ok(Object.values(n.inventory).every(q => q === 0), `round ${round} ends with no stock`);
+    assert.equal(n.report.unitsToBuy, n.report.quantity, `round ${round} buys the full quantity`);
+    if (round === 3) break;
+    n = e.next(n);
+    for (const d of [{ id: 'singapore' }, { id: 'tech' }, { id: 'pilot', quantity: 1200, price: 45, supplierId: 'standard' }]) n = e.commit(n, d);
+    assert.equal(n.stage, 3, `round ${round + 1} can afford to restock`);
+    n = e.publish(n, { mode: 'reuse' });
+  }
 });
 test('customs preparation is a real lead-time event, and switching away escapes the targeted rival', () => {
   let n = e.configure(staged(),{firstMile:'air'});
