@@ -11,7 +11,9 @@ let sending=false;
 export function enqueue(type,id,data) {
   try {
     const queue=read(KEY).filter(row=>row.id!==id);
-    queue.push({id,type,data:{schema_version:DATA_VERSION,game_version:'crossbound-20261022',...data},at:new Date().toISOString()});
+    // REQ-051: tag events with the view group (rooms/classic) once the room layer has assigned one.
+    const variant=type==='events'?globalThis.CrossboundView?.variant:null;
+    queue.push({id,type,data:{schema_version:DATA_VERSION,game_version:'crossbound-20261022',...(variant?{view_variant:variant}:{}),...data},at:new Date().toISOString()});
     localStorage.setItem(KEY,JSON.stringify(queue));
   } catch { /* Storage/network trouble must never block play. */ }
 }
