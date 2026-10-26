@@ -1,4 +1,4 @@
-import { BALANCE_VERSION, friendly, balanceRules, balanceOptions, acquisitionRisk } from '../v11/balance.js';
+import { BALANCE_VERSION, friendly, balanceRules, balanceOptions, acquisitionRisk, STOCK_CARRYOVER } from '../v11/balance.js';
 import { TAX, taxQuote, PLATFORMS, FIRST_MILE, BIDS, TIME_SLOTS, OFFSITE, CONFIG_DEFAULTS, season } from './catalog.js';
 import { productFit } from './product-fit.js';
 import { GOAL_VERSION, goal, financeSnapshot } from './release.js';
@@ -52,7 +52,7 @@ export const HELP = {
   tariff: ['预估关税是什么？', '12个国家均配置关税与进口税。关税按品类与国家的教学参数计算，进口税另列；零关税不代表零税费，退货不自动退税。'],
   conversion: ['访客为什么没有都下单？', '商品与市场匹配、售价、上架质量、配送速度、评分和推广内容共同影响购买意愿。售价越高通常越难成交；交期较长还会让部分新货错过本轮销售机会。'],
   cac: ['CAC 与 TACOS 怎么看？', '这里按各来源到访占比分配订单，是简化估算。CAC为渠道预算及佣金除以该来源未退款订单；TACOS为广告花费除以总销售额。没有订单时显示“暂无”，不把除零写成0。'],
-  inventory: ['库存为什么不是亏掉的钱？', '采购先占用现金，未售商品仍是按成本计量的库存资产。利润扣已售成本和报损，不能再扣一遍整批采购款；清仓按成本五折回款，差额才是清仓损失。'],
+  inventory: ['库存为什么不是亏掉的钱？', '本版暂行规则：每轮结算时，没卖完的货（含退货回库的）按进货成本全额退回现金，库存清零，下一轮重新备货。退回的是本金，不算利润；利润只扣已售成本和报损。'],
 };
 
 export function createV2Core(a) {
@@ -378,7 +378,7 @@ export function createV2Core(a) {
     const listingCost = sum(n.ledger.filter(e => e.round === n.round && e.category === 'listing').map(e => -e.cashDelta));
     const tax = taxQuote(m.id, p, orders, avgCost, firstMileUnit), { tariff, importTax } = tax;
     const paymentFee = money(netRevenue * .035), fxFee = money(netRevenue * tax.fxFee), packagingCost = money(orders * effects.packaging);
-    const warehouseCost = money(Object.values(n.inventory).reduce((s, v) => s + v, 0) - (n.inventory[p.id] || 0) + totalUnits - orders + returnRestocked) * .5;
+    const warehouseCost = !STOCK_CARRYOVER ? 0 : money(Object.values(n.inventory).reduce((s, v) => s + v, 0) - (n.inventory[p.id] || 0) + totalUnits - orders + returnRestocked) * .5;
     const testingCost = expenses(n, 'testing'), eventCost = expenses(n, 'events'), trademarkCost = expenses(n, 'trademark');
     const seasonPrepCost = expenses(n, 'season') || (c.seasonPrep && seasonInfo.index !== 2 ? 300 : 0);
     const interestCost = sum(n.v2.loans.filter(l => l.round === n.round).map(l => l.interest));
@@ -421,7 +421,7 @@ export function createV2Core(a) {
     if (n.stage === 2) { cashDelta = -(c.terms === 'credit' ? 0 : mean.purchaseCost) - mean.firstMileCost - mean.seasonPrepCost; inventoryDelta = mean.unitsToBuy; }
     if (n.stage === 3) cashDelta = -d.budget - mean.offsiteCost - (n.currentListing ? 0 : r.currentListing?.cost || 0);
     const settlement = p => -sum([p.shippingCost, p.platformFees, p.commissionGross, p.returnHandlingCost, p.tariff, p.importTax, p.paymentFee, p.fxFee, p.packagingCost, p.warehouseCost]);
-    if (n.stage === 4) { cashDelta = settlement(mean); inventoryDelta = -mean.orders + mean.returnRestocked; }
+    if (n.stage === 4) { cashDelta = settlement(mean); inventoryDelta = STOCK_CARRYOVER ? -mean.orders + mean.returnRestocked : -Object.values(n.inventory).reduce((s, v) => s + v, 0); }
     if (n.stage === 5) cashDelta = -option.cost;
     const overdue = [...n.v2.payables, ...n.v2.loans].some(b => !b.paid && b.dueRound <= n.round);
     const blocked = n.stage === 2 && overdue ? '有到期款项尚未偿还，先核对资金时间线或使用过桥方案。' : n.stage === 2 && mean.unitsToBuy > 0 && mean.unitsToBuy < mean.moq ? `${mean.supplierName}至少新增采购${mean.moq}件，当前补货${mean.unitsToBuy}件。请调整数量或供应商。` : null;
@@ -450,10 +450,10 @@ export function createV2Core(a) {
     Object.assign(r, { balanceVersion:n.balanceVersion, goalVersion:n.goalVersion, totalCosts: p.totalCosts, ratingAfter: money(ratingAfter), roundStart: copy(n.roundStart), modelVersion: 'v2',
       formula: '本轮先按来源形成访问机会，再由市场匹配、售价、商品页、配送、评分与波动计算购买意愿；超出市场容量的机会减半，库存和交期限制实际订单。退款与全部费用分别记账。',
       nextRatingImpact: 1 - Math.sqrt(ratingAfter / 5) });
-    r.conclusions.push(p.delayedUnits ? `${p.leadDays}天备货使${p.delayedUnits}件新货错过本轮销售窗口，余货计入下轮库存。` : '现有库存及时衔接了本轮销售。');
+    r.conclusions.push(p.delayedUnits ? `${p.leadDays}天备货使${p.delayedUnits}件新货错过本轮销售窗口，${STOCK_CARRYOVER ? '余货计入下轮库存' : '结算时已按成本退回'}。` : '现有库存及时衔接了本轮销售。');
     r.conclusions.push(`${p.tax.country}预估关税 $${p.tariff.toFixed(2)}、${p.tax.taxName} $${p.importTax.toFixed(2)} 已分别入账。`);
     if (p.badReviews >= 10) r.conclusions.push(`运营伙伴提醒：新增${p.badReviews}条差评。下轮注意商品描述和交付体验。`);
-    Object.assign(r, balance(n), { lesson: '经营利润按已发生的收入与费用计算；现金还会受到采购账期、14天回款及贷款本金的影响。未售库存仍是资产。' });
+    Object.assign(r, balance(n), { lesson: `经营利润按已发生的收入与费用计算；现金还会受到采购账期、14天回款及贷款本金的影响。${STOCK_CARRYOVER ? '未售库存仍是资产。' : '没卖完的货已按成本退回现金，不算利润。'}` });
     return r;
   }
   function balance(n) {
@@ -507,7 +507,8 @@ export function createV2Core(a) {
       r.v2.receivables.push({ round: r.round, dueRound: r.round + 1, days: 14, amount: actual.netRevenue, kind: 'sales', paid: false });
       if (actual.commissionRecovery) r.v2.receivables.push({ round: r.round, dueRound: r.round + 1, amount: actual.commissionRecovery, kind: 'commission', paid: false });
       for (const [category, label, amount] of settlementCosts) if (amount) entry(r, category, label, -amount);
-      r.report = makeReport(r, actual); delta = money(r.cash - n.cash);
+      const returned = STOCK_CARRYOVER ? null : returnStock(r);
+      r.report = makeReport(r, actual); if (returned) Object.assign(r.report, returned); delta = money(r.cash - n.cash);
       for (const event of r.v2.events.filter(e => e.dueRound === r.round && !e.choice)) {
         event.choice = 'no-action';
         r.v2.eventHistory.push({ ...copy(event), resolvedRound: r.round, outcome: '本轮未采取额外措施，结果已计入战报。' });
@@ -526,8 +527,15 @@ export function createV2Core(a) {
     }
     r.stage++;
     const titles = ['销售市场已确认', '主打商品已选定', '定价与备货已执行', '推广方案已启动', '本轮订单已结算', '下一轮计划已保存'];
-    const body = n.stage === 2 ? `采购${p.unitsToBuy}件，交期${p.leadDays}天；本轮预计到货${p.arrivedUnits}件，另${p.delayedUnits}件保留到下一轮。` : n.stage === 4 ? `${r.report.orders}单下单、${r.report.refunds}单退款；本轮贡献利润 $${r.report.profit.toFixed(2)}，费用与库存已对账。` : n.stage === 3 ? `${p.promotionChoice.name}已确认，推广预算 $${d.budget} 已入账。` : '选择已记录，继续下一步。';
+    const body = n.stage === 2 ? `采购${p.unitsToBuy}件，交期${p.leadDays}天；本轮预计到货${p.arrivedUnits}件，另${p.delayedUnits}件${STOCK_CARRYOVER ? '保留到下一轮' : '赶不上本轮，结算时按成本退回'}。` : n.stage === 4 ? `${r.report.orders}单下单、${r.report.refunds}单退款；本轮贡献利润 $${r.report.profit.toFixed(2)}，费用与库存已对账。${r.report.stockReturn ? `未售出${r.report.stockReturnUnits}件按成本退回 $${r.report.stockReturn.toFixed(2)}。` : ''}` : n.stage === 3 ? `${p.promotionChoice.name}已确认，推广预算 $${d.budget} 已入账。` : '选择已记录，继续下一步。';
     return feedback(r, titles[n.stage], body, { cash: delta, inventory: p.inventoryDelta, orders: n.stage === 4 ? r.report.orders : 0 });
+  }
+  // REQ-052: unsold stock, including restocked returns, goes back at cost. It is principal, not income.
+  function returnStock(n) {
+    const units = products.reduce((s, p) => s + (n.inventory[p.id] || 0), 0), cash = value(n.inventory, n.inventoryCosts);
+    for (const p of products) { n.inventory[p.id] = 0; n.inventoryCosts[p.id] = 0; }
+    if (cash) entry(n, 'stockReturn', `未售出清仓返现 · ${units}件按成本退回`, cash);
+    return { stockReturnUnits: units, stockReturn: cash, inventoryRemaining: 0, inventoryCostRemaining: 0 };
   }
   function restoreStart(n, snap) {
     const r = create(n.runSeed);
@@ -562,7 +570,7 @@ export function createV2Core(a) {
     r.v2.config = { ...CONFIG_DEFAULTS, firstMile:'mixed', platform: config(n).platform };
     r.round = n.round + 1; r.roundStart = snapshot(r);
     settleDue(r);
-    return feedback(r, `第${r.round}轮经营已开始`, '现金、库存、商品页与评分已保留。本轮市场波动已更新，同轮重试保持公平。');
+    return feedback(r, `第${r.round}轮经营已开始`, `${STOCK_CARRYOVER ? '现金、库存、商品页与评分已保留' : '现金、商品页与评分已保留，本轮重新备货'}。本轮市场波动已更新，同轮重试保持公平。`);
   }
   function previous(n) {
     const report = n.history.find(r => r.round === n.round - 1);

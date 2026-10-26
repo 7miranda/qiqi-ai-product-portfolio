@@ -1,6 +1,9 @@
 // REQ-049 teaching calibration. Saved rounds retain their own economics.
 export const BALANCE_VERSION = 'friendly-20261022';
 export const friendly = state => state?.balanceVersion === BALANCE_VERSION;
+// REQ-052 (interim): settlement returns unsold stock at cost, so nothing carries into the next round.
+// Restoring carry-over needs a new product decision; do not flip this silently.
+export const STOCK_CARRYOVER = false;
 export const balanceRules = state => friendly(state)
   ? { conversion: .036, elasticity: 1.1, arrivalFloor: .75, priceRefundSlope: .12, maxPrice: 2 }
   : { conversion: .025, elasticity: 1.4, arrivalFloor: 0, priceRefundSlope: .02, maxPrice: 1.5 };

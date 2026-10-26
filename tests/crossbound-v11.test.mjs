@@ -136,13 +136,14 @@ test('eight pricing comparisons no longer share the maximum-price answer', () =>
   }
   assert.equal(winners.length,8);assert.ok(winners.some(f=>f<1.5));
 });
-test('market capacity limits excess demand and clearing all stock changes cash and profit once', () => {
+test('market capacity limits excess demand; REQ-052 returns unsold stock at cost once, profit unchanged', () => {
   let n=prepare(e,{quantity:1600});n.trafficPlanId='ads';n.trafficBudget=8000;const s=e.simulate(n);assert.ok(s.saturated);
   assert.ok(s.demand<Math.floor(s.visitors*s.conversion));
-  n=finish(e,n,'ads',3600); const before=n.cash,cost=n.inventoryCosts.tech,profit=n.report.profit;
-  n=e.clearStock(n,'tech');assert.equal(n.cash,money(before+money(cost*.5)));assert.equal(n.inventory.tech,0);
-  assert.equal(n.report.profit,money(profit-money(cost-money(cost*.5))));assert.equal(n.report.assetChange,n.report.profit);
-  assert.equal(e.clearStock(n,'tech').cash,n.cash);assert.ok(e.deserialize(e.serialize(n)));
+  n=finish(e,n,'ads',3600);
+  assert.ok(n.report.stockReturnUnits>0);assert.equal(n.inventory.tech,0);assert.equal(n.inventoryCosts.tech,0);
+  assert.equal(money(n.ledger.filter(r=>r.category==='stockReturn').reduce((t,r)=>t+r.cashDelta,0)),n.report.stockReturn);
+  assert.equal(n.report.assetChange,n.report.profit);
+  assert.equal(e.clearStock(n,'tech'),n);assert.ok(e.deserialize(e.serialize(n)));
 });
 test('ratings persist to next round and report reflects the next conversion impact', () => {
   const n=finish(e,prepare(e),'ads',3600,{id:'benefit'},'economy');

@@ -3,6 +3,7 @@ import { HELP, PROMOTIONS } from './model.js';
 import { countryBadgeAsset } from './badges.js?v=2';
 import { explorationAwards } from '../v2/progress.js';
 import { goal } from '../v2/release.js';
+import { STOCK_CARRYOVER } from './balance.js';
 
 // Reuse the demo's React instance, buttons, panels and visual classes.
 export function createCrossboundUI({ React, Button, engine, Passport, passportData, growth }) {
@@ -42,8 +43,8 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
     const g = growth(company, ops), ready = g.facilities.some(f => f.ready);
     const label = '开启下一轮';
     return h('div', { className: 'result-next-v23' },
-      h('article', null, h('span', null, '继续经营 / 现金与余货保留'), h('h3', null, '下一轮，带着经验出发'),
-        h('p', null, `现有现金${cash(company.cash)}和余货会保留。${!flow.done && g.nextTask?.available ? '总部还有一条经营线索，看看再出发。' : '可以继续经营原市场，也可以去下一站。'}`),
+      h('article', null, h('span', null, STOCK_CARRYOVER ? '继续经营 / 现金与余货保留' : '继续经营 / 现金保留'), h('h3', null, '下一轮，带着经验出发'),
+        h('p', null, `现有现金${cash(company.cash)}${STOCK_CARRYOVER ? '和余货会保留' : '会保留，下一轮重新备货'}。${!flow.done && g.nextTask?.available ? '总部还有一条经营线索，看看再出发。' : '可以继续经营原市场，也可以去下一站。'}`),
         h('div', { className: 'result-next-actions' }, button(label + ' →', onContinue, { variant: 'solid', 'data-guide':'next-round' }),
           button('调整本轮方案', onAdjust))),
       h('article', null, h('span', null, '公司成长 / 游戏奖励'), h('h3', null, ready ? '公司有设施可以建设' : g.nextTask?.available ? '总部有一条新线索' : '每一步，都算数'),
@@ -207,6 +208,8 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
       h('ol', { className: 'report-insights-funnel v11-funnel' }, funnel.map(([name, number, note], i) => h('li', { key: name },
         h('span', { className: 'report-insights-step' }, h('small', null, `0${i + 1}`), name), h('strong', null, number),
         h('details', { className: 'v11-help' }, h('summary', null, '? 这一步怎么算'), h('p', null, note))))),
+      r.stockReturnUnits > 0 && h('section', { className: 'report-insights-panel v11-stock-return' }, h('h4', null, `未售出清仓返现 +${cash(r.stockReturn)}`),
+        h('p', null, `${count(r.stockReturnUnits)}件 × 单件成本 $${(r.stockReturn / r.stockReturnUnits).toFixed(2)}。没卖完的货已按成本退回，钱回到你手里，下一轮重新备货。`), h(Help, { id: 'inventory' })),
       r.round < 4 ? h('details', { className: 'decision-optional' }, h('summary', null, '想知道订单从哪里来？展开看看'), attribution) : attribution,
       h('div', { className: 'report-insights-pair' },
         h('section', { className: 'report-insights-panel' }, h('h4', null, '退款与交付'), h('ul', { className: 'report-insights-reasons' }, r.refundReasons.map(s => h('li', { key: s.id }, h('span', null, s.label), h('b', null, `${s.count}单`)))),
@@ -216,7 +219,8 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
   }
   function Clearance({ company, onChange }) {
     const [selected, setSelected] = React.useState(null);
-    if (!engine.valid(company) || ![5, 6].includes(company.stage)) return null;
+    // REQ-052: settlement already returns all stock at cost; keep the manual flow for when carry-over returns.
+    if (!STOCK_CARRYOVER || !engine.valid(company) || ![5, 6].includes(company.stage)) return null;
     const inventory = engine.products.filter(p => company.inventory[p.id] > 0);
     if (!inventory.length) return null;
     const product = engine.products.find(p => p.id === selected), cost = product && (company.inventoryCosts[product.id] ?? product.cost * company.inventory[product.id]);
