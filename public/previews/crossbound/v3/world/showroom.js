@@ -6,7 +6,8 @@ import { fitStars } from './logic.js';
 import { productModel } from './products.js';
 
 const COLS = [-5.5, -2, 1.5, 5, 8.5];
-const ROWS = [-6, -2.5, 1];
+const ROWS = [-6, -2.5, 1, 4.5];
+export const STANDS = COLS.length * ROWS.length;   // products per batch; 「换一批」 pages through the rest
 export const SUPPLIERS = [
   { id: 'standard', name: '常规供货', z: -5.5, color: P.cyan },
   { id: 'fast', name: '现货快补', z: -1.5, color: P.magenta },
@@ -25,7 +26,8 @@ function boardLines(p, marketLabel, marketId, { selected, recommended }) {
   ];
 }
 
-export function buildShowroom({ products, recommendedId, marketId, marketLabel }) {
+// batch: { page, pages, total } for the 「换一批」 terminal.
+export function buildShowroom({ products, recommendedId, marketId, marketLabel, batch = { page: 0, pages: 1, total: products.length } }) {
   const group = new THREE.Group();
   const boxes = [], circles = [], occluders = [], interactables = [], ticks = [];
   const solid = (minX, maxX, minZ, maxZ) => boxes.push({ minX, maxX, minZ, maxZ });
@@ -95,6 +97,16 @@ export function buildShowroom({ products, recommendedId, marketId, marketLabel }
     interactables.push({ id: `supplier:${s.id}`, kind: 'supplier', supplierId: s.id, x: -7.9, z: s.z, y: 2.4, label: `和「${s.name}」谈谈`, setHighlight: addOutline(npc.root, P.gold, 1.08) });
     ticks.push((t, dt) => { npc.animate(dt, 0); bang.position.y = 2.5 + Math.sin(t * 3 + s.z) * 0.08; });
   });
+
+  // 「换一批」 terminal (front centre, where the entrance was): 20 stands per batch; this pages through every product on sale here.
+  if (batch.pages > 1) {
+    const kiosk = block(2.2, 0.9, 0.7, toon(0x2a3448), { x: 0, y: 0.45, z: 7.4, parent: group });
+    block(2.22, 0.06, 0.72, neon(P.gold, 0.9), { x: 0, y: 0.91, z: 7.4, parent: group, shadow: false });
+    const label = textPlane([{ text: '换一批', size: 0.42, color: '#ffd34d' }, { text: `第 ${batch.page + 1}/${batch.pages} 批 · 共 ${batch.total} 件`, size: 0.22, color: '#c7d3dc', weight: 500 }], { width: 1.6, height: 0.8, px: 180, bg: '#0a1220', border: '#ffd34d' });
+    label.position.set(0, 1.0, 7.8); label.rotation.x = -0.9; group.add(label);
+    boxes.push({ minX: -1.1, maxX: 1.1, minZ: 7, maxZ: 7.8 });
+    interactables.push({ id: 'shuffle', kind: 'shuffle', x: 0, z: 7.4, y: 2.6, label: `换一批商品（第 ${batch.page + 1}/${batch.pages} 批）`, setHighlight: addOutline(kiosk) });
+  }
 
   // Exit (3D-021): red until product + supplier are chosen.
   const exitMat = neon(P.red);
