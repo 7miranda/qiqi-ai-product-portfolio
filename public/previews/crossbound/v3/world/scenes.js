@@ -143,7 +143,7 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
       h('dt', {}, reuse ? '本地化费' : '制作费'), h('dd', {}, `$${Math.round(quote.cost || 0)}`),
       h('dt', {}, '上架分 → 转化'), h('dd', {}, `${score} 分 ≈ 购买意愿 ×${factor.toFixed(2)}`),
       h('dt', {}, '满分奖励'), h('dd', {}, score >= 95 ? '已达 95 分：自然流量 +20%' : `95 分才有自然流量 +20%（还差 ${95 - score} 分）`));
-    shell(s, { accent: '#4EA8E0', kicker: `第 ${s.company.round} 轮 · 商品页工作室`, title: '先把商品页做好，再去推广', lead: '每张台子选一项，大屏实时变化。分数换算成购买意愿，费用按商品价位计算。' },
+    shell(s, { accent: '#8a7dff', kicker: `第 ${s.company.round} 轮 · 商品页工作室`, title: '先把商品页做好，再去推广', lead: '每张台子选一项，大屏实时变化。分数换算成购买意愿，费用按商品价位计算。' },
       h('div', { class: 'v3s-w3' }, shelf, screen, h('div', { class: 'v3s-benches' }, benches, costs)),
       primary(`发布上架 · $${Math.round(quote.cost || 0)}`, () => { busy = true; act()?.publishListing?.(); setTimeout(() => { busy = false; update(true); }, 1500); },
         { disabled: !quote || quote.cost > s.company.cash, note: quote.cost > s.company.cash ? `现金不够，还差 ${money(quote.cost - s.company.cash)}` : '发布后锁定本轮商品页，直接进入推广室' }));
@@ -186,7 +186,7 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
     const graph = h('div', { class: 'v3s-curve' });
     graph.innerHTML = `<svg viewBox="0 0 300 96" role="img" aria-label="预算与到访的关系"><path d="${path}" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="${dotX}" cy="${dotY}" r="5" fill="#adff2f"/></svg>`;
     const risk = (pv.acquisitionBounds || []).find(r => r.warning);
-    shell(s, { accent: '#FF7A59', kicker: `第 ${s.company.round} 轮 · 推广室`, title: '三块屏幕，选一个渠道开推', lead: '一步三个决定：渠道、打法、预算。达人对口加 30% 购买意愿，运气波动收窄到 0.8–1.3。' },
+    shell(s, { accent: '#ff4fb3', kicker: `第 ${s.company.round} 轮 · 推广室`, title: '三块屏幕，选一个渠道开推', lead: '一步三个决定：渠道、打法、预算。达人对口加 30% 购买意愿，运气波动收窄到 0.8–1.3。' },
       h('div', { class: 'v3s-w4' },
         h('div', { class: 'v3s-screens' }, screens),
         h('section', { class: 'v3s-card' }, h('header', {}, h('strong', {}, '打法'), h('small', {}, channel === 'creator' ? '找谁合作' : channel === 'ads' ? '广告先讲什么' : '内容先拍什么')), plays,
@@ -219,7 +219,7 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
       return h('button', { type: 'button', class: `v3s-plan${on ? ' is-on' : ''}`, 'aria-pressed': String(on), disabled: o.disabled, onclick: () => act()?.choose?.(o.id) },
         h('strong', {}, o.name), h('span', {}, effects.join(' · ')), h('small', {}, o.summary || ''));
     });
-    shell(s, { accent: '#FFC53D', kicker: `第 ${s.company.round} 轮 · 财报结算厅`, title: '安排下一轮，然后结算', lead: '只有一个决定：把这轮赚的钱怎么用。每个选项写清花多少、换来什么、锁住什么。' },
+    shell(s, { accent: '#ffd34d', kicker: `第 ${s.company.round} 轮 · 财报结算厅`, title: '安排下一轮，然后结算', lead: '只有一个决定：把这轮赚的钱怎么用。每个选项写清花多少、换来什么、锁住什么。' },
       h('div', { class: 'v3s-w6' },
         h('section', { class: 'v3s-desk' }, h('small', {}, '这一轮到目前为止'),
           h('dl', { class: 'v3s-ledger' },
@@ -269,16 +269,14 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
   function renderResult(s, r) {
     const g = goal(r), badge = g.passed ? countryBadgeAsset(r.marketId, g.tier)?.src : null;
     const story = (r.conclusions || [])[0] || '';
-    shell(s, { accent: '#FFC53D', kicker: `第 ${s.company.round} 轮 · 结算完成`, title: g.passed ? '本轮目标达成' : '本轮未达标，目标不变' },
+    shell(s, { accent: '#ffd34d', kicker: `第 ${s.company.round} 轮 · 结算完成`, title: g.passed ? '本轮目标达成' : '本轮未达标，目标不变' },
       h('div', { class: 'v3s-result' },
         badge ? h('img', { class: 'v3s-badge', src: badge, alt: `${r.marketId} 国家印章`, width: 160, height: 160 }) : null,
         h('section', { class: 'v3s-desk' },
           h('small', {}, `本轮目标：${g.target} 单未退款，或贡献利润 $5,000`),
           h('h3', { class: g.passed ? 'is-pass' : '' }, goalChannelText(g)),
-          // REQ-055 数字优先: the money row in big numbers, changes in colour.
-          h('div', { class: 'v3s-stats', 'aria-label': '本轮的钱' }, [['收入', r.netRevenue], ['成本', r.totalCosts], ['利润', r.profit, true], ['现金变化', r.cashChange, true]].map(([label, value, signed]) =>
-            h('div', {}, h('small', {}, label), h('strong', { class: signed ? (value >= 0 ? 'is-up' : 'is-down') : '' }, `${signed && value > 0 ? '↑ ' : signed && value < 0 ? '↓ ' : ''}${money(Math.abs(value || 0))}`)))),
-          r.receivables > 0 ? h('p', { class: 'v3s-note' }, `${r.cashChange < 0 ? '现金变化是负的不用慌：' : ''}货款 ${money(r.receivables)} 下一轮开局到账。`) : null,
+          h('p', { class: 'v3s-money' }, `收入 ${money(r.netRevenue)} · 成本 ${money(r.totalCosts)} · 利润 ${money(r.profit)}`),
+          h('p', { class: 'v3s-note' }, `现金变化 ${money(r.cashChange)}${r.receivables > 0 ? `（货款 ${money(r.receivables)} 下一轮开局到账）` : ''}`),
           story ? h('p', { class: 'v3s-story' }, story) : null,
           statements(s, r),
           h('div', { class: 'v3s-links' },

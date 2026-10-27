@@ -13,7 +13,7 @@ export const SUPPLIERS = [
   { id: 'fast', name: '现货快补', z: -1.5, color: P.magenta },
   { id: 'factory', name: '工厂排产', z: 2.5, color: P.lime },
 ];
-const CATEGORY_COLOR = { home: P.cyan, electronics: P.violet, lifestyle: P.magenta, future: P.gold, furniture: P.lime, outdoor: 0xff7a59 };
+const CATEGORY_COLOR = { home: P.cyan, electronics: P.violet, lifestyle: P.magenta, future: P.gold, furniture: P.lime, outdoor: 0xff9f43 };
 const MODEL_SIZE = 1.15;
 const MODEL_Y = 0.92;
 
@@ -21,8 +21,8 @@ function boardLines(p, marketLabel, marketId, { selected, recommended }) {
   const stars = fitStars(p, marketId);
   return [
     { text: `${recommended ? '★推荐 · ' : ''}${p.name}`, size: 0.2, color: selected ? '#5dff9a' : '#f2f6f8' },
-    { text: `参考价 $${p.basePrice ?? '-'} · 成本 $${p.cost ?? '-'}`, size: 0.15, color: '#22302a', weight: 500 },
-    { text: `${marketLabel || '本市场'}适配 ${'★'.repeat(stars)}${'☆'.repeat(5 - stars)}`, size: 0.15, color: '#8a5a00', weight: 500 },
+    { text: `参考价 $${p.basePrice ?? '-'} · 成本 $${p.cost ?? '-'}`, size: 0.15, color: '#c7d3dc', weight: 500 },
+    { text: `${marketLabel || '本市场'}适配 ${'★'.repeat(stars)}${'☆'.repeat(5 - stars)}`, size: 0.15, color: '#ffd34d', weight: 500 },
   ];
 }
 
@@ -33,9 +33,9 @@ export function buildShowroom({ products, recommendedId, marketId, marketLabel, 
   const solid = (minX, maxX, minZ, maxZ) => boxes.push({ minX, maxX, minZ, maxZ });
 
   // Shell 24 x 18 m, exit gap in the south wall.
-  block(24, 0.2, 18, toon(0xfbf7ee), { y: -0.1, parent: group, shadow: false });
-  for (let x = -11; x <= 11; x += 2) block(0.04, 0.01, 18, neon(0xf3e9d6), { x, y: 0.01, parent: group, shadow: false });
-  const wallMat = toon(0xf7eedc);
+  block(24, 0.2, 18, toon(0x1a2232), { y: -0.1, parent: group, shadow: false });
+  for (let x = -11; x <= 11; x += 2) block(0.04, 0.01, 18, neon(0x223047), { x, y: 0.01, parent: group, shadow: false });
+  const wallMat = toon(0x202a3c);
   const walls = [
     block(24, 5.5, 0.3, wallMat, { y: 2.75, z: -9.15, parent: group }),
     block(0.3, 5.5, 18, wallMat, { x: -12.15, y: 2.75, parent: group }),
@@ -57,18 +57,18 @@ export function buildShowroom({ products, recommendedId, marketId, marketLabel, 
     const x = COLS[i % COLS.length], z = ROWS[Math.floor(i / COLS.length)];
     const color = CATEGORY_COLOR[p.category] || P.cyan;
     const g = new THREE.Group(); g.position.set(x, 0, z); group.add(g);
-    mesh(new THREE.CylinderGeometry(0.6, 0.7, 0.9, 20), toon(0xf0e6d1), { y: 0.45, parent: g });
+    mesh(new THREE.CylinderGeometry(0.6, 0.7, 0.9, 20), toon(0x2a3448), { y: 0.45, parent: g });
     mesh(new THREE.TorusGeometry(0.62, 0.03, 6, 32), neon(color, 0.9), { y: 0.91, parent: g, shadow: false }).rotation.x = Math.PI / 2;
     const model = productModel(p, { size: MODEL_SIZE });
     const holder = new THREE.Group(); holder.position.y = MODEL_Y; g.add(holder);
     holder.add(model.group);
     const recommended = p.id === recommendedId;
-    const board = textPlane(boardLines(p, marketLabel, marketId, { recommended }), { width: 1.9, height: 0.75, px: 200, bg: '#ffffff', border: recommended ? '#ffd34d' : '#29414a' });
+    const board = textPlane(boardLines(p, marketLabel, marketId, { recommended }), { width: 1.9, height: 0.75, px: 200, bg: '#0a1220', border: recommended ? '#ffd34d' : '#29414a' });
     // Lectern-style board below the model so it never hides the product from the walkway (F-001: readable at 5 m).
     board.position.set(0, 0.62, 0.9); board.rotation.x = -0.95; g.add(board);
     const ring = mesh(new THREE.RingGeometry(0.85, 1.05, 32), neon(P.green, 0.85), { y: 0.03, parent: g, shadow: false });
     ring.rotation.x = -Math.PI / 2; ring.visible = false;
-    const tag = textPlane([{ text: '✓ 已选', size: 0.55, color: '#ffffff', weight: 800 }], { width: 1.1, height: 0.4, px: 128, bg: '#2fa36b' });
+    const tag = textPlane([{ text: '✓ 已选', size: 0.55, color: '#0a1220', weight: 800 }], { width: 1.1, height: 0.4, px: 128, bg: '#5dff9a' });
     tag.position.y = MODEL_Y + model.height * 1.2 + 0.45; tag.visible = false; g.add(tag);
     circles.push({ x, z, r: 0.75 });
     const st = { p, x, z, g, holder, model, board, ring, tag, recommended, held: false, selected: false };
@@ -84,13 +84,13 @@ export function buildShowroom({ products, recommendedId, marketId, marketLabel, 
   // Supplier booths with NPCs (3D-020).
   const booths = new Map();
   SUPPLIERS.forEach(s => {
-    block(0.7, 1.05, 1.8, toon(0xf0e6d1), { x: -9, y: 0.52, z: s.z, parent: group });
+    block(0.7, 1.05, 1.8, toon(0x2a3448), { x: -9, y: 0.52, z: s.z, parent: group });
     block(0.72, 0.06, 1.82, neon(s.color, 0.9), { x: -9, y: 1.06, z: s.z, parent: group, shadow: false });
-    const npc = character({ body: s.color, trim: 0xfcf8f0, hair: 0xf6edda });
+    const npc = character({ body: s.color, trim: 0x1a2030, hair: 0x2b2a35 });
     npc.root.position.set(-10.3, 0, s.z); npc.root.rotation.y = Math.PI / 2; group.add(npc.root);   // faces the hall (+x)
-    const sign = textPlane([{ text: s.name, size: 0.4, color: '#' + new THREE.Color(s.color).getHexString() }], { width: 2, height: 0.6, bg: '#ffffff', border: '#f0e5d1' });
+    const sign = textPlane([{ text: s.name, size: 0.4, color: '#' + new THREE.Color(s.color).getHexString() }], { width: 2, height: 0.6, bg: '#0a1220', border: '#29414a' });
     sign.position.set(-11.95, 2.9, s.z); sign.rotation.y = Math.PI / 2; group.add(sign);
-    const bang = textPlane([{ text: '!', size: 0.9, color: '#8a5a00' }], { width: 0.5, height: 0.7, glow: true });
+    const bang = textPlane([{ text: '!', size: 0.9, color: '#ffd34d' }], { width: 0.5, height: 0.7, glow: true });
     bang.position.set(-10.3, 2.5, s.z); group.add(bang);
     solid(-12, -8.6, s.z - 0.95, s.z + 0.95);
     booths.set(s.id, { s, npc, bang });
@@ -100,9 +100,9 @@ export function buildShowroom({ products, recommendedId, marketId, marketLabel, 
 
   // 「换一批」 terminal (front centre, where the entrance was): 20 stands per batch; this pages through every product on sale here.
   if (batch.pages > 1) {
-    const kiosk = block(2.2, 0.9, 0.7, toon(0xf0e6d1), { x: 0, y: 0.45, z: 7.4, parent: group });
+    const kiosk = block(2.2, 0.9, 0.7, toon(0x2a3448), { x: 0, y: 0.45, z: 7.4, parent: group });
     block(2.22, 0.06, 0.72, neon(P.gold, 0.9), { x: 0, y: 0.91, z: 7.4, parent: group, shadow: false });
-    const label = textPlane([{ text: '换一批', size: 0.42, color: '#8a5a00' }, { text: `第 ${batch.page + 1}/${batch.pages} 批 · 共 ${batch.total} 件`, size: 0.22, color: '#22302a', weight: 500 }], { width: 1.6, height: 0.8, px: 180, bg: '#ffffff', border: '#ffc53d' });
+    const label = textPlane([{ text: '换一批', size: 0.42, color: '#ffd34d' }, { text: `第 ${batch.page + 1}/${batch.pages} 批 · 共 ${batch.total} 件`, size: 0.22, color: '#c7d3dc', weight: 500 }], { width: 1.6, height: 0.8, px: 180, bg: '#0a1220', border: '#ffd34d' });
     label.position.set(0, 1.0, 7.8); label.rotation.x = -0.9; group.add(label);
     boxes.push({ minX: -1.1, maxX: 1.1, minZ: 7, maxZ: 7.8 });
     interactables.push({ id: 'shuffle', kind: 'shuffle', x: 0, z: 7.4, y: 2.6, label: `换一批商品（第 ${batch.page + 1}/${batch.pages} 批）`, setHighlight: addOutline(kiosk) });
@@ -111,7 +111,7 @@ export function buildShowroom({ products, recommendedId, marketId, marketLabel, 
   // Exit (3D-021): red until product + supplier are chosen.
   const exitMat = neon(P.red);
   for (const [fx, fy, fw, fh] of [[-1.6, 1.75, 0.1, 3.5], [1.6, 1.75, 0.1, 3.5], [0, 3.5, 3.3, 0.1]]) block(fw, fh, 0.12, exitMat, { x: fx, y: fy, z: 8.95, parent: group, shadow: false });
-  const exitSign = textPlane([{ text: '出口 EXIT', size: 0.5, color: '#22302a' }], { width: 2.4, height: 0.6, bg: '#ffffff', border: '#ff7a59' });
+  const exitSign = textPlane([{ text: '出口 EXIT', size: 0.5, color: '#f2f6f8' }], { width: 2.4, height: 0.6, bg: '#0a1220', border: '#ff5a5a' });
   exitSign.position.set(0, 3.95, 8.98); exitSign.rotation.y = Math.PI; group.add(exitSign);
   interactables.push({ id: 'exit', kind: 'exit', x: 0, z: 8.1, y: 3.2, label: '离开展厅', setHighlight: addOutline(exitSign) });
 
@@ -150,7 +150,7 @@ export function buildShowroom({ products, recommendedId, marketId, marketLabel, 
       const s = ctx.canvas.width, k = s / 30, cx = s / 2, cy = s / 2;
       const P2 = (x, z) => [cx + (x - player.x) * k, cy + (z - player.z) * k];
       ctx.clearRect(0, 0, s, s);
-      ctx.strokeStyle = '#8a6fd1'; ctx.lineWidth = 3; ctx.strokeRect(...P2(-12, -9), 24 * k, 18 * k);
+      ctx.strokeStyle = '#8a7dff'; ctx.lineWidth = 3; ctx.strokeRect(...P2(-12, -9), 24 * k, 18 * k);
       for (const st of stands.values()) { const [x, y] = P2(st.x, st.z); ctx.fillStyle = st.selected ? '#5dff9a' : '#52cadd'; ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill(); }
       for (const b of booths.values()) { const [x, y] = P2(-9, b.s.z); ctx.fillStyle = '#' + new THREE.Color(b.s.color).getHexString(); ctx.fillRect(x - 5, y - 8, 10, 16); }
       const [ex, ey] = P2(0, 9); ctx.fillStyle = state.ready ? '#5dff9a' : '#ff5a5a'; ctx.fillRect(ex - 14, ey - 3, 28, 6);
