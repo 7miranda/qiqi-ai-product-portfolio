@@ -1,0 +1,61 @@
+/* REQ-055 light theme · component layer (loads last).
+   Colours of inherited styles are remapped at build time (scripts/crossbound-v11/theme.mjs); this file only sets
+   the v1.2 tokens and the component rules of 《下一版方案》§5.3: one solid primary per screen, ghost buttons,
+   pill shapes, 20px cards, 44px touch targets, 15px body / 13px notes. */
+:root {
+  --cb-page: #FFF8EC; --cb-cream: #FDF1D7; --cb-card: #FFFFFF; --cb-line: #EADFC8;
+  --cb-primary: #2FA36B; --cb-primary-ink: #1E7A4E; --cb-sun: #FFC53D; --cb-coral: #FF7A59; --cb-sky: #4EA8E0;
+  --cb-ink: #22302A; --cb-ink2: #5A6B62; --cb-note: #7A8A82;
+  --cb-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --cb-radius: 20px;
+  color-scheme: light;
+}
+html, body { background: var(--cb-page); color: var(--cb-ink); }
+
+/* ---------- Buttons (Ge: .cut-action / .cut-solid / .cut-outline > .cut-inner) ---------- */
+/* 22px reads as a pill on a 44px button and as a rounded card on taller option buttons. */
+html body .cut-action, html body .cut-outline { clip-path: none !important; border-radius: 22px !important; }
+html body .cut-solid.cut-action { border-radius: 999px !important; }
+html body .cut-action { min-height: 44px; font-size: 15px; transition: background .2s, color .2s, transform .2s, box-shadow .2s; }
+html body .cut-solid.cut-action {
+  background: var(--cb-primary); color: #fff; font-weight: 700; font-size: 16px; padding-inline: 22px;
+  box-shadow: 0 2px 10px rgba(47, 163, 107, 0.25);
+}
+html body .cut-solid.cut-action:hover:not(:disabled) { background: #289160; color: #fff; transform: translateY(-1px); }
+html body .cut-outline { background: transparent !important; padding: 0 !important; }
+html body .cut-outline > .cut-inner.cut-action {
+  background: var(--cb-card); color: var(--cb-ink); border: 1.5px solid var(--cb-line);
+}
+html body .cut-outline > .cut-inner.cut-action:hover:not(:disabled) { border-color: var(--cb-sky); background: #F4FAFE; color: var(--cb-ink); }
+html body .cut-outline > .cut-action[aria-pressed=true] { border-color: var(--cb-primary) !important; background: #EAF6EF !important; color: var(--cb-primary-ink) !important; }
+html body .cut-outline:has(:focus-visible) > .cut-action { outline: 3px solid rgba(78, 168, 224, .45); outline-offset: 2px; }
+html body .cut-action:disabled { opacity: .45; }
+
+/* ---------- Cards ---------- */
+main.campaign .mission-brief,
+main.campaign .v11-notification-row,
+[role=dialog] .report-insights-panel,
+[role=dialog] .v2-panel {
+  background: var(--cb-card); border: 1px solid var(--cb-line); border-radius: var(--cb-radius); box-shadow: var(--cb-shadow);
+}
+main.campaign .mission-brief { background-image: none; padding: 24px; }
+/* Notification rows are cards, not pills; the dismiss × sits inside the card. */
+html body .v11-notification-row, html body .v11-notification-row .cut-outline, html body .v11-notification-row .cut-action { border-radius: var(--cb-radius) !important; }
+html body .v11-notification-row { overflow: hidden; }
+html body .v11-notification-dismiss { min-width: 44px; }
+
+/* Campus labels: pill flags on the map (✓ done / ⚑ current / upcoming faded) */
+main.campaign .enterprise-campus-v18__label .cut-action { background: var(--cb-card); border: 1px solid var(--cb-line); box-shadow: var(--cb-shadow); }
+main.campaign .enterprise-campus-v18__label[data-v3-progress=current] .cut-action { border: 2px solid var(--cb-sun); box-shadow: 0 0 0 4px rgba(255, 197, 61, .25), var(--cb-shadow); }
+main.campaign .enterprise-campus-v18__label[data-v3-progress=upcoming] { opacity: .5; }
+
+/* ---------- Type ---------- */
+main.campaign, [role=dialog] { font-size: 15px; }
+main.campaign h1, [role=dialog] h1 { color: var(--cb-ink); }
+main.campaign h2, [role=dialog] h2 { color: var(--cb-ink); font-weight: 700; }
+
+/* ---------- Touch (REQ-053 P2 · 44pt) ---------- */
+main.campaign button, [role=dialog] button, .v3s button, .v3w-hud button { min-height: 44px; }
+@media (pointer: coarse) {
+  main.campaign button, [role=dialog] button, .v3s button { min-width: 44px; }
+}

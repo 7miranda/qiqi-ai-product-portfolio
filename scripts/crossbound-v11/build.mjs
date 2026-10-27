@@ -3,6 +3,7 @@ import path from 'node:path';
 import ts from 'typescript';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
+import { themeCss, warmMaterial } from './theme.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 // Hash text with normalised line endings so Windows CRLF checkouts produce the same asset versions.
@@ -15,6 +16,7 @@ const cssVersion = createHash('sha256').update(read(path.join(root, folder, 'v11
 const v2Version = createHash('sha256').update(['../v11/balance.js','../v11/model.js','../v11/growth.js','core.js','model.js','catalog.js','progress.js','ui.js','release.js','release-ui.js','records.js','questionnaire.js','tutorial.js','walkthrough.js','styles.css'].map(f=>read(path.join(root,folder,'v2',f))).join('')).digest('hex').slice(0,10);
 // REQ-051 walkable world (3D 方案 v2): own version hash so world edits refresh without touching v1.1/v2 caches.
 const worldFiles = ['logic.js','kit.js','ui.js','showroom.js','rooms.js','products.js','world.js','scenes.js','boot.js','world.css'].map(f => `v3/world/${f}`).concat(['vendor/three/three.module.min.js','vendor/three/three.core.min.js']);
+const themeVersion = createHash('sha256').update(read(path.join(root, folder, 'v3/theme/tokens.css')) + read(fileURLToPath(new URL('./theme.mjs', import.meta.url)))).digest('hex').slice(0, 10);
 const worldVersion = createHash('sha256').update(worldFiles.map(f=>read(path.join(root,folder,f))).join('')).digest('hex').slice(0,10);
 const encode = text => text.replace(/[\u0080-\uFFFF]/g, c => '\\u' + c.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0'));
 function replaceOne(source, from, to, label = from.slice(0, 80)) {
@@ -58,7 +60,7 @@ function patchMain(s) {
   once('function hu(){', 'function hu(){if(v11Flow.active)v11Flow.finish();');
   once('onClick:()=>u("progress"),children:"'+encode('成长奖励')+'"', 'onClick:()=>u("progress"),children:v11HQ?"公司总部 · "+v11HQ:"公司总部"');
   const tutorial = 'o&&!n&&!ms&&(0,re.jsx)(Ge,{variant:"outline",className:"company-tutorial-entry"';
-  once(tutorial, 'o&&!n&&!l&&(0,re.jsx)(V11UI.Cockpit,{company:t,ops:r,preview:pr,onOpen:nr,onBuild:()=>u("progress"),onTask:As}),(0,re.jsxs)(Ge,{variant:"outline",className:"v11-header-achievements",onClick:v11OpenAchievements,children:["出海成就",v11Achievements.unread.length>0&&(0,re.jsx)("span",{className:"v11-new-dot",children:"●"})]}),o&&!n&&(0,re.jsx)(Ge,{variant:"outline",className:"company-tutorial-entry"');
+  once(tutorial, 'o&&!n&&!l&&(0,re.jsx)(V11UI.Cockpit,{company:t,ops:r,preview:pr,onOpen:nr,onBuild:()=>u("progress"),onTask:As,onHandbook:()=>u("handbook")}),(0,re.jsxs)(Ge,{variant:"outline",className:"v11-header-achievements",onClick:v11OpenAchievements,children:["出海成就",v11Achievements.unread.length>0&&(0,re.jsx)("span",{className:"v11-new-dot",children:"●"})]}),o&&!n&&(0,re.jsx)(Ge,{variant:"outline",className:"company-tutorial-entry"');
   s = replaceElement(s, 'campus-world', original => original.replace('children:', 'children:[!l&&(0,re.jsx)(V11UI.NotificationDock,{company:t,ops:r,unread:v11Achievements.unread,onAchievements:v11OpenAchievements,onTask:As,onHQ:()=>u("progress")}),') .replace(/\}\)$/, ']} )'));
   once('(0,re.jsx)(Vse,{currentStepLabel:', '(0,re.jsx)(Vse,{headquartersStatus:v11HQ,currentStepLabel:');
   // REQ-053 P1: from 安排下轮 on, 经营总部 is the W6 结算厅 scene when scenes are on; otherwise the HQ panel.
@@ -112,7 +114,7 @@ function patchMain(s) {
     tn(null);d(R7[Math.min(next.stage,5)]);u(next.stage===6?'complete':'decision');rn();No();
   }`);
   once('onAchievements:v11OpenAchievements,onTask:As,onHQ:()=>u("progress")','onAchievements:v11OpenAchievements,onTask:As,onHQ:()=>u("progress"),onCommunity:()=>u("community")');
-  once('l==="complete"?(0,re.jsxs)(re.Fragment,{children:[','l==="community"?(0,re.jsx)(V2UI.Community,{company:t,onReward:ev=>s(cur=>V11Growth.claimCommunity(cur,ev)),onDone:()=>u(null)}):l==="financials"?(0,re.jsx)(V2UI.Financials,{company:t,onSelect:key=>u(key==="report"?"complete":key)}):l==="assessment"?(0,re.jsx)(V2UI.Assessment,{company:t,ops:r,onSelect:key=>u(key==="report"?"complete":key)}):l==="complete"?(0,re.jsxs)(re.Fragment,{children:[(0,re.jsx)(V2UI.ReportTabs,{onSelect:key=>u(key==="report"?"complete":key)}),(0,re.jsx)(V2UI.GoalCard,{company:t}),releaseRank(r).level===10&&(0,re.jsx)(V2UI.GrowthProgress,{ops:r}),');
+  once('l==="complete"?(0,re.jsxs)(re.Fragment,{children:[','l==="handbook"?(0,re.jsx)(V11UI.Handbook,{}):l==="community"?(0,re.jsx)(V2UI.Community,{company:t,onReward:ev=>s(cur=>V11Growth.claimCommunity(cur,ev)),onDone:()=>u(null)}):l==="financials"?(0,re.jsx)(V2UI.Financials,{company:t,onSelect:key=>u(key==="report"?"complete":key)}):l==="assessment"?(0,re.jsx)(V2UI.Assessment,{company:t,ops:r,onSelect:key=>u(key==="report"?"complete":key)}):l==="complete"?(0,re.jsxs)(re.Fragment,{children:[(0,re.jsx)(V2UI.ReportTabs,{onSelect:key=>u(key==="report"?"complete":key)}),(0,re.jsx)(V2UI.GoalCard,{company:t}),releaseRank(r).level===10&&(0,re.jsx)(V2UI.GrowthProgress,{ops:r}),');
   // REQ-053 P1: with scenes on, entering the current step opens its scene instead of the classic panel.
   once('function nr(){dt!==null&&Bs(null),','function nr(){if(window.CrossboundScenes?.enter?.())return;dt!==null&&Bs(null),');
   s=s.replace('fe=t.round===1?300:500','fe=releaseGoal(t).target').replace('ut=!!(Pe&&Pe.keptOrders>=fe&&Pe.profit>0)','ut=!!(Pe&&releaseGoal(Pe).passed)');
@@ -180,8 +182,33 @@ for (const file of ['index.html', 'preview.html']) {
   });
   // REQ-052: stock no longer carries over, so the cash-first plan must not promise leftover goods.
   script = replaceOne(script, encode('先把钱留在手里，带着余货再做一轮。'), encode('先把钱留在手里，下一轮重新备货。'));
+  // REQ-053 P2-5 copy scan: inherited lines that still promise leftover stock carries into the next round.
+  for (const [from, to] of [
+    ['现金、余货和经验继续保留。', '现金和经验继续保留；没卖完的货已按成本退回。'],
+    ['现金、余货和经验都会保留到下一轮。', '现金和经验都会保留到下一轮；没卖完的货结算时按成本退回。'],
+    ['上一轮现金与余货已保留。', '上一轮的现金已保留，没卖完的货已按成本退回。'],
+    ['上一轮的现金和余货还在。', '上一轮的现金还在。'],
+    ['再带着现金和余货继续下一轮。', '再带着现金继续下一轮。'],
+    ['带上现金和余货，开启下一轮', '带上现金，开启下一轮'],
+    ['下一轮会保留现金、余货和经验。', '下一轮会保留现金和经验。'],
+    ['或带着现金与余货开下一轮。', '或带着现金开下一轮。'],
+    ['件余货带进下一轮', '件余货已按成本退回'],
+    ['下轮先使用余货，再决定采购。', '结算时按成本退回，下轮重新备货。'],
+  ]) {
+    const a = encode(from);
+    if (!script.includes(a)) throw new Error(`copy scan: missing ${from}`);
+    script = script.split(a).join(encode(to));
+  }
   script = replaceFunction(script, 'Tse', s=>s.replace(encode('首轮挑战：300 单未退款，扣掉费用后赚钱。'),encode('首轮挑战：250 单未退款，或贡献利润达到 $5,000。')));
   script = replaceFunction(script, 'R5', s => s.replace(encode('进价提高 8%；交期本轮不改变模拟销量'), encode('进价提高8%；新规则按交期计算本轮及时可售库存')));
+  // REQ-055: the campus keeps its modelling but moves to a warm, sunny palette (materials, ground light, ambient).
+  {
+    const start = script.indexOf(',g1t="#526e7f"'), end = script.indexOf('enterprise-campus-v17 enterprise-campus-v18') + 3500;
+    if (start < 0 || end < start) throw new Error('campus palette anchors');
+    const campus = script.slice(start, end).replace(/"#([0-9a-fA-F]{6})"/g, (m, hex) => `"${warmMaterial('#' + hex)}"`)
+      .replace('ambientLight",{intensity:.31}', 'ambientLight",{intensity:.85}');
+    script = script.slice(0, start) + campus + script.slice(end);
+  }
   script = replaceOne(script, 'window.Globe=W8e;', `${marker}\n${bridge}\nwindow.Globe=W8e;`);
   script = `import {balanceOptions,balanceRules} from "./v11/balance.js";\nimport {GOAL_VERSION,goal as releaseGoal,rank as releaseRank,LEVELS,recommend,matchesDefault} from "./v2/release.js";\nimport {capture,captureExit,flush,feedbackState} from "./v2/records.js";\nimport { HELP } from "./v11/model.js";\nimport { createCrossboundV2 } from "./v2/model.js?v=${v2Version}";\nimport { createV2UI, profitRows } from "./v2/ui.js?v=${v2Version}";\nimport { explorationAwards } from "./v2/progress.js";\nimport { createGrowth } from "./v11/growth.js?v=${v2Version}";\nimport { createCrossboundUI } from "./v11/ui.js?v=${uiVersion}";\n` + script;
   const parsed = ts.createSourceFile(file, script, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
@@ -196,6 +223,11 @@ for (const file of ['index.html', 'preview.html']) {
   imports.three = `./vendor/three/three.module.min.js?v=${worldVersion}`;
   html = html.replace('<head>', `<head>\n<script src="./runtime-config.js"></script>\n\n<script type="importmap">${JSON.stringify({imports})}</script>\n<link rel="stylesheet" href="./v3/world/world.css?v=${worldVersion}">\n<script type="module" src="./v3/world/boot.js?v=${worldVersion}"></script>`);
   html = html.replace('</head>', `<link rel="stylesheet" href="./v11/styles.css?v=${cssVersion}">\n<link rel="stylesheet" href="./v2/styles.css?v=${v2Version}">\n</head>`);
+  // REQ-055: inherited dark-neon styles are remapped onto the light tokens; component rules load last.
+  html = html.replace(/(<style[^>]*>)([\s\S]*?)(<\/style>)/g, (m, open, css, close) => open + themeCss(css) + close)
+    .replace(/(<meta name="theme-color" content=")[^"]*"/, '$1#FFF8EC"');
+  html = html.replace('</head>', `<link rel="stylesheet" href="./v3/theme/tokens.css?v=${themeVersion}">
+</head>`);
   fs.writeFileSync(path.join(root, relative), html);
   console.log(`${file}: v1.1 integrated; original campus and dialog layout retained.`);
 }

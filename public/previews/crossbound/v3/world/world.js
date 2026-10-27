@@ -49,12 +49,12 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
   const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 200);
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(PALETTE.night);
-  scene.fog = new THREE.Fog(0x0b1020, 26, 48);
+  scene.fog = new THREE.Fog(0xffffff, 26, 48);
 
   // Lights: dim neon night. Only the key light casts shadows (性能红线).
-  const hemi = new THREE.HemisphereLight(0x9aa8ff, 0x2a2238, 2.6);
-  const ambient = new THREE.AmbientLight(0xffffff, 0.8);
-  const key = new THREE.DirectionalLight(0xd2e0ff, 2.6);
+  const hemi = new THREE.HemisphereLight(0xcde2e9, 0xf7efde, 2.6);
+  const ambient = new THREE.AmbientLight(0x22302a, 0.8);
+  const key = new THREE.DirectionalLight(0xcde2e9, 2.6);
   key.position.set(-14, 22, 12);
   key.shadow.mapSize.set(2048, 2048);
   Object.assign(key.shadow.camera, { left: -16, right: 16, top: 12, bottom: -12, far: 80 });

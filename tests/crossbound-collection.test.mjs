@@ -46,7 +46,9 @@ test('tutorial progress follows game state and completed report reading, not cli
   n.currentListing={};assert.equal(tutorialSteps(n,'decision')[0].id,'1:promotion');
   n.history=[{round:1}];assert.deepEqual(checklist(n,{}),[true,true,true,false,false]);
   assert.deepEqual(checklist(n,{reports:{1:true}}),[true,true,true,true,false]);
-  n.round=2;n.stage=2;assert.deepEqual(tutorialSteps(n,'decision').map(x=>x.id),['2:first-mile','2:credit']);
+  n.round=2;n.stage=2;assert.deepEqual(tutorialSteps(n,'decision').map(x=>x.id),['2:credit']);
+  // REQ-053 P2-4: item 5 is "round 2 played and its report read", with no hidden panel-tip requirement.
+  n.history=[{round:1},{round:2}];assert.deepEqual(checklist(n,{reports:{1:true,2:true}}),[true,true,true,true,true]);
 });
 test('legacy analytics identity survives engine migration without changing UUID company identity',()=>{
   const company={runSeed:123,v2:{identity:'new-engine-uuid',collectionIdentity:'legacy-123'}};

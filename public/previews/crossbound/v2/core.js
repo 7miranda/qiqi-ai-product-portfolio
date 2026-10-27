@@ -650,6 +650,6 @@ export function createV2Core(a) {
     if (oldZero) defs.push(['zero-refunds', '完美交付 · 历史纪念', '旧版已获得的零退款徽章，永久保留', r => r === oldZero]);
     return defs.map(([id, name, description, predicate]) => { const found = history.find(predicate); return { id, name, description, earned: !!found, round: found?.round }; });
   }
-  return { valid, create, migrate, upgrade, snapshot, listingProduct, listingQuote, publish, optimize, choice, normalize, simulate, preview, commit, rollback, next, previous, clearStock, serialize, deserialize, milestones, scale, options, products, markets, channels,
+  return { help: HELP, valid, create, migrate, upgrade, snapshot, listingProduct, listingQuote, publish, optimize, choice, normalize, simulate, preview, commit, rollback, next, previous, clearStock, serialize, deserialize, milestones, scale, options, products, markets, channels,
     configure, config, supplyQuote, hasTrademark, act, eventChoices, eventEffect, balance };
 }
