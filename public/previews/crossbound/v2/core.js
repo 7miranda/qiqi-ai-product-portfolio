@@ -164,6 +164,7 @@ export function createV2Core(a) {
   function hasTrademark(n,productId=n.productId) {
     return Array.isArray(n.v2.trademarks)?n.v2.trademarks.includes(productId):!!n.v2.trademark;
   }
+  const testCost = n => (n.v2?.tests?.length ? 150 : 0);
   function act(n, input) {
     if (!valid(n) || !input) return n;
     const r = copy(n);
@@ -174,10 +175,12 @@ export function createV2Core(a) {
       entry(r, 'loan', '过桥贷款本金（下轮偿还，利息12%）', amount);
       settleDue(r);
     } else if (input.type === 'test') {
-      if (n.stage !== 2 || n.cash < 150 || r.v2.tests.some(t => t.round === n.round && t.productId === n.productId)) return n;
+      // REQ-056: the first sample test of a game is free (an unknown fit should be cheap to find out).
+      const cost = testCost(n);
+      if (n.stage !== 2 || n.cash < cost || r.v2.tests.some(t => t.round === n.round && t.productId === n.productId)) return n;
       const fit = productFit[n.productId][n.marketId], score = money(fit * (.9 + seededUnit(n.runSeed, n.round, `test:${n.productId}:${n.marketId}`) * .2));
-      r.v2.tests.push({ round: n.round, productId: n.productId, marketId: n.marketId, score, cost: 150 });
-      entry(r, 'testing', '小预算测款（仅抽样信号，不保证订单）', -150);
+      r.v2.tests.push({ round: n.round, productId: n.productId, marketId: n.marketId, score, cost });
+      entry(r, 'testing', cost ? '小预算测款（仅抽样信号，不保证订单）' : '首次测款免费（仅抽样信号，不保证订单）', -cost);
     } else if (input.type === 'trademark') {
       if (n.cash < 600 || !n.productId || hasTrademark(n) || n.stage > 3) return n;
       r.v2.trademarks=[...(r.v2.trademarks||[]),n.productId]; r.v2.trademark = true; entry(r, 'trademark', '模拟商标登记', -600);
@@ -650,6 +653,6 @@ export function createV2Core(a) {
     if (oldZero) defs.push(['zero-refunds', '完美交付 · 历史纪念', '旧版已获得的零退款徽章，永久保留', r => r === oldZero]);
     return defs.map(([id, name, description, predicate]) => { const found = history.find(predicate); return { id, name, description, earned: !!found, round: found?.round }; });
   }
-  return { help: HELP, valid, create, migrate, upgrade, snapshot, listingProduct, listingQuote, publish, optimize, choice, normalize, simulate, preview, commit, rollback, next, previous, clearStock, serialize, deserialize, milestones, scale, options, products, markets, channels,
+  return { help: HELP, testCost, valid, create, migrate, upgrade, snapshot, listingProduct, listingQuote, publish, optimize, choice, normalize, simulate, preview, commit, rollback, next, previous, clearStock, serialize, deserialize, milestones, scale, options, products, markets, channels,
     configure, config, supplyQuote, hasTrademark, act, eventChoices, eventEffect, balance };
 }

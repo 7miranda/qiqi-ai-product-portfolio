@@ -343,3 +343,12 @@ test('REQ-057: pricing and promotion count settlement cash up front; a plan that
     else assert.ok(ship.cashShortfall > 0);
   }
 });
+
+test('REQ-056: the first sample test of a game is free; later tests cost $150', () => {
+  const n = staged(); // stage 2
+  assert.equal(e.testCost(n), 0);
+  const cash = n.cash, tested = e.act(n, { type: 'test' });
+  assert.equal(tested.cash, cash, 'first test is free');
+  assert.equal(tested.v2.tests.length, 1);
+  assert.equal(e.testCost(tested), 150);
+});

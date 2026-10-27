@@ -5,21 +5,21 @@ import fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import {
   WORLDS, ROOMS_3D, parseMode, variantFor, qualityFor, QUALITY, downgrade, createFpsMonitor,
-  currentWorld, roomStates, zoneStates, taskFor, nearestInteractable, pickShowcase, fitStars,
+  currentWorld, roomStates, zoneStates, taskFor, nearestInteractable, pickShowcase, fitStars, fitTier, capacityBar,
   archetypeFor, crateLayout, settlementSplit, budgetCurve, cashPlan, loanFor,
 } from '../public/previews/crossbound/v3/world/logic.js';
 
 const folder = 'public/previews/crossbound';
 const snap = (stage, extra = {}) => ({ company: { stage, ...extra } });
 
-test('six step scenes in engine order: W1/W2/W5 are 3D rooms, W3/W4/W6 are 2D scenes', () => {
-  assert.deepEqual(WORLDS.map(w => w.name), ['选品展厅', '定价财务室', '商品页工作室', '推广室', '物流仓', '财报结算厅']);
+test('seven step scenes in engine order: W1/W2/W5 are 3D rooms, W0/W3/W4/W6 are 2D scenes', () => {
+  assert.deepEqual(WORLDS.map(w => w.name), ['市场研究所', '选品展厅', '定价财务室', '商品页工作室', '推广室', '物流仓', '财报结算厅']);
   assert.deepEqual([...ROOMS_3D], ['w1', 'w2', 'w5']);
-  assert.deepEqual(WORLDS.map(w => w.zone), ['product', 'supply', 'growth', 'growth', 'fulfillment', 'headquarters'], 'each scene opens from a campus building');
+  assert.deepEqual(WORLDS.map(w => w.zone), ['market', 'product', 'supply', 'growth', 'growth', 'fulfillment', 'headquarters'], 'each scene opens from a campus building');
 });
 
-test('stage -> scene (stage 3 splits listing W3 / promotion W4; stage 0 stays on the map)', () => {
-  assert.equal(currentWorld(snap(0)), 'hub');
+test('stage -> scene (REQ-056: stage 0 is the W0 market scene; stage 3 splits listing W3 / promotion W4)', () => {
+  assert.equal(currentWorld(snap(0)), 'w0');
   assert.equal(currentWorld(snap(1)), 'w1');
   assert.equal(currentWorld(snap(2)), 'w2');
   assert.equal(currentWorld(snap(3)), 'w3');
@@ -30,7 +30,7 @@ test('stage -> scene (stage 3 splits listing W3 / promotion W4; stage 0 stays on
 });
 
 test('map progress (REQ-053 §3): rooms and campus buildings are done / current / upcoming', () => {
-  assert.deepEqual(roomStates(snap(2)), { w1: 'done', w2: 'current', w3: 'upcoming', w4: 'upcoming', w5: 'upcoming', w6: 'upcoming' });
+  assert.deepEqual(roomStates(snap(2)), { w0: 'done', w1: 'done', w2: 'current', w3: 'upcoming', w4: 'upcoming', w5: 'upcoming', w6: 'upcoming' });
   assert.equal(roomStates(snap(3, { currentListing: {} })).w3, 'done');
   assert.deepEqual(zoneStates(snap(0)), { market: 'current', product: 'upcoming', supply: 'upcoming', growth: 'upcoming', fulfillment: 'upcoming', headquarters: 'upcoming' });
   assert.equal(zoneStates(snap(3)).growth, 'current', 'listing in progress');
@@ -67,7 +67,12 @@ test('showroom puts the recommended product first, keeps the current pick, sprea
   assert.ok(!shown.some(o => o.id === 'off'), 'disabled products are not shown');
   assert.deepEqual(new Set(shown.map(o => o.category)), new Set(['home', 'tech', 'beauty']));
   assert.equal(fitStars({ fit: { singapore: 1.25 } }, 'singapore'), 5);
-  assert.equal(fitStars({ fit: {} }, 'singapore'), 3);
+  // REQ-056: no data is not a middle rating.
+  assert.equal(fitStars({ fit: {} }, 'singapore'), null);
+  assert.equal(fitTier({ fit: {} }, 'singapore'), null);
+  assert.deepEqual(fitTier({ fit: { singapore: 1.25 } }, 'singapore'), { stars: 5, label: '高' });
+  assert.equal(fitTier({ fit: { singapore: 1.05 } }, 'singapore').label, '中');
+  assert.equal(fitTier({ fit: { singapore: 0.85 } }, 'singapore').label, '低');
 });
 
 test('budget curve (REQ-053 §4.5 ③): visits grow with √budget; the next $1,000 is spelled out', () => {
@@ -192,4 +197,19 @@ test('v1.2: W3 optimize, W6 statements and cash cards are wired into the scenes'
   assert.match(scenes, /type: 'loan', amount: plan\.loan/);
   const world = fs.readFileSync(`${folder}/v3/world/world.js`, 'utf8');
   assert.match(world, /async function offerLoan/);
+});
+
+test('REQ-056: the capacity bar shows expected visits against capacity and warns past it', () => {
+  assert.equal(capacityBar(1000, 0), null);
+  const fine = capacityBar(12000, 20000);
+  assert.equal(fine.over, false); assert.equal(fine.fill, 0.6);
+  assert.ok(fine.text.includes('12,000 / 容量 20,000'), fine.text);
+  const over = capacityBar(26000, 20000);
+  assert.equal(over.over, true); assert.equal(over.fill, 1);
+  assert.match(over.text, /再多流量也只能算一半/);
+});
+test('REQ-056: the market step is a scene with platform cards and market cards, no classic panel', () => {
+  const scenes = fs.readFileSync(`${folder}/v3/world/scenes.js`, 'utf8'), boot = fs.readFileSync(`${folder}/v3/world/boot.js`, 'utf8');
+  for (const piece of ['const RENDER = { w0: renderW0,', 'engine.configure(c, { platform: p.id })', 'capacityBar(v, cap)']) assert.ok(scenes.includes(piece), piece);
+  assert.doesNotMatch(boot, /'hub'/);
 });

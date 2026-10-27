@@ -36,8 +36,9 @@ export function archetypeFor(product) {
 }
 
 // REQ-053 §3: one map, one full-screen scene per step. W1/W2/W5 are the 3D rooms (fixed camera, click to act);
-// W3/W4/W6 are 2D scenes. Choosing the market (stage 0) stays on the campus map in P1.
+// W0/W3/W4/W6 are 2D scenes. REQ-056: choosing the market (stage 0) is its own scene, opened from 市场研究.
 export const WORLDS = Object.freeze([
+  { id: 'w0', name: '市场研究所', step: '选市场与平台', zone: 'market', render: '2d' },
   { id: 'w1', name: '选品展厅', step: '挑商品、选供应商', zone: 'product', render: '3d' },
   { id: 'w2', name: '定价财务室', step: '定价与备货', zone: 'supply', render: '3d' },
   { id: 'w3', name: '商品页工作室', step: '制作商品页并上架', zone: 'growth', render: '2d' },
@@ -101,7 +102,7 @@ export function createFpsMonitor({ minFps = 45, windowMs = 5000 } = {}) {
 // The scene for an engine snapshot. Stage 3 is W3 (listing) until the page is published, then W4 (promotion).
 export function currentWorld(snapshot) {
   const stage = snapshot?.company?.stage ?? 0;
-  if (stage === 0) return 'hub';
+  if (stage === 0) return 'w0';
   if (stage === 1) return 'w1';
   if (stage === 2) return 'w2';
   if (stage === 3) return snapshot?.company?.currentListing ? 'w4' : 'w3';
@@ -114,11 +115,11 @@ export function currentWorld(snapshot) {
 export function roomStates(snapshot) {
   const current = currentWorld(snapshot);
   const at = WORLDS.findIndex(w => w.id === current);
-  return Object.fromEntries(WORLDS.map((w, i) => [w.id, current === 'hub' ? 'upcoming' : i < at ? 'done' : i === at ? 'current' : 'upcoming']));
+  return Object.fromEntries(WORLDS.map((w, i) => [w.id, i < at ? 'done' : i === at ? 'current' : 'upcoming']));
 }
 // Campus zones carry the same progress; the growth building holds both W3 and W4.
 export function zoneStates(snapshot) {
-  const rooms = roomStates(snapshot), out = { market: (snapshot?.company?.stage ?? 0) > 0 ? 'done' : 'current' };
+  const rooms = roomStates(snapshot), out = {};
   for (const w of WORLDS) {
     const prev = out[w.zone], s = rooms[w.id];
     out[w.zone] = !prev ? s : prev === 'current' || s === 'current' ? 'current' : prev === 'done' && s === 'done' ? 'done' : 'upcoming';
@@ -132,7 +133,7 @@ export function taskFor(snapshot, local = {}) {
   if (!c) return '';
   if (c.stage >= 6) return '本轮已结算，看完结果就能开启下一轮';
   const world = currentWorld(snapshot);
-  if (world === 'hub') return '点市场研究，选一个销售市场';
+  if (world === 'w0') return '点市场研究，选一个销售市场';
   if (world === 'w1') {
     if (!local.product) return '点一件商品拿起来看看，挑 1 件';
     if (!local.supplier) return '点左边的供应商，谈一家';
@@ -186,10 +187,24 @@ export function pickShowcase(options = [], { recommendedId, currentId, limit = 1
 }
 
 // Market fit stars (1-5) for the product stand board, from the catalog `fit` multipliers.
+// REQ-056: no data is not "average" — it returns null and the board says 匹配度待测 instead of showing stars.
 export function fitStars(product, marketId) {
   const f = product?.fit?.[marketId];
-  if (!Number.isFinite(f)) return 3;
+  if (!Number.isFinite(f)) return null;
   return Math.max(1, Math.min(5, Math.round((f - 0.7) / 0.12)));
+}
+// REQ-056 ④: a coarse tier (高 / 中 / 低) from the real fit, never the exact number; null when there is no data.
+export function fitTier(product, marketId) {
+  const stars = fitStars(product, marketId);
+  if (stars == null) return null;
+  return { stars, label: stars >= 4 ? '高' : stars >= 3 ? '中' : '低' };
+}
+// REQ-056 ②: expected visits against the market's capacity; past capacity, extra visits count half.
+export function capacityBar(visitors, capacity) {
+  if (!(capacity > 0)) return null;
+  const v = Math.max(0, Math.round(visitors || 0)), ratio = v / capacity;
+  return { visitors: v, capacity, ratio, fill: Math.min(1, ratio), over: v > capacity,
+    text: v > capacity ? `预计到访 ${v.toLocaleString()} 超过容量 ${capacity.toLocaleString()}：再多流量也只能算一半` : `预计到访 ${v.toLocaleString()} / 容量 ${capacity.toLocaleString()}` };
 }
 
 // REQ-053 §4.5 ③: visits grow with the square root of budget; say what the next $1,000 buys.

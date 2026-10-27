@@ -143,7 +143,7 @@ export function createV2UI({ React, Button, engine, Base, tasks, facilities=[] }
         preview && rows([['当前采购单价', cash(preview.unitCost)], ['新增采购', `${preview.unitsToBuy}件`], ['备货＋头程', `${preview.leadDays}天`], ['及时可售 / 延迟到货', `${preview.units} / ${preview.delayedUnits}件`]]),
         details('小预算测款 · 先验证，再备货',
           stockTest ? h('p', { role: 'status' }, `样本匹配指数 ${stockTest.score.toFixed(2)}，${stockTest.score >= 1.1 ? '信号较强，可以小批验证。' : stockTest.score >= 1 ? '信号中等，留意获客成本。' : '信号偏弱，考虑换品或控制数量。'}测款信号不是订单承诺。`) :
-            button('花$150，获取一次测款信号', () => onChange(engine.act(company, { type: 'test' })), { disabled: company.cash < 150 }),
+            button(engine.testCost?.(company) === 0 ? '首次测款免费，获取一次信号' : '花$150，获取一次测款信号', () => onChange(engine.act(company, { type: 'test' })), { disabled: company.cash < (engine.testCost?.(company) ?? 150) }),
           h('p', { className: 'panel-note' }, '同轮、同商品与市场保持同一样本结果，回滚不能换一份好运。')),
         phase.index !== 2 && h('label', { className: 'v2-check' }, h('input', { type: 'checkbox', checked: c.seasonPrep, onChange: e => change({ seasonPrep: e.target.checked }) }), `提前备战本季 $300 · 收割期触达×1.3（未备战×1.1）`)),
       company.stage === 3 && preview?.acquisitionBounds?.length > 0 && panel('获客成本，先看能不能赚回来',

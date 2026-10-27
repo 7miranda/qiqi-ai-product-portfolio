@@ -91,12 +91,11 @@ async function openScene(id) {
   }
 }
 
-// Called by the patched nr(): open the current step's scene. Returns true when it took over (stage 0, the market,
-// stays on the classic panel in P1; so does any scene that cannot open).
+// Called by the patched nr(): open the current step's scene (REQ-056: the market too). Returns true when it took
+// over; a scene that cannot open leaves the classic panel.
 function enter() {
   if (!scenesOn() || !inGame()) return false;
   const id = currentWorld(state.snapshot);
-  if (id === 'hub') return false;
   if (ROOMS_3D.has(id) && !hasWebgl()) return false;
   openScene(id).then(ok => { if (!ok) state.snapshot?.actions?.open?.(); });
   return true;
@@ -149,7 +148,7 @@ function evaluate() {
   // After a commit the game opens the next step's panel itself (cr() → "decision"); with scenes on, the scene takes over.
   if (scenesOn() && inGame() && !state.scene && !state.opening && s.view === 'decision') {
     const id = currentWorld(s);
-    if (id !== 'hub' && !(ROOMS_3D.has(id) && !hasWebgl())) openScene(id);
+    if (!(ROOMS_3D.has(id) && !hasWebgl())) openScene(id);
   }
   setCampusPaused(!!state.scene || state.dialogOpen);
   markCampus();
