@@ -6,7 +6,7 @@ import { FIRST_MILE } from '../../v2/catalog.js';
 import { balanceRules } from '../../v11/balance.js';
 import { WORLDS, QUALITY, PICKS_KEY, downgrade, createFpsMonitor, taskFor, nearestInteractable, pickShowcase, money } from './logic.js';
 import { createUI, createSounds } from './ui.js';
-import { buildShowroom, SUPPLIERS } from './showroom.js';
+import { buildShowroom, SUPPLIERS, STANDS } from './showroom.js';
 import { buildFinance, buildWarehouse } from './rooms.js';
 import { lightPillar, PALETTE, disposeTree } from './kit.js';
 
@@ -66,7 +66,7 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
   const pillar = lightPillar(PALETTE.gold);
   scene.add(pillar);
 
-  let active = null, inside = null, transitioning = false, roomBusy = false, enteredAt = performance.now();
+  let active = null, inside = null, transitioning = false, roomBusy = false, enteredAt = performance.now(), showPage = 0;
   const picks = loadPicks();
 
   function roundKey() { const c = store.snapshot()?.company; return c ? `${c.runSeed}:${c.round}` : null; }
@@ -92,8 +92,12 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
   const BUILD = {
     w1: () => {
       const s = store.snapshot();
-      const products = pickShowcase(s?.options || [], { recommendedId: s?.recommendedId, currentId: picks.product, limit: 15 });
-      return buildShowroom({ products, recommendedId: s?.recommendedId, marketId: s?.company?.marketId, marketLabel: s?.market?.name });
+      // Every product on sale, recommended + current pick first; 20 stands per batch, 「换一批」 shows the next.
+      const all = pickShowcase(s?.options || [], { recommendedId: s?.recommendedId, currentId: picks.product, limit: Infinity });
+      const pages = Math.max(1, Math.ceil(all.length / STANDS));
+      showPage %= pages;
+      const products = all.slice(showPage * STANDS, (showPage + 1) * STANDS);
+      return buildShowroom({ products, recommendedId: s?.recommendedId, marketId: s?.company?.marketId, marketLabel: s?.market?.name, batch: { page: showPage, pages, total: all.length } });
     },
     w2: () => buildFinance({ snapshot: store.snapshot() }),
     w5: () => buildWarehouse({ snapshot: store.snapshot() }),
@@ -229,6 +233,7 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
     if (!item || ui.busy || transitioning || held || roomBusy) return;
     switch (item.kind) {
       case 'product': return productStand(item.productId);
+      case 'shuffle': showPage++; return switchRoom('w1');
       case 'supplier': return supplierTalk(item.supplierId);
       case 'lever': return stockLever();
       case 'console': return financeConsole();

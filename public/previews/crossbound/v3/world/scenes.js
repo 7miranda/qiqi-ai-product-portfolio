@@ -213,8 +213,10 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
           story ? h('p', { class: 'v3s-story' }, story) : null,
           h('div', { class: 'v3s-links' },
             h('button', { type: 'button', class: 'v3s-ghost', onclick: () => act()?.report?.() }, '查看完整战报'),
-            h('button', { type: 'button', class: 'v3s-ghost', onclick: () => act()?.panel?.('progress') }, '成长、成就与四维评估在总部')))),
-      primary('开启下一轮', () => { busy = true; act()?.nextRound?.(); setTimeout(() => { busy = false; update(true); }, 1500); }));
+            h('button', { type: 'button', class: 'v3s-ghost', onclick: () => act()?.panel?.('progress') }, '成长、成就与四维评估在总部'))),
+        // The one action sits right under the result, centred with it (not in the footer corner).
+        h('div', { class: 'v3s-result-actions' }, primary('开启下一轮', () => { busy = true; act()?.nextRound?.(); setTimeout(() => { busy = false; update(true); }, 1500); }))),
+      []);
   }
 
   // The engine opens its next panel after a commit; the scene shows the next step instead.

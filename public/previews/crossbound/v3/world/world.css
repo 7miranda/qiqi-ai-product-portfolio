@@ -223,7 +223,14 @@ span.v3s-crate-img { font-size: 44px; line-height: 1; width: auto; height: auto;
 .v3s-plan { display: grid; gap: 4px; text-align: left; padding: 14px 16px; border-radius: 14px; border: 1px solid #ffffff1c; background: #0d1826; color: #e6eff3; cursor: pointer; }
 .v3s-plan strong { font-size: 16px; } .v3s-plan span { color: #ffd34d; font-size: 14px; } .v3s-plan small { color: #a4bdc7; font-size: 13px; }
 .v3s-plan.is-on { border-color: #ffd34d; box-shadow: 0 0 18px #ffd34d44; }
-.v3s-result { display: grid; grid-template-columns: auto minmax(0, 620px); gap: 22px; align-items: start; justify-content: center; }
+/* Settlement result: badge, card and the one action stacked in the middle of the screen. */
+.v3s-body:has(> .v3s-result) { display: grid; place-items: center; }
+.v3s-result { display: grid; justify-items: center; gap: 20px; width: min(640px, 100%); margin: 0 auto; text-align: center; }
+.v3s-result .v3s-desk { width: 100%; text-align: left; }
+.v3s-result .v3s-desk h3 { line-height: 1.4; }
+.v3s-result-actions { display: flex; justify-content: center; width: 100%; }
+.v3s-result-actions .v3s-primary { min-width: 260px; }
+.v3s-foot:empty { display: none; }
 .v3s-badge { width: 160px; height: 160px; object-fit: contain; filter: drop-shadow(0 0 20px #ffd34d55); animation: v3-pop-badge .5s ease-out; }
 @keyframes v3-pop-badge { from { transform: scale(.6); opacity: 0; } }
 .v3s-money { margin: 0; font-size: 17px; font-weight: 700; color: #e6eff3; }
@@ -234,9 +241,9 @@ span.v3s-crate-img { font-size: 44px; line-height: 1; width: auto; height: auto;
   .v3s-head { padding: 12px 14px 6px; grid-template-columns: auto 1fr; grid-template-areas: "back cash" "title title" "rooms rooms"; }
   .v3s-lead, .v3s-body { padding-left: 14px; padding-right: 14px; }
   .v3s-foot { padding: 12px 14px 16px; flex-wrap: wrap; } .v3s-primary { flex: 1 1 100%; }
-  .v3s-w3, .v3s-w4, .v3s-w6, .v3s-result { grid-template-columns: 1fr; }
+  .v3s-w3, .v3s-w4, .v3s-w6 { grid-template-columns: 1fr; }
   .v3s-screens { grid-template-columns: 1fr; } .v3s-bench .v3s-chips { grid-template-columns: 1fr; }
   .v3s-w4 > .v3s-ledger { grid-template-columns: auto 1fr; }
-  .v3s-result { justify-items: center; }
+  .v3s-result-actions .v3s-primary { min-width: 0; width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { #v3-world, #v3-world *, .v3s, .v3s * { animation: none !important; transition: none !important; } }
