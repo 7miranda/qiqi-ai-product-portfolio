@@ -6,7 +6,7 @@ import { execFileSync } from 'node:child_process';
 import {
   WORLDS, ROOMS_3D, parseMode, variantFor, qualityFor, QUALITY, downgrade, createFpsMonitor,
   currentWorld, roomStates, zoneStates, taskFor, nearestInteractable, pickShowcase, fitStars,
-  archetypeFor, crateLayout, settlementSplit, budgetCurve,
+  archetypeFor, crateLayout, settlementSplit, budgetCurve, cashPlan, loanFor,
 } from '../public/previews/crossbound/v3/world/logic.js';
 
 const folder = 'public/previews/crossbound';
@@ -170,4 +170,26 @@ test('deployments turn the scenes on unless CROSSBOUND_WORLD overrides it', () =
   assert.throws(() => run({ CROSSBOUND_WORLD: 'yes' }));
   assert.match(fs.readFileSync('dist/crossbound/runtime-config.js', 'utf8'), /\/crossbound\/api/);
   fs.rmSync('dist', { recursive: true, force: true });
+});
+
+test('REQ-057: the cash plan names the remaining spend and the smallest bridge loan that covers a gap', () => {
+  assert.equal(cashPlan(null), null);
+  assert.equal(cashPlan({ cashNeed: 0 }), null);
+  const ok = cashPlan({ cashNeed: 12000, settlementCash: 8000, laterSpend: 900, cashShortfall: 0 });
+  assert.match(ok.text, /\$12,000.*发货结算约 \$8,000.*推广约 \$900.*下轮开局才到账/);
+  assert.equal(ok.loan, 0);
+  assert.equal(cashPlan({ cashNeed: 9000, settlementCash: 9000, cashShortfall: 3400 }).loan, 4000);
+  assert.equal(loanFor(10), 2000);
+  assert.equal(loanFor(450000), 200000);
+});
+
+test('v1.2: W3 optimize, W6 statements and cash cards are wired into the scenes', () => {
+  const scenes = fs.readFileSync(`${folder}/v3/world/scenes.js`, 'utf8');
+  assert.match(scenes, /engine\.optimize\(c\)/);
+  assert.match(scenes, /'优化 \+5 分 · \$300'/);
+  assert.match(scenes, /financialStatements\(s\.company, r\)/);
+  for (const t of ['利润表', '资产负债表', '现金流量表', '利润 ≠ 现金']) assert.ok(scenes.includes(t), t);
+  assert.match(scenes, /type: 'loan', amount: plan\.loan/);
+  const world = fs.readFileSync(`${folder}/v3/world/world.js`, 'utf8');
+  assert.match(world, /async function offerLoan/);
 });

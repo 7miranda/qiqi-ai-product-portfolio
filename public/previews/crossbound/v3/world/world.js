@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { FIRST_MILE } from '../../v2/catalog.js';
 import { balanceRules } from '../../v11/balance.js';
-import { WORLDS, QUALITY, PICKS_KEY, downgrade, createFpsMonitor, taskFor, nearestInteractable, pickShowcase, money } from './logic.js';
+import { WORLDS, QUALITY, PICKS_KEY, downgrade, createFpsMonitor, taskFor, nearestInteractable, pickShowcase, money, cashPlan } from './logic.js';
 import { createUI, createSounds } from './ui.js';
 import { buildShowroom, SUPPLIERS, STANDS } from './showroom.js';
 import { buildFinance, buildWarehouse } from './rooms.js';
@@ -341,9 +341,22 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
     if (r?.action === 'advanced') return advancedOptions();
     if (r?.action !== 'ok') return;
     s = store.snapshot();
-    if (s.preview?.affordable === false) { sound.error(); ui.notice(s.preview.supplyBlockedReason || `现金不够：还差 ${money(s.preview.cashShortfall)}，减少数量或换一档`, 4200); return; }
+    if (s.preview?.affordable === false) { if (!s.preview.supplyBlockedReason && await offerLoan(s)) return; sound.error(); ui.notice(s.preview.supplyBlockedReason || `现金不够：还差 ${money(s.preview.cashShortfall)}，减少数量或换一档`, 4200); return; }
     engine.act()?.commit();
     if (!await store.waitFor(x => x.company?.stage !== 2, 2500)) { sound.error(); ui.notice('这一档暂时买不起，换一档或减少数量', 3600); }
+  }
+  // REQ-057: a cash gap (settlement included) is met before the spend, with the bridge loan offered right there.
+  // Returns true when the player saw the offer (borrowed or chose to adjust), false when no loan is possible.
+  async function offerLoan(s) {
+    const plan = cashPlan(s.preview), c = s.company;
+    if (!plan?.short || !s.engine || (c.v2?.loans || []).some(l => l.round === c.round)) return false;
+    const r = await ui.screen({ side: true, kicker: 'CASH · 资金缺口', title: `现金还差 ${money(plan.short)}`,
+      body: `${plan.text}。可以回去减少数量，或借过桥贷：下轮开局还 ${money(plan.loan * 1.12)}（含 12% 利息）。`,
+      actions: [{ label: '回去调整', value: 'back' }, { label: `借 ${money(plan.loan)}`, value: 'loan', primary: true }] });
+    if (r?.action !== 'loan') return true;
+    engine.act()?.setCompany?.(s.engine.act(c, { type: 'loan', amount: plan.loan }));
+    sound.confirm(); ui.notice(`已借入 ${money(plan.loan)}，下轮开局偿还`, 3000);
+    return true;
   }
   // 账期、谈判、备战、测款、商标、贷款 stay in the classic panel as advanced options (REQ-053 §4.3 ③).
   function advancedOptions() {
@@ -376,10 +389,12 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
     const fm = s.engine ? FIRST_MILE.find(f => f.id === s.engine.config(s.company).firstMile) : null;
     const r = await ui.screen({
       side: true, kicker: `出货线 · ${o.english || ''}`, title: o.name, body: o.summary || '',
-      rows: [['运费', `$${o.costPerOrder} / 单`], ['时效', `${o.days} 天`], ['退款比例', `${Math.round((o.refundRate || 0) * 100)}%`], ['头程', fm ? `${fm.name}（可在右侧终端改）` : '-'], ['预计订单', `${pv.orders ?? '-'} 单`], ['预计利润', money(pv.profit)], ['没卖完的货', '结算时按成本退回（扣5%）']],
+      rows: [['运费', `$${o.costPerOrder} / 单`], ['时效', `${o.days} 天`], ['退款比例', `${Math.round((o.refundRate || 0) * 100)}%`], ['头程', fm ? `${fm.name}（可在右侧终端改）` : '-'], ['预计订单', `${pv.orders ?? '-'} 单`], ['预计利润', money(pv.profit)], ['没卖完的货', '结算时按成本退回（扣5%）'], ...(pv.cashNeed ? [['发货要付', pv.cashShortfall ? `${money(pv.cashNeed)}（现金还差 ${money(pv.cashShortfall)}）` : money(pv.cashNeed)]] : [])],
       actions: [{ label: '再看看', value: 'back' }, { label: '选这条线发货', value: 'ship', primary: true }],
     });
     if (r?.action !== 'ship') return;
+    const now = store.snapshot();
+    if (now?.preview?.affordable === false && await offerLoan(now)) return;
     engine.act()?.commit();
     if (!await store.waitFor(x => x.company?.stage !== 4, 2500)) { sound.error(); ui.notice('发货前现金不够，先在高级选项里看资金方案', 3600); engine.act()?.open(); }
   }

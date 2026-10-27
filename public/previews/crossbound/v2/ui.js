@@ -93,6 +93,7 @@ export function createV2UI({ React, Button, engine, Base, tasks, facilities=[] }
     const need = Math.max(preview?.cashShortfall || 0, debt.filter(r => r.dueRound <= company.round).reduce((s, r) => s + r.amount, 0) - company.cash);
     const amounts = [...new Set([2000, 5000, 10000, 20000, ...(need > 20000 ? [Math.min(200000, Math.ceil(need / 1000) * 1000)] : [])])];
     return details(preview?.cashShortfall ? `现金缺口 ${cash(preview.cashShortfall)} · 查看过桥方案` : '资金时间线 · 回款、账期与过桥方案',
+      preview?.cashNeed > 0 && company.stage >= 2 && company.stage <= 4 && h('p', { className: preview.cashShortfall ? 'v3-warning' : 'panel-note' }, `本轮还要付约 ${cash(preview.cashNeed)}${preview.settlementCash ? `（含发货结算约 ${cash(preview.settlementCash)}）` : ''}，销售款下轮开局才到账${preview.cashShortfall ? `，现金还差 ${cash(preview.cashShortfall)}` : ''}。`),
       rows([['可用现金', cash(company.cash)], ['平台及佣金应收', cash(incoming.reduce((s, r) => s + r.amount, 0))], ['待付采购款与贷款', cash(debt.reduce((s, r) => s + r.amount, 0))]]),
       h('ol', null, h('li', null, '备货：现款支付或记录下轮到期采购款。'), h('li', null, '发货：先付运输、税费与佣金，销售净收入计入应收；没卖完的货按成本退回现金。'), h('li', null, '交付后14天：推进到下轮开局时回款，再支付到期采购款和贷款。')),
       incoming.map((r, i) => h('p', { key: `in${i}` }, `第${r.dueRound}轮开局到账：${r.kind === 'commission' ? '退货佣金追回' : '平台净销售款'} ${cash(r.amount)}`)),

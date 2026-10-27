@@ -204,3 +204,18 @@ export function budgetCurve(visitors, budget, step = 1000) {
 export function money(n) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n || 0);
 }
+
+// REQ-057: what this round still has to pay before the sales money arrives next round, and the smallest
+// bridge loan that covers a gap (whole thousands, $2,000–$200,000, the engine's loan rule).
+export function cashPlan(preview) {
+  if (!preview || !(preview.cashNeed > 0)) return null;
+  const short = preview.cashShortfall || 0;
+  const parts = [preview.settlementCash ? `发货结算约 ${money(preview.settlementCash)}` : null, preview.laterSpend ? `推广约 ${money(preview.laterSpend)}` : null].filter(Boolean);
+  return {
+    text: `本轮还要付约 ${money(preview.cashNeed)}${parts.length ? `（含${parts.join('、')}）` : ''}，销售款下轮开局才到账`,
+    short, loan: short > 0 ? loanFor(short) : 0,
+  };
+}
+export function loanFor(shortfall) {
+  return Math.min(200000, Math.max(2000, Math.ceil(shortfall / 1000) * 1000));
+}

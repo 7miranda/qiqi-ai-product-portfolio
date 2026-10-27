@@ -35,10 +35,11 @@ export const PLATFORMS = [
   { id: 'amazon', name: 'Amazon', fee: .15, entry: 39, traffic: 1, conversion: 1.12, detail: '模拟佣金15%；购买意愿+12%；每轮店铺费$39' },
   { id: 'direct', name: '独立站', fee: 0, entry: 500, traffic: .75, conversion: 1, detail: '无平台佣金；首次建站$500；初期触达为75%' },
 ];
+// REQ-054: the friendly arrival floor (75%) only protects the cheapest tier; faster tiers lift it by 10 / 20 points.
 export const FIRST_MILE = [
-  { id: 'sea', name: '海运', days: 14, unit: .4, detail: '运输14天 · 每件$0.40 × 体积系数' },
-  { id: 'mixed', name: '海空联运', days: 7, unit: 1, detail: '运输7天 · 每件$1.00 × 体积系数' },
-  { id: 'air', name: '空运', days: 2, unit: 2.2, detail: '运输2天 · 每件$2.20 × 体积系数' },
+  { id: 'sea', name: '海运', days: 14, unit: .4, arrivalBonus: 0, detail: '运输14天 · 每件$0.40 × 体积系数' },
+  { id: 'mixed', name: '海空联运', days: 7, unit: 1, arrivalBonus: .1, detail: '运输7天 · 每件$1.00 × 体积系数' },
+  { id: 'air', name: '空运', days: 2, unit: 2.2, arrivalBonus: .2, detail: '运输2天 · 每件$2.20 × 体积系数' },
 ];
 export const BIDS = [
   { id: 'low', name: '长尾词 · 低出价', clicks: .85, conversion: 1.18, range: [.9, 1.1] },

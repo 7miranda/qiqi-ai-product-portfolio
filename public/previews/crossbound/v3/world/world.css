@@ -224,7 +224,7 @@ span.v3s-crate-img { font-size: 44px; line-height: 1; width: auto; height: auto;
 .v3s-plan strong { font-size: 16px; } .v3s-plan span { color: #ffd34d; font-size: 14px; } .v3s-plan small { color: #a4bdc7; font-size: 13px; }
 .v3s-plan.is-on { border-color: #ffd34d; box-shadow: 0 0 18px #ffd34d44; }
 /* Settlement result: badge, card and the one action stacked in the middle of the screen. */
-.v3s-body:has(> .v3s-result) { display: grid; place-items: center; }
+.v3s-body:has(> .v3s-result) { display: grid; place-items: safe center; }
 .v3s-result { display: grid; justify-items: center; gap: 20px; width: min(640px, 100%); margin: 0 auto; text-align: center; }
 .v3s-result .v3s-desk { width: 100%; text-align: left; }
 .v3s-result .v3s-desk h3 { line-height: 1.4; }
@@ -247,3 +247,20 @@ span.v3s-crate-img { font-size: 44px; line-height: 1; width: auto; height: auto;
   .v3s-result-actions .v3s-primary { min-width: 0; width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { #v3-world, #v3-world *, .v3s, .v3s * { animation: none !important; transition: none !important; } }
+.v3s-optimize { margin-top: 10px; padding: 12px; border-radius: 12px; border: 1px dashed var(--v3s-accent); display: grid; gap: 6px; }
+.v3s-optimize p { margin: 0; font-size: 14px; }
+.v3s-optimize small { color: #c7d3dc; font-size: 13px; }
+/* REQ-048: three statements on the W6 result desk */
+.v3s-statements { margin-top: 14px; padding-top: 12px; border-top: 1px solid #ffffff1f; }
+.v3s-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.v3s-tab { min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid #ffffff26; background: transparent; color: #e6eff3; font-size: 15px; cursor: pointer; }
+.v3s-tab.is-on { border-color: var(--v3s-accent); background: color-mix(in srgb, var(--v3s-accent) 18%, transparent); font-weight: 700; }
+.v3s-fin { width: 100%; border-collapse: collapse; font-size: 15px; }
+.v3s-fin th, .v3s-fin td { padding: 6px 4px; border-bottom: 1px solid #ffffff12; text-align: right; font-weight: 400; }
+.v3s-fin th { text-align: left; }
+.v3s-fin th small { display: block; color: #9fb0ba; font-size: 13px; }
+.v3s-fin tr.is-total th, .v3s-fin tr.is-total td { font-weight: 700; }
+.v3s-fin-delta { color: #9fb0ba; font-size: 13px; white-space: nowrap; }
+.v3s-checks { display: flex; gap: 12px; flex-wrap: wrap; margin: 8px 0 0; font-size: 13px; }
+.v3s-checks .is-ok { color: #7ee2a8; }
+.v3s-checks .is-warn, .v3s-note.is-warn { color: #ff8a6b; }

@@ -241,7 +241,9 @@ test('customs preparation is a real lead-time event, and switching away escapes 
   n=e.commit(n,{id:'pilot',quantity:1200,price:45,supplierId:'fast'}); n=e.publish(n,FULL);
   n.v2.events.push({ id: 'vat-review:1', kind: 'vat-review', title: '核对进口税', dueRound: 1, stage: 0, choice: null });
   const before = e.simulate(n), after = e.simulate(e.act(n, { type: 'event', id: 'vat-review:1', choice: 'prepare' }));
-  assert.equal(before.leadDays, after.leadDays + 3); assert.ok(after.units > before.units);
+  assert.equal(before.leadDays, after.leadDays + 3);
+  // REQ-054: air already arrives at its 95% floor, so three days earlier can only keep or raise arrivals.
+  assert.ok(after.units >= before.units);
   n.v2.events = [{ id: 'rival:1', kind: 'rival', marketId: 'london', productId: 'tech', encounter: 1, dueRound: 1, stage: 0, choice: 'pricewar' }];
   assert.equal(e.eventEffect(n).conversion, 1);
   assert.equal(e.eventEffect(n).priceFactor, 1);
@@ -300,4 +302,44 @@ test('REQ-053 §4.6: first mile is chosen at fulfilment and paid at shipping, on
   old.cash = money(old.cash - 100);
   old = e.commit(old, { id: 'standard' });
   assert.equal(old.ledger.filter(row => row.round === old.round && row.category === 'firstMile').length, 1);
+});
+
+test('REQ-057: pricing and promotion count settlement cash up front; a plan that passes them always ships', () => {
+  // A plan that leaves too little cash for promotion plus shipping is flagged at pricing, with the exact gap.
+  const n = staged();
+  const tight = { id: 'pilot', quantity: 1200, price: 45, supplierId: 'standard' };
+  const full = e.preview(n, tight);
+  assert.ok(full.settlementCash > 0 && full.laterSpend > 0);
+  assert.equal(full.cashNeed, Math.round((-full.cashDelta + full.laterSpend + full.settlementCash) * 100) / 100);
+  const poor = { ...n, cash: Math.round(full.cashNeed - 500) };
+  const p = e.preview(poor, tight);
+  assert.equal(p.affordable, false);
+  assert.equal(p.cashShortfall, Math.round((full.cashNeed - poor.cash) * 100) / 100);
+  assert.equal(e.commit(poor, tight).stage, 2, 'pricing refuses the plan instead of settlement');
+  // A bridge loan covers the gap and the plan goes through.
+  const lent = e.act(poor, { type: 'loan', amount: Math.max(2000, Math.ceil(p.cashShortfall / 1000) * 1000) });
+  assert.equal(e.preview(lent, tight).affordable, true);
+  // Whatever passes pricing and promotion is never stopped at shipping (no 交付前现金不足 hard stop).
+  for (const seed of [1, 7, 12345, 99]) for (const fm of ['sea', 'mixed', 'air']) {
+    let m = e.configure(staged({}, seed), {});
+    const pr = e.preview(m, tight);
+    m = { ...m, cash: Math.ceil(pr.cashNeed) };
+    m = e.publish(e.commit(m, tight), FULL);
+    assert.equal(m.stage, 3);
+    // Pricing assumed the default content budget; a bigger ads budget re-opens the gap at the promotion step.
+    const promo = e.preview(m, { id: 'ads' }), budget = promo.budget;
+    if (!promo.affordable) {
+      assert.ok(promo.cashShortfall > 0);
+      assert.equal(e.commit(m, { id: 'ads' }).stage, 3);
+      m = { ...m, cash: Math.ceil(promo.cashNeed) };
+    }
+    m = e.commit(m, { id: 'ads' });
+    assert.equal(m.stage, 4, `seed ${seed}`);
+    m = e.configure(m, { firstMile: fm });
+    // The estimates assumed the default fulfilment; a dearer line or first mile chosen here is warned before the click.
+    const line = e.options(m, 'fulfillment')[1].id, ship = e.preview(m, { id: line });
+    if (fm !== 'air') assert.equal(ship.affordable, true, `seed ${seed} ${fm}`);
+    if (ship.affordable) assert.equal(e.commit(m, { id: line }).stage, 5, `seed ${seed} ${fm} budget ${budget}`);
+    else assert.ok(ship.cashShortfall > 0);
+  }
 });
