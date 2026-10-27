@@ -2,11 +2,11 @@
 // Each has its own layout and interaction (no shared panel template); all choices go into the game's own draft
 // state and are committed with the same calls as the classic panel, so the engine stays authoritative.
 import { PROMOTIONS } from '../../v11/model.js';
-import { BIDS, TIME_SLOTS, OFFSITE } from '../../v2/catalog.js';
+import { BIDS, TIME_SLOTS, OFFSITE, PLATFORMS } from '../../v2/catalog.js';
 import { goal, goalChannelText, financialStatements } from '../../v2/release.js';
 import { profitRows } from '../../v2/ui.js';
 import { countryBadgeAsset } from '../../v11/badges.js';
-import { WORLDS, roomStates, budgetCurve, money, cashPlan } from './logic.js';
+import { WORLDS, roomStates, budgetCurve, money, cashPlan, capacityBar } from './logic.js';
 
 // The three listing benches mirror the original editor (same ids, same points); costs come from the engine quote.
 const BENCHES = [
@@ -299,12 +299,61 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
     if (!after) update(true);
   }
 
-  const RENDER = { w3: renderW3, w4: renderW4, w6: renderW6 };
+  // ---------- W0 市场研究所（REQ-056）：平台三选一 + 市场卡 + 容量条 ----------
+  // Platform trade-offs in one line each (catalog numbers, so they follow the rules).
+  const PLATFORM_LINES = {
+    tiktok: p => `佣金 ${Math.round(p.fee * 100)}% · 零入驻 · 内容和达人触达更好`,
+    amazon: p => `佣金 ${Math.round(p.fee * 100)}% + 每轮 $${p.entry} · 购买意愿 ×${p.conversion}`,
+    direct: p => `一次建站 $${p.entry} · 无佣金 · 初期流量 ×${p.traffic}`,
+  };
+  function renderW0(s) {
+    const engine = s.engine, c = s.company, cfg = engine.config(c);
+    const markets = engine.options(c, 'markets');
+    // Expected visits use the default promotion with last round's product (or the first product): an estimate of
+    // how much of the market one round fills, not a promise.
+    const pid = c.productId || c.history?.at(-1)?.productId || engine.products[0]?.id;
+    const visits = id => { try { const p = engine.simulate({ ...c, marketId: id, productId: pid }, 'mean'); return p ? [p.visitors, p.capacity] : null; } catch { return null; } };
+    const opened = c.v2?.openedPlatforms || [];
+    const platforms = PLATFORMS.map(p => {
+      const on = cfg.platform === p.id, entry = p.id === 'direct' && opened.includes('direct') ? 0 : p.entry;
+      return h('button', { type: 'button', class: `v3s-plan v3s-platform${on ? ' is-on' : ''}`, 'aria-pressed': String(on),
+        onclick: () => act()?.setCompany?.(engine.configure(c, { platform: p.id })) },
+        h('strong', {}, p.name), h('span', {}, PLATFORM_LINES[p.id]?.(p) || p.detail),
+        h('small', {}, p.id === 'direct' && entry === 0 ? '已建站，不再收建站费' : p.id === 'amazon' ? '店铺费每轮都收' : entry ? `本轮先付 $${entry}` : '不用先付钱'));
+    });
+    const locked = c.carryEffect?.newMarket ? c.carryEffect.previousMarket : null;
+    const cards = markets.map(m => {
+      const on = s.choice?.id === m.id, visited = c.roundStart?.visitedMarkets?.includes(m.id);
+      const [v, cap] = visits(m.id) || [];
+      const bar = capacityBar(v, cap), badge = countryBadgeAsset(m.id, 'bronze')?.src;
+      const disabled = m.id === locked;
+      return h('button', { type: 'button', class: `v3s-market${on ? ' is-on' : ''}`, 'aria-pressed': String(on), disabled,
+        onclick: () => act()?.choose?.(m.id) },
+        h('header', {}, badge ? h('img', { src: badge, alt: '', width: 40, height: 40 }) : null,
+          h('div', {}, h('strong', {}, m.name), h('small', {}, m.region))),
+        h('b', {}, disabled ? '跨区试销：本轮必须换市场' : visited ? '进过了 · 不再收进入费' : `首次进入 · 进入费 ${money(m.launchCost)}`),
+        bar ? h('div', { class: `v3s-capacity${bar.over ? ' is-over' : ''}`, role: 'img', 'aria-label': bar.text },
+          h('i', { style: `width:${Math.round(bar.fill * 100)}%` })) : null,
+        bar ? h('small', { class: bar.over ? 'is-warn' : '' }, bar.text) : null,
+        h('p', {}, m.summary || ''));
+    });
+    const pv = s.preview || {}, chosen = markets.find(m => m.id === s.choice?.id);
+    const spend = -(pv.cashDelta || 0);
+    shell(s, { accent: '#52cadd', kicker: `第 ${c.round} 轮 · 市场研究所`, title: '先选在哪个平台、哪个市场卖', lead: '一步两个决定：平台和市场。容量条是按默认推广估的本轮到访，超过容量的部分只算一半。' },
+      h('div', { class: 'v3s-w0' },
+        h('section', { class: 'v3s-card' }, h('header', {}, h('strong', {}, '开店平台'), h('small', {}, '三家各有代价')), h('div', { class: 'v3s-platforms' }, platforms)),
+        h('div', { class: 'v3s-markets' }, cards)),
+      primary(chosen ? `确认${chosen.name}${spend > 0 ? ` · 先付 ${money(spend)}` : ''}` : '先选一个市场', () => commit(0),
+        { disabled: !chosen || pv.affordable === false, note: chosen ? (pv.affordable === false ? `现金不够，还差 ${money(pv.cashShortfall)}` : '确认后进入选品展厅') : '点一张市场卡' }));
+  }
+
+  const RENDER = { w0: renderW0, w3: renderW3, w4: renderW4, w6: renderW6 };
   function update(force = false) {
     if (closed) return;
     const s = store.snapshot();
     if (!s?.company) return;
     // Leave or hand over when the engine has moved on (published, committed, next round started).
+    if (id === 'w0' && s.company.stage === 1) return hand('w1');
     if (id === 'w3' && s.company.currentListing) return hand('w4');
     if (id === 'w4' && s.company.stage === 4) return hand('w5');
     if (id === 'w6' && s.company.stage === 0) return leave();

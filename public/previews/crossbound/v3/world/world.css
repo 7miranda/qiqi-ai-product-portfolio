@@ -264,3 +264,23 @@ span.v3s-crate-img { font-size: 44px; line-height: 1; width: auto; height: auto;
 .v3s-checks { display: flex; gap: 12px; flex-wrap: wrap; margin: 8px 0 0; font-size: 13px; }
 .v3s-checks .is-ok { color: #7ee2a8; }
 .v3s-checks .is-warn, .v3s-note.is-warn { color: #ff8a6b; }
+/* W0 市场研究所 (REQ-056): platform strip + market cards with a capacity bar */
+.v3s-w0 { display: grid; gap: 16px; }
+.v3s-platforms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.v3s-platform.is-on { border-color: var(--v3s-accent); box-shadow: 0 0 18px color-mix(in srgb, var(--v3s-accent) 30%, transparent); }
+.v3s-markets { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.v3s-market { display: grid; gap: 6px; align-content: start; text-align: left; padding: 14px; min-height: 44px; border-radius: 14px; cursor: pointer;
+  border: 1px solid #ffffff26; background: #0e1c22; color: #e6eff3; transition: border-color .15s, box-shadow .15s; }
+.v3s-market:hover { border-color: #ffffff4d; }
+.v3s-market.is-on { border-color: var(--v3s-accent); box-shadow: 0 0 18px color-mix(in srgb, var(--v3s-accent) 35%, transparent); }
+.v3s-market:disabled { opacity: .45; cursor: not-allowed; }
+.v3s-market header { display: flex; align-items: center; gap: 10px; }
+.v3s-market header img { width: 40px; height: 40px; object-fit: contain; }
+.v3s-market header strong { font-size: 16px; display: block; } .v3s-market header small { color: #9fb0ba; font-size: 13px; }
+.v3s-market > b { color: #ffd34d; font-size: 13px; font-weight: 600; }
+.v3s-market > small { color: #c7d3dc; font-size: 13px; } .v3s-market > small.is-warn { color: #ff8a6b; }
+.v3s-market > p { margin: 0; color: #9fb0ba; font-size: 13px; }
+.v3s-capacity { height: 8px; border-radius: 999px; background: #ffffff1a; overflow: hidden; }
+.v3s-capacity i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #52cadd, #adff2f); }
+.v3s-capacity.is-over i { background: linear-gradient(90deg, #ffd34d, #ff5a5a); }
+@media (max-width: 900px) { .v3s-platforms { grid-template-columns: 1fr; } }

@@ -2,7 +2,7 @@
 // F-001: each stand carries a recognisable product model; F-004: selected = steady green ring, ×1.2 and a floating "已选" tag.
 import * as THREE from 'three';
 import { PALETTE as P, toon, neon, block, mesh, textPlane, neonSign, addOutline, character } from './kit.js';
-import { fitStars } from './logic.js';
+import { fitTier } from './logic.js';
 import { productModel } from './products.js';
 
 const COLS = [-5.5, -2, 1.5, 5, 8.5];
@@ -18,11 +18,14 @@ const MODEL_SIZE = 1.15;
 const MODEL_Y = 0.92;
 
 function boardLines(p, marketLabel, marketId, { selected, recommended }) {
-  const stars = fitStars(p, marketId);
+  // REQ-056 ④: a tier from real fit data; no data is 匹配度待测, never a default middle rating.
+  const tier = fitTier(p, marketId);
   return [
     { text: `${recommended ? '★推荐 · ' : ''}${p.name}`, size: 0.2, color: selected ? '#5dff9a' : '#f2f6f8' },
     { text: `参考价 $${p.basePrice ?? '-'} · 成本 $${p.cost ?? '-'}`, size: 0.15, color: '#c7d3dc', weight: 500 },
-    { text: `${marketLabel || '本市场'}适配 ${'★'.repeat(stars)}${'☆'.repeat(5 - stars)}`, size: 0.15, color: '#ffd34d', weight: 500 },
+    tier
+      ? { text: `${marketLabel || '本市场'}匹配度 ${tier.label} ${'★'.repeat(tier.stars)}${'☆'.repeat(5 - tier.stars)}`, size: 0.15, color: '#ffd34d', weight: 500 }
+      : { text: '匹配度待测 · 首次测款免费', size: 0.15, color: '#9fb0ba', weight: 500 },
   ];
 }
 
