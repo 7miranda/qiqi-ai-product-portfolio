@@ -128,3 +128,22 @@ test('low-ticket default path stays profitable under five fixed seeds and preser
     assert.ok(n.report.profit>0,`${seed}/${market.id}/${id}: ${n.report.profit}`);
   }
 });
+test('REQ-054: first-mile tiers arrive 75% / 85% / 95% at the floor; the REQ-049 matrix holds for every tier',()=>{
+  const e=engines[1];
+  const rate=r=>r.arrivedUnits/Math.max(1,r.unitsToBuy);
+  const rates={};
+  for(const fm of ['sea','mixed','air']) {
+    const at=(market,product,channel,factor)=>{
+      const s=scenario(e,market,product,channel,factor);
+      return e.simulate(e.configure(s.n,{firstMile:fm}),'mean');
+    };
+    for(const market of ['singapore','london','los-angeles','tokyo'])
+      for(const product of ['tech','care'])for(const channel of ['content','ads','creator'])
+        assert.ok(at(market,product,channel).profit>0,`${fm}/${market}/${product}/${channel}`);
+    for(const factor of [.7,1.8])assert.ok(at('los-angeles','care','ads',factor).profit<0,`${fm} x${factor}`);
+    assert.ok(at('los-angeles','care','ads',1.5).profit>0,`${fm} x1.5`);
+    rates[fm]=rate(at('los-angeles','care','ads'));
+  }
+  assert.ok(rates.sea>=.75&&rates.sea<rates.mixed&&rates.mixed<rates.air,JSON.stringify(rates));
+  assert.ok(rates.mixed>=.85&&rates.air>=.95,JSON.stringify(rates));
+});

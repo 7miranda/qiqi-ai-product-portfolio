@@ -322,7 +322,8 @@ export function createV2Core(a) {
     // One round is a 30-day teaching window. Old stock is available immediately.
     const leadDays = supply.leadDays + firstMile.days + effects.delayDays, firstMileUnit = money(firstMile.unit * (p.shippingFactor || 1));
     const firstMileCost = money(unitsToBuy * firstMileUnit);
-    const arrivedUnits = Math.floor(unitsToBuy * clamp((30 - leadDays) / 30, rules.arrivalFloor, 1));
+    const arrivalFloor = rules.arrivalFloor ? Math.min(1, rules.arrivalFloor + (firstMile.arrivalBonus || 0)) : 0;
+    const arrivedUnits = Math.floor(unitsToBuy * clamp((30 - leadDays) / 30, arrivalFloor, 1));
     const units = openingQty + arrivedUnits, delayedUnits = unitsToBuy - arrivedUnits;
     const regionFactor = ({ '亚洲': .8, '欧洲': 1, '北美洲': 1.2, '大洋洲': .85, '南美洲': .9 })[m.region] || 1;
     const draw = key => seededUnit(n.runSeed, n.round, key);
@@ -426,6 +427,11 @@ export function createV2Core(a) {
     const settlement = p => -sum([p.shippingCost, p.platformFees, p.commissionGross, p.returnHandlingCost, p.tariff, p.importTax, p.paymentFee, p.fxFee, p.packagingCost, p.warehouseCost, firstMileDue(p)]);
     if (n.stage === 4) { cashDelta = settlement(mean); inventoryDelta = STOCK_CARRYOVER ? -mean.orders + mean.returnRestocked : -Object.values(n.inventory).reduce((s, v) => s + v, 0); }
     if (n.stage === 5) cashDelta = -option.cost;
+    // REQ-057: sales money only arrives next round, so the cash still needed this round is this step's spend,
+    // the promotion still to come (stage 2: the default budget), and the worst-case shipping settlement.
+    const settlementCash = n.stage >= 2 && n.stage <= 4 && mean ? money(Math.max(...[mean, low, high].map(p => -settlement(p)))) : 0;
+    const laterSpend = n.stage === 2 && mean ? mean.budget || 0 : 0;
+    const cashNeed = n.stage === 4 ? settlementCash : n.stage >= 2 && n.stage <= 3 ? money(-cashDelta + laterSpend + settlementCash) : money(-cashDelta);
     const overdue = [...n.v2.payables, ...n.v2.loans].some(b => !b.paid && b.dueRound <= n.round);
     const blocked = n.stage === 2 && overdue ? '有到期款项尚未偿还，先核对资金时间线或使用过桥方案。' : n.stage === 2 && mean.unitsToBuy > 0 && mean.unitsToBuy < mean.moq ? `${mean.supplierName}至少新增采购${mean.moq}件，当前补货${mean.unitsToBuy}件。请调整数量或供应商。` : null;
     const marketBlocked = n.stage === 0 && n.carryEffect.newMarket && d.id === n.carryEffect.previousMarket;
@@ -439,9 +445,9 @@ export function createV2Core(a) {
     if (mean && n.stage === 4) bounds.cashDelta = [Math.min(settlement(low), settlement(high)), Math.max(settlement(low), settlement(high))];
     if (n.stage === 5) bounds.profit = [money(n.report.profit - option.cost), money(n.report.profit - option.cost)];
     return { ...mean, cashDelta: money(cashDelta), inventoryDelta, acquisitionBounds, bounds, attributionBounds, settled: n.stage >= 5, profit: n.stage === 5 ? money(n.report.profit - option.cost) : mean?.profit ?? null,
-      affordable: n.cash + cashDelta >= 0 && !blocked && !marketBlocked, supplyBlockedReason: blocked,
+      affordable: n.cash - cashNeed >= 0 && !blocked && !marketBlocked, supplyBlockedReason: blocked,
       summary: option.summary, risks: [option.risk, ...(blocked ? [blocked] : [])],
-      cashShortfall: Math.max(0, money(-n.cash - cashDelta)), assumptions: '教学模拟；销售窗口30天，交付后的平台款14天结算，下轮开局到账。同轮同方案固定，跨轮重新波动。', nextTrafficBonus: option.trafficBonus || 0 };
+      cashShortfall: Math.max(0, money(cashNeed - n.cash)), cashNeed, settlementCash, laterSpend, assumptions: '教学模拟；销售窗口30天，交付后的平台款14天结算，下轮开局到账。同轮同方案固定，跨轮重新波动。', nextTrafficBonus: option.trafficBonus || 0 };
   }
   function makeReport(n, p) {
     const r = old.report(n, p);

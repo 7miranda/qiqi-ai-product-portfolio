@@ -3,7 +3,7 @@
 // ship out along the chosen belt, and the unsold ones lift away into a "+$X 按成本退回" counter.
 import * as THREE from 'three';
 import { PALETTE as P, toon, neon, block, mesh, textPlane, neonSign, addOutline } from './kit.js';
-import { crateLayout, settlementSplit, money } from './logic.js';
+import { crateLayout, settlementSplit, money, cashPlan } from './logic.js';
 
 const CRATE = 0.7, GAP = 0.18;
 const ease = p => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
@@ -78,14 +78,16 @@ const PLANS = ['pilot', 'scale', 'premium'];
 function costLines(preview, plan, extra = {}) {
   if (!preview || !plan) return [{ text: '成本板 · COST BOARD', size: 0.16, color: '#52cadd' }, { text: '先拉动备货拉杆选一档', size: 0.13, color: '#c7d3dc', weight: 500 }];
   const spend = -(preview.cashDelta || 0), share = extra.cash ? Math.round(spend / extra.cash * 100) : null;
-  const pricey = extra.base && preview.price >= extra.base * 1.5;
+  const pricey = extra.base && preview.price >= extra.base * 1.5, gap = cashPlan(preview);
   return [
     { text: `成本板 · ${plan.name}`, size: 0.14, color: '#52cadd' },
     { text: `售价 $${preview.price} · 备货 ${preview.quantity} 件`, size: 0.13, color: '#f2f6f8' },
     { text: `单件成本 ${cash2(preview.unitCost)} · 交期 ${preview.leadDays ?? '-'} 天`, size: 0.11, color: '#c7d3dc', weight: 500 },
     { text: `本单采购 ${money(spend)}${share != null ? ` · 占现金 ${share}%` : ''}`, size: 0.11, color: share > 60 ? '#ff5a5a' : '#ffd34d', weight: 500 },
     pricey ? { text: '定太贵了，退货会变多', size: 0.12, color: '#ff5a5a' } : { text: `预计利润 ${money(preview.profit)}`, size: 0.13, color: (preview.profit || 0) >= 0 ? '#5dff9a' : '#ff5a5a' },
-  ];
+    // REQ-057: settlement cash is counted now, not discovered at shipping.
+    gap ? { text: gap.short ? `连发货结算共需 ${money(preview.cashNeed)} · 还差 ${money(gap.short)}` : `连推广和发货结算共需约 ${money(preview.cashNeed)}`, size: 0.1, color: gap.short ? '#ff5a5a' : '#c7d3dc', weight: 500 } : null,
+  ].filter(Boolean);
 }
 
 export function buildFinance({ snapshot }) {

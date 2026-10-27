@@ -3,9 +3,10 @@
 // state and are committed with the same calls as the classic panel, so the engine stays authoritative.
 import { PROMOTIONS } from '../../v11/model.js';
 import { BIDS, TIME_SLOTS, OFFSITE } from '../../v2/catalog.js';
-import { goal, goalChannelText } from '../../v2/release.js';
+import { goal, goalChannelText, financialStatements } from '../../v2/release.js';
+import { profitRows } from '../../v2/ui.js';
 import { countryBadgeAsset } from '../../v11/badges.js';
-import { WORLDS, roomStates, budgetCurve, money } from './logic.js';
+import { WORLDS, roomStates, budgetCurve, money, cashPlan } from './logic.js';
 
 // The three listing benches mirror the original editor (same ids, same points); costs come from the engine quote.
 const BENCHES = [
@@ -61,7 +62,7 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
   const root = h('div', { class: 'v3s', role: 'dialog', 'aria-modal': 'true' });
   document.body.append(root);
   requestAnimationFrame(() => root.classList.add('is-in'));
-  let id = firstId, signature = '', closed = false, busy = false;
+  let id = firstId, signature = '', closed = false, busy = false, finTab = 'income';
 
   const act = () => store.snapshot()?.actions;
   const product = s => s.engine?.products?.find(p => p.id === s.company.productId);
@@ -83,6 +84,22 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
   }
   function primary(label, onclick, { disabled, note } = {}) {
     return [note ? h('span', { class: 'v3s-foot-note' }, note) : null, h('button', { type: 'button', class: 'v3s-primary', disabled: disabled || busy, onclick }, label)];
+  }
+
+  // REQ-006 regression (v1.2): pay $300 once a round to lift an existing page by 5 points (max 95).
+  // Expected return is read off last round: orders scale with score / 80, so +5 points ≈ orders × 5 / score.
+  function optimizeCard(s, asset) {
+    const c = s.company, engine = s.engine;
+    if (!asset || c.currentListing) return null;
+    const base = asset.baseScore ?? asset.score;
+    if (base >= 95) return h('p', { class: 'v3s-note' }, '已有商品页已到 95 分上限，不用再优化。');
+    const done = (c.listingInvestments || []).some(e => e.round === c.round && e.productId === c.productId);
+    const last = (c.history || []).filter(r => r.productId === c.productId && r.listingScore).at(-1);
+    const gain = last ? Math.max(1, Math.round(last.orders * Math.min(5, 95 - base) / last.listingScore)) : null;
+    return h('div', { class: 'v3s-optimize' },
+      h('p', {}, done ? `本轮已优化过：已有商品页现在 ${base} 分。` : `已有商品页 ${base} 分，本轮可优化一次（+5 分，最高 95）。`),
+      h('small', {}, gain ? `按上轮 ${last.orders.toLocaleString()} 单算，多 5 分约多 ${gain.toLocaleString()} 单（沿用这张商品页时生效）。` : '沿用这张商品页时生效。'),
+      done ? null : h('button', { type: 'button', class: 'v3s-ghost', disabled: c.cash < 300 || busy, onclick: () => act()?.setCompany?.(engine.optimize(c)) }, '优化 +5 分 · $300'));
   }
 
   // ---------- W3 商品页工作室：货架 + 编辑台 + 商品页大屏 ----------
@@ -120,6 +137,7 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
       h('small', {}, '货架 · 本轮商品'),
       h('div', { class: 'v3s-crate' }, picture('v3s-crate-img'), h('strong', {}, p?.name || ''), h('small', {}, p?.categoryLabel || '')),
       asset ? h('label', { class: 'v3s-toggle' }, h('input', { type: 'checkbox', checked: reuse, onchange: e => set({ mode: e.target.checked ? 'reuse' : 'build' }) }), '沿用这件商品已有的商品页') : null,
+      optimizeCard(s, asset),
       asset ? h('p', { class: 'v3s-note' }, reuse ? `沿用 ${asset.baseScore ?? asset.score} 分的商品页；${quote.cost ? '跨市场本地化费 $100（同市场以后免）' : '这个市场已本地化，免费'}` : '重新制作会按下面的选择收费。') : null);
     const costs = h('dl', { class: 'v3s-ledger' },
       h('dt', {}, reuse ? '本地化费' : '制作费'), h('dd', {}, `$${Math.round(quote.cost || 0)}`),
@@ -129,6 +147,18 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
       h('div', { class: 'v3s-w3' }, shelf, screen, h('div', { class: 'v3s-benches' }, benches, costs)),
       primary(`发布上架 · $${Math.round(quote.cost || 0)}`, () => { busy = true; act()?.publishListing?.(); setTimeout(() => { busy = false; update(true); }, 1500); },
         { disabled: !quote || quote.cost > s.company.cash, note: quote.cost > s.company.cash ? `现金不够，还差 ${money(quote.cost - s.company.cash)}` : '发布后锁定本轮商品页，直接进入推广室' }));
+  }
+
+  // REQ-057: the gap is shown before the spend, with the bridge loan in the same place.
+  function cashCard(s, pv) {
+    const plan = cashPlan(pv), c = s.company;
+    if (!plan) return null;
+    const used = (c.v2?.loans || []).some(l => l.round === c.round);
+    return h('section', { class: `v3s-cash-plan${plan.short ? ' is-short' : ''}` },
+      h('p', {}, plan.text + '。'),
+      plan.short ? h('p', { class: 'is-warn' }, `现金还差 ${money(plan.short)}。${used ? '本轮已借过一次过桥贷，请减少预算或数量。' : ''}`) : null,
+      plan.short && !used ? h('button', { type: 'button', class: 'v3s-ghost', disabled: busy, onclick: () => act()?.setCompany?.(s.engine.act(c, { type: 'loan', amount: plan.loan })) },
+        `借过桥贷 ${money(plan.loan)} · 下轮还 ${money(plan.loan * 1.12)}`) : null);
   }
 
   // ---------- W4 推广室：三块屏幕选渠道 + 打法 + 预算曲线 ----------
@@ -172,9 +202,10 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
         h('dl', { class: 'v3s-ledger' },
           h('dt', {}, '预计订单'), h('dd', {}, `${pv.orders ?? '-'} 单`),
           h('dt', {}, '预计利润'), h('dd', {}, money(pv.profit)),
-          h('dt', {}, '获客成本'), h('dd', { class: risk ? 'is-warn' : '' }, risk ? `${risk.name} CAC 超过单件毛利一半，小心赚不回来` : '在安全线内'))),
+          h('dt', {}, '获客成本'), h('dd', { class: risk ? 'is-warn' : '' }, risk ? `${risk.name} CAC 超过单件毛利一半，小心赚不回来` : '在安全线内')),
+        cashCard(s, pv)),
       primary(`启动推广 · 花 ${money(budget + (pv.offsiteCost || 0))}`, () => commit(3),
-        { disabled: pv.affordable === false, note: pv.affordable === false ? `现金不够，还差 ${money(pv.cashShortfall)}` : '启动后进入物流仓发货' }));
+        { disabled: pv.affordable === false, note: pv.affordable === false ? `现金不够，还差 ${money(pv.cashShortfall)}（发货结算也算在内）` : '启动后进入物流仓发货' }));
   }
 
   // ---------- W6 财报结算厅：一张结算桌 ----------
@@ -199,6 +230,42 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
         h('div', { class: 'v3s-plans' }, options)),
       primary('确认，结算本轮', () => commit(5), { disabled: !s.choice?.id, note: s.choice?.id ? '结算后直接看本轮结果' : '先选一项' }));
   }
+  // REQ-048: 利润表 / 资产负债表 / 现金流量表, the same numbers and reconciliation as the report dialog's 财报 tab.
+  function statements(s, r) {
+    const f = financialStatements(s.company, r);
+    if (!f) return null;
+    const tabs = [['income', '利润表'], ['balance', '资产负债表'], ['cash', '现金流量表']].filter(([t]) => !f.legacy || t === 'income');
+    const tab = tabs.some(([t]) => t === finTab) ? finTab : 'income';
+    const arrow = d => d == null ? '' : d > 0 ? `↑ ${money(d)}` : d < 0 ? `↓ ${money(-d)}` : '—';
+    const table = rows => h('table', { class: 'v3s-fin' }, h('tbody', {}, rows.map(([label, amount, delta, note, strong]) =>
+      h('tr', { class: strong ? 'is-total' : '' }, h('th', { scope: 'row' }, label, note ? h('small', {}, note) : null), h('td', {}, money(amount)), h('td', { class: 'v3s-fin-delta' }, arrow(delta))))));
+    const net = r.netRevenue || 0, gross = r.grossRevenue ?? net + (r.refundAmount || 0);
+    let body, line;
+    if (tab === 'income') {
+      body = table([['销售收入', gross], ['退款', -(gross - net)], ['净销售收入', net, null, null, true], ['已售货品成本', -(r.cogs || 0)], ['毛利', net - (r.cogs || 0), null, null, true],
+        ...profitRows(r).filter(x => !['netRevenue', 'cogs'].includes(x.id) && Math.abs(x.amount) >= .005).map(x => [x.label, x.amount]), ['净利润', r.profit, null, null, true]]);
+      line = `本轮赚了 ${money(r.profit)}。`;
+    } else if (tab === 'balance') {
+      const c = f.closing, o = f.opening;
+      body = table([['现金', c.cash, c.cash - o.cash, '现在能用的钱'], ['存货', c.inventory, c.inventory - o.inventory, '余货按采购成本计'], ['应收账款', c.receivables, c.receivables - o.receivables, '货卖了、钱还没到账的部分'], ['资产合计', c.assets, c.assets - o.assets, null, true],
+        ['应付采购款', c.payables, c.payables - o.payables, '货已采购、钱还没付'], ['过桥贷未还本金', c.principal, c.principal - o.principal], ['应付利息', c.interest, c.interest - o.interest], ['负债合计', c.liabilities, c.liabilities - o.liabilities, null, true], ['净资产', c.equity, c.equity - o.equity, '资产减负债', true]]);
+      line = f.cashRisk ? '现金可能接不上应付：先核对待到账货款和到期债务。' : `净资产 ${money(c.equity)}，比本轮开始 ${arrow(f.equityChange)}，正好等于本轮净利润。`;
+    } else {
+      body = table([['期初现金', f.opening.cash, null, null, true], ...f.flow.filter(x => Math.abs(x.amount) >= .005).map(x => [x.label, x.amount]), ['现金净变动', f.movement, null, null, true], ['期末现金', f.cashEnd, null, null, true]]);
+      line = '贷款本金和应收到账是现金流，不重复计入利润。';
+    }
+    const gap = f.legacy ? null : (() => {
+      const unpaid = f.closing.receivables - f.opening.receivables, stock = f.closing.inventory - f.opening.inventory;
+      return `利润 ≠ 现金：利润 ${money(r.profit)}，现金变化 ${money(f.movement)}。差额里 ${money(unpaid)} 还没到账，${money(stock)} 压在货上${Math.abs(f.closing.liabilities - f.opening.liabilities) > .01 ? `，负债变化 ${money(f.closing.liabilities - f.opening.liabilities)}` : ''}。`;
+    })();
+    return h('section', { class: 'v3s-statements', 'aria-label': '本轮财报' },
+      h('div', { class: 'v3s-tabs', role: 'tablist' }, tabs.map(([t, label]) => h('button', { type: 'button', role: 'tab', class: `v3s-tab${t === tab ? ' is-on' : ''}`, 'aria-selected': String(t === tab), onclick: () => { finTab = t; update(true); } }, label))),
+      body,
+      h('p', { class: f.cashRisk && tab === 'balance' ? 'v3s-note is-warn' : 'v3s-note' }, line),
+      gap ? h('p', { class: 'v3s-note' }, gap) : null,
+      f.legacy ? (f.reason ? h('p', { class: 'v3s-note' }, f.reason) : null)
+        : h('p', { class: 'v3s-checks' }, ['资产 = 负债 + 净资产', '净资产变动 = 净利润', '期末现金三处一致'].map((label, i) => h('span', { class: f.checks[i] ? 'is-ok' : 'is-warn' }, `${f.checks[i] ? '✓' : '✗'} ${label}`))));
+  }
   function renderResult(s, r) {
     const g = goal(r), badge = g.passed ? countryBadgeAsset(r.marketId, g.tier)?.src : null;
     const story = (r.conclusions || [])[0] || '';
@@ -211,6 +278,7 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
           h('p', { class: 'v3s-money' }, `收入 ${money(r.netRevenue)} · 成本 ${money(r.totalCosts)} · 利润 ${money(r.profit)}`),
           h('p', { class: 'v3s-note' }, `现金变化 ${money(r.cashChange)}${r.receivables > 0 ? `（货款 ${money(r.receivables)} 下一轮开局到账）` : ''}`),
           story ? h('p', { class: 'v3s-story' }, story) : null,
+          statements(s, r),
           h('div', { class: 'v3s-links' },
             h('button', { type: 'button', class: 'v3s-ghost', onclick: () => act()?.report?.() }, '查看完整战报'),
             h('button', { type: 'button', class: 'v3s-ghost', onclick: () => act()?.panel?.('progress') }, '成长、成就与四维评估在总部'))),
