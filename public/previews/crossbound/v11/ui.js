@@ -23,6 +23,21 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
     const content = HELP[id];
     return content ? h('details', { className: 'v11-help' }, h('summary', { 'aria-label': content[0] }, '? ', content[0]), h('p', null, content[1])) : null;
   }
+  // REQ-053 P2-1: every HELP card in one place. Optional reading: no red dot, no unread count, never opens by itself.
+  const HANDBOOK = [
+    ['选品与定价', ['conversion']],
+    ['库存与退货', ['inventory', 'returns']],
+    ['税费与推广成本', ['tariff', 'cac']],
+  ];
+  function Handbook() {
+    const help = engine.help || HELP;
+    return h(React.Fragment, null,
+      h('h2', { id: 'campaign-dialog-title' }, '总部手册'),
+      h('p', { className: 'panel-note' }, '经营规则与名词解释都在这里，想查再查；每轮结算的战报会结合你这一轮的数字再讲一遍。'),
+      HANDBOOK.map(([title, ids]) => h('section', { key: title, className: 'report-insights-panel v11-handbook' },
+        h('h3', null, title),
+        ids.filter(id => help[id]).map(id => h('details', { key: id, className: 'v11-help' }, h('summary', null, help[id][0]), h('p', null, help[id][1]))))));
+  }
   function useSettlement(company) {
     const key = `crossbound-settlement-v11:${company.runSeed ?? 'legacy'}:${company.round}`;
     const read = () => { try { return JSON.parse(localStorage.getItem(key)) || { phase: 'report' }; } catch { return { phase: 'report' }; } };
@@ -253,7 +268,7 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
       h('ul', null, records.map(r => h('li', { key: r.round }, `第${r.round}轮：${cash(r.profit)}`))),
       h('ul', null, totals.map(s => h('li', { key: s.id }, `${s.name}：${s.orders}单未退款，累计CAC ${cash(s.cac)}`))));
   }
-  function Cockpit({ company, ops, preview, onOpen, onBuild, onTask }) {
+  function Cockpit({ company, ops, preview, onOpen, onBuild, onTask, onHandbook }) {
     const [open, setOpen] = React.useState(false);
     if (!engine.valid(company)) return null;
     const target = goal(company).target, g = growth(company, ops), p = company.report || preview;
@@ -285,7 +300,7 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
         button(company.report ? '查看本轮战报' : '继续当前选择', onOpen),
         g.nextTask?.available && button('总部来电 · 有新任务', onTask, { className: 'v11-call-pulse' }),
         g.facilities.some(f => f.ready) && button('公司总部 · 可建设设施', onBuild),
-        h(Help, { id: 'conversion' }), h(Help, { id: 'inventory' }), h(History, { company })),
+        h(Help, { id: 'conversion' }), onHandbook && button('总部手册 · 规则与名词', onHandbook, { className: 'v11-handbook-entry' }), h(History, { company })),
     );
   }
   function GrowthSummary({ company, ops, onTask, onBuild }) {
@@ -301,5 +316,5 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
       h('span', { className: 'v11-call-avatar', 'aria-hidden': true }, '林'), h('b', null, '总部来电 · 运营伙伴'),
       h('p', null, title || '有一条经营线索，想和你一起拿个主意。')), h('strong', { className: 'signal-text' }, round <= 3 ? '+200经验 · +40建设点' : '+100经验 · +20建设点'));
   }
-  return { range, Help, useSettlement, SettlementProgress, SettlementActions, SettlementGoal, ReviewTask, LevelUp, RewardActions, NotificationDock, ListingOptimization, Promotion, MarketFacts, CountryBadge, AchievementHall, useAchievements, RoundAchievements, Report, Clearance, History, Cockpit, GrowthSummary, CallIntro };
+  return { range, Help, Handbook, useSettlement, SettlementProgress, SettlementActions, SettlementGoal, ReviewTask, LevelUp, RewardActions, NotificationDock, ListingOptimization, Promotion, MarketFacts, CountryBadge, AchievementHall, useAchievements, RoundAchievements, Report, Clearance, History, Cockpit, GrowthSummary, CallIntro };
 }

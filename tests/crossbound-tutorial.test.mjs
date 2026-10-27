@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {tutorialSteps} from '../public/previews/crossbound/v2/tutorial.js';
+import {tutorialSteps,markReportRead,REPORT_READ_MS} from '../public/previews/crossbound/v2/tutorial.js';
 import {activeWalkthrough,walkthroughPlan,bubblePosition} from '../public/previews/crossbound/v2/walkthrough.js';
 
 test('first round covers entry, every real decision, listing and financial reading',()=>{
@@ -21,10 +21,23 @@ test('second round only teaches new systems when they affect a decision',()=>{
   const n={round:2,stage:1,v2:{events:[]}};
   assert.deepEqual(tutorialSteps(n,'decision'),[]);
   n.stage=3;n.currentListing={};assert.deepEqual(tutorialSteps(n,'decision'),[]);
-  n.stage=2;assert.deepEqual(tutorialSteps(n,'decision').map(s=>s.id),['2:first-mile','2:credit']);
+  n.stage=2;assert.deepEqual(tutorialSteps(n,'decision').map(s=>s.id),['2:credit']);
   n.v2.events=[{dueRound:2,stage:4,choice:null}];assert.equal(tutorialSteps(n,'decision').some(s=>s.id==='2:event'),false);
-  n.stage=4;assert.equal(tutorialSteps(n,'decision')[0].id,'2:event');
-  n.v2.events[0].choice='prepare';assert.deepEqual(tutorialSteps(n,'decision'),[]);
+  // REQ-053 §4.6: first mile is taught at fulfilment, beside a pending event.
+  n.stage=4;assert.deepEqual(tutorialSteps(n,'decision').map(s=>s.id),['2:first-mile','2:event']);
+  n.v2.events[0].choice='prepare';assert.deepEqual(tutorialSteps(n,'decision').map(s=>s.id),['2:first-mile']);
+});
+
+test('REQ-053 P2-4: a read report is never walked through again; reading counts once, after a few seconds',()=>{
+  const n={round:1,stage:6};
+  assert.equal(tutorialSteps(n,'complete')[0].id,'1:report');
+  assert.deepEqual(tutorialSteps(n,'financials',{reports:{1:true}}),[]);
+  assert.deepEqual(tutorialSteps(n,'complete',{reports:{1:true}}),[]);
+  const s={reports:{}};
+  assert.equal(markReportRead(s,1,REPORT_READ_MS-1),s,'a glance does not count');
+  const read=markReportRead(s,1,REPORT_READ_MS);
+  assert.equal(read.reports[1],true);
+  assert.equal(markReportRead(read,1,99999),read,'only once');
 });
 
 test('refresh resumes at saved control; confirmations never advance the game themselves',()=>{

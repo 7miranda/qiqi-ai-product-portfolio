@@ -14,20 +14,29 @@ function baseSteps(n,view){
     if(view==='v2-events')return [{id:'2:event',segment:2,title:'总部来电 · 经营事件',action:'先看事件影响，再选择一个应对办法。',effect:'处理费用和后续影响都会写入这一轮的经营记录。'}];
     if(view==='complete'||view==='financials')return [{id:'2:report',segment:2,title:'这轮的钱主要卡在哪一步？',action:'打开财报，看看应收、应付和平台费用。',effect:'应收是还没到账的钱，应付是尚未支付的进货款；两者都会影响下轮可用现金。'}];
     if(view==='decision'&&n.stage===0)return [{id:'2:platform',segment:1,title:'先选开店平台',action:'在市场下面比较平台，再确认这一站。',effect:'不同平台的入驻费用、流量和佣金不同。'}];
-    if(view==='decision'&&n.stage===2)return [{id:'2:first-mile',segment:1,title:'货怎么运过去',action:'在备货方案中比较海运、空运和海空联运。',effect:'头程费用和到货天数会改变本轮可售数量。'},{id:'2:credit',segment:1,title:'货款什么时候付',action:'核对现款或账期采购，再看资金时间线。',effect:'账期能暂时保留现金，但到期仍要付款，利润不会凭空增加。'}];
+    if(view==='decision'&&n.stage===2)return [{id:'2:credit',segment:1,title:'货款什么时候付',action:'核对现款或账期采购，再看资金时间线。',effect:'账期能暂时保留现金，但到期仍要付款，利润不会凭空增加。'}];
+    // REQ-053 §4.6: first mile is chosen at fulfilment.
+    if(view==='decision'&&n.stage===4)return [{id:'2:first-mile',segment:1,title:'货怎么运过去',action:'发货前比较海运、海空联运和空运。',effect:'头程越快到货越多（75% / 85% / 95%），运费也越高。'}];
   }
   return [];
 }
-export function tutorialSteps(n,view){
-  const steps=baseSteps(n,view);
+export function tutorialSteps(n,view,state){
+  // A report already read is never walked through again (the old "看完出来又要看" loop).
+  const steps=baseSteps(n,view).filter(s=>!(s.id.endsWith(':report')&&state?.reports?.[n.round]));
   if(n.round===2&&view==='decision'&&n.v2?.events?.some(e=>e.dueRound===n.round&&n.stage>=e.stage&&!e.choice))steps.push(...baseSteps(n,'v2-events'));
   return steps;
 }
+// REQ-053 P2-4: the checklist is the progress — each item is one real action, ticked once and never asked again.
+// Item 5 no longer depends on seeing panel tips (the 2.5D scenes do not show them, so it could never complete).
 export function checklist(n,state){
   const first=n.history.find(r=>r.round===1);
-  const eventInSecond=[...(n.v2?.events||[]),...(n.v2?.eventHistory||[])].some(e=>e.dueRound===2||e.resolvedRound===2);
-  const secondSystems=['2:platform','2:first-mile','2:credit',...(eventInSecond?['2:event']:[])];
-  return [!!first||n.round===1&&n.stage>=2,!!first||n.round===1&&(!!n.currentListing||n.stage>3),!!first,!!state?.reports?.[1],!!n.history.find(r=>r.round===2)&&!!state?.reports?.[2]&&secondSystems.every(k=>state?.seen?.[k])];
+  return [!!first||n.round===1&&n.stage>=2,!!first||n.round===1&&(!!n.currentListing||n.stage>3),!!first,!!state?.reports?.[1],!!n.history.find(r=>r.round===2)&&!!state?.reports?.[2]];
+}
+// A report counts as read after a few seconds on the report or statements view, once per round.
+export const REPORT_READ_MS=4000;
+export function markReportRead(state,round,dwell){
+  if(!state||state.reports?.[round]||dwell<REPORT_READ_MS)return state;
+  return {...state,reports:{...state.reports,[round]:true}};
 }
 export function createTutorialUI({React,Button}){
   const h=React.createElement;
@@ -42,7 +51,7 @@ export function createTutorialUI({React,Button}){
       if(!state){const fresh=company.history.length===0&&company.round===1;const next={eligible:fresh,seen:{},skipped:{},reports:{},started_at:Date.now()};save(next);if(fresh)track(company,'tutorial_started',{},'tutorial:start');return;}
       if(!state.eligible)return;
       if(!resumed.current){resumed.current=true;if(Object.keys(state.seen).length)track(company,'resumed',{stage:company.stage});}
-      const steps=state.skipped[`round:${company.round}`]?[]:tutorialSteps(company,view).filter(s=>!state.skipped[s.id]);
+      const steps=state.skipped[`round:${company.round}`]?[]:tutorialSteps(company,view,state).filter(s=>!state.skipped[s.id]);
       const prev=previous.current;
       if(prev&&prev.round===company.round&&(company.stage>prev.stage||company.stage===3&&company.currentListing&&!prev.listing||prev.active?.item.wait&&prev.view!==view&&((!prev.view&&view==='decision')||(prev.view==='complete'&&view==='financials')||(prev.view==='financials'&&view==='complete')))){
         if(prev.active){const token=`${prev.active.key}:${prev.active.index}`;track(company,'step_completed',{step:token,system:prev.active.step.id,method:'game_action',used_default:company.decisions[prev.stage]?.used_default??null},`tutorial:walk:done:${token}`);}
@@ -54,7 +63,7 @@ export function createTutorialUI({React,Button}){
       let elapsed=0,last=Date.now();
       const timer=setInterval(()=>{const now=Date.now();if(!document.hidden&&!document.querySelector('.v2-badge-celebration[open]'))elapsed+=now-last;last=now;
       },500);
-      const report=()=>track(company,'report_viewed',{view,dwell_ms:elapsed});
+      const report=()=>{track(company,'report_viewed',{view,dwell_ms:elapsed});const next=markReportRead(current.current,company.round,elapsed);if(next!==current.current)save(next)};
       addEventListener('pagehide',report);
       return()=>{clearInterval(timer);removeEventListener('pagehide',report);report()};
     },[company.round,started,view,state?.eligible,state?.reports?.[company.round]]);
@@ -64,7 +73,7 @@ export function createTutorialUI({React,Button}){
       if(done.slice(0,4).every(Boolean)&&!state.skipped['round:1']&&!Object.keys(state.skipped).some(k=>k.startsWith('1:'))){onReward({type:'tutorial',id:'licensed',run:userId(company),round:1});track(company,'completed',{round:1,first_settlement_ms:Date.now()-state.started_at},'tutorial:complete:1');}
       if(done[4]){onReward({type:'tutorial',id:'independent',run:userId(company),round:2});track(company,'completed',{round:2},'tutorial:complete:2');}
     },[company.stage,company.round,company.history.length,state]);
-    const steps=state?.eligible&&!state.skipped[`round:${company.round}`]?tutorialSteps(company,view).filter(s=>!state.skipped[s.id]):[];
+    const steps=state?.eligible&&!state.skipped[`round:${company.round}`]?tutorialSteps(company,view,state).filter(s=>!state.skipped[s.id]):[];
     return {state,steps,view,done:checklist(company,state),
       viewed:(id,token,segment)=>{save(cur=>({...cur,seen:{...cur.seen,[id]:true}}));track(company,'step_viewed',{step:token,system:id,segment},`tutorial:walk:view:${token}`)},
       advance:(walkKey,index,id,method)=>{

@@ -58,7 +58,7 @@ function patchMain(s) {
   once('function hu(){', 'function hu(){if(v11Flow.active)v11Flow.finish();');
   once('onClick:()=>u("progress"),children:"'+encode('成长奖励')+'"', 'onClick:()=>u("progress"),children:v11HQ?"公司总部 · "+v11HQ:"公司总部"');
   const tutorial = 'o&&!n&&!ms&&(0,re.jsx)(Ge,{variant:"outline",className:"company-tutorial-entry"';
-  once(tutorial, 'o&&!n&&!l&&(0,re.jsx)(V11UI.Cockpit,{company:t,ops:r,preview:pr,onOpen:nr,onBuild:()=>u("progress"),onTask:As}),(0,re.jsxs)(Ge,{variant:"outline",className:"v11-header-achievements",onClick:v11OpenAchievements,children:["出海成就",v11Achievements.unread.length>0&&(0,re.jsx)("span",{className:"v11-new-dot",children:"●"})]}),o&&!n&&(0,re.jsx)(Ge,{variant:"outline",className:"company-tutorial-entry"');
+  once(tutorial, 'o&&!n&&!l&&(0,re.jsx)(V11UI.Cockpit,{company:t,ops:r,preview:pr,onOpen:nr,onBuild:()=>u("progress"),onTask:As,onHandbook:()=>u("handbook")}),(0,re.jsxs)(Ge,{variant:"outline",className:"v11-header-achievements",onClick:v11OpenAchievements,children:["出海成就",v11Achievements.unread.length>0&&(0,re.jsx)("span",{className:"v11-new-dot",children:"●"})]}),o&&!n&&(0,re.jsx)(Ge,{variant:"outline",className:"company-tutorial-entry"');
   s = replaceElement(s, 'campus-world', original => original.replace('children:', 'children:[!l&&(0,re.jsx)(V11UI.NotificationDock,{company:t,ops:r,unread:v11Achievements.unread,onAchievements:v11OpenAchievements,onTask:As,onHQ:()=>u("progress")}),') .replace(/\}\)$/, ']} )'));
   once('(0,re.jsx)(Vse,{currentStepLabel:', '(0,re.jsx)(Vse,{headquartersStatus:v11HQ,currentStepLabel:');
   // REQ-053 P1: from 安排下轮 on, 经营总部 is the W6 结算厅 scene when scenes are on; otherwise the HQ panel.
@@ -112,7 +112,7 @@ function patchMain(s) {
     tn(null);d(R7[Math.min(next.stage,5)]);u(next.stage===6?'complete':'decision');rn();No();
   }`);
   once('onAchievements:v11OpenAchievements,onTask:As,onHQ:()=>u("progress")','onAchievements:v11OpenAchievements,onTask:As,onHQ:()=>u("progress"),onCommunity:()=>u("community")');
-  once('l==="complete"?(0,re.jsxs)(re.Fragment,{children:[','l==="community"?(0,re.jsx)(V2UI.Community,{company:t,onReward:ev=>s(cur=>V11Growth.claimCommunity(cur,ev)),onDone:()=>u(null)}):l==="financials"?(0,re.jsx)(V2UI.Financials,{company:t,onSelect:key=>u(key==="report"?"complete":key)}):l==="assessment"?(0,re.jsx)(V2UI.Assessment,{company:t,ops:r,onSelect:key=>u(key==="report"?"complete":key)}):l==="complete"?(0,re.jsxs)(re.Fragment,{children:[(0,re.jsx)(V2UI.ReportTabs,{onSelect:key=>u(key==="report"?"complete":key)}),(0,re.jsx)(V2UI.GoalCard,{company:t}),releaseRank(r).level===10&&(0,re.jsx)(V2UI.GrowthProgress,{ops:r}),');
+  once('l==="complete"?(0,re.jsxs)(re.Fragment,{children:[','l==="handbook"?(0,re.jsx)(V11UI.Handbook,{}):l==="community"?(0,re.jsx)(V2UI.Community,{company:t,onReward:ev=>s(cur=>V11Growth.claimCommunity(cur,ev)),onDone:()=>u(null)}):l==="financials"?(0,re.jsx)(V2UI.Financials,{company:t,onSelect:key=>u(key==="report"?"complete":key)}):l==="assessment"?(0,re.jsx)(V2UI.Assessment,{company:t,ops:r,onSelect:key=>u(key==="report"?"complete":key)}):l==="complete"?(0,re.jsxs)(re.Fragment,{children:[(0,re.jsx)(V2UI.ReportTabs,{onSelect:key=>u(key==="report"?"complete":key)}),(0,re.jsx)(V2UI.GoalCard,{company:t}),releaseRank(r).level===10&&(0,re.jsx)(V2UI.GrowthProgress,{ops:r}),');
   // REQ-053 P1: with scenes on, entering the current step opens its scene instead of the classic panel.
   once('function nr(){dt!==null&&Bs(null),','function nr(){if(window.CrossboundScenes?.enter?.())return;dt!==null&&Bs(null),');
   s=s.replace('fe=t.round===1?300:500','fe=releaseGoal(t).target').replace('ut=!!(Pe&&Pe.keptOrders>=fe&&Pe.profit>0)','ut=!!(Pe&&releaseGoal(Pe).passed)');
@@ -180,6 +180,23 @@ for (const file of ['index.html', 'preview.html']) {
   });
   // REQ-052: stock no longer carries over, so the cash-first plan must not promise leftover goods.
   script = replaceOne(script, encode('先把钱留在手里，带着余货再做一轮。'), encode('先把钱留在手里，下一轮重新备货。'));
+  // REQ-053 P2-5 copy scan: inherited lines that still promise leftover stock carries into the next round.
+  for (const [from, to] of [
+    ['现金、余货和经验继续保留。', '现金和经验继续保留；没卖完的货已按成本退回。'],
+    ['现金、余货和经验都会保留到下一轮。', '现金和经验都会保留到下一轮；没卖完的货结算时按成本退回。'],
+    ['上一轮现金与余货已保留。', '上一轮的现金已保留，没卖完的货已按成本退回。'],
+    ['上一轮的现金和余货还在。', '上一轮的现金还在。'],
+    ['再带着现金和余货继续下一轮。', '再带着现金继续下一轮。'],
+    ['带上现金和余货，开启下一轮', '带上现金，开启下一轮'],
+    ['下一轮会保留现金、余货和经验。', '下一轮会保留现金和经验。'],
+    ['或带着现金与余货开下一轮。', '或带着现金开下一轮。'],
+    ['件余货带进下一轮', '件余货已按成本退回'],
+    ['下轮先使用余货，再决定采购。', '结算时按成本退回，下轮重新备货。'],
+  ]) {
+    const a = encode(from);
+    if (!script.includes(a)) throw new Error(`copy scan: missing ${from}`);
+    script = script.split(a).join(encode(to));
+  }
   script = replaceFunction(script, 'Tse', s=>s.replace(encode('首轮挑战：300 单未退款，扣掉费用后赚钱。'),encode('首轮挑战：250 单未退款，或贡献利润达到 $5,000。')));
   script = replaceFunction(script, 'R5', s => s.replace(encode('进价提高 8%；交期本轮不改变模拟销量'), encode('进价提高8%；新规则按交期计算本轮及时可售库存')));
   script = replaceOne(script, 'window.Globe=W8e;', `${marker}\n${bridge}\nwindow.Globe=W8e;`);
