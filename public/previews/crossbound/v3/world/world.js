@@ -2,13 +2,13 @@
 // No walking and no camera follow — a fixed oblique camera with the near wall cut away, and the player clicks
 // what they want to use. Player actions go through the engine's own select / commit calls; no rule is re-implemented.
 import * as THREE from 'three';
-import { FIRST_MILE } from '../../v2/catalog.js';
-import { balanceRules } from '../../v11/balance.js';
-import { WORLDS, QUALITY, PICKS_KEY, downgrade, createFpsMonitor, taskFor, nearestInteractable, pickShowcase, money, cashPlan } from './logic.js';
-import { createUI, createSounds } from './ui.js';
-import { buildShowroom, SUPPLIERS, STANDS } from './showroom.js';
-import { buildFinance, buildWarehouse } from './rooms.js';
-import { lightPillar, PALETTE, disposeTree } from './kit.js';
+import { FIRST_MILE } from '../../v2/catalog.js?v=01295b5f6d';
+import { balanceRules } from '../../v11/balance.js?v=01295b5f6d';
+import { WORLDS, QUALITY, PICKS_KEY, downgrade, createFpsMonitor, taskFor, nearestInteractable, pickShowcase, money, cashPlan } from './logic.js?v=01295b5f6d';
+import { createUI, createSounds } from './ui.js?v=01295b5f6d';
+import { buildShowroom, SUPPLIERS, STANDS } from './showroom.js?v=01295b5f6d';
+import { buildFinance, buildWarehouse } from './rooms.js?v=01295b5f6d';
+import { lightPillar, PALETTE, disposeTree } from './kit.js?v=01295b5f6d';
 
 const FLY_MS = 400;                 // F-002: pick-up flight
 const OPEN_MS = 900;                // F-003: open animation
@@ -49,10 +49,10 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
   const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 200);
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(PALETTE.night);
-  scene.fog = new THREE.Fog(0x0b1020, 26, 48);
+  scene.fog = new THREE.Fog(0x071218, 26, 48);
 
   // Lights: dim neon night. Only the key light casts shadows (性能红线).
-  const hemi = new THREE.HemisphereLight(0x9aa8ff, 0x2a2238, 2.6);
+  const hemi = new THREE.HemisphereLight(0xd6edf4, 0x152a31, 2.6);
   const ambient = new THREE.AmbientLight(0xffffff, 0.8);
   const key = new THREE.DirectionalLight(0xd2e0ff, 2.6);
   key.position.set(-14, 22, 12);

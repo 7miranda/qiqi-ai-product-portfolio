@@ -64,7 +64,9 @@ export function createServicesUI({ React, Button }) {
       h('ol', { className: 'services-steps', 'aria-label': '整理需求的顺序' }, ['确认问题', '准备资料', '形成需求清单'].map((name, i) => h('li', { key: name }, h('span', null, `0${i + 1}`), name))),
       h('form', { ref: form, noValidate: true, onSubmit: generate },
         h('section', { className: 'services-stage', 'aria-labelledby': 'services-step-one' }, h('h3', { id: 'services-step-one' }, h('span', null, '01'), '你想先推进哪件事？'),
-          h('div', { className: 'services-choices', role: 'group', 'aria-label': '选择服务方向' }, SERVICES.map(s => button(s.name, () => changeService(s.id), { key: s.id, 'aria-pressed': s.id === service.id }))),
+          h('div', { className: 'services-choices', role: 'group', 'aria-label': '选择服务方向' }, SERVICES.map(s => button(
+            h('span', { className: 'services-choice-label' }, h('span', null, s.name.slice(0, 4)), h('span', null, s.name.slice(4))),
+            () => changeService(s.id), { key: s.id, 'aria-label': s.name, 'aria-pressed': s.id === service.id }))),
           h('div', { className: 'services-detail-grid' },
             h('fieldset', { className: 'services-surface' }, h('legend', null, '问题与目标'),
               field('company', '企业简称（选填）', { maxLength: 60, placeholder: '便于识别这份清单…' }),

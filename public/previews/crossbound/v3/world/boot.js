@@ -1,8 +1,8 @@
 // REQ-053 §3 single mode: the campus is the one 2.5D headquarters map; each step opens its own full-screen scene.
 // No mode choice, no walkable street, no avatar. W1/W2/W5 are 3D rooms (lazy-loaded three.js); W3/W4/W6 are
 // 2D scenes. Entering the current step goes through the game's nr(), patched to call CrossboundScenes.enter().
-import { track, userId } from '../../v2/records.js';
-import { parseMode, variantFor, qualityFor, currentWorld, zoneStates, ROOMS_3D, VARIANT_KEY, QUALITY_KEY } from './logic.js';
+import { track, userId } from '../../v2/records.js?v=01295b5f6d';
+import { parseMode, variantFor, qualityFor, currentWorld, zoneStates, ROOMS_3D, VARIANT_KEY, QUALITY_KEY } from './logic.js?v=01295b5f6d';
 
 const root = document.documentElement;
 const local = {
@@ -47,8 +47,8 @@ const store = {
 
 // ---------- Scene host ----------
 let worldModule = null, scenesModule = null;
-const loadWorld = () => (worldModule ||= import('./world.js').catch(e => { worldModule = null; throw e; }));
-const loadScenes = () => (scenesModule ||= import('./scenes.js').catch(e => { scenesModule = null; throw e; }));
+const loadWorld = () => (worldModule ||= import('./world.js?v=01295b5f6d').catch(e => { worldModule = null; throw e; }));
+const loadScenes = () => (scenesModule ||= import('./scenes.js?v=01295b5f6d').catch(e => { scenesModule = null; throw e; }));
 const idle = (fn, ms) => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: ms }) : setTimeout(fn, ms));
 
 function closeScene() {

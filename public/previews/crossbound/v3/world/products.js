@@ -1,8 +1,8 @@
 // F-001 / F-003: recognisable low-poly product models with one signature "open" motion each.
 // Every model is procedural (no third-party assets) and well under the 5,000-face cap (3D-073).
 import * as THREE from 'three';
-import { toon, neon, block, mesh, PALETTE as P } from './kit.js';
-import { archetypeFor } from './logic.js';
+import { toon, neon, block, mesh, PALETTE as P } from './kit.js?v=01295b5f6d';
+import { archetypeFor } from './logic.js?v=01295b5f6d';
 
 const ease = p => 1 - Math.pow(1 - Math.max(0, Math.min(1, p)), 3);
 const cyl = (rt, rb, h, seg = 16) => new THREE.CylinderGeometry(rt, rb, h, seg);

@@ -1,27 +1,18 @@
 // Shared building blocks for the neon-toon world: materials, labels, signs, characters.
 import * as THREE from 'three';
+import { industrialColor } from '../../details/room-materials.js?v=01295b5f6d';
 
-export const PALETTE = {
+export const PALETTE = Object.fromEntries(Object.entries({
   night: 0x0a1020, asphalt: 0x1e2636, curb: 0x34405a, wall: 0x2a3650, wallDark: 0x1a2232, glass: 0x2a5878,
   cyan: 0x52cadd, lime: 0xc9ff9f, magenta: 0xff4fb3, gold: 0xffd34d, violet: 0x8a7dff, ink: 0xf2f6f8, red: 0xff5a5a, green: 0x5dff9a,
-};
+}).map(([name, color]) => [name, industrialColor(color)]));
 const FONT = '"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif';
 
-let gradient;
-function gradientMap() {
-  if (gradient) return gradient;
-  const data = new Uint8Array([70, 70, 70, 255, 150, 150, 150, 255, 255, 255, 255, 255]);
-  gradient = new THREE.DataTexture(data, 3, 1, THREE.RGBAFormat);
-  gradient.minFilter = gradient.magFilter = THREE.NearestFilter;
-  gradient.needsUpdate = true;
-  return gradient;
-}
-
 export function toon(color, extra = {}) {
-  return new THREE.MeshToonMaterial({ color, gradientMap: gradientMap(), ...extra });
+  return new THREE.MeshStandardMaterial({ color: industrialColor(color), roughness: 0.48, metalness: 0.18, ...extra });
 }
 export function neon(color, opacity = 1) {
-  return new THREE.MeshBasicMaterial({ color, toneMapped: false, transparent: opacity < 1, opacity });
+  return new THREE.MeshBasicMaterial({ color: industrialColor(color), toneMapped: false, transparent: opacity < 1, opacity });
 }
 
 export function mesh(geometry, material, { x = 0, y = 0, z = 0, ry = 0, shadow = true, parent } = {}) {
@@ -43,17 +34,17 @@ export function textPlane(lines, { width = 4, height = 1, px = 256, bg = null, b
   canvas.width = Math.round(px * width / height);
   canvas.height = px;
   const ctx = canvas.getContext('2d');
-  if (bg) { ctx.fillStyle = bg; ctx.fillRect(0, 0, canvas.width, canvas.height); }
-  if (border) { ctx.strokeStyle = border; ctx.lineWidth = px * 0.04; ctx.strokeRect(0, 0, canvas.width, canvas.height); }
+  if (bg) { ctx.fillStyle = industrialColor(bg); ctx.fillRect(0, 0, canvas.width, canvas.height); }
+  if (border) { ctx.strokeStyle = industrialColor(border); ctx.lineWidth = px * 0.04; ctx.strokeRect(0, 0, canvas.width, canvas.height); }
   const total = lines.reduce((s, l) => s + (l.size || 0.4) * px * 1.25, 0);
   let y = (canvas.height - total) / 2;
   for (const l of lines) {
     const size = (l.size || 0.4) * px;
     ctx.font = `${l.weight || 600} ${size}px ${FONT}`;
-    ctx.fillStyle = l.color || '#f2f6f8';
+    ctx.fillStyle = industrialColor(l.color || '#f2f6f8');
     ctx.textAlign = l.align || 'center';
     ctx.textBaseline = 'top';
-    if (glow) { ctx.shadowColor = l.color || '#fff'; ctx.shadowBlur = size * 0.35; }
+    if (glow) { ctx.shadowColor = industrialColor(l.color || '#fff'); ctx.shadowBlur = size * 0.35; }
     const x = ctx.textAlign === 'left' ? px * 0.12 : canvas.width / 2;
     ctx.fillText(l.text, x, y + size * 0.1, canvas.width * 0.94);
     y += size * 1.25;

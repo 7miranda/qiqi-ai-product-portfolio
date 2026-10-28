@@ -51,9 +51,15 @@ test('cash, assets and profit reconcile for products, suppliers, channels, refun
     assert.equal(report.attribution.reduce((s,x)=>s+x.orders,0),report.orders);
     assert.equal(report.attribution.reduce((s,x)=>s+x.keptOrders,0),report.keptOrders);
     assert.ok(report.attribution.every(s=>s.keptOrders>=0));
-    assert.equal(report.tariff,market==='los-angeles'?money(report.orders*price*.08):0);
+    const unitCost=adapter.supplier(adapter.products.find(p=>p.id===product),supplier,'v1').unitCost;
+    assert.equal(report.tariff,market==='los-angeles'?money(report.orders*unitCost*.08):0);
     assert.ok(e.deserialize(e.serialize(n)));
   }
+  const current=prepare(e,{market:'los-angeles'});
+  current.trafficPlanId='ads';current.trafficBudget=2400;
+  assert.equal(e.simulate(current).tariff,1030.4,'new rounds tax shipped procurement value, including refunded orders');
+  const frozen={...current,balanceVersion:undefined,roundStart:{...current.roundStart,balanceVersion:undefined}};
+  assert.equal(e.simulate(frozen).tariff,3312,'a saved pre-calibration round retains the 8% selling-price basis');
 });
 test('lead days affect timely stock, delivery affects demand and rising prices add refund risk', () => {
   const standard=e.simulate(prepare(e,{quantity:1600})), fast=e.simulate(prepare(e,{quantity:1600,supplier:'fast'}));
@@ -71,12 +77,22 @@ test('positive orders keep at least one refund; zero orders have zero refunds', 
 });
 test('cross-market listing reuses product asset and charges localization once', () => {
   let n=e.next(finish(e,prepare(e)));
-  n=e.commit(n,{id:'london'});n=e.commit(n,{id:'tech'});n=e.commit(n,{id:'pilot',quantity:1200,price:45,supplierId:'standard'});
+  const beforeEntry=n.cash;
+  n=e.commit(n,{id:'london'});assert.equal(n.cash,money(beforeEntry-600));
+  assert.equal(n.ledger.at(-1).category,'launch');assert.equal(n.ledger.at(-1).cashDelta,-600);
+  n=e.commit(n,{id:'tech'});n=e.commit(n,{id:'pilot',quantity:1200,price:45,supplierId:'standard'});
   assert.equal(e.listingQuote(n,{...FULL,mode:'reuse'}).cost,100);
+  const beforeLocalization=n.cash;
   n=e.publish(n,{...FULL,mode:'reuse'});assert.equal(n.currentListing.score,95);
-  n=e.next(finish(e,n));n=e.commit(n,{id:'london'});assert.equal(n.ledger.at(-1).cashDelta,-500);
+  assert.equal(n.cash,money(beforeLocalization-100));assert.equal(n.ledger.at(-1).cashDelta,-100);
+  n=e.next(finish(e,n));const beforeReentry=n.cash;
+  n=e.commit(n,{id:'london'});assert.equal(n.cash,beforeReentry);
+  assert.equal(n.ledger.at(-1).category,'launch');assert.equal(n.ledger.at(-1).cashDelta,0);
   n=e.commit(n,{id:'tech'});n=e.commit(n,{id:'pilot',quantity:1200,price:45,supplierId:'standard'});
   assert.equal(e.listingQuote(n,{...FULL,mode:'reuse'}).cost,0);
+  const beforeReuse=n.cash;n=e.publish(n,{...FULL,mode:'reuse'});
+  assert.equal(n.cash,beforeReuse);assert.equal(n.ledger.at(-1).cashDelta,0);
+  assert.deepEqual(n.listingAssets.tech.localizedMarkets,['singapore','london']);
 });
 test('paid optimization remains with its charge after rollback and cannot be duplicated', () => {
   let n=e.next(finish(e,prepare(e,{listing:BASIC})));
@@ -96,24 +112,29 @@ test('content creates free next-round tail, while selected creative and creator 
   n.trafficPlanId='creator';n.promotionChoice={id:'large'};const large=e.simulate(n);n.promotionChoice={id:'small'};const small=e.simulate(n);
   assert.ok(large.currentRoundVisitors>small.currentRoundVisitors);assert.equal(large.commissionRate,.1);assert.equal(small.commissionRate,.05);
 });
-test('content suits smaller tests, ads scale, creators can win or lose under round conditions', () => {
-  const compare = (budget, channel, seed=12345) => {
+test('recalibrated channels have exact demand, stock limits and seed-dependent creator returns', () => {
+  const compare = (budget, channel, seed=12345, mode='mean') => {
     const n=prepare(e,{seed,quantity:1600,market:'london'});
     n.trafficPlanId=channel;n.trafficBudget=budget;
     n.promotionChoice={id:channel==='ads'?'benefit':channel==='content'?'review':'large'};
-    return e.simulate(n,'mean');
+    return e.simulate(n,mode);
   };
-  assert.ok(compare(900,'content').demand>compare(900,'ads').demand);
-  assert.ok(compare(8000,'ads').demand>compare(8000,'content').demand);
-  const winners=new Set();
-  for(const budget of [900,2400,3600,8000])for(let seed=0;seed<60;seed++){
-    const rows=['content','ads','creator'].map(channel=>{
-      const n=prepare(e,{seed,quantity:1600,market:'london'});n.trafficPlanId=channel;n.trafficBudget=budget;
-      n.promotionChoice={id:channel==='ads'?'benefit':channel==='content'?'review':'large'};
-      return {channel,profit:e.simulate(n).profit};
-    });winners.add(rows.sort((a,b)=>b.profit-a.profit)[0].channel);
+  const contentLow=compare(900,'content'),adsLow=compare(900,'ads');
+  const contentHigh=compare(8000,'content'),adsHigh=compare(8000,'ads');
+  assert.deepEqual([contentLow.demand,adsLow.demand,contentHigh.demand,adsHigh.demand],[1017,1261,2005,2780]);
+  for(const result of [contentLow,adsLow,contentHigh,adsHigh]){
+    assert.equal(result.orders,Math.min(result.units,result.demand));
+    assert.equal(result.attribution.reduce((s,x)=>s+x.orders,0),result.orders);
   }
-  assert.equal(winners.size,3);
+  assert.equal(contentHigh.orders,adsHigh.orders,'extra demand cannot sell stock that has not arrived');
+  assert.equal(contentHigh.profit,adsHigh.profit,'equal spend and stock-limited sales have the same settled economics');
+  assert.equal(contentHigh.nextContentTail,4240);assert.equal(adsHigh.nextContentTail,0);
+  assert.ok(contentHigh.currentRoundVisitors/contentLow.currentRoundVisitors<adsHigh.currentRoundVisitors/adsLow.currentRoundVisitors,'content production has diminishing scaling');
+  const creatorWin=compare(300,'creator',5,'actual'),adsLose=compare(300,'ads',5,'actual');
+  const creatorLose=compare(300,'creator',0,'actual'),adsWin=compare(300,'ads',0,'actual');
+  assert.deepEqual([creatorWin.profit,adsLose.profit,creatorLose.profit,adsWin.profit],[8761.1,8376.5,7286.05,9825.3]);
+  assert.ok(creatorWin.profit>adsLose.profit);assert.ok(creatorLose.profit<adsWin.profit);
+  assert.equal(creatorWin.commissionRate,.1);assert.equal(creatorLose.commissionRate,.1);
 });
 test('forecast bounds contain realized orders and profit across independent seeds', () => {
   for(let seed=0;seed<50;seed++)for(const channel of ['content','ads','creator']){

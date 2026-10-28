@@ -1,5 +1,5 @@
-import { createCrossboundV11 } from '../v11/model.js';
-import { createV2Core } from './core.js?v=http-uuid-1';
+import { createCrossboundV11 } from '../v11/model.js?v=01295b5f6d';
+import { createV2Core } from './core.js?v=01295b5f6d';
 
 // Frozen rules for a saved v1.1 round; promote only at the next round boundary.
 export function createCrossboundV2(adapter) {
