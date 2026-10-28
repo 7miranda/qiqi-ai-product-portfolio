@@ -1,0 +1,277 @@
+/* Precision pass: retain the campus, palette, typography and layout dimensions. */
+.campaign,#v3-world,.v3s {
+  --detail-line: #2b434d;
+  --detail-line-soft: #243a43;
+  --detail-cyan: #77cad5;
+  --detail-ink: #dce9ed;
+  --detail-surface: #0f2027;
+  --detail-radius: 12px;
+  color-scheme: dark;
+}
+.campaign :is(button,a,summary,input,select,textarea) {
+  -webkit-tap-highlight-color: #77cad526;
+  touch-action: manipulation;
+}
+.campaign :is(button,a,summary):focus-visible {
+  outline: 2px solid var(--detail-cyan);
+  outline-offset: 3px;
+}
+.campaign .cut-outline:has(>button:focus-visible) {
+  outline: 2px solid var(--detail-cyan) !important;
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+.campaign .cut-outline>button:focus-visible { outline: none; }
+.campaign .cut-action {
+  transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+.campaign .cut-outline>button.cut-inner:not([aria-pressed=true]) {
+  background: var(--detail-surface);
+  color: #bdd0d8;
+  box-shadow: inset 0 0 0 1px var(--detail-line-soft);
+}
+.campaign .cut-outline>button.cut-inner[aria-pressed=true] {
+  box-shadow: inset 0 0 0 1px #8ab767, inset 3px 0 0 #a6ff32;
+}
+.campaign .cut-solid {
+  box-shadow: inset 0 1px 0 #edffc166, 0 4px 16px #8dce2412;
+}
+.campaign .cut-action:disabled {
+  cursor: not-allowed;
+  opacity: .42;
+  transform: none !important;
+  box-shadow: none;
+}
+@media(hover:hover) and (pointer:fine) {
+  .campaign .cut-outline>button.cut-inner:not([aria-pressed=true]):not(:disabled):hover {
+    background: #17313a;
+    color: #edf6f8;
+    box-shadow: inset 0 0 0 1px #507882;
+  }
+  .campaign .cut-solid:not(:disabled):hover {
+    box-shadow: inset 0 1px 0 #f3ffdb99, 0 5px 20px #a6ff3225;
+    transform: translateY(-1px);
+  }
+  .campaign .cut-action:not(:disabled):active { transform: translateY(1px); }
+}
+
+/* Fine structural edges and two short corner marks, rather than luminous frames. */
+.campaign .campaign-dialog {
+  border: 1px solid var(--detail-line) !important;
+  border-radius: 18px;
+  overscroll-behavior: contain;
+  box-shadow: 0 24px 90px #0009, inset 0 1px 0 #98cbd314;
+}
+.campaign .campaign-panel { position: relative; }
+.campaign .campaign-panel::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  pointer-events: none;
+  z-index: 2;
+  background:
+    linear-gradient(#77cad55c,#77cad55c) left top/18px 1px no-repeat,
+    linear-gradient(#77cad55c,#77cad55c) left top/1px 18px no-repeat,
+    linear-gradient(#77cad55c,#77cad55c) right bottom/18px 1px no-repeat,
+    linear-gradient(#77cad55c,#77cad55c) right bottom/1px 18px no-repeat;
+}
+.campaign .panel-topbar {
+  background: #0a151bf5;
+  box-shadow: 0 1px 0 #78b9c31c;
+}
+.campaign :is(.services-surface,.services-handoff,.services-generate,.services-home-action,
+  .v2-panel,.v2-details,.report-insights-panel,.listing-edit-panel,.listing-buyer-preview,
+  .creator-flow-panel,.passport-next,.passport-rules,.v11-cockpit-body,.v11-facility-grid article) {
+  box-shadow: inset 0 0 0 1px var(--detail-line-soft), inset 0 1px 0 #a2ccd50c;
+}
+.campaign .mission-guidance-v24 {
+  box-shadow: inset 0 0 0 1px #33545c, inset 3px 0 0 #6ab7bd, 0 10px 35px #02060926;
+}
+.campaign .enterprise-campus-v18__label .cut-action:not(:disabled):hover {
+  box-shadow: inset 0 0 0 1px #6a9c9e;
+}
+.campaign :is(.v11-cockpit-body,.v11-notification-list,.v11-table-wrap,.company-more>div) {
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #42636e #0b171e;
+}
+.campaign .v11-notification-row { box-shadow: inset 0 0 0 1px #29434c; }
+.campaign .v11-notification-heading .cut-action { min-height: 36px; }
+.campaign .v11-notification-dismiss { flex-basis: 36px; }
+.campaign .v11-notification-dismiss .cut-action { min-height: 36px; width: 36px; }
+.campaign .v11-notification-link .cut-action { box-shadow: none; }
+
+/* Inputs use the same cool rim; selection, validation and disabled states stay distinct. */
+.campaign :is(input:not([type=range]):not([type=checkbox]):not([type=radio]),select,textarea) {
+  border-color: #3c5965;
+  color-scheme: dark;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.campaign :is(input,select,textarea):focus-visible {
+  outline: 2px solid var(--detail-cyan);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px #77cad512;
+}
+.campaign [aria-invalid=true] { border-color: #e0a17c !important; }
+.campaign input[type=range] { accent-color: #a6ff32; cursor: pointer; }
+.campaign input[type=range]:focus-visible { outline-offset: 6px; }
+.campaign input:disabled,.campaign select:disabled { opacity: .5; cursor: not-allowed; }
+.campaign .services-materials label { box-shadow: inset 0 0 0 1px var(--detail-line-soft); }
+.campaign .services-materials label:has(input:checked) { box-shadow: inset 0 0 0 1px #739b58; }
+.campaign .services-materials label:focus-within { outline: 2px solid var(--detail-cyan); outline-offset: 3px; }
+.campaign .services-choices button { position: relative; }
+.campaign .services-choices button[aria-pressed=true]::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 7px;
+  height: 4px;
+  border-left: 2px solid #c5edab;
+  border-bottom: 2px solid #c5edab;
+  transform: rotate(-45deg);
+}
+
+/* The promotion cards have text only: remove the inherited number/arrow grid slots. */
+.campaign .v11-promotion .decision-choice-list .cut-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+}
+.campaign .v11-promotion .decision-choice-list small { line-height: 1.7; }
+.campaign .listing-local-steps li {
+  background: transparent;
+  border-radius: 0;
+  box-shadow: inset 0 -1px 0 #29414a;
+  cursor: default;
+}
+.campaign .listing-local-steps li.is-current { box-shadow: inset 0 -2px 0 #91c36c; }
+.campaign .creator-flow-v20 .creator-steps>li {
+  background: transparent;
+  border-radius: 0;
+  box-shadow: inset 0 -1px 0 #2b444e;
+  cursor: default;
+}
+.campaign .creator-flow-v20 .creator-steps>li.is-current {
+  background: transparent;
+  box-shadow: inset 0 -2px 0 #77cad5;
+  color: #c6e4e9;
+}
+.campaign .v11-table-wrap { border-radius: var(--detail-radius); }
+.campaign .v11-table-wrap thead { background: #12262e; color: #bbd3dc; }
+.campaign .v11-table-wrap :is(th,td):not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+.campaign .v11-table-wrap tbody th { font-weight: 500; color: #d1e2e8; }
+.campaign .v11-table-wrap tbody tr:hover { background: #77cad507; }
+.campaign :is(.campaign-wallet,.v2-metrics,.mission-progress,.report-insights-funnel) { font-variant-numeric: tabular-nums; }
+
+/* Preserve each asset's natural geometry; only unify its frame and edge treatment. */
+.campaign :is(.creator-style-photo,.creator-video-frame,.listing-image) { border-radius: var(--detail-radius); }
+.campaign .creator-flow-v20 .creator-video-screen.creator-photographic-screen { border-radius: var(--detail-radius); aspect-ratio: 3/4; }
+.campaign .creator-style-photo { aspect-ratio: 3/4; }
+.campaign .product-studio-preview img { object-fit: contain; }
+.campaign .listing-image .product-studio-preview { aspect-ratio: 3/2; }
+.campaign .creator-portrait { object-fit: cover; }
+.campaign :is(.creator-style-photo,.creator-video-frame) { overflow: hidden; box-shadow: inset 0 0 0 1px #43606b; }
+.campaign .catalog-model-products .cut-action { box-shadow: inset 0 0 0 1px var(--detail-line-soft); }
+.campaign .catalog-model-products .cut-action[aria-pressed=true] { box-shadow: inset 0 0 0 1px #91b96f, inset 0 -3px 0 #a6ff32; }
+.campaign .portal-nav a { box-shadow: inset 0 0 0 1px var(--detail-line-soft); transition: background-color 160ms ease, box-shadow 160ms ease; }
+.campaign .portal-nav a:hover { box-shadow: inset 0 0 0 1px #547c83; }
+
+/* The newer full-screen rooms share the headquarters palette and control language. */
+.v3s {
+  --v3s-accent: #77cad5 !important;
+  overscroll-behavior: contain;
+  background: radial-gradient(1000px 500px at 70% -10%,#24454d55,transparent 60%),linear-gradient(#081419,#040b0f);
+}
+.v3s :is(.v3s-shelf,.v3s-bench,.v3s-screen,.v3s-desk,.v3s-card) {
+  background: linear-gradient(145deg,#142c3333,transparent 55%),#0b1a22;
+  border-color: var(--detail-line);
+}
+.v3s :is(.v3s-chip,.v3s-screen,.v3s-plan,.v3s-market,.v3s-tab).is-on {
+  border-color: #91b96f;
+  background: #142b25;
+  box-shadow: inset 3px 0 0 #a6ff32;
+  transform: none;
+}
+#v3-world .v3-panel {
+  border-color: #426a74;
+  background: #0a1922f5;
+  box-shadow: 0 16px 55px #0007, inset 0 1px 0 #83bcc522;
+}
+#v3-world .v3-panel::before { background: none; }
+#v3-world .v3-hud-task { border-color: #507782; box-shadow: 0 4px 18px #0005; }
+#v3-world .v3-hud-task::before { color: #77cad5; }
+#v3-world .v3-panel>.v3-kicker,#v3-world .v3-panel>h3 { padding-right: 88px; }
+#v3-world .v3-close { min-height: 44px; }
+#v3-world .v3-inbox-x { min-width: 44px; min-height: 44px; }
+#v3-world .v3-inbox-link { padding-right: 50px; }
+#v3-world .v3-dialog { max-height: calc(100dvh - 150px); overflow: auto; }
+#v3-world :is(.v3-dialog,.v3-panel,.v3-inbox-list),.v3s-statements {
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #42636e #0b171e;
+}
+.v3s-statements { max-width: 100%; overflow-x: auto; }
+.v3s-ledger dd { min-width: 0; overflow-wrap: anywhere; }
+.v3s-market>b,.v3s-platform>span { color: #b6d3db; }
+.v3s-foot { background: #08121bf5; box-shadow: 0 -1px 0 #36515d; }
+.v3s-rooms li.is-current { color: #cbe3e9; background: #18343d; border-color: #507782; }
+.v3s :is(.v3s-chip,.v3s-screen,.v3s-plan,.v3s-market)[aria-pressed=true] { position: relative; }
+.v3s :is(.v3s-chip,.v3s-screen,.v3s-plan,.v3s-market)[aria-pressed=true]::after {
+  content: '';
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  width: 7px;
+  height: 4px;
+  border-left: 2px solid #c5edab;
+  border-bottom: 2px solid #c5edab;
+  transform: rotate(-45deg);
+}
+.v3s :is(button,select,input),#v3-world button {
+  touch-action: manipulation;
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+.v3s :is(button,select,input):focus-visible,#v3-world button:focus-visible {
+  outline: 2px solid var(--detail-cyan);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px #77cad51a;
+}
+.v3s button:not(:disabled):hover,#v3-world .v3-btn:not(:disabled):hover { border-color: #6a9da7; }
+.v3s button:disabled,#v3-world button:disabled { cursor: not-allowed; box-shadow: none; }
+
+@media(pointer:coarse) {
+  .campaign .v11-notification-heading .cut-action { min-height: 44px; }
+  .campaign .v11-notification-dismiss { flex-basis: 44px; }
+  .campaign .v11-notification-dismiss .cut-action { min-height: 44px; width: 44px; }
+  .campaign .cut-action:active { box-shadow: inset 0 0 0 2px #77cad5; }
+}
+@media(min-width:1400px) and (max-width:1999px) {
+  .campaign .v11-notification-dock { position: relative; inset: auto; width: 100%; margin: 0 0 16px; }
+  .campaign .v11-notification-list { max-height: 180px; }
+}
+@media(min-width:761px) and (max-width:1999px) {
+  .campaign .v11-notification-list { grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); }
+  .campus-layout-v21 .campus-world { height: auto; }
+  .campus-layout-v21 .enterprise-campus-v18 { height: 520px; }
+}
+@media(min-width:1600px) and (max-width:1999px) {
+  .campus-layout-v21 .enterprise-campus-v18 { height: 560px; }
+}
+@media(max-width:760px) and (pointer:coarse) {
+  .enterprise-campus-v17__viewport canvas,.factory-scene-v15__viewport canvas { touch-action: pan-y !important; }
+}
+@media(max-width:760px) {
+  .campaign .services-choices .cut-action { padding: 16px 8px 8px; }
+  .campaign .services-choice-label>span { display: block; white-space: nowrap; }
+  .campaign .panel-topbar>.panel-close { flex: none; width: auto; margin-right: auto; }
+  #v3-world .v3-layer.is-busy .v3-back { top: 78px; bottom: auto; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .campaign .cut-action,.campaign .portal-nav a,.campaign :is(input,select,textarea),.v3s :is(button,select,input),#v3-world button { transition: none; }
+  .campaign .cut-action:not(:disabled):is(:hover,:active) { transform: none; }
+}

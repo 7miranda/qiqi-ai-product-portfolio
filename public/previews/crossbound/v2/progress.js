@@ -1,5 +1,5 @@
-import { seededUnit } from '../v11/model.js';
-import { goal } from './release.js';
+import { seededUnit } from '../v11/model.js?v=01295b5f6d';
+import { goal } from './release.js?v=01295b5f6d';
 export function passport(company, markets) {
   const countries = markets.map(m => {
     const wins = company.history.filter(r => r.marketId === m.id && goal(r).passed);

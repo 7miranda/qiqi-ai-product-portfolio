@@ -1,12 +1,12 @@
 // REQ-053 §3 2.5D scenes opened full-screen from the campus map: W3 商品页工作室, W4 推广室, W6 财报结算厅.
 // Each has its own layout and interaction (no shared panel template); all choices go into the game's own draft
 // state and are committed with the same calls as the classic panel, so the engine stays authoritative.
-import { PROMOTIONS } from '../../v11/model.js';
-import { BIDS, TIME_SLOTS, OFFSITE, PLATFORMS } from '../../v2/catalog.js';
-import { goal, goalChannelText, financialStatements } from '../../v2/release.js';
-import { profitRows } from '../../v2/ui.js';
-import { countryBadgeAsset } from '../../v11/badges.js';
-import { WORLDS, roomStates, budgetCurve, money, cashPlan, capacityBar } from './logic.js';
+import { PROMOTIONS } from '../../v11/model.js?v=01295b5f6d';
+import { BIDS, TIME_SLOTS, OFFSITE, PLATFORMS } from '../../v2/catalog.js?v=01295b5f6d';
+import { goal, goalChannelText, financialStatements } from '../../v2/release.js?v=01295b5f6d';
+import { profitRows } from '../../v2/ui.js?v=01295b5f6d';
+import { countryBadgeAsset } from '../../v11/badges.js?v=01295b5f6d';
+import { WORLDS, roomStates, budgetCurve, money, cashPlan, capacityBar } from './logic.js?v=01295b5f6d';
 
 // The three listing benches mirror the original editor (same ids, same points); costs come from the engine quote.
 const BENCHES = [
@@ -38,7 +38,7 @@ async function productShot(p) {
   shots.set(p.id, null);
   try {
     shotKit ||= (async () => {
-      const [THREE, { productModel }] = await Promise.all([import('three'), import('./products.js')]);
+      const [THREE, { productModel }] = await Promise.all([import('three'), import('./products.js?v=01295b5f6d')]);
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
       renderer.setSize(360, 360, false); renderer.outputColorSpace = THREE.SRGBColorSpace;
       const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 50);

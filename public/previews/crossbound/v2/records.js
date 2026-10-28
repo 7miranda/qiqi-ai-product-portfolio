@@ -1,6 +1,6 @@
-import { goal } from './release.js';
-import { apiPath } from './api.js';
-import { assessment } from './progress.js';
+import { goal } from './release.js?v=01295b5f6d';
+import { apiPath } from './api.js?v=01295b5f6d';
+import { assessment } from './progress.js?v=01295b5f6d';
 export const DATA_VERSION='2026-10-22';
 export const userId=company=>company.v2?.collectionIdentity || company.v2?.identity || `legacy-${company.runSeed}`;
 const uid=()=>globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`;

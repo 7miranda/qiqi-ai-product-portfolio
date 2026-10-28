@@ -126,14 +126,28 @@ test('rival story appears after promotion, complaint needs trademark, outcome an
   assert.ok(first.report.profit > 6000);
   let n = e.next(first);
   assert.equal(n.v2.events.find(e => e.kind === 'rival').stage, 4);
+  const rivalId = n.v2.events.find(e => e.kind === 'rival').id;
+  assert.equal(e.act(n, { type: 'event', id: rivalId, choice: 'complaint' }), n, 'the encounter is not actionable before promotion');
   for (const d of [{ id: 'singapore' }, { id: 'tech' }]) n = e.commit(n, d);
-  n = e.act(n, { type: 'trademark' });
   n = e.commit(n, { id: 'pilot', quantity: 1200, price: 45, supplierId: 'standard' });
-  n = e.publish(n, { mode: 'reuse' }); n = e.commit(n, { id: 'ads', budget: 3600 });
+  n = e.publish(n, { mode: 'reuse' });
+  const unregistered = e.commit(n, { id: 'ads', budget: 3600 });
+  assert.equal(e.act(unregistered, { type: 'event', id: rivalId, choice: 'complaint' }), unregistered, 'an active encounter still needs this product trademark');
+  const beforeTrademark = n.cash;
+  n = e.act(n, { type: 'trademark' });
+  assert.equal(n.cash, money(beforeTrademark - 600));assert.equal(e.act(n, { type: 'trademark' }), n);
+  n = e.commit(n, { id: 'ads', budget: 3600 });
   const rival = n.v2.events.find(e => e.kind === 'rival');
-  assert.equal(e.eventEffect(n).conversion, .7);
+  for (const encounter of [1, 2, 10]) {
+    const repeated = { ...n, v2: { ...n.v2, events: [{ ...rival, encounter }] } };
+    assert.equal(e.eventEffect(repeated).conversion, .8, 'one unresolved rival never removes more than 20%');
+  }
+  const beforeComplaint = n.cash;
   n = e.act(n, { type: 'event', id: rival.id, choice: 'complaint' });
-  assert.ok(n.v2.eventHistory.some(x => x.kind === 'rival'));
+  assert.equal(n.cash, money(beforeComplaint - 200));
+  assert.equal(n.v2.eventHistory.find(x => x.kind === 'rival').success, true);
+  assert.equal(e.eventEffect(n).conversion, 1);
+  assert.equal(e.act(n, { type: 'event', id: rival.id, choice: 'complaint' }), n, 'complaint costs and outcomes cannot be duplicated');
   assert.deepEqual(e.deserialize(e.serialize(n)).v2.eventHistory, n.v2.eventHistory);
 });
 test('collection awards are deduplicated and replay in the separate growth ledger', () => {
@@ -155,37 +169,71 @@ test('v1.1 saves keep current-round outcomes and promote only at a boundary', ()
   assert.equal(next.history[0].profit, old.report.profit);
   assert.equal(e.previous(next).engineVersion, 'v11');
 });
-test('season preparation survives rounds, heat decays, and a held stock is charged storage only once per round', () => {
+test('season preparation persists while product heat grows to 1.15 and returned stock incurs no warehouse carry', () => {
   let n = finish(e, stocked({ seasonPrep: true }));
   assert.equal(n.report.seasonPrepCost, 300);
-  assert.equal(n.report.warehouseCost, n.report.inventoryRemaining * .5);
-  n = e.next(n);
-  assert.equal(n.v2.heat.tech, .95); assert.equal(n.v2.seasonPrepared, 1);
-  for (const d of [{ id: 'singapore' }, { id: 'tech' }, { id: 'pilot', quantity: 1200, price: 45, supplierId: 'standard' }]) n = e.commit(n, d);
-  n = finish(e, e.publish(n, { mode: 'reuse' }));
-  assert.equal(n.stage, 6); assert.equal(n.report.profit, n.report.assetChange);
-  n = e.next(n);
-  assert.equal(n.round, 3); assert.equal(n.v2.heat.tech, .95 ** 2);
-  for (const d of [{ id: 'singapore' }, { id: 'tech' }]) n = e.commit(n, d);
-  const prepared = e.simulate(n, 'mean'), unprepared = e.simulate({ ...n, v2: { ...n.v2, seasonPrepared: 0 } }, 'mean');
-  assert.equal(prepared.seasonFactor, 1.3); assert.equal(unprepared.seasonFactor, 1.1);
-  assert.ok(prepared.visitors > unprepared.visitors);
+  assert.equal(n.report.warehouseCost, 0);assert.equal(n.report.inventoryRemaining, 0);
+  for (const [round, heat] of [[2, 1.05], [3, 1.1], [4, 1.15], [5, 1.15]]) {
+    n = e.next(n);
+    assert.equal(n.round, round);assert.deepEqual(n.v2.heat, { tech: heat });
+    assert.equal(n.v2.seasonPrepared, 1);assert.equal(n.v2.config.seasonPrep, false);
+    assert.equal(e.next(n), n, 'reopening an unfinished round cannot apply another heat increment');
+    for (const d of [{ id: 'singapore' }, { id: 'tech' }]) n = e.commit(n, d);
+    if (round === 3) {
+      const prepared = e.simulate(n, 'mean'), unprepared = e.simulate({ ...n, v2: { ...n.v2, seasonPrepared: 0 } }, 'mean');
+      assert.equal(prepared.seasonFactor, 1.3);assert.equal(unprepared.seasonFactor, 1.1);
+      assert.ok(prepared.visitors > unprepared.visitors);
+    }
+    n = e.commit(n, { id: 'pilot', quantity: 1200, price: 45, supplierId: 'standard' });
+    n = finish(e, e.publish(n, { mode: 'reuse' }));
+    assert.equal(n.stage, 6);assert.equal(n.report.profit, n.report.assetChange);
+    assert.equal(n.report.seasonPrepCost, 0);assert.equal(n.report.warehouseCost, 0);
+    assert.equal(n.inventory.tech, 0);
+  }
+  assert.equal(n.ledger.filter(row => row.category === 'season').length, 1);
 });
-test('V2 clearance leaves receivables intact and reconciles the half-cost inventory loss', () => {
+test('V2 settlement returns unsold principal less 5%, preserves receivables and prevents repeat clearance', () => {
   const n = finish(e, stocked({ terms: 'credit' }));
+  assert.deepEqual([n.report.stockReturnUnits, n.report.stockReturnCost, n.report.stockReturnFee, n.report.stockReturn], [194, 2308.6, 115.43, 2193.17]);
+  assert.equal(n.report.stockReturnFee, money(n.report.stockReturnCost * .05));
+  assert.equal(money(n.report.stockReturn + n.report.stockReturnFee), n.report.stockReturnCost, 'principal returned plus its fee equals the removed stock cost');
+  assert.equal(n.report.receivables, 44595);assert.equal(n.report.profit, 13533.47);
+  assert.equal(n.report.profit, n.report.assetChange);
+  assert.ok(Object.values(n.inventory).every(quantity => quantity === 0));
+  assert.ok(Object.values(n.inventoryCosts).every(cost => cost === 0));
+  assert.equal(n.ledger.filter(row => row.category === 'stockReturn').length, 1);
+  assert.equal(n.ledger.find(row => row.category === 'stockReturn').cashDelta, 2193.17);
   const sold = e.clearStock(n, 'tech');
-  assert.equal(sold.report.receivables, n.report.receivables);
-  assert.equal(sold.report.profit, sold.report.assetChange);
-  assert.equal(sold.report.profit, money(n.report.profit - sold.report.clearanceLoss));
+  assert.equal(sold, n, 'settlement has already emptied inventory; no second 50% sale is available');
+  assert.equal(sold.report.clearanceLoss, undefined);assert.equal(sold.clearanceEvents.length, 0);
   assert.equal(e.clearStock(sold, 'tech'), sold);
   assert.ok(e.deserialize(e.serialize(sold)));
+  const next = e.next(n);
+  assert.equal(next.cash, money(n.cash + n.report.receivables - n.report.liabilities));
+  assert.equal(next.ledger.filter(row => row.category === 'stockReturn').length, 1, 'the next round does not return the same principal or charge its fee again');
 });
-test('customs preparation is a real lead-time event, and switching away escapes the targeted rival', () => {
+test('customs preparation removes three days without bypassing arrival floors, and rivals only affect their target', () => {
   let n = stocked();
   n.v2.events.push({ id: 'vat-review:1', kind: 'vat-review', title: '核对进口税', dueRound: 1, stage: 0, choice: null });
-  const before = e.simulate(n), after = e.simulate(e.act(n, { type: 'event', id: 'vat-review:1', choice: 'prepare' }));
-  assert.equal(before.leadDays, after.leadDays + 3); assert.ok(after.units > before.units);
+  const prepared = e.act(n, { type: 'event', id: 'vat-review:1', choice: 'prepare' });
+  const before = e.simulate(n), after = e.simulate(prepared);
+  assert.deepEqual([before.leadDays, after.leadDays, before.units, after.units], [17, 14, 1020, 1020]);
+  assert.equal(after.units, 1200 * .85, 'the default mixed route protects 75% + 10% of new stock');
+  assert.equal(prepared.cash, money(n.cash - 180));assert.equal(e.eventEffect(prepared).delayDays, 0);
+  assert.equal(e.act(prepared, { type: 'event', id: 'vat-review:1', choice: 'prepare' }), prepared);
+  const waiting = e.act(n, { type: 'event', id: 'vat-review:1', choice: 'wait' });
+  assert.equal(waiting.cash, n.cash);assert.equal(e.eventEffect(waiting).delayDays, 3);
+  const insufficient = { ...n, cash: 179 };
+  assert.equal(e.act(insufficient, { type: 'event', id: 'vat-review:1', choice: 'prepare' }), insufficient);
+  assert.equal(insufficient.v2.events.find(event => event.id === 'vat-review:1').choice, null);
+  const frozen = { ...n, balanceVersion: undefined, roundStart: { ...n.roundStart, balanceVersion: undefined } };
+  const frozenBefore = e.simulate(frozen), frozenAfter = e.simulate(e.act(frozen, { type: 'event', id: 'vat-review:1', choice: 'prepare' }));
+  assert.deepEqual([frozenBefore.leadDays, frozenAfter.leadDays, frozenBefore.units, frozenAfter.units], [17, 14, 520, 640], 'saved pre-calibration rounds have no arrival floor');
   n.v2.events = [{ id: 'rival:1', kind: 'rival', marketId: 'london', productId: 'tech', encounter: 1, dueRound: 1, stage: 0, choice: 'pricewar' }];
   assert.equal(e.eventEffect(n).conversion, 1);
   assert.equal(e.eventEffect(n).priceFactor, 1);
+  const targeted = { ...n, marketId: 'london' };
+  assert.equal(e.eventEffect(targeted).conversion, .95);assert.equal(e.eventEffect(targeted).priceFactor, .9);
+  assert.equal(e.eventEffect({ ...targeted, productId: 'living' }).conversion, 1);
+  assert.equal(e.eventEffect({ ...targeted, productId: 'living' }).priceFactor, 1);
 });

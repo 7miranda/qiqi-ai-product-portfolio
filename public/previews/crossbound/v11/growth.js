@@ -1,4 +1,4 @@
-import { rank as currentRank } from '../v2/release.js';
+import { rank as currentRank } from '../v2/release.js?v=01295b5f6d';
 // Growth rewards use their own ledger. They never change operating cash or orders.
 export function createGrowth({ tasks, facilities, createOps, commitOps, purchase, rank, snapshot, baseGrowth }) {
   rank = currentRank;
