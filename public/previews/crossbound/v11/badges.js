@@ -9,7 +9,7 @@ export function countryBadgeAsset(marketId, tier) {
   if (!BADGE_MARKETS.includes(marketId)) return null;
   const earned = BADGE_TIERS.includes(tier);
   return {
-    src: new URL(`../assets/badges/countries-v1/web/${earned ? tier : 'gold'}/${marketId}.webp`, import.meta.url).href,
+    src: new URL(`../assets/badges/countries-v2/web/${earned ? tier : 'gold'}/${marketId}.webp`, import.meta.url).href,
     locked: !earned,
     tier: earned ? tier : 'locked',
   };

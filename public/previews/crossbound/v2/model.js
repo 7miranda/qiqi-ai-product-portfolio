@@ -5,7 +5,7 @@ import { createV2Core } from './core.js?v=http-uuid-1';
 export function createCrossboundV2(adapter) {
   const old = createCrossboundV11(adapter), modern = createV2Core(adapter);
   const api = { ...modern };
-  for (const key of ['snapshot', 'listingQuote', 'publish', 'optimize', 'normalize', 'simulate', 'preview', 'commit', 'rollback', 'previous', 'clearStock', 'serialize', 'milestones']) {
+  for (const key of ['options', 'snapshot', 'listingQuote', 'publish', 'optimize', 'normalize', 'simulate', 'preview', 'commit', 'rollback', 'previous', 'clearStock', 'serialize', 'milestones']) {
     api[key] = (state, ...args) => (modern.valid(state) ? modern : old)[key](state, ...args);
   }
   api.valid = n => modern.valid(n) || old.valid(n);

@@ -100,3 +100,68 @@ dialog.v2-badge-celebration::backdrop { background: #020a0fb8; backdrop-filter: 
 @media(prefers-reduced-motion:reduce) {
   dialog.v2-badge-celebration[open],.v2-badge-art .country-badge { animation: none; }
 }
+
+/* Report extensions share the existing dark panels and lime primary actions. */
+.v3-table-wrap{overflow-x:auto}.v3-table-wrap table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}.v3-table-wrap caption{text-align:left;padding:12px 0;color:#a7c5cd}.v3-table-wrap th,.v3-table-wrap td{padding:13px 10px;border-bottom:1px solid #29434b;text-align:right}.v3-table-wrap th:first-child{text-align:left}.v3-table-wrap small{display:block;font-weight:400;color:#85a8b3}.v3-warning{color:#ffb56c}.v3-radar{width:240px;max-width:100%;display:block;margin:16px auto}.v2-panel progress{width:100%;height:6px;accent-color:#adff2f}.v2-panel textarea,.v2-panel select{display:block;box-sizing:border-box;width:100%;background:#10252d;border:1px solid #355560;border-radius:10px;color:#d9edf2;padding:12px;margin:8px 0}.v2-panel label{display:block}.clarity-switches [aria-pressed=true]{background:#203b27;color:#adff2f}.v2-panel .operation-actions{display:grid;gap:10px}.v2-panel textarea:focus-visible{outline:2px solid #adff2f}
+
+.v3-report-round{display:flex;align-items:center;gap:12px;margin:18px 0}.v3-report-round select{background:#10252d;color:#d7eaf0;padding:10px 16px;border:1px solid #355560;border-radius:10px}.v3-skill-tracks{display:grid;grid-template-columns:1fr 1fr;gap:16px}.v3-skill-tracks article{padding:20px;border:1px solid #29434b;border-radius:14px;background:#0c2028}.v3-skill-tracks li{margin:12px 0}.v3-skill-tracks small{display:block;color:#8caab4}@media(max-width:600px){.v3-skill-tracks{grid-template-columns:1fr}}
+
+/* Community survey and collectible: keep the existing panel and button language. */
+.v2-panel .v3-community-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.v2-panel .v3-community-options button{width:100%;min-width:0;min-height:72px;height:auto;padding:20px;text-align:left;justify-content:flex-start;align-items:center}
+.v3-community-badge{display:block;object-fit:contain;width:240px;height:240px;max-width:100%;flex-shrink:0}
+.v3-community-incentive,.v3-community-collection{display:flex;align-items:center;gap:24px;margin:18px 0 24px;padding:20px;border:1px solid #42513e;border-radius:14px;background:#122821}
+.v3-community-incentive .v3-community-badge{width:100px;height:100px}
+.v3-community-incentive strong,.v3-community-receipt h3{color:#ead49c}
+.v3-community-incentive p{margin:10px 0 0}
+.v3-community-receipt{text-align:center;padding:4px 16px 20px}
+.v3-community-receipt .v3-community-badge{margin:0 auto 16px;filter:drop-shadow(0 12px 24px #b38b2726)}
+.v3-community-receipt h3{font-size:26px;margin:0 0 14px}
+.v3-community-receipt .v3-community-caption{color:#91adb6;font-size:13px;margin-bottom:24px}
+.v3-community-collection .v3-community-badge{width:124px;height:124px}
+.v3-community-badge.is-locked{filter:grayscale(1);opacity:.42}
+@media(max-width:540px){.v2-panel .v3-community-options button{min-height:72px;padding:14px;font-size:13px}.v3-community-incentive,.v3-community-collection{gap:14px;padding:14px}.v3-community-incentive .v3-community-badge{width:68px;height:68px}.v3-community-collection .v3-community-badge{width:84px;height:84px}.v3-community-receipt h3{font-size:22px}}
+
+.v2-panel .v3-community-options>.cut-outline{min-height:0;height:auto}
+
+/* Shared content rhythm: separate explanatory copy from the following action. */
+.campaign-panel :is(.v2-panel,.v2-details,.operation-feedback) > p:has(+ :is(.cut-action,.cut-outline,.v2-inline-actions,.v2-contact-form)) { margin-bottom: 20px; }
+.campaign-panel .v2-panel > progress { display: block; margin: 16px 0 20px; }
+.campaign-panel .v2-panel > :is(p,small):last-child { margin-bottom: 0; }
+.campaign-panel .v2-panel > small { display: block; line-height: 1.75; }
+.campaign-panel :is(.v2-panel,.v2-details) > :is(ul,ol) { padding-left: 22px; margin: 16px 0; line-height: 1.8; }
+.campaign-panel :is(.v2-panel,.v2-details) > :is(ul,ol) > li + li { margin-top: 8px; }
+.v3-table-wrap th,.v3-table-wrap td { line-height: 1.7; }
+.v3-table-wrap th small { margin-top: 4px; line-height: 1.7; }
+.v3-skill-tracks > article { display: flex; flex-direction: column; min-width: 0; }
+.v3-skill-tracks > article > ol { padding-left: 20px; margin: 0 0 20px; line-height: 1.8; }
+.v3-skill-tracks > article > .cut-outline { margin-top: auto; align-self: flex-start; }
+.v3-skill-tracks li > small { margin-top: 6px; line-height: 1.75; }
+.v2-contact-form > p { margin: 0 0 4px; }
+.v2-contact-form label:not(.v2-check) { line-height: 1.7; }
+.v2-contact-form select { margin: 0; }
+.v2-panel .v2-contact-form .v2-check { display: flex; }
+.v3-community-incentive p,.v3-community-collection p { line-height: 1.8; }
+.v3-community-incentive strong,.v3-community-collection strong { line-height: 1.6; }
+
+.v2-cac-warning { color: #ff9b8f; line-height: 1.7; margin: 12px 0; }
+/* Inline coaching occupies its own space, preserving the existing decision UI. */
+.v4-guide{margin:18px 0 24px;padding:20px 24px;background:#10272d;border:1px solid #38534a;border-left:3px solid #adff2f;border-radius:12px;color:#c6d9dc;line-height:1.75}
+.v4-guide>div+div{margin-top:16px;padding-top:16px;border-top:1px solid #294047}
+.v4-guide-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.v4-guide-heading strong{color:#adff2f;font-size:14px}
+.v4-guide-heading button{flex:none;background:none;border:0;color:#8faab1;cursor:pointer;padding:2px 4px;font:inherit;font-size:12px}
+.v4-guide p{margin:12px 0 6px!important}.v4-guide small{display:block;color:#8faab1}.v4-guide li{margin:12px 0}
+.v5-walkthrough{position:fixed;inset:0;margin:0;padding:0;border:0;width:100vw;height:100dvh;max-width:none;max-height:none;overflow:visible;background:transparent;color:#e6f1f2;pointer-events:none;z-index:10000;font-family:inherit}
+.v5-walkthrough::backdrop{background:transparent;pointer-events:none}
+.v5-spotlight{position:fixed;border:2px solid #adff2f;border-radius:12px;box-shadow:0 0 0 9999px rgb(2 10 13 / .63),0 0 26px rgb(173 255 47 / .25);pointer-events:none;box-sizing:border-box}
+.v5-coach{position:fixed;box-sizing:border-box;padding:20px;border:1px solid #38554b;border-radius:16px;background:#112329;box-shadow:0 14px 60px #0009;pointer-events:auto;max-height:calc(100dvh - 24px);overflow:auto;text-align:left}
+.v5-coach-top{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:#adff2f}
+.v5-coach button{font-family:inherit;cursor:pointer;min-height:36px}
+.v5-coach-top button,.v5-coach-locate{padding:4px 0;border:0;background:transparent;color:#a6bcc0;font-size:12px}
+.v5-coach-progress{display:flex;gap:5px;margin:10px 0 16px}.v5-coach-progress i{height:3px;flex:1;background:#344a50;border-radius:3px}.v5-coach-progress .is-done{background:#adff2f}
+.v5-coach h3{margin:0 0 12px;font-size:18px;line-height:1.5;color:#f1f6f7}.v5-coach p{margin:0 0 18px!important;font-size:14px;line-height:1.8;color:#c3d5d9}
+.v5-coach-keep{display:block;width:100%;padding:11px 12px;border:0;border-radius:9px;background:#adff2f;color:#132000;font-size:14px;font-weight:650;line-height:1.5}
+.v5-coach small{display:block;font-size:12px;line-height:1.7;color:#adff2f}.v5-coach-locate{display:block;margin-top:8px}
+.v5-coach button:focus-visible{outline:2px solid #adff2f;outline-offset:4px}
+@media(max-width:600px){.v5-coach{padding:14px}.v5-coach h3{font-size:16px;margin-bottom:8px}.v5-coach p{font-size:13px;line-height:1.65;margin-bottom:12px!important}.v5-coach-progress{margin:5px 0 10px}}

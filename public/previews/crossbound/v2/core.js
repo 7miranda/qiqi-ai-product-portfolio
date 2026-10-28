@@ -1,5 +1,7 @@
+import { BALANCE_VERSION, friendly, balanceRules, balanceOptions, acquisitionRisk, STOCK_CARRYOVER, STOCK_RETURN_FEE, CREATOR_RANGE, CREATOR_MATCH, EVENT_FLOOR } from '../v11/balance.js';
 import { TAX, taxQuote, PLATFORMS, FIRST_MILE, BIDS, TIME_SLOTS, OFFSITE, CONFIG_DEFAULTS, season } from './catalog.js';
 import { productFit } from './product-fit.js';
+import { GOAL_VERSION, goal, goalPasses, financeSnapshot } from './release.js';
 // Crossbound v1.1: pure operating rules. The bridge supplies the existing demo data.
 export const money = value => Math.round((value + Number.EPSILON) * 100) / 100;
 const copy = value => structuredClone(value);
@@ -37,7 +39,7 @@ export const PROMOTIONS = {
   creator: [
     { id: 'large', name: '大达人 · 广泛触达', detail: '建议预算 $3,600，触达更广，成交分佣 10%', visitors: 1.4, commission: .10, suggestedBudget: 3600 },
     { id: 'small', name: '小达人 · 轻量试销', detail: '建议预算 $900，触达较少，成交分佣 5%', visitors: .78, commission: .05, suggestedBudget: 900 },
-    { id: 'vertical', name: '垂类达人 · 对口受众', detail: '建议预算 $2,400；选择对口领域，转化 +15%，分佣 8%', visitors: 1, commission: .08, suggestedBudget: 2400 },
+    { id: 'vertical', name: '垂类达人 · 对口受众', detail: '建议预算 $1,800；选择对口领域，转化 +30%，分佣 8%', visitors: 1, commission: .08, suggestedBudget: 1800 },
   ],
   content: [
     { id: 'review', name: '测评', detail: '拆解性能与使用证据', categories: ['electronics', 'future'], visitors: 1, commission: 0 },
@@ -50,19 +52,20 @@ export const HELP = {
   tariff: ['预估关税是什么？', '12个国家均配置关税与进口税。关税按品类与国家的教学参数计算，进口税另列；零关税不代表零税费，退货不自动退税。'],
   conversion: ['访客为什么没有都下单？', '商品与市场匹配、售价、上架质量、配送速度、评分和推广内容共同影响购买意愿。售价越高通常越难成交；交期较长还会让部分新货错过本轮销售机会。'],
   cac: ['CAC 与 TACOS 怎么看？', '这里按各来源到访占比分配订单，是简化估算。CAC为渠道预算及佣金除以该来源未退款订单；TACOS为广告花费除以总销售额。没有订单时显示“暂无”，不把除零写成0。'],
-  inventory: ['库存为什么不是亏掉的钱？', '采购先占用现金，未售商品仍是按成本计量的库存资产。利润扣已售成本和报损，不能再扣一遍整批采购款；清仓按成本五折回款，差额才是清仓损失。'],
+  inventory: ['库存为什么不是亏掉的钱？', '本版暂行规则：每轮结算时，没卖完的货（含退货回库的）按进货成本退回现金，扣5%清仓手续费，库存清零，下一轮重新备货。退回的是本金，不算利润；那5%手续费算作本轮成本，是买多了的代价。'],
 };
 
 export function createV2Core(a) {
   const { products, markets, stocks, channels, fulfillment, expansion, old } = a;
   const tables = [markets, products, stocks, channels, fulfillment, expansion];
+  const options = (n, kind) => balanceOptions(n, kind, ({markets,channels,fulfillment})[kind]);
   const keys = ['marketId', 'productId', 'stockPlanId', 'trafficPlanId', 'fulfillmentPlanId', 'expansionPlanId'];
   const find = (rows, id) => rows.find(r => r.id === id);
   const valid = n => n?.engineVersion === 'v2';
-  const initialV2 = () => ({ identity: companyIdentity(), config: { ...CONFIG_DEFAULTS }, receivables: [], payables: [], loans: [],
+  const initialV2 = () => ({ identity: companyIdentity(), config: { ...CONFIG_DEFAULTS, firstMile:'mixed' }, receivables: [], payables: [], loans: [],
     events: [], eventHistory: [], actions: [], heat: {}, tests: [], openedPlatforms: [], entered: [], entryRewards: [],
-    trademark: false, seasonPrepared: 0, rivalEncounters: 0 });
-  const config = n => ({ ...CONFIG_DEFAULTS, ...n.v2?.config });
+    trademark: false, trademarks: [], seasonPrepared: 0, rivalEncounters: 0 });
+  const config = n => ({ ...CONFIG_DEFAULTS, ...friendly(n) ? {firstMile:'mixed'} : {}, ...n.v2?.config });
   const selected = (rows, id) => rows.find(r => r.id === id) || rows[0];
   const dueTotal = rows => sum(rows.filter(r => !r.paid).map(r => r.amount));
   const expenses = (n, category) => sum(n.ledger.filter(e => e.round === n.round && e.category === category).map(e => -e.cashDelta));
@@ -73,14 +76,14 @@ export function createV2Core(a) {
     n.ledger.push({ id: n.ledger.length + 1, round: n.round, category, label, cashDelta: money(cashDelta) });
   };
   function snapshot(n) {
-    return { ...old.snapshot(n), engineVersion: 'v2', runSeed: n.runSeed, round: n.round, v2: copy(n.v2),
+    return { ...old.snapshot(n), engineVersion: 'v2', balanceVersion:n.balanceVersion, goalVersion:n.goalVersion, runSeed: n.runSeed, round: n.round, v2: copy(n.v2),
       visitedMarkets: copy(n.visitedMarkets || []), ratings: copy(n.ratings || {}),
       contentTail: n.contentTail || 0, previousMarket: n.previousMarket || null,
       listingInvestments: copy(n.listingInvestments || []), clearanceEvents: copy(n.clearanceEvents || []) };
   }
   function create(seed) {
     const n = old.create();
-    Object.assign(n, { engineVersion: 'v2', runSeed: seed ?? globalThis.crypto.getRandomValues(new Uint32Array(1))[0],
+    Object.assign(n, { balanceVersion:BALANCE_VERSION, engineVersion: 'v2', goalVersion:GOAL_VERSION, runSeed: seed ?? globalThis.crypto.getRandomValues(new Uint32Array(1))[0],
       visitedMarkets: [], ratings: {}, contentTail: 0, previousMarket: null, listingInvestments: [], clearanceEvents: [], v2: initialV2() });
     n.roundStart = snapshot(n);
     return n;
@@ -90,7 +93,7 @@ export function createV2Core(a) {
     const out = copy(n);
     // A running historical round keeps its rules until next round. No history is recalculated.
     if (out.stage !== 0) return out;
-    Object.assign(out, { engineVersion: 'v2', runSeed: globalThis.crypto.getRandomValues(new Uint32Array(1))[0],
+    Object.assign(out, { balanceVersion:BALANCE_VERSION, goalVersion:GOAL_VERSION, engineVersion: 'v2', runSeed: globalThis.crypto.getRandomValues(new Uint32Array(1))[0],
       visitedMarkets: [...new Set(out.history.map(r => r.marketId))], ratings: {}, contentTail: 0,
       previousMarket: out.carryEffect.previousMarket, listingInvestments: [], clearanceEvents: [], v2: initialV2() });
     const assets = {};
@@ -107,8 +110,8 @@ export function createV2Core(a) {
   function upgrade(n) {
     if (valid(n) || n.stage !== 0) return n;
     const r = copy(n);
-    r.engineVersion = 'v2';
-    r.v2 = initialV2();
+    r.engineVersion = 'v2'; r.goalVersion=GOAL_VERSION; r.balanceVersion=BALANCE_VERSION;
+    r.v2 = {...initialV2(),collectionIdentity:`legacy-${n.runSeed}`};
     // Already explored countries are not first-entry rewards a second time.
     r.v2.entered = [...(r.visitedMarkets || [])];
     r.roundStart = snapshot(r);
@@ -118,7 +121,7 @@ export function createV2Core(a) {
     if (!valid(n) || n.stage > 4) return n;
     const r = copy(n), c = config(n);
     const rules = {
-      platform: [0, PLATFORMS.map(x => x.id)], firstMile: [2, FIRST_MILE.map(x => x.id)],
+      platform: [0, PLATFORMS.map(x => x.id)], firstMile: [4, FIRST_MILE.map(x => x.id)],
       terms: [2, ['cash', 'credit']], negotiation: [2, ['none', 'volume', 'credit']],
       bid: [3, BIDS.map(x => x.id)], timeSlot: [3, TIME_SLOTS.map(x => x.id)], offsite: [3, OFFSITE.map(x => x.id)],
       seasonPrep: [2, [true, false]],
@@ -153,11 +156,15 @@ export function createV2Core(a) {
         if (avoided || e.choice === 'complaint' && e.success) continue;
         if (e.choice === 'differentiate') { conversion *= 1; packaging += 1.5; }
         else if (e.choice === 'pricewar') conversion *= .95;
-        else conversion *= Math.max(.55, .7 - .03 * (e.encounter - 1));
+        else conversion *= Math.max(EVENT_FLOOR, .7 - .03 * (e.encounter - 1));
       }
     }
     return { conversion, traffic, packaging, delayDays, active, priceFactor: active.some(e => e.kind === 'rival' && e.marketId === n.marketId && e.productId === n.productId && e.choice === 'pricewar') ? .9 : 1 };
   }
+  function hasTrademark(n,productId=n.productId) {
+    return Array.isArray(n.v2.trademarks)?n.v2.trademarks.includes(productId):!!n.v2.trademark;
+  }
+  const testCost = n => (n.v2?.tests?.length ? 150 : 0);
   function act(n, input) {
     if (!valid(n) || !input) return n;
     const r = copy(n);
@@ -168,18 +175,20 @@ export function createV2Core(a) {
       entry(r, 'loan', '过桥贷款本金（下轮偿还，利息12%）', amount);
       settleDue(r);
     } else if (input.type === 'test') {
-      if (n.stage !== 2 || n.cash < 150 || r.v2.tests.some(t => t.round === n.round && t.productId === n.productId)) return n;
+      // REQ-056: the first sample test of a game is free (an unknown fit should be cheap to find out).
+      const cost = testCost(n);
+      if (n.stage !== 2 || n.cash < cost || r.v2.tests.some(t => t.round === n.round && t.productId === n.productId)) return n;
       const fit = productFit[n.productId][n.marketId], score = money(fit * (.9 + seededUnit(n.runSeed, n.round, `test:${n.productId}:${n.marketId}`) * .2));
-      r.v2.tests.push({ round: n.round, productId: n.productId, marketId: n.marketId, score, cost: 150 });
-      entry(r, 'testing', '小预算测款（仅抽样信号，不保证订单）', -150);
+      r.v2.tests.push({ round: n.round, productId: n.productId, marketId: n.marketId, score, cost });
+      entry(r, 'testing', cost ? '小预算测款（仅抽样信号，不保证订单）' : '首次测款免费（仅抽样信号，不保证订单）', -cost);
     } else if (input.type === 'trademark') {
-      if (n.cash < 600 || r.v2.trademark || n.stage > 3) return n;
-      r.v2.trademark = true; entry(r, 'trademark', '模拟商标登记', -600);
+      if (n.cash < 600 || !n.productId || hasTrademark(n) || n.stage > 3) return n;
+      r.v2.trademarks=[...(r.v2.trademarks||[]),n.productId]; r.v2.trademark = true; entry(r, 'trademark', '模拟商标登记', -600);
     } else if (input.type === 'event') {
       const e = r.v2.events.find(e => e.id === input.id && e.dueRound === n.round && n.stage >= e.stage);
       if (!e || e.choice || !eventChoices(e).some(x => x.id === input.choice)) return n;
       const choice = eventChoices(e).find(x => x.id === input.choice);
-      if (choice.cost > n.cash || input.choice === 'complaint' && !n.v2.trademark) return n;
+      if (choice.cost > n.cash || input.choice === 'complaint' && !hasTrademark(n,e.productId)) return n;
       e.choice = input.choice;
       if (choice.cost) entry(r, 'events', `${e.title} · ${choice.name}`, -choice.cost);
       e.success = input.choice === 'complaint' && seededUnit(n.runSeed, n.round, e.id) < (n.currentListing?.score || 60) / 100;
@@ -276,7 +285,7 @@ export function createV2Core(a) {
     const category = products.some(x => x.category === input?.category) ? input.category : p?.category;
     const matched = channelId === 'creator' ? selected.id === 'vertical' && category === p?.category : !!selected.categories?.includes(p?.category);
     return { ...selected, category, matched, trafficFactor: selected.visitors * (channelId === 'content' && matched ? 1.1 : 1),
-      conversionFactor: channelId === 'ads' ? matched ? 1.1 : .95 : channelId === 'creator' && matched ? 1.15 : 1 };
+      conversionFactor: channelId === 'ads' ? matched ? 1.1 : .95 : channelId === 'creator' && matched ? CREATOR_MATCH : 1 };
   }
   function normalize(n, input) {
     const raw = typeof input === 'string' ? { id: input } : input;
@@ -287,10 +296,10 @@ export function createV2Core(a) {
       const p = find(products, n.productId);
       out.quantity = raw.quantity ?? option.quantity; out.price = raw.price ?? Math.round(p.basePrice * option.priceFactor);
       out.supplierId = raw.supplierId ?? 'standard'; out.supplyRule = 'v1';
-      if (!Number.isInteger(out.quantity) || out.quantity < 200 || out.quantity > 1600 || !Number.isFinite(out.price) || out.price < Math.round(p.basePrice * .7) || out.price > Math.round(p.basePrice * 1.5) || money(out.price) !== out.price || !a.supplier(p, out.supplierId, out.supplyRule)) return null;
+      if (!Number.isInteger(out.quantity) || out.quantity < 200 || out.quantity > 1600 || !Number.isFinite(out.price) || out.price < Math.round(p.basePrice * .7) || out.price > Math.round(p.basePrice * balanceRules(n).maxPrice) || money(out.price) !== out.price || !a.supplier(p, out.supplierId, out.supplyRule)) return null;
     }
     if (n.stage === 3) {
-      out.budget = raw.budget ?? option.budget;
+      out.budget = raw.budget ?? find(options(n, 'channels'), option.id).budget;
       if (!Number.isInteger(out.budget) || out.budget < 300 || out.budget > 8000) return null;
       if (n.currentListing) out.listing = copy(n.currentListing.selection);
       else if (raw.listing && listingQuote(n, raw.listing)) out.listing = copy(raw.listing);
@@ -300,9 +309,10 @@ export function createV2Core(a) {
     return out;
   }
   function simulate(n, mode = 'actual') {
-    const p = find(products, n.productId), m = find(markets, n.marketId);
+    const p = find(products, n.productId), m = find(options(n, 'markets'), n.marketId);
     if (!p || !m) return null;
-    const stock = find(stocks, n.stockPlanId) || stocks[0], channel = find(channels, n.trafficPlanId) || channels[0], f = find(fulfillment, n.fulfillmentPlanId) || fulfillment[1];
+    const stock = find(stocks, n.stockPlanId) || stocks[0], channel = find(options(n, 'channels'), n.trafficPlanId) || options(n, 'channels')[0], f = find(options(n, 'fulfillment'), n.fulfillmentPlanId) || options(n, 'fulfillment')[1];
+    const rules = balanceRules(n);
     const c = config(n), platform = selected(PLATFORMS, c.platform), firstMile = selected(FIRST_MILE, c.firstMile);
     const offsite = selected(OFFSITE, c.offsite), bid = selected(BIDS, c.bid), timeSlot = selected(TIME_SLOTS, c.timeSlot), effects = eventEffect(n);
     const advertisedPrice = n.price ?? Math.round(p.basePrice * stock.priceFactor), quantity = n.quantity ?? stock.quantity;
@@ -315,12 +325,13 @@ export function createV2Core(a) {
     // One round is a 30-day teaching window. Old stock is available immediately.
     const leadDays = supply.leadDays + firstMile.days + effects.delayDays, firstMileUnit = money(firstMile.unit * (p.shippingFactor || 1));
     const firstMileCost = money(unitsToBuy * firstMileUnit);
-    const arrivedUnits = Math.floor(unitsToBuy * clamp((30 - leadDays) / 30, 0, 1));
+    const arrivalFloor = rules.arrivalFloor ? Math.min(1, rules.arrivalFloor + (firstMile.arrivalBonus || 0)) : 0;
+    const arrivedUnits = Math.floor(unitsToBuy * clamp((30 - leadDays) / 30, arrivalFloor, 1));
     const units = openingQty + arrivedUnits, delayedUnits = unitsToBuy - arrivedUnits;
     const regionFactor = ({ '亚洲': .8, '欧洲': 1, '北美洲': 1.2, '大洋洲': .85, '南美洲': .9 })[m.region] || 1;
     const draw = key => seededUnit(n.runSeed, n.round, key);
     const variation = key => mode === 'low' ? .9 : mode === 'high' ? 1.1 : mode === 'mean' ? 1 : .9 + draw(key) * .2;
-    const creatorFactor = channel.id !== 'creator' ? 1 : mode === 'low' ? .5 : mode === 'high' ? 2 : mode === 'mean' ? 1.25 : .5 + draw('creator') * 1.5;
+    const creatorFactor = channel.id !== 'creator' ? 1 : mode === 'low' ? CREATOR_RANGE[0] : mode === 'high' ? CREATOR_RANGE[1] : mode === 'mean' ? (CREATOR_RANGE[0] + CREATOR_RANGE[1]) / 2 : CREATOR_RANGE[0] + draw('creator') * (CREATOR_RANGE[1] - CREATOR_RANGE[0]);
     const secondary = choice(channel.id, n.promotionChoice, p);
     const baseVisitors = channel.id === 'content' ? 16500 : channel.visitors;
     // Content wins economical tests and builds tail; production capacity limits rapid scaling.
@@ -339,15 +350,15 @@ export function createV2Core(a) {
     const deliveryFactor = ({ economy: .92, standard: 1, express: 1.1 })[f.id];
     const rating = n.roundStart.ratings?.[p.id]?.rating ?? 5;
     const coldStartFactor = n.previousMarket && n.previousMarket !== m.id && !n.roundStart.visitedMarkets.includes(m.id) ? .9 : 1;
-    const priceFactor = (p.basePrice / price) ** 1.4;
+    const priceFactor = (p.basePrice / price) ** rules.elasticity;
     const fit = productFit[p.id]?.[m.id];
     if (!Number.isFinite(fit)) throw new Error(`Missing product/market fit: ${p.id}/${m.id}`);
-    const baseConversion = .025 * m.demandFactor * fit;
+    const baseConversion = rules.conversion * m.demandFactor * fit;
     const conversion = baseConversion * priceFactor * listing.conversionFactor * deliveryFactor * Math.sqrt(rating / 5) * coldStartFactor * secondary.conversionFactor * variation('demand') * platform.conversion * effects.conversion * (channel.id === 'ads' ? bid.conversion * timeSlot.conversion : 1);
     const capacity = CAPACITY[m.id], effectiveVisits = Math.min(visitors, capacity) + Math.max(0, visitors - capacity) * .5;
     const demand = Math.floor(effectiveVisits * conversion), orders = Math.min(units, demand);
     const qualityRate = (['furniture', 'future'].includes(p.category) ? .025 : p.category === 'electronics' ? .02 : .015) * (120 - listing.score) / 60;
-    const priceRefundRate = Math.max(0, (price / p.basePrice - 1.3) / .1) * .02;
+    const priceRefundRate = Math.max(0, (price / p.basePrice - 1.3) / .1) * rules.priceRefundSlope;
     const rates = [{ id: 'timing', label: '配送时效', rate: f.refundRate }, { id: 'description', label: '质量与描述', rate: qualityRate }, { id: 'other', label: '其他退货原因', rate: .02 }, ...(priceRefundRate > 0 ? [{ id: 'expectation', label: '高价预期落差', rate: priceRefundRate }] : [])];
     const refunds = orders ? Math.min(orders, Math.max(1, Math.round(orders * rates.reduce((s, r) => s + r.rate, 0)))) : 0;
     const reasonCounts = allocate(refunds, rates.map(r => r.rate));
@@ -367,18 +378,19 @@ export function createV2Core(a) {
       return { id: sourceIds[i], name: sourceNames[i], visitors: v, orders: sourceOrders[i], refunds: sourceRefunds[i], keptOrders: kept, spend, commission: fee, cac: kept ? money((spend + fee) / kept) : null };
     });
     const platformEntry = platform.id === 'direct' && n.v2.openedPlatforms.includes('direct') ? 0 : platform.entry;
-    const launchCost = money(m.launchCost * (n.previousMarket === m.id ? .5 : 1));
+    const launchCost = n.roundStart.visitedMarkets.includes(m.id) ? 0 : money(m.launchCost);
     const listingCost = sum(n.ledger.filter(e => e.round === n.round && e.category === 'listing').map(e => -e.cashDelta));
     const tax = taxQuote(m.id, p, orders, avgCost, firstMileUnit), { tariff, importTax } = tax;
     const paymentFee = money(netRevenue * .035), fxFee = money(netRevenue * tax.fxFee), packagingCost = money(orders * effects.packaging);
-    const warehouseCost = money(Object.values(n.inventory).reduce((s, v) => s + v, 0) - (n.inventory[p.id] || 0) + totalUnits - orders + returnRestocked) * .5;
+    const warehouseCost = !STOCK_CARRYOVER ? 0 : money(Object.values(n.inventory).reduce((s, v) => s + v, 0) - (n.inventory[p.id] || 0) + totalUnits - orders + returnRestocked) * .5;
     const testingCost = expenses(n, 'testing'), eventCost = expenses(n, 'events'), trademarkCost = expenses(n, 'trademark');
     const seasonPrepCost = expenses(n, 'season') || (c.seasonPrep && seasonInfo.index !== 2 ? 300 : 0);
     const interestCost = sum(n.v2.loans.filter(l => l.round === n.round).map(l => l.interest));
     const platformEntryCost = expenses(n, 'platformEntry') || platformEntry;
     const totalCosts = sum([cogs, writeoffCost, returnHandlingCost, listingCost, shippingCost, platformFees, commission, budget, launchCost, tariff,
-      importTax, paymentFee, fxFee, packagingCost, warehouseCost, firstMileCost, offsite.cost, testingCost, eventCost, trademarkCost, seasonPrepCost, interestCost, platformEntryCost]);
-    return { modelVersion: 'v2', commerceRule: 'v23', ...supply, leadDays, units, totalUnits, quantity, unitsToBuy, arrivedUnits, delayedUnits, price, advertisedPrice, budget,
+      importTax, paymentFee, fxFee, packagingCost, warehouseCost, firstMileCost, offsite.cost, testingCost, eventCost, trademarkCost, seasonPrepCost, interestCost, platformEntryCost,
+      STOCK_CARRYOVER ? 0 : money(money(availableCost - cogs - writeoffCost) * STOCK_RETURN_FEE)]);
+    return { balanceVersion:n.balanceVersion, goalVersion:n.goalVersion, modelVersion: 'v2', commerceRule: 'v23', ...supply, leadDays, units, totalUnits, quantity, unitsToBuy, arrivedUnits, delayedUnits, price, advertisedPrice, budget,
       tax, importTax, paymentFee, fxFee, packagingCost, warehouseCost, firstMileCost, firstMileUnit, firstMile, platform, platformEntryCost,
       commissionGross, commissionRecovery, offsiteCost: offsite.cost, offsite, testingCost, eventCost, trademarkCost, seasonPrepCost, interestCost,
       localRevenue: money(netRevenue * tax.fx), heat, season: seasonInfo, seasonFactor, bid, timeSlot, adVariation,
@@ -388,7 +400,7 @@ export function createV2Core(a) {
       returnRestocked, returnWriteoffs, returnHandlingCost, refundReasons: rates.map((r, i) => ({ ...r, count: reasonCounts[i] })), priceRefundRate,
       revenue, refundAmount, netRevenue, cogs, writeoffCost: money(writeoffCost), shippingCost, platformFees, commission, marketingCost: budget, launchCost, tariff, purchaseCost, availableCost,
       totalCosts, profit: money(netRevenue - totalCosts), stockouts: Math.max(0, demand - orders), inventoryRemaining: totalUnits - orders + returnRestocked,
-      inventoryCostRemaining: money(availableCost - cogs - writeoffCost), days: f.days, attribution, tacos: revenue ? (channel.id === 'ads' ? budget : 0) / revenue : null,
+      inventoryCostRemaining: money(availableCost - cogs - writeoffCost), stockReturnFee: STOCK_CARRYOVER ? 0 : money(money(availableCost - cogs - writeoffCost) * STOCK_RETURN_FEE), days: f.days, attribution, tacos: revenue ? (channel.id === 'ads' ? budget : 0) / revenue : null,
       promotionChoice: { id: secondary.id, name: secondary.name, category: secondary.category, matched: secondary.matched },
       nextContentTail: channel.id === 'content' ? Math.floor(currentRoundVisitors * .1) : 0, ratingBefore: rating,
       badReviews: Math.round(refunds * .3), commissionRate: secondary.commission, events: copy(effects.active) };
@@ -410,24 +422,35 @@ export function createV2Core(a) {
     let cashDelta = 0, inventoryDelta = 0;
     const c = config(r), platform = selected(PLATFORMS, c.platform);
     const entryFee = platform.id === 'direct' && n.v2.openedPlatforms.includes('direct') ? 0 : platform.entry;
-    if (n.stage === 0) cashDelta = -money(option.launchCost * (n.previousMarket === d.id ? .5 : 1) + entryFee);
-    if (n.stage === 2) { cashDelta = -(c.terms === 'credit' ? 0 : mean.purchaseCost) - mean.firstMileCost - mean.seasonPrepCost; inventoryDelta = mean.unitsToBuy; }
+    if (n.stage === 0) cashDelta = -money((n.visitedMarkets.includes(d.id) ? 0 : find(options(n, 'markets'), option.id).launchCost) + entryFee);
+    if (n.stage === 2) { cashDelta = -(c.terms === 'credit' ? 0 : mean.purchaseCost) - mean.seasonPrepCost; inventoryDelta = mean.unitsToBuy; }
     if (n.stage === 3) cashDelta = -d.budget - mean.offsiteCost - (n.currentListing ? 0 : r.currentListing?.cost || 0);
-    const settlement = p => -sum([p.shippingCost, p.platformFees, p.commissionGross, p.returnHandlingCost, p.tariff, p.importTax, p.paymentFee, p.fxFee, p.packagingCost, p.warehouseCost]);
-    if (n.stage === 4) { cashDelta = settlement(mean); inventoryDelta = -mean.orders + mean.returnRestocked; }
+    // REQ-053 §4.6: first mile is paid at shipping; saves that paid it at stocking (old rule) are not charged twice.
+    const firstMileDue = p => expenses(n, 'firstMile') ? 0 : p.firstMileCost;
+    const settlement = p => -sum([p.shippingCost, p.platformFees, p.commissionGross, p.returnHandlingCost, p.tariff, p.importTax, p.paymentFee, p.fxFee, p.packagingCost, p.warehouseCost, firstMileDue(p)]);
+    if (n.stage === 4) { cashDelta = settlement(mean); inventoryDelta = STOCK_CARRYOVER ? -mean.orders + mean.returnRestocked : -Object.values(n.inventory).reduce((s, v) => s + v, 0); }
     if (n.stage === 5) cashDelta = -option.cost;
+    // REQ-057: sales money only arrives next round, so the cash still needed this round is this step's spend,
+    // the promotion still to come (stage 2: the default budget), and the worst-case shipping settlement.
+    const settlementCash = n.stage >= 2 && n.stage <= 4 && mean ? money(Math.max(...[mean, low, high].map(p => -settlement(p)))) : 0;
+    const laterSpend = n.stage === 2 && mean ? mean.budget || 0 : 0;
+    const cashNeed = n.stage === 4 ? settlementCash : n.stage >= 2 && n.stage <= 3 ? money(-cashDelta + laterSpend + settlementCash) : money(-cashDelta);
     const overdue = [...n.v2.payables, ...n.v2.loans].some(b => !b.paid && b.dueRound <= n.round);
     const blocked = n.stage === 2 && overdue ? '有到期款项尚未偿还，先核对资金时间线或使用过桥方案。' : n.stage === 2 && mean.unitsToBuy > 0 && mean.unitsToBuy < mean.moq ? `${mean.supplierName}至少新增采购${mean.moq}件，当前补货${mean.unitsToBuy}件。请调整数量或供应商。` : null;
     const marketBlocked = n.stage === 0 && n.carryEffect.newMarket && d.id === n.carryEffect.previousMarket;
     const bounds = {};
+    const acquisitionBounds = mean ? acquisitionRisk(mean).map(row => {
+      const ends = [acquisitionRisk(low).find(x=>x.id===row.id)?.cac, acquisitionRisk(high).find(x=>x.id===row.id)?.cac].filter(Number.isFinite);
+      return {...row, bounds:ends.length===2?[Math.min(...ends),Math.max(...ends)]:null};
+    }) : [];
     if (mean) for (const k of ['visitors', 'demand', 'orders', 'refunds', 'keptOrders', 'profit', 'shippingCost', 'returnHandlingCost', 'writeoffCost', 'returnRestocked', 'returnWriteoffs', 'tariff', 'importTax', 'acos']) bounds[k] = low[k] == null || high[k] == null ? [null, null] : [Math.min(low[k], high[k]), Math.max(low[k], high[k])];
     const attributionBounds = mean ? Object.fromEntries(mean.attribution.map((s, i) => [s.id, [Math.min(low.attribution[i].orders, high.attribution[i].orders), Math.max(low.attribution[i].orders, high.attribution[i].orders)]])) : {};
     if (mean && n.stage === 4) bounds.cashDelta = [Math.min(settlement(low), settlement(high)), Math.max(settlement(low), settlement(high))];
     if (n.stage === 5) bounds.profit = [money(n.report.profit - option.cost), money(n.report.profit - option.cost)];
-    return { ...mean, cashDelta: money(cashDelta), inventoryDelta, bounds, attributionBounds, settled: n.stage >= 5, profit: n.stage === 5 ? money(n.report.profit - option.cost) : mean?.profit ?? null,
-      affordable: n.cash + cashDelta >= 0 && !blocked && !marketBlocked, supplyBlockedReason: blocked,
+    return { ...mean, cashDelta: money(cashDelta), inventoryDelta, acquisitionBounds, bounds, attributionBounds, settled: n.stage >= 5, profit: n.stage === 5 ? money(n.report.profit - option.cost) : mean?.profit ?? null,
+      affordable: n.cash - cashNeed >= 0 && !blocked && !marketBlocked, supplyBlockedReason: blocked,
       summary: option.summary, risks: [option.risk, ...(blocked ? [blocked] : [])],
-      cashShortfall: Math.max(0, money(-n.cash - cashDelta)), assumptions: '教学模拟；销售窗口30天，交付后的平台款14天结算，下轮开局到账。同轮同方案固定，跨轮重新波动。', nextTrafficBonus: option.trafficBonus || 0 };
+      cashShortfall: Math.max(0, money(cashNeed - n.cash)), cashNeed, settlementCash, laterSpend, assumptions: '教学模拟；销售窗口30天，交付后的平台款14天结算，下轮开局到账。同轮同方案固定，跨轮重新波动。', nextTrafficBonus: option.trafficBonus || 0 };
   }
   function makeReport(n, p) {
     const r = old.report(n, p);
@@ -436,13 +459,13 @@ export function createV2Core(a) {
     const stars = before.rating * before.reviews + p.keptOrders * 5 + (p.refunds - p.badReviews) * 5 + p.badReviews;
     const ratingAfter = Math.min(5, (p.orders > 0 && p.refunds === 0 ? Math.min(5, before.rating + .1) : reviews ? clamp(stars / reviews, 1, 5) : before.rating) + p.offsite.rating);
     n.ratings[n.productId] = { rating: money(ratingAfter), reviews };
-    Object.assign(r, { totalCosts: p.totalCosts, ratingAfter: money(ratingAfter), roundStart: copy(n.roundStart), modelVersion: 'v2',
+    Object.assign(r, { balanceVersion:n.balanceVersion, goalVersion:n.goalVersion, goalPasses: goalPasses(n), totalCosts: p.totalCosts, ratingAfter: money(ratingAfter), roundStart: copy(n.roundStart), modelVersion: 'v2',
       formula: '本轮先按来源形成访问机会，再由市场匹配、售价、商品页、配送、评分与波动计算购买意愿；超出市场容量的机会减半，库存和交期限制实际订单。退款与全部费用分别记账。',
       nextRatingImpact: 1 - Math.sqrt(ratingAfter / 5) });
-    r.conclusions.push(p.delayedUnits ? `${p.leadDays}天备货使${p.delayedUnits}件新货错过本轮销售窗口，余货计入下轮库存。` : '现有库存及时衔接了本轮销售。');
+    r.conclusions.push(p.delayedUnits ? `${p.leadDays}天备货使${p.delayedUnits}件新货错过本轮销售窗口，${STOCK_CARRYOVER ? '余货计入下轮库存' : `结算时按成本退回（扣${Math.round(STOCK_RETURN_FEE * 100)}%手续费）`}。` : '现有库存及时衔接了本轮销售。');
     r.conclusions.push(`${p.tax.country}预估关税 $${p.tariff.toFixed(2)}、${p.tax.taxName} $${p.importTax.toFixed(2)} 已分别入账。`);
     if (p.badReviews >= 10) r.conclusions.push(`运营伙伴提醒：新增${p.badReviews}条差评。下轮注意商品描述和交付体验。`);
-    Object.assign(r, balance(n), { lesson: '经营利润按已发生的收入与费用计算；现金还会受到采购账期、14天回款及贷款本金的影响。未售库存仍是资产。' });
+    Object.assign(r, balance(n), { lesson: `经营利润按已发生的收入与费用计算；现金还会受到采购账期、14天回款及贷款本金的影响。${STOCK_CARRYOVER ? '未售库存仍是资产。' : '没卖完的货已按成本退回现金，不算利润；扣掉的5%清仓手续费计入成本。'}` });
     return r;
   }
   function balance(n) {
@@ -468,11 +491,12 @@ export function createV2Core(a) {
     const d = normalize(n, input), p = d && preview(n, d);
     if (!d || !p?.affordable) return feedback(n, '方案暂时不能执行', p?.supplyBlockedReason || '请检查方案参数和可用现金。');
     const r = candidate(n, d), option = find(tables[n.stage], d.id);
-    r.decisions.push(copy(d));
+    r.decisions.push({ ...copy(d), ...(typeof input.used_default==='boolean'?{used_default:input.used_default}:{}) });
     let delta = p.cashDelta;
     if (n.stage === 0) {
       const platform = selected(PLATFORMS, config(r).platform), fee = platform.id === 'direct' && r.v2.openedPlatforms.includes('direct') ? 0 : platform.entry;
-      entry(r, 'launch', `${option.name} · ${n.previousMarket === d.id ? '续留半价运营' : '市场进入'}`, -money(option.launchCost * (n.previousMarket === d.id ? .5 : 1)));
+      const revisit = n.visitedMarkets.includes(d.id);
+      entry(r, 'launch', `${option.name} · ${revisit ? '续留经营（免进入费）' : '市场进入'}`, revisit ? 0 : -money(find(options(n, 'markets'), option.id).launchCost));
       entry(r, 'platformEntry', `${platform.name} · 模拟店铺费用`, -fee);
       r.v2.openedPlatforms = [...new Set([...r.v2.openedPlatforms, platform.id])];
       r.visitedMarkets = [...new Set([...r.visitedMarkets, d.id])];
@@ -482,7 +506,6 @@ export function createV2Core(a) {
       r.inventory[r.productId] += p.unitsToBuy; r.inventoryCosts[r.productId] = p.availableCost;
       if (config(r).terms === 'credit' && p.purchaseCost) r.v2.payables.push({ round: r.round, dueRound: r.round + 1, amount: p.purchaseCost, paid: false });
       else entry(r, 'procurement', `${p.supplierName} · 采购补货`, -p.purchaseCost);
-      entry(r, 'firstMile', `${p.firstMile.name} · 头程运输`, -p.firstMileCost);
       if (p.seasonPrepCost) { entry(r, 'season', '大卖季提前备战', -p.seasonPrepCost); r.v2.seasonPrepared = Math.ceil(r.round / 3); }
     }
     if (n.stage === 3) { entry(r, 'marketing', `${option.name} · ${p.promotionChoice.name}`, -d.budget); if (p.offsiteCost) entry(r, 'offsite', p.offsite.name, -p.offsiteCost); }
@@ -490,13 +513,15 @@ export function createV2Core(a) {
       const actual = simulate(r);
       const settlementCosts = [['shipping', '跨境履约', actual.shippingCost], ['platform', '模拟平台佣金', actual.platformFees], ['commission', '达人佣金（毛收入计提）', actual.commissionGross], ['returnHandling', '退件检验与处理', actual.returnHandlingCost],
         ['tariff', `${actual.tax.country}预估关税`, actual.tariff], ['importTax', actual.tax.taxName, actual.importTax],
-        ['payment', '收款手续费3.5%', actual.paymentFee], ['fx', '换汇成本', actual.fxFee], ['packaging', '差异化包装', actual.packagingCost], ['warehouse', '余货仓储费 $0.5/件/轮', actual.warehouseCost]];
+        ['payment', '收款手续费3.5%', actual.paymentFee], ['fx', '换汇成本', actual.fxFee], ['packaging', '差异化包装', actual.packagingCost], ['warehouse', '余货仓储费 $0.5/件/轮', actual.warehouseCost],
+        ['firstMile', `${actual.firstMile.name} · 头程运输`, expenses(n, 'firstMile') ? 0 : actual.firstMileCost]];
       if (money(n.cash - sum(settlementCosts.map(row => row[2]))) < 0) return feedback(n, '交付前现金不足', '平台货款将在交付后14天回款。可先使用资金时间线中的过桥方案，或调整履约和备货。');
       r.inventory[r.productId] = actual.inventoryRemaining; r.inventoryCosts[r.productId] = actual.inventoryCostRemaining;
       r.v2.receivables.push({ round: r.round, dueRound: r.round + 1, days: 14, amount: actual.netRevenue, kind: 'sales', paid: false });
       if (actual.commissionRecovery) r.v2.receivables.push({ round: r.round, dueRound: r.round + 1, amount: actual.commissionRecovery, kind: 'commission', paid: false });
       for (const [category, label, amount] of settlementCosts) if (amount) entry(r, category, label, -amount);
-      r.report = makeReport(r, actual); delta = money(r.cash - n.cash);
+      const returned = STOCK_CARRYOVER ? null : returnStock(r);
+      r.report = makeReport(r, actual); if (returned) applyReturn(r.report, returned, actual.stockReturnFee); delta = money(r.cash - n.cash);
       for (const event of r.v2.events.filter(e => e.dueRound === r.round && !e.choice)) {
         event.choice = 'no-action';
         r.v2.eventHistory.push({ ...copy(event), resolvedRound: r.round, outcome: '本轮未采取额外措施，结果已计入战报。' });
@@ -506,6 +531,8 @@ export function createV2Core(a) {
       entry(r, 'expansion', option.name, -option.cost);
       Object.assign(r.report, { expansionCost: option.cost, profit: money(r.report.profit - option.cost), contributionProfit: money(r.report.profit - option.cost), totalCosts: money(r.report.totalCosts + option.cost), cash: r.cash, cashChange: money(r.cash - r.roundStart.cash), assetChange: money(r.cash + r.report.inventoryValue - r.roundStart.cash - r.report.openingInventoryValue), decisions: copy(r.decisions) });
       Object.assign(r.report, balance(r));
+      r.report.financeEnd = financeSnapshot(r);
+      r.report.goal = goal(r.report);
       schedule(r);
       r.history.push(copy(r.report)); r.contentTail = r.report.nextContentTail;
       r.previousMarket = r.marketId;
@@ -513,12 +540,26 @@ export function createV2Core(a) {
     }
     r.stage++;
     const titles = ['销售市场已确认', '主打商品已选定', '定价与备货已执行', '推广方案已启动', '本轮订单已结算', '下一轮计划已保存'];
-    const body = n.stage === 2 ? `采购${p.unitsToBuy}件，交期${p.leadDays}天；本轮预计到货${p.arrivedUnits}件，另${p.delayedUnits}件保留到下一轮。` : n.stage === 4 ? `${r.report.orders}单下单、${r.report.refunds}单退款；本轮贡献利润 $${r.report.profit.toFixed(2)}，费用与库存已对账。` : n.stage === 3 ? `${p.promotionChoice.name}已确认，推广预算 $${d.budget} 已入账。` : '选择已记录，继续下一步。';
+    const body = n.stage === 2 ? `采购${p.unitsToBuy}件，交期${p.leadDays}天；本轮预计到货${p.arrivedUnits}件，另${p.delayedUnits}件${STOCK_CARRYOVER ? '保留到下一轮' : '赶不上本轮，结算时按成本退回'}。` : n.stage === 4 ? `${r.report.orders}单下单、${r.report.refunds}单退款；本轮贡献利润 $${r.report.profit.toFixed(2)}，费用与库存已对账。${r.report.stockReturn ? `未售出${r.report.stockReturnUnits}件按成本退回 $${r.report.stockReturn.toFixed(2)}。` : ''}` : n.stage === 3 ? `${p.promotionChoice.name}已确认，推广预算 $${d.budget} 已入账。` : '选择已记录，继续下一步。';
     return feedback(r, titles[n.stage], body, { cash: delta, inventory: p.inventoryDelta, orders: n.stage === 4 ? r.report.orders : 0 });
+  }
+  // REQ-052: unsold stock, including restocked returns, goes back at cost. It is principal, not income.
+  // REQ-053: minus the clearance fee, which is a cost of the round.
+  function returnStock(n) {
+    const units = products.reduce((s, p) => s + (n.inventory[p.id] || 0), 0), cost = value(n.inventory, n.inventoryCosts);
+    const fee = money(cost * STOCK_RETURN_FEE), cash = money(cost - fee);
+    for (const p of products) { n.inventory[p.id] = 0; n.inventoryCosts[p.id] = 0; }
+    if (cash) entry(n, 'stockReturn', `未售出清仓返现 · ${units}件按成本退回${fee ? `（扣${Math.round(STOCK_RETURN_FEE * 100)}%手续费 $${fee.toFixed(2)}）` : ''}`, cash);
+    return { stockReturnUnits: units, stockReturnCost: cost, stockReturn: cash, stockReturnFee: fee, inventoryRemaining: 0, inventoryCostRemaining: 0 };
+  }
+  // The forecast already counted the fee on this product's stock; settle any difference (other products' leftovers in old saves).
+  function applyReturn(report, returned, forecastFee) {
+    const extra = money(returned.stockReturnFee - (forecastFee || 0));
+    Object.assign(report, returned, { profit: money(report.profit - extra), contributionProfit: money((report.contributionProfit ?? report.profit) - extra), totalCosts: money(report.totalCosts + extra) });
   }
   function restoreStart(n, snap) {
     const r = create(n.runSeed);
-    Object.assign(r, copy(snap), { cash: snap.cash, stage: 0, round: snap.round || n.round, inventory: copy(snap.inventory), inventoryCosts: copy(snap.inventoryCosts), listingAssets: copy(snap.listingAssets),
+    Object.assign(r, copy(snap), { rulesLocked:true, balanceVersion:snap.balanceVersion, goalVersion:snap.goalVersion, cash: snap.cash, stage: 0, round: snap.round || n.round, inventory: copy(snap.inventory), inventoryCosts: copy(snap.inventoryCosts), listingAssets: copy(snap.listingAssets),
       ledger: copy(n.ledger.slice(0, snap.ledgerLength)), history: copy(n.history.slice(0, snap.historyLength)), roundStart: copy(snap) });
     return settleDue(r);
   }
@@ -543,13 +584,12 @@ export function createV2Core(a) {
     if (n.stage !== 6) return n;
     const r = create(n.runSeed);
     for (const k of ['cash', 'inventory', 'inventoryCosts', 'listingAssets', 'ledger', 'history', 'visitedMarkets', 'ratings', 'contentTail', 'previousMarket', 'carryEffect', 'listingInvestments', 'clearanceEvents', 'v2']) r[k] = copy(n[k]);
-    r.v2.heat[n.productId] ??= 1;
-    for (const id of Object.keys(r.v2.heat)) r.v2.heat[id] *= .95;
+    r.v2.heat = n.productId ? { [n.productId]: Math.min(1.15, money((n.v2.heat[n.productId] ?? 1) + .05)) } : {};
     r.v2.actions = []; r.v2.firstEntry = null;
-    r.v2.config = { ...CONFIG_DEFAULTS, platform: config(n).platform };
+    r.v2.config = { ...CONFIG_DEFAULTS, firstMile:'mixed', platform: config(n).platform };
     r.round = n.round + 1; r.roundStart = snapshot(r);
     settleDue(r);
-    return feedback(r, `第${r.round}轮经营已开始`, '现金、库存、商品页与评分已保留。本轮市场波动已更新，同轮重试保持公平。');
+    return feedback(r, `第${r.round}轮经营已开始`, `${STOCK_CARRYOVER ? '现金、库存、商品页与评分已保留' : '现金、商品页与评分已保留，本轮重新备货'}。本轮市场波动已更新，同轮重试保持公平。`);
   }
   function previous(n) {
     const report = n.history.find(r => r.round === n.round - 1);
@@ -568,6 +608,7 @@ export function createV2Core(a) {
       report.assetChange = money(r.cash + report.inventoryValue - r.roundStart.cash - report.openingInventoryValue);
       if (productId === r.productId) { report.inventoryRemaining = 0; report.inventoryCostRemaining = 0; }
       Object.assign(report, balance(r));
+      report.financeEnd = financeSnapshot(r);
       if (r.stage === 6) r.history[r.history.length - 1] = copy(report);
     }
     return feedback(r, '余货已清仓', `${quantity}件回款 $${cash.toFixed(2)}，清仓损失 $${loss.toFixed(2)}，已写入账本。`, { cash });
@@ -584,17 +625,26 @@ export function createV2Core(a) {
       if (n.ledger.some(e => !Number.isFinite(e.cashDelta))) return null;
       if (!n.v2 || !n.roundStart.v2 || !['receivables', 'payables', 'loans', 'events', 'eventHistory', 'actions', 'tests', 'entered', 'openedPlatforms', 'entryRewards'].every(k => Array.isArray(n.v2[k]))) return null;
       if ([...n.v2.receivables, ...n.v2.payables, ...n.v2.loans].some(r => !Number.isFinite(r.amount) || r.amount < 0 || !Number.isInteger(r.dueRound))) return null;
-      if (typeof n.v2.identity !== 'string' || !n.v2.heat || Object.values(n.v2.heat).some(v => !Number.isFinite(v) || v < 0 || v > 1) || n.v2.tests.some(t => !Number.isFinite(t.score))) return null;
+      if (typeof n.v2.identity !== 'string' || !n.v2.heat || Object.values(n.v2.heat).some(v => !Number.isFinite(v) || v < 0 || v > 1.15) || n.v2.tests.some(t => !Number.isFinite(t.score))) return null;
       const roundDelta = sum(n.ledger.filter(e => e.round === n.round).map(e => e.cashDelta));
       if (money(n.roundStart.cash + roundDelta) !== n.cash) return null;
-      return copy(n);
+      const restored=copy(n);
+      // Untouched rounds can adopt the new goals. Committed decisions and history keep their rules.
+      if(restored.stage===0 && !restored.rulesLocked && !restored.decisions.length && !(restored.v2.actions || []).length){
+        restored.goalVersion=GOAL_VERSION;restored.balanceVersion=BALANCE_VERSION;
+        // An untouched old default may adopt the new first-mile recommendation.
+        if(!n.balanceVersion && restored.v2.config.firstMile==='air')restored.v2.config.firstMile='mixed';
+        restored.roundStart.goalVersion=GOAL_VERSION;restored.roundStart.balanceVersion=BALANCE_VERSION;
+        restored.roundStart.v2.config=copy(restored.v2.config);
+      }
+      return restored;
     } catch { return null; }
   }
   function milestones(n) {
     const history = n.history;
     const defs = [
       ['first-profit', '第一桶金', '首次完成一轮并盈利', r => r.profit > 0],
-      ['first-goal', '第一站，站稳了', '首次完成订单目标且盈利', r => r.profit > 0 && r.keptOrders >= (r.round === 1 ? 300 : 500)],
+      ['first-goal', '第一站，站稳了', '首次完成本轮经营目标', r => goal(r).passed],
       ['steady-delivery', '稳稳交付', '单轮至少300单，退款率不高于5%', r => r.orders >= 300 && r.refunds / r.orders <= .05],
       ['profit-5000', '生意起势', '单轮贡献利润超过$5,000', r => r.profit > 5000],
       ['listing-master', '好商品，被看懂', '用95分及以上商品页完成一轮', r => r.listingScore >= 95],
@@ -603,6 +653,6 @@ export function createV2Core(a) {
     if (oldZero) defs.push(['zero-refunds', '完美交付 · 历史纪念', '旧版已获得的零退款徽章，永久保留', r => r === oldZero]);
     return defs.map(([id, name, description, predicate]) => { const found = history.find(predicate); return { id, name, description, earned: !!found, round: found?.round }; });
   }
-  return { valid, create, migrate, upgrade, snapshot, listingProduct, listingQuote, publish, optimize, choice, normalize, simulate, preview, commit, rollback, next, previous, clearStock, serialize, deserialize, milestones, scale, products, markets, channels,
-    configure, config, supplyQuote, act, eventChoices, eventEffect, balance };
+  return { help: HELP, testCost, valid, create, migrate, upgrade, snapshot, listingProduct, listingQuote, publish, optimize, choice, normalize, simulate, preview, commit, rollback, next, previous, clearStock, serialize, deserialize, milestones, scale, options, products, markets, channels,
+    configure, config, supplyQuote, hasTrademark, act, eventChoices, eventEffect, balance };
 }

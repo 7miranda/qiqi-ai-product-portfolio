@@ -1,6 +1,9 @@
+import { feedbackState } from '../v2/records.js';
 import { HELP, PROMOTIONS } from './model.js';
-import { countryBadgeAsset } from './badges.js?v=1';
+import { countryBadgeAsset } from './badges.js?v=2';
 import { explorationAwards } from '../v2/progress.js';
+import { goal, goalChannelText } from '../v2/release.js';
+import { STOCK_CARRYOVER } from './balance.js';
 
 // Reuse the demo's React instance, buttons, panels and visual classes.
 export function createCrossboundUI({ React, Button, engine, Passport, passportData, growth }) {
@@ -20,6 +23,21 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
     const content = HELP[id];
     return content ? h('details', { className: 'v11-help' }, h('summary', { 'aria-label': content[0] }, '? ', content[0]), h('p', null, content[1])) : null;
   }
+  // REQ-053 P2-1: every HELP card in one place. Optional reading: no red dot, no unread count, never opens by itself.
+  const HANDBOOK = [
+    ['选品与定价', ['conversion']],
+    ['库存与退货', ['inventory', 'returns']],
+    ['税费与推广成本', ['tariff', 'cac']],
+  ];
+  function Handbook() {
+    const help = engine.help || HELP;
+    return h(React.Fragment, null,
+      h('h2', { id: 'campaign-dialog-title' }, '总部手册'),
+      h('p', { className: 'panel-note' }, '经营规则与名词解释都在这里，想查再查；每轮结算的战报会结合你这一轮的数字再讲一遍。'),
+      HANDBOOK.map(([title, ids]) => h('section', { key: title, className: 'report-insights-panel v11-handbook' },
+        h('h3', null, title),
+        ids.filter(id => help[id]).map(id => h('details', { key: id, className: 'v11-help' }, h('summary', null, help[id][0]), h('p', null, help[id][1]))))));
+  }
   function useSettlement(company) {
     const key = `crossbound-settlement-v11:${company.runSeed ?? 'legacy'}:${company.round}`;
     const read = () => { try { return JSON.parse(localStorage.getItem(key)) || { phase: 'report' }; } catch { return { phase: 'report' }; } };
@@ -38,17 +56,24 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
   }
   function SettlementActions({ company, ops, flow, onContinue, onSkip, onAdjust, onHQ }) {
     const g = growth(company, ops), ready = g.facilities.some(f => f.ready);
-    const label = flow.done ? '开启下一轮' : flow.phase === 'reward' ? '查看已获得的奖励' : flow.phase === 'build' && ready ? '继续建设公司' : g.nextTask?.available ? '下一步：接总部来电' : ready ? '下一步：建设公司' : '开启下一轮';
+    const label = '开启下一轮';
     return h('div', { className: 'result-next-v23' },
-      h('article', null, h('span', null, '继续经营 / 现金与余货保留'), h('h3', null, '下一轮，带着经验出发'),
-        h('p', null, `现有现金${cash(company.cash)}和余货会保留。${!flow.done && g.nextTask?.available ? '总部还有一条经营线索，看看再出发。' : '可以继续经营原市场，也可以去下一站。'}`),
-        h('div', { className: 'result-next-actions' }, button(label + ' →', onContinue, { variant: 'solid' }),
-          !flow.done && (g.nextTask?.available || ready || flow.active) && button('跳过引导，开启下一轮', onSkip),
-          button('调整本轮方案', onAdjust))),
-      h('article', null, h('span', null, '公司成长 / 游戏奖励'), h('h3', null, ready ? '公司有设施可以建设' : g.nextTask?.available ? '总部有一条新线索' : '每一步，都算数'),
-        h('p', { className: 'v11-growth-gap' }, g.gap ? `距离 LV.${g.rank.level + 1} 还差${g.gap}经验。现有建设点${ops.research}。` : `已达到本季最高等级。现有建设点${ops.research}。`),
-        g.nextTask?.available && h('small', null, `${g.nextTask.title}：完成可得${g.nextTask.xp}经验、${g.nextTask.research}建设点。`),
-        h('div', { className: 'result-next-actions' }, button('查看公司总部 →', onHQ, { variant: 'solid' }))));
+      h('article', null, h('span', null, STOCK_CARRYOVER ? '继续经营 / 现金与余货保留' : '继续经营 / 现金保留'), h('h3', null, '下一轮，带着经验出发'),
+        h('p', null, `现有现金${cash(company.cash)}${STOCK_CARRYOVER ? '和余货会保留' : '会保留，下一轮重新备货'}。${!flow.done && g.nextTask?.available ? '总部还有一条经营线索，看看再出发。' : '可以继续经营原市场，也可以去下一站。'}`),
+        h('div', { className: 'result-next-actions' }, button(label + ' →', onContinue, { variant: 'solid', 'data-guide':'next-round' }),
+          button('调整本轮方案', onAdjust))));
+  }
+  // REQ-053 §4.7: target once, the lane that passed, one money line, one link to HQ (growth, achievements, 四维评估 moved there).
+  function SettlementGoal({ company, onOpen }) {
+    const r = company.report;
+    if (!r) return null;
+    const g = goal(r);
+    return h('section', { className: 'listing-confirmed-v23 v11-round-achievements v11-settlement-goal', 'aria-label': '本轮目标' },
+      g.passed && h(CountryBadge, { marketId: r.marketId, tier: g.tier }),
+      h('div', null, h('span', null, `本轮目标 / ${g.target} 单未退款，或贡献利润 $5,000`),
+        h('p', { className: g.passed ? 'signal-text' : '' }, goalChannelText(g)),
+        h('p', null, `收入 ${cash(r.netRevenue)} · 成本 ${cash(r.totalCosts)} · 利润 ${cash(r.profit)} · 现金变化 ${cash(r.cashChange)}${r.receivables > 0 ? `（货款 ${cash(r.receivables)} 下一轮开局到账）` : ''}`)),
+      button('成长、成就与四维评估在总部 →', onOpen));
   }
   function ReviewTask({ task, onSubmit, feedback }) {
     const [selected, setSelected] = React.useState('');
@@ -77,28 +102,31 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
       button(reward.kind === 'challenge' && ready ? '下一步：建设公司 →' : '开启下一轮 →', onContinue),
       reward.kind === 'challenge' && ready && button('稍后建设，先开启下一轮', onSkip));
   }
-  function NotificationDock({ company, ops, unread, onAchievements, onTask, onHQ }) {
+  function NotificationDock({ company, ops, unread, onAchievements, onTask, onHQ, onCommunity }) {
     const key = `crossbound-notices-v11:${company.runSeed ?? 'legacy'}`;
     const read = () => { try { const n = JSON.parse(localStorage.getItem(key)); return Array.isArray(n) ? n : []; } catch { return []; } };
     const [stored, setStored] = React.useState(() => ({ key, dismissed: read() }));
     const [collapsed, setCollapsed] = React.useState(false);
     const dismissed = stored.key === key ? stored.dismissed : read(), g = growth(company, ops);
     const ready = g.facilities.filter(f => f.ready), messages = [];
+    const feedback=feedbackState(company);
+    if(company.history.length>=1&&!feedback.first) messages.push({id:'community-first',title:'总部来电 · 共建者专线',detail:'三句话告诉总部你的体验 · 50建设点',action:onCommunity,persistent:true});
+    else if(company.history.length>=3&&!feedback.deep) messages.push({id:'community-deep',title:'总部回访',detail:'三轮之后，聊聊哪里还值得打磨',action:onCommunity,persistent:true});
     const event = company.v2?.events.find(e => e.dueRound === company.round && company.stage >= e.stage && !e.choice);
     if (event) messages.push({ id: `event:${event.id}`, title: '总部来电 · 新经营事件', detail: event.title, action: onTask });
     if (company.v2?.firstEntry) messages.push({ id: `first:${company.v2.firstEntry.marketId}`, title: '新市场足迹 · +5建设点', detail: '到公司总部看看这个国家的小知识', action: onHQ });
     if (unread.length) messages.push({ id: `achievements:${unread.map(x => x.key).join('|')}`, title: `新成就 · ${unread.length}项`, detail: unread.at(-1).name, action: onAchievements });
     if (g.nextTask?.available) messages.push({ id: `task:${g.nextTask.id}`, title: g.reviewTask ? '总部来电 · 售后提醒' : '总部来电', detail: g.nextTask.title, action: onTask });
     if (ready.length) messages.push({ id: `build:${ready.map(f => f.id).join('|')}`, title: '公司可以建设了', detail: ready.map(f => f.name).join('、'), action: onHQ });
-    const visible = messages.filter(m => !dismissed.includes(m.id));
+    const visible = messages.filter(m => m.persistent || !dismissed.includes(m.id));
     if (!visible.length) return null;
     const dismiss = id => { const next = [...dismissed, id]; setStored({ key, dismissed: next }); try { localStorage.setItem(key, JSON.stringify(next)); } catch {} };
     return h('aside', { className: 'v11-notification-dock', 'aria-label': '消息提醒' },
       h('div', { className: 'v11-notification-heading' }, h('span', { role: 'status', 'aria-live': 'polite' }, `消息提醒 · ${visible.length}`),
         button(collapsed ? '展开 ＋' : '收起 −', () => setCollapsed(!collapsed), { 'aria-expanded': !collapsed })),
       !collapsed && h('div', { className: 'v11-notification-list' }, visible.map(m => h('div', { className: 'v11-notification-row', key: m.id },
-        button(h(React.Fragment, null, h('strong', null, m.title), h('small', null, m.detail)), () => { dismiss(m.id); m.action(); }, { className: 'v11-notification-link' }),
-        button('×', () => dismiss(m.id), { className: 'v11-notification-dismiss', 'aria-label': `收起${m.title}` })))));
+        button(h(React.Fragment, null, h('strong', null, m.title), h('small', null, m.detail)), () => { if(!m.persistent)dismiss(m.id); m.action(); }, { className: 'v11-notification-link' }),
+        !m.persistent && button('×', () => dismiss(m.id), { className: 'v11-notification-dismiss', 'aria-label': `收起${m.title}` })))));
   }
   function ListingOptimization({ company, product, published, onOptimize }) {
     if (!engine.valid(company)) return null;
@@ -120,14 +148,14 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
         { key: option.id, 'aria-pressed': selected.id === option.id }))),
       channel === 'creator' && selected.id === 'vertical' && h('label', { className: 'market-select-label' }, '达人擅长的领域',
         h('select', { value: selected.category, onChange: e => onChange({ id: selected.id, category: e.target.value }) }, categories.map(([id, name]) => h('option', { key: id, value: id }, name)))),
-      h('p', { className: 'panel-note', role: 'status' }, channel === 'creator' ? `当前成交分佣${pct(selected.commission)}。${selected.matched ? '达人领域对口，购买意愿+15%。' : '触达仍有爆单或翻车波动。'}` : selected.matched ? channel === 'ads' ? '素材与品类匹配，购买意愿+10%。' : '选题与品类匹配，到访+10%，其中10%可延续到下轮。' : channel === 'ads' ? '素材与品类不匹配，购买意愿-5%。可以换个讲法。' : '这个选题没有品类加成，仍保留内容长尾。'),
+      h('p', { className: 'panel-note', role: 'status' }, channel === 'creator' ? `当前成交分佣${pct(selected.commission)}。${selected.matched ? '达人领域对口，购买意愿+30%。' : '触达仍有爆单或翻车波动。'}` : selected.matched ? channel === 'ads' ? '素材与品类匹配，购买意愿+10%。' : '选题与品类匹配，到访+10%，其中10%可延续到下轮。' : channel === 'ads' ? '素材与品类不匹配，购买意愿-5%。可以换个讲法。' : '这个选题没有品类加成，仍保留内容长尾。'),
     );
   }
   function MarketFacts({ company, market }) {
     if (!engine.valid(company) || !market) return null;
-    const retained = company.previousMarket === market.id;
-    const cold = company.previousMarket && !retained && !company.roundStart.visitedMarkets.includes(market.id);
-    return h('p', { className: 'panel-note' }, retained ? '继续经营原市场，本轮运营费减半。' : cold ? '首次进入这一新市场，本轮购买意愿按90%冷启动估算。' : '首次建立市场业务，按进入费核算。');
+    const visited = company.roundStart.visitedMarkets.includes(market.id);
+    const cold = company.previousMarket && company.previousMarket !== market.id && !visited;
+    return h('p', { className: 'panel-note' }, visited ? '这个市场进过了，留下来不再收进入费。' : cold ? '首次进入这一新市场：收一次进入费，本轮购买意愿按90%冷启动估算。' : '首次进入这个市场，收一次进入费；以后留下来经营不再收。');
   }
   function CountryBadge({ marketId, tier }) {
     const asset = countryBadgeAsset(marketId, tier);
@@ -169,12 +197,12 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
   function RoundAchievements({ company, onOpen }) {
     const r = company.report;
     if (!r) return null;
-    const target = company.round === 1 ? 300 : 500, qualified = r.keptOrders >= target && r.profit > 0;
-    const tier = r.profit > 10000 || r.refunds === 0 ? '金章' : r.profit > 5000 ? '银章' : '铜章';
+    const {target,passed:qualified,tier:badgeTier} = goal(r);
+    const tier = {gold:'金章',silver:'银章',bronze:'铜章'}[badgeTier];
     const country = engine.markets.find(m => m.id === r.marketId)?.country || '';
     const newlyEarned = engine.milestones(company).filter(m => m.earned && m.round === company.round);
     return h('section', { className: 'listing-confirmed-v23 v11-round-achievements', 'aria-label': '本轮成就' },
-      qualified && h(CountryBadge, { marketId: r.marketId, tier: r.profit > 10000 || r.refunds === 0 ? 'gold' : r.profit > 5000 ? 'silver' : 'bronze' }),
+      qualified && h(CountryBadge, { marketId: r.marketId, tier: badgeTier }),
       h('div', null, h('span', null, '本轮成就 / 收藏这一步成长'),
         h('p', null, qualified ? `✦ ${country} · ${tier}` : `国家印章尚未达成：${r.keptOrders < target ? `还差${target - r.keptOrders}单未退款订单` : '贡献利润需大于$0'}。`),
         newlyEarned.length > 0 && h('p', { className: 'signal-text' }, `新里程碑：${newlyEarned.map(m => m.name).join(' · ')}`)),
@@ -203,6 +231,8 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
       h('ol', { className: 'report-insights-funnel v11-funnel' }, funnel.map(([name, number, note], i) => h('li', { key: name },
         h('span', { className: 'report-insights-step' }, h('small', null, `0${i + 1}`), name), h('strong', null, number),
         h('details', { className: 'v11-help' }, h('summary', null, '? 这一步怎么算'), h('p', null, note))))),
+      r.stockReturnUnits > 0 && h('section', { className: 'report-insights-panel v11-stock-return' }, h('h4', null, `未售出清仓返现 +${cash(r.stockReturn)}`),
+        h('p', null, `${count(r.stockReturnUnits)}件 × 单件成本 $${((r.stockReturnCost ?? r.stockReturn) / r.stockReturnUnits).toFixed(2)}${r.stockReturnFee ? `，扣5%清仓手续费 ${cash(r.stockReturnFee)}` : ''}。没卖完的货已按成本退回，钱回到你手里，下一轮重新备货。`), h(Help, { id: 'inventory' })),
       r.round < 4 ? h('details', { className: 'decision-optional' }, h('summary', null, '想知道订单从哪里来？展开看看'), attribution) : attribution,
       h('div', { className: 'report-insights-pair' },
         h('section', { className: 'report-insights-panel' }, h('h4', null, '退款与交付'), h('ul', { className: 'report-insights-reasons' }, r.refundReasons.map(s => h('li', { key: s.id }, h('span', null, s.label), h('b', null, `${s.count}单`)))),
@@ -212,7 +242,8 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
   }
   function Clearance({ company, onChange }) {
     const [selected, setSelected] = React.useState(null);
-    if (!engine.valid(company) || ![5, 6].includes(company.stage)) return null;
+    // REQ-052: settlement already returns all stock at cost; keep the manual flow for when carry-over returns.
+    if (!STOCK_CARRYOVER || !engine.valid(company) || ![5, 6].includes(company.stage)) return null;
     const inventory = engine.products.filter(p => company.inventory[p.id] > 0);
     if (!inventory.length) return null;
     const product = engine.products.find(p => p.id === selected), cost = product && (company.inventoryCosts[product.id] ?? product.cost * company.inventory[product.id]);
@@ -237,10 +268,10 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
       h('ul', null, records.map(r => h('li', { key: r.round }, `第${r.round}轮：${cash(r.profit)}`))),
       h('ul', null, totals.map(s => h('li', { key: s.id }, `${s.name}：${s.orders}单未退款，累计CAC ${cash(s.cac)}`))));
   }
-  function Cockpit({ company, ops, preview, onOpen, onBuild, onTask }) {
+  function Cockpit({ company, ops, preview, onOpen, onBuild, onTask, onHandbook }) {
     const [open, setOpen] = React.useState(false);
     if (!engine.valid(company)) return null;
-    const target = company.round === 1 ? 300 : 500, g = growth(company, ops), p = company.report || preview;
+    const target = goal(company).target, g = growth(company, ops), p = company.report || preview;
     const snapshot = [['市场', engine.markets.find(m => m.id === company.marketId)?.countryLabel], ['商品', engine.products.find(p => p.id === company.productId)?.name], ['售价', company.price == null ? null : cash(company.price)], ['目标备货', company.quantity ? `${company.quantity}件` : null], ['渠道', engine.channels.find(c => c.id === company.trafficPlanId)?.name], ['履约', company.fulfillmentPlanId && { economy: '经济专线', standard: '标准履约', express: '加急履约' }[company.fulfillmentPlanId]]];
     const spent = company.ledger.filter(e => e.round === company.round && e.cashDelta < 0).reduce((a, e) => a - e.cashDelta, 0);
     const expected = company.report ? `${p.keptOrders}单` : preview?.bounds?.keptOrders ? range(preview, 'keptOrders') + '单' : '待选择商品后估算';
@@ -252,7 +283,7 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
     }) : [];
     return h('aside', { className: `v11-cockpit ${open ? 'is-open' : ''}`, 'aria-label': '本轮经营看板' },
       button(h(React.Fragment, null, h('span', null, '本轮看板'), h('span', { className: 'v11-header-toggle-icon', 'aria-hidden': true }, open ? '−' : '＋')), () => setOpen(!open), { 'aria-expanded': open, 'aria-label': open ? '收起本轮看板' : '展开本轮看板' }),
-      open && h('div', { className: 'v11-cockpit-body' }, h('h3', null, `第${company.round}轮 · 目标${target}单`),
+      open && h('div', { className: 'v11-cockpit-body' }, h('h3', null, `第${company.round}轮 · ${target}单${goal(company).modern?'或利润$5,000':''}`),
         h('p', null, `未退款订单${company.report ? '' : '预计'} ${expected}`), h('progress', { max: target, value: Math.min(target, p?.keptOrders || 0), 'aria-label': '本轮订单目标进度' }),
         h('p', null, `本轮已投入${cash(spent)} / 开轮现金${cash(company.roundStart.cash)}`), h('progress', { max: Math.max(1, company.roundStart.cash), value: Math.min(company.roundStart.cash, spent), 'aria-label': '预算使用进度' }),
         h('dl', null, snapshot.map(([label, v]) => h('div', { key: label }, h('dt', null, label), h('dd', null, v || '待决定')))),
@@ -269,7 +300,7 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
         button(company.report ? '查看本轮战报' : '继续当前选择', onOpen),
         g.nextTask?.available && button('总部来电 · 有新任务', onTask, { className: 'v11-call-pulse' }),
         g.facilities.some(f => f.ready) && button('公司总部 · 可建设设施', onBuild),
-        h(Help, { id: 'conversion' }), h(Help, { id: 'inventory' }), h(History, { company })),
+        h(Help, { id: 'conversion' }), onHandbook && button('总部手册 · 规则与名词', onHandbook, { className: 'v11-handbook-entry' }), h(History, { company })),
     );
   }
   function GrowthSummary({ company, ops, onTask, onBuild }) {
@@ -285,5 +316,5 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
       h('span', { className: 'v11-call-avatar', 'aria-hidden': true }, '林'), h('b', null, '总部来电 · 运营伙伴'),
       h('p', null, title || '有一条经营线索，想和你一起拿个主意。')), h('strong', { className: 'signal-text' }, round <= 3 ? '+200经验 · +40建设点' : '+100经验 · +20建设点'));
   }
-  return { range, Help, useSettlement, SettlementProgress, SettlementActions, ReviewTask, LevelUp, RewardActions, NotificationDock, ListingOptimization, Promotion, MarketFacts, CountryBadge, AchievementHall, useAchievements, RoundAchievements, Report, Clearance, History, Cockpit, GrowthSummary, CallIntro };
+  return { range, Help, Handbook, useSettlement, SettlementProgress, SettlementActions, SettlementGoal, ReviewTask, LevelUp, RewardActions, NotificationDock, ListingOptimization, Promotion, MarketFacts, CountryBadge, AchievementHall, useAchievements, RoundAchievements, Report, Clearance, History, Cockpit, GrowthSummary, CallIntro };
 }

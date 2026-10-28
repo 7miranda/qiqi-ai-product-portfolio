@@ -1,5 +1,7 @@
+import { rank as currentRank } from '../v2/release.js';
 // Growth rewards use their own ledger. They never change operating cash or orders.
 export function createGrowth({ tasks, facilities, createOps, commitOps, purchase, rank, snapshot, baseGrowth }) {
+  rank = currentRank;
   const clone = n => structuredClone(n);
   const factor = round => round <= 3 ? 2 : 1;
   const reviewId = (run, round) => `reviews:${run}:${round}`;
@@ -74,6 +76,9 @@ export function createGrowth({ tasks, facilities, createOps, commitOps, purchase
         else if (event.type === 'purchase') state = purchase(state, event.upgradeId);
         else if (event.type === 'review') state = reviewAnswer(state, event.evidence, event.choiceId, event.round);
         else if (event.type === 'exploration') state = claimExploration(state, event.award);
+        else if (event.type === 'community') state = claimCommunity(state,event);
+        else if (event.type === 'round-growth') state = claimRound(state,event);
+        else if (event.type === 'tutorial') state = claimTutorial(state,event);
         else return null;
         if (state.history.length !== before + 1 || JSON.stringify(state.history.at(-1)) !== JSON.stringify(event)) return null;
       }
@@ -86,6 +91,7 @@ export function createGrowth({ tasks, facilities, createOps, commitOps, purchase
   }
   function growth(company, ops) {
     const out = baseGrowth(company, ops), multiplier = factor(company.round), review = reviewTask(company, ops);
+    out.rank=rank(ops); out.gap=out.rank.nextXp==null?0:out.rank.nextXp-ops.xp;
     out.completed = tasks.filter(t => ops.completed.includes(t.id)).length;
     if (out.nextTask) { out.nextTask.xp *= multiplier; out.nextTask.research *= multiplier; }
     const candidates = tasks.filter(t => !ops.completed.includes(t.id)).map(t => ({
@@ -110,5 +116,23 @@ export function createGrowth({ tasks, facilities, createOps, commitOps, purchase
     result.history.push({ type: 'exploration', award: clone(award) });
     return result;
   }
-  return { commit, reviewTask, reviewAnswer, deserialize, serialize, growth, claimExploration };
+  function claimCommunity(ops,event) {
+    if(!['first','deep'].includes(event.id)||!Number.isInteger(event.rounds)||event.rounds<(event.id==='deep'?3:1)||typeof event.run!=='string'||typeof event.substantive!=='boolean')return ops;
+    const id=`community:${event.run}:${event.id}`;
+    if(ops.completed.includes(id))return ops;
+    const result=clone(ops);result.completed.push(id);result.research+=event.id==='deep'?(event.substantive?30:0):50+(event.substantive?20:0);
+    result.history.push({type:'community',id:event.id,run:event.run,rounds:event.rounds,substantive:event.substantive});return result;
+  }
+  function claimRound(ops,event) {
+    if(!Number.isInteger(event.round)||event.round<1||event.round>100||typeof event.run!=='string'||!/^\d{4}-\d{2}$/.test(event.month)||event.xp!==100||typeof event.season!=='boolean')return ops;
+    const id=`round-growth:${event.run}:${event.round}`;if(ops.completed.includes(id))return ops;
+    const result=clone(ops);result.completed.push(id);result.xp+=100;result.history.push({...event});return result;
+  }
+  function claimTutorial(ops,event){
+    if(!['licensed','independent'].includes(event.id)||typeof event.run!=='string'||event.round!==(event.id==='licensed'?1:2))return ops;
+    const id=`tutorial:${event.run}:${event.id}`;if(ops.completed.includes(id))return ops;
+    const result=clone(ops);result.completed.push(id);result.research+=event.id==='licensed'?20:0;
+    result.history.push({type:'tutorial',id:event.id,run:event.run,round:event.round});return result;
+  }
+  return { commit, reviewTask, reviewAnswer, deserialize, serialize, growth, claimExploration, claimCommunity, claimRound, claimTutorial };
 }
