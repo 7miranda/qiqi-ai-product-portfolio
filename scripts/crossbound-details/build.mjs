@@ -87,6 +87,7 @@ for (const file of ['index.html', 'preview.html']) {
   script = patchFunction(script, 'dxe', source => once(source, 'active:!1,onTouch:', 'studio:!0,active:!1,onTouch:'));
   script = patchFunction(script, 'cxe', source => once(once(source, 'onTouch:r,subject:s}', 'onTouch:r,subject:s,studio}'), 'Xpt,{product:n,active:i,reduced:e}', 'Xpt,{product:n,active:i,reduced:e,studio}'));
   script = patchFunction(script, 'Xpt', source => once(once(source, 'active:e,reduced:t}', 'active:e,reduced:t,studio}'), '[-1,1].map(l=>(0,X.jsxs)(Cd,{position:[l*1.68,.58,-.65]', '(studio?[]:[-1,1]).map(l=>(0,X.jsxs)(Cd,{position:[l*1.68,.58,-.65]'));
+  script = patchFunction(script, 'eG', source => once(source, 'globeColor:s?"#030a0d":"#071d28"', 'globeColor:s?"#1c3b50":"#071d28"'));
   script = patchFunction(script, 'Rse', source => {
     source = once(source, 'onSupply:o,onMarkets:a})', 'onSupply:o,onMarkets:a,onServices:serviceOpen,onCourses:courseOpen})');
     source = once(source, 'onExample:B,hasProgress:e})', 'onExample:B,hasProgress:e,onServices:serviceOpen,onCourses:courseOpen})');

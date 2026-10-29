@@ -77,6 +77,7 @@ for (const file of ['index.html', 'preview.html']) {
       .replace(/^import \{ createCoursesUI \} from "\.\/courses\/ui\.js\?v=[^"]+";\n/, '')
       .replace(/^import \{ createServicesUI \} from "\.\/services\/ui\.js\?v=[^"]+";\n/, '')
       .replace('Object.defineProperty(window,"CrossboundProductPreview",{configurable:true,value:s1t});\n', '')
+      .replace('globeColor:s?"#1c3b50":"#071d28"', 'globeColor:s?"#030a0d":"#071d28"')
       .replace('studio:!0,active:!1,onTouch:', 'active:!1,onTouch:')
       .replace('onTouch:r,subject:s,studio}', 'onTouch:r,subject:s}')
       .replace('Xpt,{product:n,active:i,reduced:e,studio}', 'Xpt,{product:n,active:i,reduced:e}')
