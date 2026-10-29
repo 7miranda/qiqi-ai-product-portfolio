@@ -8,12 +8,12 @@ export function createServicesUI({ React, Button }) {
   const arrow = () => h('svg', { viewBox: '0 0 24 24', width: 22, height: 22, fill: 'none', 'aria-hidden': true }, h('path', { d: 'M5 12h14m-6-6 6 6-6 6', stroke: 'currentColor', strokeWidth: 1.6 }));
   function Nav() {
     return h('nav', { className: 'portal-nav portal-nav-v21 services-navigation', 'aria-label': '首页主要入口' },
-      [['home-intelligence', '出海情报'], ['home-start', '模拟经营'], ['home-services', '企业服务'], ['home-cases', '卖家案例']].map(([id, label], i) =>
+      [['home-intelligence', '出海情报'], ['home-start', '模拟经营'], ['home-courses', '基础课程'], ['home-services', '企业服务'], ['home-cases', '卖家案例']].map(([id, label], i) =>
         h('a', { key: id, href: `#${id}` }, h('small', { 'aria-hidden': true }, `0${i + 1}`), h('span', null, label), arrow())));
   }
   function Home({ onOpen }) {
     return h('section', { id: 'home-services', className: 'services-home', 'aria-labelledby': 'services-home-title' },
-      h('header', { className: 'services-home-heading' }, h('span', { className: 'eyebrow' }, '03 / 企业经营服务'),
+      h('header', { className: 'services-home-heading' }, h('span', { className: 'eyebrow' }, '04 / 企业经营服务'),
         h('h2', { id: 'services-home-title' }, '把下一步经营，', h('span', { className: 'signal-text' }, '落到实处')),
         h('p', null, '先在模拟中看懂生意，再为自己的产品和团队，找到一项具体帮助。')),
       h('div', { className: 'services-home-grid' }, SERVICES.map((s, i) => h('article', { key: s.id },
