@@ -95,8 +95,8 @@ export function createCoursesUI({ React, Button }) {
         h('h2', { id: 'campaign-dialog-title' }, '工厂出海基础课程'),
         h('p', null, '围绕同一款产品，把选市场、算费用、找客户和交货，一步步做清楚。每章90分钟，讲完就练，最后形成企业未来90天行动计划。')),
       h(Facts),
-      h('nav', { className: 'course-view-switch', 'aria-label': '选择课程内容' }, [['syllabus', '课程大纲'], ['camp', '8周线下陪跑'], ['prepare', '参加前准备']].map(([id, label]) =>
-        button(label, () => setView(id), { key: id, 'aria-pressed': view === id, 'aria-controls': 'course-current-view' }))),
+      h('nav', { className: 'course-view-switch', 'aria-label': '选择课程内容' }, [['syllabus', ['课程大纲']], ['camp', ['8周', '线下陪跑']], ['prepare', ['参加前', '准备']]].map(([id, parts]) =>
+        button(h('span', { className: 'course-view-label' }, parts.map(part => h('span', { key: part }, part))), () => setView(id), { key: id, 'aria-label': parts.join(''), 'aria-pressed': view === id, 'aria-controls': 'course-current-view' }))),
       h('div', { id: 'course-current-view' }, view === 'camp' ? h(Camp) : view === 'prepare' ? h(Prepare) : h(Syllabus)));
   }
   return { Home, Workspace };

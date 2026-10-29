@@ -7,6 +7,9 @@
   --home-ink: #e3edf0;
   --home-copy: #a4bbc4;
   --home-panel: #0c1a22;
+  --home-glass: var(--spatial-panel, linear-gradient(145deg,#3f5e6dbd 0%,#1e3947e0 23%,#0b1c29ef 56%,#061019f5 100%));
+  --home-edge: var(--spatial-edge, #597785);
+  --home-shadow: var(--spatial-shadow, inset 0 1px 0 #d5ecf15c,inset 0 -2px 1px #020a10b3,0 18px 36px #0008,0 3px 6px #0005);
 }
 
 /* Keep the header's controls separate from the amount they describe. */
@@ -24,27 +27,32 @@
 .campaign .arrival-v15 .portal-nav-v21 {
   width: calc(100% - var(--home-gutter) * 2);
   gap: 14px;
+  background: linear-gradient(180deg,#152a35c9,#040e17d9);
+  border-color: #476471;
+  box-shadow: inset 0 1px 0 #b6d5e43d,inset 0 -1px 0 #000b,0 20px 40px #0008;
+  backdrop-filter: blur(14px);
+  border-radius: 2px;
 }
 .campaign .arrival-v15 .portal-nav-v21 a {
   position: relative;
   min-width: 0;
-  background: linear-gradient(160deg, #14262e, #0c181f);
-  box-shadow: inset 0 0 0 1px #314b56, inset 0 1px 0 #b3d0d51a;
+  background: linear-gradient(165deg,#496576d9 0%,#233c4be8 24%,#0c1b28f0 63%,#06111bf5 100%);
+  box-shadow: inset 0 0 0 1px #6e8d9c80,inset 0 1px 0 #deeff76b,inset 0 -2px 1px #020a10d9,0 7px 14px #0006;
   color: var(--home-ink);
-  border-radius: 11px;
+  border-radius: 2px;
   padding-inline: 22px;
   gap: 14px;
 }
-.campaign .arrival-v15 .portal-nav-v21 a small { color: #80adb8; font-size: 11px; }
+.campaign .arrival-v15 .portal-nav-v21 a small { color: #b4d2dd; font-size: 11px; border-left: 2px solid #8dc4d0; padding-left: 8px; }
 .campaign .arrival-v15 .portal-nav-v21 a svg { color: #88b7c2; width: 18px; height: 18px; }
 .campaign .arrival-v15 .portal-kicker { color: #a7c0c8; letter-spacing: .055em; }
 .campaign .arrival-v15 .portal-heading > p { color: #afc2c9; text-wrap: pretty; }
 .campaign .arrival-v15 .portal-market-label {
   padding: 16px;
-  border-radius: 11px;
-  background: #0a1b23b8;
-  box-shadow: inset 0 0 0 1px #34515d, 0 8px 28px #01080d33;
-  backdrop-filter: blur(8px);
+  border-radius: 2px;
+  background: linear-gradient(145deg,#476b7d99,#17303dd9 38%,#07141ee8 100%);
+  box-shadow: inset 0 0 0 1px #7b9aa29c,inset 0 1px 0 #d2eaf477,0 14px 32px #01080d99;
+  backdrop-filter: blur(14px);
 }
 .campaign .arrival-v15 .portal-market-label > small { color: #99b5c0; }
 .campaign .arrival-v15 .portal-market-label > strong { color: #e2eef1; }
@@ -96,6 +104,16 @@
   box-shadow: inset 0 1px 0 #39515d26;
   scroll-margin-top: 32px;
 }
+.arrival-v15 .home-intelligence {
+  background: radial-gradient(ellipse at 8% 0%,#42677966,transparent 55%),linear-gradient(180deg,#112430,#050e17 82%);
+}
+.arrival-v15 .home-start {
+  background: linear-gradient(90deg,#06121be8 0%,#0a1a25b8 58%,#07121b94 100%),linear-gradient(0deg,#040c16f5,transparent 65%),url('../assets/industrial-atmosphere.png') 68% 50% / cover;
+  box-shadow: inset 0 1px 0 #8ba9b740,inset 0 -1px 0 #536b783d;
+}
+.arrival-v15 .home-seller-cases {
+  background: radial-gradient(ellipse at 88% 18%,#274b5e85,transparent 56%),linear-gradient(180deg,#06111b,#0b1b27 45%,#040c14);
+}
 .arrival-v15 :is(.intelligence-heading, .opening-story-v22 > header, .services-home-heading) {
   margin-bottom: 36px;
 }
@@ -123,10 +141,16 @@
 .arrival-v15 .intelligence-directory { gap: 24px; padding-top: 0; }
 .arrival-v15 .intelligence-directory article {
   min-width: 0;
-  padding: 24px 0 8px;
-  border-top: 1px solid #3c5863;
+  padding: 24px 18px 14px;
+  border: 1px solid var(--home-edge);
+  border-right-color: #294451;
+  border-bottom-color: #1b303d;
+  border-radius: 2px;
+  background: linear-gradient(160deg,#3e6071b3,#16303fe8 27%,#081824f5 76%);
+  box-shadow: var(--home-shadow);
+  cursor: default;
 }
-.arrival-v15 .intelligence-index { color: #80acb9; font-size: 11px; }
+.arrival-v15 .intelligence-index { display: block; margin: -24px -18px 0; padding: 10px 18px; color: #b8d9e2; font-size: 11px; border: 0; border-left: 3px solid #9dc9d6; border-bottom: 1px solid #6a8796; border-radius: 0; background: linear-gradient(180deg,#395967,#162f3e); box-shadow: inset 0 1px 0 #bfdde447,inset 0 -2px 0 #06111b; }
 .arrival-v15 .intelligence-directory h3 { color: #e0ecef; margin: 13px 0 10px; font-weight: 550; }
 .arrival-v15 .intelligence-directory article > p { min-height: 44px; margin-bottom: 16px; font-size: 13px; color: #8daab7; }
 .arrival-v15 .intelligence-directory article > div { display: flex; flex-direction: column; gap: 0; }
@@ -156,21 +180,30 @@
 /* The two opening panels and their full-width action remain a single composition. */
 .arrival-v15 .opening-story-pair { gap: 22px; }
 .arrival-v15 .opening-story-pair > article {
+  --hud-x: 32px;
+  --hud-y: 30px;
   padding: 30px 32px;
-  background: linear-gradient(150deg, #142a333b, transparent 72%), var(--home-panel);
-  box-shadow: inset 0 0 0 1px #2a424d, inset 0 1px 0 #b4d3df0c;
-  border-radius: 15px;
+  border: 1px solid var(--home-edge);
+  border-right-color: #2c4755;
+  border-bottom-color: #1a2e3a;
+  background: var(--home-glass);
+  box-shadow: var(--home-shadow);
+  border-radius: 0;
+  backdrop-filter: blur(12px);
 }
-.arrival-v15 .opening-story-pair .opening-scene { background: linear-gradient(145deg, #16333c66, transparent 80%), #0e2028; }
+.arrival-v15 .opening-story-pair .opening-scene { --hud-surface: linear-gradient(145deg,#4e7481bd,#1d3c49d9 35%,#0b1b27ed 80%); }
 .arrival-v15 .opening-story-pair h3 { white-space: normal; letter-spacing: -.02em; color: #e3eff1; }
 .arrival-v15 .opening-story-pair p { color: #adc4ce; line-height: 1.9; }
 .arrival-v15 .opening-story-role { color: #8aabb7; }
 .arrival-v15 .opening-decision > div { padding-top: 18px; border-top: 1px solid #29444e; }
 .arrival-v15 .opening-story-start {
   padding: 28px 32px;
-  background: #10232b;
-  box-shadow: inset 0 0 0 1px #34505a;
-  border-radius: 15px;
+  background: linear-gradient(175deg,#42616fd9,#1d3946ed 30%,#0b202ef5 100%);
+  border: 1px solid #6a8794;
+  border-bottom-color: #243d49;
+  box-shadow: var(--home-shadow);
+  border-radius: 2px;
+  backdrop-filter: blur(12px);
 }
 .arrival-v15 .opening-story-start strong { font-variant-numeric: tabular-nums; letter-spacing: -.035em; }
 .arrival-v15 .opening-story-start small { color: #8ba9b7; }
@@ -179,40 +212,59 @@
 .arrival-v15 .agent-bridge.is-compact {
   margin: 36px var(--home-gutter);
   padding: 26px 30px;
-  background: linear-gradient(115deg, #18323a4d, transparent 75%), #0b191f;
-  border-radius: 15px;
-  box-shadow: inset 0 0 0 1px #2c4650;
+  background: radial-gradient(ellipse at 90% 0%,#71a4b34d,transparent 58%),var(--home-glass);
+  border: 1px solid var(--home-edge);
+  border-bottom-color: #1b303d;
+  border-radius: 2px;
+  box-shadow: var(--home-shadow);
+  backdrop-filter: blur(12px);
 }
 .arrival-v15 .agent-bridge-disclosure > summary { gap: 24px; }
 .arrival-v15 .agent-bridge-disclosure > summary small { color: #87b2bc; font-size: 11px; }
 .arrival-v15 .agent-bridge.is-compact h3 { font-size: 26px; line-height: 1.4; letter-spacing: -.025em; }
-.arrival-v15 .agent-bridge-expand { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; background: #132b33; color: #91cad0; }
-.arrival-v15 .agent-bridge-roles { padding: 6px; border-radius: 11px; background: #08151c; box-shadow: inset 0 0 0 1px #263f48; }
+.arrival-v15 .agent-bridge-expand { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 2px; background: linear-gradient(150deg,#507383,#152e3b 80%); color: #d0eff4; box-shadow: inset 0 1px 0 #d8edf155,inset 0 0 0 1px #7997a573,0 4px 8px #0005; }
+.arrival-v15 .agent-bridge-roles { padding: 6px; border-radius: 2px; background: linear-gradient(180deg,#030d17,#142b38); box-shadow: inset 0 2px 6px #000b,inset 0 0 0 1px #617d8a66,0 1px 0 #acc7d529; }
 .arrival-v15 .agent-bridge .agent-bridge-role .cut-action { min-height: 48px; color: #9ab7c2; }
-.arrival-v15 .agent-bridge .agent-bridge-role.is-selected .cut-action { color: #def6d0; background: #183029; box-shadow: inset 0 0 0 1px #5a7e53; }
+.arrival-v15 .agent-bridge .agent-bridge-role.is-selected .cut-action { color: #def6d0; background: linear-gradient(155deg,#426047,#16382f 75%); box-shadow: inset 0 0 0 1px #819e72,inset 0 1px 0 #e5ffc04d,0 4px 10px #0005; }
 .arrival-v15 .agent-bridge-evidence > div { border-top: 1px solid #2b424b; padding-top: 16px; }
 .arrival-v15 .agent-bridge-evidence dd { margin-top: 10px; color: #9db7c1; }
 .arrival-v15 .agent-bridge-sequence { border-top: 1px solid #2b424b; padding-top: 18px; }
 
 /* Static service cards do not lift or glow like controls. Their one action stays clear. */
-.arrival-v15 .services-home { width: auto; margin: 88px var(--home-gutter); }
+.arrival-v15 .services-home { position: relative; isolation: isolate; width: auto; margin: 88px var(--home-gutter); }
+.arrival-v15 .services-home::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -34px -28px;
+  pointer-events: none;
+  border: 1px solid #607f8b66;
+  border-radius: 2px;
+  background: linear-gradient(115deg,#0b1e2aed,#09202cd1 50%,#102534a6),url('../assets/industrial-atmosphere.png') 45% 42% / cover;
+  box-shadow: inset 0 1px 0 #a7c9d447,0 24px 70px #0007;
+}
 .arrival-v15 .services-home-grid { gap: 22px; }
 .arrival-v15 .services-home-grid article {
+  --hud-x: 26px;
+  --hud-y: 28px;
   min-width: 0;
   display: flex;
   flex-direction: column;
   padding: 28px 26px;
-  border: 0;
-  border-radius: 15px;
-  background: linear-gradient(155deg, #152d3638, transparent 72%), #0b1a21;
-  box-shadow: inset 0 0 0 1px #2d4651, inset 0 1px 0 #bed5dc0a;
+  border: 1px solid var(--home-edge);
+  border-right-color: #2c4653;
+  border-bottom-color: #1c303e;
+  border-radius: 0;
+  background: var(--home-glass);
+  box-shadow: var(--home-shadow);
+  backdrop-filter: blur(12px);
 }
-.arrival-v15 .services-home-grid .services-index { color: #85b1be; font-size: 11px; }
+.arrival-v15 .services-home-grid .services-index { color: #bedce5; font-size: 11px; text-shadow: 0 2px 4px #0008; }
 .arrival-v15 .services-home-grid h3 { margin: 24px 0 16px; font-size: clamp(21px, 2vw, 28px); font-weight: 550; white-space: normal; }
 .arrival-v15 .services-home-grid p { font-size: 15px; color: #b9cdd5; }
 .arrival-v15 .services-home-grid .services-home-outcome { color: #8eaab9; min-height: 54px; }
 .arrival-v15 .services-home-grid small { margin-top: auto; padding-top: 20px; color: #87a8b7; line-height: 1.8; }
-.arrival-v15 .services-home-action { margin-top: 22px; padding: 28px 32px; border-radius: 15px; background: #10242c; box-shadow: inset 0 0 0 1px #36535c; }
+.arrival-v15 .services-home-action { margin-top: 22px; padding: 28px 32px; border-radius: 2px; border: 1px solid #78929d; border-bottom-color: #28424f; background: linear-gradient(175deg,#4a6775db,#203b49ed 30%,#0b2131f5 100%); box-shadow: var(--home-shadow); backdrop-filter: blur(12px); }
 .arrival-v15 .services-home-action strong { color: #e2edef; font-size: 21px; }
 .arrival-v15 .services-home > .services-quiet { color: #859fac; font-size: 12px; }
 
@@ -220,14 +272,19 @@
 .arrival-v15 .news-stories-v24 { gap: 22px; margin-bottom: 40px; }
 .arrival-v15 .news-stories-v24 > article,
 .arrival-v15 .case-story-panels > article {
+  --hud-x: 32px;
+  --hud-y: 30px;
   padding: 30px 32px;
-  border-radius: 15px;
-  background: linear-gradient(155deg, #142b3438, transparent 68%), #0b191f;
-  box-shadow: inset 0 0 0 1px #2c434e;
+  border-radius: 2px;
+  border: 1px solid var(--home-edge);
+  border-right-color: #2b4654;
+  border-bottom-color: #1b303d;
+  background: linear-gradient(#b9d9e5,#b9d9e5) left top / 18px 2px no-repeat,linear-gradient(#b9d9e5,#b9d9e5) left top / 2px 18px no-repeat,linear-gradient(#6c98aa,#6c98aa) right bottom / 18px 2px no-repeat,linear-gradient(#6c98aa,#6c98aa) right bottom / 2px 18px no-repeat,var(--hud-surface,var(--home-glass));
+  box-shadow: var(--home-shadow);
 }
 .arrival-v15 .news-stories-v24 h3 { white-space: normal; font-size: clamp(22px, 2vw, 28px); text-wrap: balance; }
 .arrival-v15 .news-story-summary { color: #a5bfc8; }
-.arrival-v15 .news-story-metric { padding-top: 30px; }
+.arrival-v15 .news-story-metric { padding-top: 30px; text-shadow: 0 3px 16px #020b12b3; }
 .arrival-v15 .news-story-metric > strong,
 .arrival-v15 .case-story-metrics strong { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: 8px; font-variant-numeric: tabular-nums; }
 .arrival-v15 .news-story-metric > strong > small,
@@ -237,20 +294,20 @@
 .arrival-v15 .news-stories-v24 time { color: #849fab; }
 .arrival-v15 .news-stories-enterprises { margin-bottom: 18px; color: #afc6cf; }
 .arrival-v15 .case-story-choices { gap: 12px; margin-bottom: 20px; }
-.campaign .arrival-v15 .case-story-choices .cut-action { min-height: 54px; background: #11232b; box-shadow: inset 0 0 0 1px #2d4752; color: #b8cfd8; }
-.campaign .arrival-v15 .case-story-choices .cut-action[aria-pressed=true] { background: #1c352a; color: #d5f4bf; box-shadow: inset 0 0 0 1px #6f8c58, inset 3px 0 #a6ff32; }
+.campaign .arrival-v15 .case-story-choices .cut-action { min-height: 54px; background: linear-gradient(160deg,#355262,#142d3a 45%,#0a1b28); box-shadow: inset 0 0 0 1px #5e7c8c,inset 0 1px 0 #d5edf140,0 6px 12px #0005; color: #c5dbe4; }
+.campaign .arrival-v15 .case-story-choices .cut-action[aria-pressed=true] { background: linear-gradient(155deg,#496646,#1a3b2f 75%); color: #d5f4bf; box-shadow: inset 0 0 0 1px #93ad7b,inset 0 1px 0 #e7ffc44d,inset 3px 0 #a6ff32,0 6px 12px #0005; }
 .arrival-v15 .case-story-panels { gap: 22px; }
 .arrival-v15 .case-story-facts { display: flex; flex-direction: column; }
 .arrival-v15 .case-story-metrics { margin-top: auto; padding-top: 32px; }
 .arrival-v15 .case-story-basis { margin-top: 18px; color: #87a4b1; }
 .arrival-v15 .case-story-hook { font-size: 18px; color: #bfd3db; }
-.arrival-v15 .case-story-play { background: linear-gradient(145deg, #15332980, transparent 78%), #0c1c23 !important; }
+.arrival-v15 .case-story-panels > .case-story-play { --hud-surface: linear-gradient(145deg,#41665fc7,#1c393de8 35%,#081c28f5 85%); }
 .arrival-v15 .case-story-play ol { gap: 15px; }
 .arrival-v15 .case-story-play li { color: #adc5cd; }
 .arrival-v15 .case-story-source { padding: 20px 0 0; border-top: 1px solid #29434d; border-radius: 0; background: transparent; gap: 22px; }
 .arrival-v15 .case-story-source a { min-height: 44px; color: #b4cbd5; }
 .arrival-v15 .case-story-source summary { min-height: 44px; color: #9ebdc8; }
-.arrival-v15 .home-example { padding-inline: var(--home-gutter); background: #09151b; box-shadow: inset 0 1px #2b424c66, inset 0 -1px #2b424c66; }
+.arrival-v15 .home-example { padding-inline: var(--home-gutter); background: linear-gradient(180deg,#29424f,#102533 28%,#071621); box-shadow: inset 0 1px #a6c6d34d,inset 0 -1px #020a11,0 8px 20px #0005; }
 .campaign .arrival-v15 .home-example > summary { padding-block: 17px; color: #bad0d8; }
 
 /* The room stays photographic. Only the readable layer and its controls are refined. */
@@ -262,23 +319,90 @@
 .arrival-v15 .arrival-life-copy h2 { text-wrap: balance; }
 .arrival-v15 .arrival-life-copy > p { color: #c0d0d7; max-width: 480px; text-wrap: pretty; }
 .arrival-v15 .arrival-life-actions { max-width: 520px; gap: 12px; }
-.campaign .arrival-v15 .arrival-life-actions .cut-action { min-height: 54px; padding-inline: 20px; border-radius: 10px; }
-.campaign .arrival-v15 .arrival-life-actions .cut-inner { background: #10252ee6; box-shadow: inset 0 0 0 1px #6a8a9866; }
-.arrival-v15 .arrival-scene-caption { right: var(--home-gutter); max-width: calc(100% - var(--home-gutter) * 2); padding: 14px 18px; background: #08171fb3; border-radius: 10px; box-shadow: inset 0 0 0 1px #7c9fa43d; backdrop-filter: blur(8px); }
+.campaign .arrival-v15 .arrival-life-actions .cut-action { min-height: 54px; padding-inline: 20px; border-radius: 2px; }
+.campaign .arrival-v15 .arrival-life-actions .cut-inner { background: linear-gradient(155deg,#4b6a78ba,#1a3543e0 36%,#0a202deb); box-shadow: inset 0 0 0 1px #9cb9c58c,inset 0 1px 0 #d2eaf25c,0 7px 16px #0006; backdrop-filter: blur(12px); }
+.arrival-v15 .arrival-scene-caption { right: var(--home-gutter); max-width: calc(100% - var(--home-gutter) * 2); padding: 14px 18px; background: linear-gradient(145deg,#51778799,#193541c9 42%,#071924db); border-radius: 2px; box-shadow: inset 0 0 0 1px #95b4bc9c,inset 0 1px 0 #e1f2f255,0 12px 28px #0007; backdrop-filter: blur(14px); }
 .arrival-v15 .arrival-scene-caption > span { color: #adcad2; line-height: 1.7; }
 .arrival-v15 .arrival-scene-caption > b { color: #dfedf0; }
 .arrival-v15 .arrival-life .arrival-scene-picks { left: var(--home-gutter); right: var(--home-gutter); width: auto; max-width: none; gap: 16px; }
-.campaign .arrival-v15 .arrival-life .arrival-scene-picks .cut-action { min-height: 54px; padding: 15px 20px; background: #0b2029df; color: #b7cfd9; box-shadow: inset 0 0 0 1px #4f717e66; }
-.campaign .arrival-v15 .arrival-life .arrival-scene-picks .cut-action[aria-pressed=true] { background: #1e372bdf; color: #d9fac5; box-shadow: inset 0 0 0 1px #8db367, inset 0 2px #a6ff32; }
+.campaign .arrival-v15 .arrival-life .arrival-scene-picks .cut-action { min-height: 54px; padding: 15px 20px; background: linear-gradient(155deg,#3e6071c7,#15323ee0 36%,#081c28ed); color: #c4dbe3; box-shadow: inset 0 0 0 1px #73919f9c,inset 0 1px 0 #d9edf24d,0 10px 22px #0007; backdrop-filter: blur(12px); }
+.campaign .arrival-v15 .arrival-life .arrival-scene-picks .cut-action[aria-pressed=true] { background: linear-gradient(155deg,#536c49d9,#213e31e8 42%,#12291fed); color: #e2facd; box-shadow: inset 0 0 0 1px #a3c082,inset 0 2px #b1e979,0 10px 22px #0007; }
+
+/* Static information bays have a complete chamfered metal rim; controls keep their focus outside. */
+.arrival-v15 .opening-story-pair,.arrival-v15 .services-home-grid { filter: drop-shadow(0 15px 18px #0008); }
+.arrival-v15 .opening-story-pair > article,
+.arrival-v15 .services-home-grid > article {
+  position: relative;
+  isolation: isolate;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  clip-path: polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+}
+.arrival-v15 .opening-story-pair > article::before,
+.arrival-v15 .services-home-grid > article::before,
+.arrival-v15 .opening-story-pair > article::after,
+.arrival-v15 .services-home-grid > article::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+.arrival-v15 .opening-story-pair > article::before,
+.arrival-v15 .services-home-grid > article::before {
+  z-index: -2;
+  inset: 0;
+  background: linear-gradient(145deg,#c5e1ed 0%,#698f9f 22%,#253e4e 54%,#547b8e 84%,#a3c9da 100%);
+  clip-path: polygon(evenodd,0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px),0 0,1px 1px,1px calc(100% - 14px),14px calc(100% - 1px),calc(100% - 1px) calc(100% - 1px),calc(100% - 1px) 14px,calc(100% - 14px) 1px,1px 1px);
+}
+.arrival-v15 .opening-story-pair > article::after,
+.arrival-v15 .services-home-grid > article::after {
+  z-index: -1;
+  inset: 1px;
+  background: var(--hud-surface,var(--home-glass));
+  clip-path: polygon(0 0,calc(100% - 13px) 0,100% 13px,100% 100%,13px 100%,0 calc(100% - 13px));
+}
+.arrival-v15 .opening-story-pair .opening-chapter-index,
+.arrival-v15 .services-home-grid .services-index,
+.arrival-v15 .news-stories-v24 .news-story-subject,
+.arrival-v15 .case-story-facts > header,
+.arrival-v15 .case-story-play > .case-story-kicker {
+  display: block;
+  margin: calc(-1 * var(--hud-y)) calc(-1 * var(--hud-x)) 0;
+  padding: 13px var(--hud-x);
+  border: 0;
+  border-left: 3px solid #9bc6d4;
+  border-bottom: 1px solid #5d7c8e;
+  border-radius: 0;
+  background: linear-gradient(90deg,#b0d2dd 0 42px,transparent 42px calc(100% - 26px),#678e9f calc(100% - 26px)) left bottom / 100% 2px no-repeat,linear-gradient(180deg,#365363,#152f40);
+  box-shadow: inset 0 1px 0 #c1dce933,inset 0 -2px 0 #06111b;
+  color: #c1dce5;
+}
+.arrival-v15 .news-stories-v24 .news-story-subject,
+.arrival-v15 .case-story-facts > header,
+.arrival-v15 .case-story-play > .case-story-kicker { margin-bottom: 24px; }
+.arrival-v15 .agent-bridge-disclosure > summary {
+  padding-bottom: 18px;
+  border-bottom: 1px solid #6b8998;
+  box-shadow: 0 1px 0 #030d17;
+}
+.arrival-v15 .agent-bridge-evidence > div {
+  padding: 16px;
+  border: 1px solid #385769;
+  border-left: 2px solid #87b6c6;
+  background: linear-gradient(145deg,#061420,#112b3a);
+  box-shadow: inset 0 3px 8px #0007,inset 0 -1px 0 #9cb9c126;
+}
+.campaign .arrival-v15 :is(.case-story-choices .cut-action,.arrival-scene-picks .cut-action,.agent-bridge-role .cut-action) { border-radius: 2px; }
 
 @media (hover: hover) and (pointer: fine) {
-  .campaign .arrival-v15 .portal-nav-v21 a:hover { background: linear-gradient(160deg, #19343b, #11252c); box-shadow: inset 0 0 0 1px #6a929c, inset 0 1px #b8d8dc26; }
+  .campaign .arrival-v15 .portal-nav-v21 a:hover { background: linear-gradient(165deg,#587a8ade,#2b4a5aeb 24%,#122d3bf5 70%); box-shadow: inset 0 0 0 1px #a0c0cb,inset 0 1px 0 #e9f6f88c,inset 0 -2px 1px #04101bd9,0 8px 18px #0007; }
   .arrival-v15 .portal-quick-link:hover { border-top-color: #65929b; }
   .campaign .arrival-v15 .intelligence-directory :is(a, .cut-action):hover { color: #d9f4c2; background: transparent; box-shadow: inset 0 -1px #5f874e; }
   .campaign .arrival-v15 .intelligence-directory .cut-outline > button.cut-inner:not([aria-pressed=true]):not(:disabled):hover { color: #d9f4c2; background: transparent; box-shadow: inset 0 -1px #5f874e; }
-  .campaign .arrival-v15 .case-story-choices .cut-action:not([aria-pressed=true]):hover { background: #18333c; color: #e3eef2; }
-  .campaign .arrival-v15 .arrival-life .arrival-scene-picks .cut-action:not([aria-pressed=true]):hover { background: #18313bdc; color: #e1edf1; box-shadow: inset 0 0 0 1px #7194a2; }
-  .campaign .arrival-v15 .arrival-life-actions .cut-inner:hover { background: #1a3640ed; }
+  .campaign .arrival-v15 .case-story-choices .cut-action:not([aria-pressed=true]):hover { background: linear-gradient(160deg,#466b7c,#1d3d4b 45%,#102937); color: #e3eef2; }
+  .campaign .arrival-v15 .arrival-life .arrival-scene-picks .cut-action:not([aria-pressed=true]):hover { background: linear-gradient(155deg,#577e8fd4,#214858e8 42%,#102b39f0); color: #e1edf1; box-shadow: inset 0 0 0 1px #a6c6d0,inset 0 1px 0 #e1f0f359,0 10px 22px #0007; }
+  .campaign .arrival-v15 .arrival-life-actions .cut-inner:hover { background: linear-gradient(155deg,#5b8191c9,#214454eb 36%,#102d3cf0); }
 }
 
 @media (min-width: 761px) and (max-width: 1100px) {
@@ -288,7 +412,7 @@
   .arrival-v15 .intelligence-directory { gap: 18px; }
   .arrival-v15 .intelligence-directory h3 { font-size: 18px; }
   .campaign .arrival-v15 .intelligence-directory :is(a, .cut-action) { font-size: 12px; }
-  .arrival-v15 .services-home-grid article { padding: 26px 20px; }
+  .arrival-v15 .services-home-grid article { --hud-x: 20px; --hud-y: 26px; padding: 26px 20px; }
   .arrival-v15 .services-home-grid h3 { font-size: 22px; }
 }
 
@@ -330,13 +454,14 @@
   .campaign .arrival-v15 :is(.intelligence-heading h2, .home-start h2, .services-home-heading h2, .home-seller-cases h2) { font-size: clamp(26px, 6.8vw, 36px); line-height: 1.35; }
   .arrival-v15 :is(.intelligence-heading p, .home-start > header p, .services-home-heading > p) { font-size: 14px; }
   .arrival-v15 .intelligence-directory { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; }
-  .arrival-v15 .intelligence-directory article { padding-top: 20px; }
+  .arrival-v15 .intelligence-directory article { padding: 20px 12px 12px; }
+  .arrival-v15 .intelligence-index { margin: -20px -12px 0; padding-inline: 12px; }
   .arrival-v15 .intelligence-directory h3 { font-size: 19px; }
   .arrival-v15 .intelligence-directory article > p { min-height: 46px; font-size: 12px; }
   .campaign .arrival-v15 .intelligence-directory :is(a, .cut-action) { gap: 6px; font-size: 12px; }
   .arrival-v15 .intelligence-directory .cut-action > small { display: none; }
   .arrival-v15 .opening-story-pair { gap: 14px; }
-  .arrival-v15 .opening-story-pair > article, .arrival-v15 .news-stories-v24 > article, .arrival-v15 .case-story-panels > article { padding: 24px 22px; }
+  .arrival-v15 .opening-story-pair > article, .arrival-v15 .news-stories-v24 > article, .arrival-v15 .case-story-panels > article { --hud-x: 22px; --hud-y: 24px; padding: 24px 22px; }
   .arrival-v15 .opening-story-start { padding: 24px 22px; }
   .arrival-v15 .agent-bridge.is-compact { margin-block: 24px; padding: 20px 22px; }
   .arrival-v15 .agent-bridge.is-compact h3 { font-size: 24px; white-space: normal; }
@@ -344,8 +469,9 @@
   .arrival-v15 .agent-bridge.is-compact .agent-bridge-role .cut-action { font-size: 12px; min-height: 46px; gap: 6px; }
   .arrival-v15 .agent-bridge-question h4 { white-space: normal; }
   .arrival-v15 .services-home { margin-block: 60px; }
+  .arrival-v15 .services-home::before { inset: -24px -10px; border-radius: 2px; }
   .arrival-v15 .services-home-grid { grid-template-columns: 1fr; gap: 14px; }
-  .arrival-v15 .services-home-grid article { padding: 24px 22px; }
+  .arrival-v15 .services-home-grid article { --hud-x: 22px; --hud-y: 24px; padding: 24px 22px; }
   .arrival-v15 .services-home-grid h3 { margin-top: 18px; font-size: 25px; }
   .arrival-v15 .services-home-grid .services-home-outcome { min-height: 0; }
   .arrival-v15 .services-home-action { padding: 24px 22px; align-items: stretch; flex-direction: column; gap: 22px; }
@@ -385,6 +511,10 @@
   .arrival-v15 .agent-bridge.is-compact { padding-inline: 18px; }
   .arrival-v15 .agent-bridge.is-compact .agent-bridge-role .cut-action { font-size: 11px; }
   .campaign .arrival-v15 .arrival-life-actions .cut-action { padding-inline: 10px; gap: 8px; font-size: 12px; }
+}
+
+@media (max-width: 700px) {
+  .campaign .arrival-v15 .services-navigation>a:last-child:nth-child(odd) { grid-column: 1 / -1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
