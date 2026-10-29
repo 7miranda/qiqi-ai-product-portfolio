@@ -58,7 +58,7 @@ export function createServicesUI({ React, Button }) {
         placeholder: props.placeholder, required: key === 'product' || key === 'problem', 'aria-invalid': !!errors[key], 'aria-describedby': errors[key] ? `service-error-${key}` : undefined,
         onChange: e => update(key, e.target.value) }), errors[key] && h('small', { id: `service-error-${key}`, className: 'services-error' }, errors[key]));
     return h('div', { className: 'services-workspace' },
-      h('header', { className: 'services-space-heading' }, h('span', { className: 'eyebrow' }, '企业经营服务 / 需求准备'), h('h2', { id: 'campaign-dialog-title' }, '先把下一步，说清楚'),
+      h('header', { className: 'services-space-heading' }, h('span', { className: 'eyebrow' }, '企业经营服务 / 需求准备'), h('h2', { id: 'campaign-dialog-title' }, h('span', { className: 'services-title-phrase' }, '先把下一步，'), h('span', { className: 'services-title-phrase' }, '说清楚')),
         h('p', null, '选一项帮助，核对资料，再带走一份需求清单。草稿自动保存在本机，不会发送。'),
         context && h('p', { className: 'services-context' }, `本轮练习：${context}。下方填写你的真实业务，模拟资金与成绩不会带入。`)),
       h('ol', { className: 'services-steps', 'aria-label': '整理需求的顺序' }, ['确认问题', '准备资料', '形成需求清单'].map((name, i) => h('li', { key: name }, h('span', null, `0${i + 1}`), name))),

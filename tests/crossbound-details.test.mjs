@@ -60,7 +60,7 @@ test('room finish changes only known display colors and preserves product and wa
 });
 
 test('both entry pages load the complete visual system with one current stylesheet version', () => {
-  const styles = ['styles', 'home', 'workspaces', 'operations'];
+  const styles = ['styles', 'home', 'workspaces', 'operations', 'atmosphere'];
   const hash = createHash('sha256').update(styles.map(name => current(`details/${name}.css`)).join('')).digest('hex').slice(0, 10);
   for (const file of ['index.html', 'preview.html']) {
     const html = current(file);
