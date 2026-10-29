@@ -28,7 +28,7 @@
 /* The same metal frame, glass face and recessed data plane as the operating rooms. */
 .courses-home,.courses-workspace{
   --course-glass:var(--spatial-panel,linear-gradient(135deg,#466474b8,#1a3544e8 38%,#091c28f2));
-  --course-well:linear-gradient(180deg,#193748de,#254858d4);
+  --course-well:linear-gradient(180deg,#112c3cde,#1b394bd9);
   --course-rim:inset 0 1px 0 #cce5ee59,inset 0 -1px 0 #020a12c9,0 9px 22px #01081052;
   --course-inset:inset 0 3px 8px #0008,inset 0 -1px 0 #aacbd426;
 }

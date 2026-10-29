@@ -1,6 +1,6 @@
 /* Homepage finish: the original globe, steel campus palette and wide composition remain. */
 .campaign.campaign-arrival {
-  background: linear-gradient(90deg,#173343d9,#183544b3 58%,#183342c7),url('../assets/industrial-atmosphere.png') center / cover fixed;
+  background: linear-gradient(90deg,#0c2230e3,#102938c9 58%,#102634d6),url('../assets/industrial-atmosphere.png') center / cover fixed;
 }
 .campaign .arrival-v15 {
   --home-gutter: clamp(24px, 7vw, 160px);
@@ -16,7 +16,7 @@
 }
 .campaign .arrival-v15 .arrival-portal { background: transparent; }
 .campaign .arrival-v15 .portal-shade {
-  background: linear-gradient(90deg,#173343e6, #17334399 35%,transparent 65%);
+  background: linear-gradient(90deg,#102735de,#1027358c 35%,transparent 65%);
 }
 
 /* Keep the header's controls separate from the amount they describe. */
