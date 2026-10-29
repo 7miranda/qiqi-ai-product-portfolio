@@ -6,33 +6,10 @@
   --home-depth-well: linear-gradient(180deg,#061117eb,#102831d9);
 }
 
-/* Light is behind the globe and beside the copy, never painted onto the canvas. */
-.campaign .arrival-v15 .arrival-portal {
-  background: radial-gradient(ellipse at 73% 48%,#1c3e4b26,transparent 52%);
-}
-.campaign .arrival-v15 .portal-shade {
-  background: linear-gradient(90deg,#030b10e8 0%,#07171f8c 35%,transparent 68%),linear-gradient(0deg,#0612196b,transparent 35%);
-}
+/* Keep the original dark hero; instruments retain the shared glass material. */
 .campaign .arrival-v15 .portal-heading {
   isolation: isolate;
   text-shadow: 0 3px 16px #020e1d80;
-}
-.campaign .arrival-v15 .portal-heading::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: -26px -32px -24px -28px;
-  pointer-events: none;
-  background: linear-gradient(110deg,#547a8920,transparent 39%),linear-gradient(90deg,#08171f94,transparent 90%);
-}
-.campaign .arrival-v15 .portal-world { isolation: isolate; }
-.campaign .arrival-v15 .portal-world::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: 8% 2% 2%;
-  pointer-events: none;
-  background: radial-gradient(ellipse at 50% 45%,#5f9aad14,transparent 57%),radial-gradient(ellipse 42% 7% at 50% 84%,#22495747,transparent 82%);
 }
 .campaign .arrival-v15 .portal-market-label {
   border-color: #9fc6d470;
@@ -170,8 +147,6 @@
 }
 
 @media(max-width:760px) {
-  .campaign .arrival-v15 .portal-heading::before { inset: -18px -12px; }
-  .campaign .arrival-v15 .portal-shade { background: linear-gradient(180deg,#06151f8c,transparent 72%); }
   .campaign .arrival-v15 :is(.opening-story-pair,.services-home-grid) { filter: drop-shadow(0 16px 14px #020c1980); }
   .campaign .arrival-v15 .services-home-grid > article { --service-light-x: 15%; }
   .campaign .arrival-v15 .arrival-life-shade { background: linear-gradient(0deg,#040e15ed,#071923b3 36%,transparent 76%); }
