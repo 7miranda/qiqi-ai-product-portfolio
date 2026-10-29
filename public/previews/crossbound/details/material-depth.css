@@ -1,0 +1,121 @@
+/* Physical layers: a distant hall, light-catching glass, then recessed data. */
+.campaign,#v3-world,.v3s {
+  --depth-rim: #799aaa80;
+  --depth-glass:
+    radial-gradient(ellipse at 5% -12%,#9ac7e23b,transparent 55%),
+    linear-gradient(132deg,#324f61e8 0%,#193749ed 34%,#102838f2 66%,#081a29f5 100%);
+  --depth-shadow: inset 0 1px 0 #dfedf666,inset 1px 0 0 #b9d6e824,inset 0 -2px 0 #020c16b3,0 24px 38px -12px #010813c4,0 3px 8px #02090e66;
+  --depth-well: linear-gradient(180deg,#061422de,#0c2130eb 64%,#183344e0);
+  --depth-inset: inset 0 3px 12px #02081299,inset 0 -1px 0 #a1c5d530;
+  --spatial-panel: var(--depth-glass);
+  --spatial-shadow: var(--depth-shadow);
+  --spatial-edge: var(--depth-rim);
+  --spatial-inset: var(--depth-inset);
+}
+
+.campaign.campaign-arrival {
+  background:
+    radial-gradient(ellipse at 78% 2%,#61a4c32e,transparent 60%),
+    linear-gradient(100deg,#071b2de0,#102b3dcc 56%,#061727e0),
+    url('../assets/industrial-atmosphere.png') center/cover fixed;
+}
+.campaign-playing {
+  background: radial-gradient(ellipse at 52% 60%,#2c536b4d,transparent 65%),linear-gradient(150deg,#10283a,#071723 75%);
+}
+.v3s {
+  background:
+    radial-gradient(ellipse at 46% 5%,#93c4dd29,transparent 55%),
+    linear-gradient(90deg,#071a2bcc,#163347a6 49%,#071929d6),
+    linear-gradient(0deg,#061421e6,transparent 68%),
+    url('../assets/industrial-atmosphere.png') center/cover fixed;
+}
+
+/* The edge catches light while the lower plane falls into a distinct shadow. */
+.campaign dialog.campaign-dialog {
+  border-top-color: #b0cbd9b3 !important;
+  border-left-color: #7f9daa99 !important;
+  border-right-color: #3b586c99 !important;
+  border-bottom-color: #20394a !important;
+  box-shadow: inset 0 1px 0 #e2f2fa5c,inset 0 -2px 0 #020913cc,0 28px 80px #010711b3,0 0 0 4px #0b223280;
+}
+.campaign .campaign-dialog::backdrop {
+  background: linear-gradient(105deg,#061728d9,#19374894 58%,#071524db),url('../assets/industrial-atmosphere.png') center/cover;
+  backdrop-filter: blur(5px);
+}
+.campaign dialog.campaign-dialog .campaign-panel {
+  background: var(--depth-glass);
+}
+.campaign .panel-topbar,
+.v3s .v3s-head {
+  background: linear-gradient(115deg,#557386c7 0%,#29495bd9 20%,#122d40ed 62%,#0b2131f0 100%);
+  border-bottom: 1px solid #9bbdce4d;
+  box-shadow: inset 0 1px 0 #e1f1fa47,0 9px 22px #020b144d;
+  backdrop-filter: blur(14px);
+}
+
+.campaign .campaign-panel :is(.market-atlas-intel,.wf-document,.creator-flow-block,
+  .services-surface,.services-handoff,.course-chapter,.creator-flow-panel,.listing-edit-panel,.listing-buyer-preview,
+  .v2-panel,.v11-facility-grid article,.report-insights-panel,.v11-cockpit-body) {
+  background: var(--depth-glass);
+  border-color: var(--depth-rim);
+  box-shadow: var(--depth-shadow);
+}
+.campaign :is(.services-materials,.v11-table-wrap,.report-insights-funnel,.supply-fields) {
+  background: var(--depth-well);
+  box-shadow: var(--depth-inset);
+}
+.campaign .module-products-v20 .library-selected .room-observation,
+.campaign .supply-matcher .supply-object {
+  background: radial-gradient(ellipse at 49% 16%,#6593ae47,transparent 62%),linear-gradient(180deg,#0c2031,#18394c 75%,#091d2c);
+  box-shadow: var(--depth-inset);
+}
+.campaign .mission-guidance-v24 {
+  background: radial-gradient(ellipse at 3% 0%,#9acbe236,transparent 52%),linear-gradient(118deg,#3b6075d6,#153446e8 44%,#0a2234f2);
+  border-color: #7b9dac8c;
+  box-shadow: var(--depth-shadow);
+}
+
+/* Workbench housings float in front of the room; their controls stay flat. */
+.v3s :is(.v3s-bench,.v3s-shelf,.v3s-card,.v3s-desk,.v3s-phone) {
+  background: var(--depth-glass);
+  border-color: var(--depth-rim);
+  box-shadow: var(--depth-shadow);
+  backdrop-filter: blur(8px);
+}
+.v3s :is(.v3s-bench,.v3s-card)>header {
+  background: linear-gradient(112deg,#b8d8e633,transparent 47%),linear-gradient(180deg,#56768b99,#1d3b4e73);
+  border-bottom-color: #91b6c780;
+  box-shadow: inset 0 1px 0 #e1f2fa4d,0 5px 10px #020b1440;
+}
+.v3s .v3s-ledger,
+.v3s .v3s-curve svg,
+.v3s .v3s-statements {
+  background: var(--depth-well);
+  box-shadow: var(--depth-inset);
+  border-color: #6a8e9f59;
+}
+.v3s .v3s-shot {
+  background: radial-gradient(ellipse at 50% 12%,#8bbcd35c,transparent 58%),linear-gradient(180deg,#102a3d,#061826 70%,#17394c);
+  box-shadow: inset 0 4px 18px #020914b3,inset 0 -1px 0 #b8d6e44d;
+}
+.v3s .v3s-phone-bar { border-bottom-color: #9dbec04d; }
+.v3s .v3s-foot {
+  background: linear-gradient(115deg,#294b5ef5,#102c40fa 60%,#0a2032fc);
+  border-top-color: #9bbdce73;
+  box-shadow: inset 0 1px 0 #d2eaf53b,0 -12px 30px #010a1566;
+}
+
+#v3-world :is(.v3-panel,.v3-dialog,.v3-hud-money,.v3-hud-task) {
+  background: var(--depth-glass);
+  border-color: var(--depth-rim);
+  box-shadow: var(--depth-shadow);
+  backdrop-filter: blur(10px);
+}
+
+@media(max-width:760px) {
+  .campaign.campaign-arrival,.v3s { background-attachment: scroll; }
+  .campaign .campaign-dialog::backdrop { backdrop-filter: none; }
+  .campaign .panel-topbar,.v3s .v3s-head { backdrop-filter: blur(8px); }
+  .v3s :is(.v3s-bench,.v3s-shelf,.v3s-card,.v3s-desk,.v3s-phone),
+  #v3-world :is(.v3-panel,.v3-dialog,.v3-hud-money,.v3-hud-task) { backdrop-filter: none; }
+}

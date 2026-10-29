@@ -21,7 +21,7 @@ const coursesModelVersion = hash(['courses/model.js']);
 const courseUI = path.join(root, folder, 'courses/ui.js');
 fs.writeFileSync(courseUI, fs.readFileSync(courseUI, 'utf8').replace(/\.\/model\.js(?:\?v=[^"']+)?/, `./model.js?v=${coursesModelVersion}`));
 const coursesVersion = hash(['courses/model.js', 'courses/ui.js', 'courses/styles.css']);
-const detailStyles = ['styles', 'home', 'workspaces', 'operations', 'atmosphere'];
+const detailStyles = ['styles', 'home', 'workspaces', 'operations', 'atmosphere', 'material-depth', 'depth-home'];
 const detailsVersion = hash(detailStyles.map(name => `details/${name}.css`));
 const fromBaseline = file => execFileSync('git', ['show', `${baseline}:${folder}/${file}`], { cwd: root, encoding: 'utf8', maxBuffer: 30e6 });
 const moduleFiles = execFileSync('git', ['ls-tree', '-r', '--name-only', baseline, `${folder}/`], { cwd: root, encoding: 'utf8' })
