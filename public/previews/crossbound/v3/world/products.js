@@ -1,8 +1,10 @@
 // F-001 / F-003: recognisable low-poly product models with one signature "open" motion each.
 // Every model is procedural (no third-party assets) and well under the 5,000-face cap (3D-073).
 import * as THREE from 'three';
-import { toon, neon, block, mesh, PALETTE as P } from './kit.js?v=01295b5f6d';
-import { archetypeFor } from './logic.js?v=01295b5f6d';
+import { toon, neon, mesh, PALETTE as P } from './kit.js?v=13cef6754e';
+import { RoundedBoxGeometry } from '../../vendor/three/RoundedBoxGeometry.js?v=13cef6754e';
+const block = (w, h, d, material, opts) => mesh(new RoundedBoxGeometry(w, h, d, 1, Math.min(w, h, d) * 0.2), material, opts);
+import { archetypeFor } from './logic.js?v=13cef6754e';
 
 const ease = p => 1 - Math.pow(1 - Math.max(0, Math.min(1, p)), 3);
 const cyl = (rt, rb, h, seg = 16) => new THREE.CylinderGeometry(rt, rb, h, seg);
@@ -206,14 +208,12 @@ const BUILDERS = {
   },
 };
 
-const ACCENT = { home: P.cyan, electronics: P.violet, lifestyle: P.magenta, future: P.gold, furniture: P.lime, outdoor: 0xff9f43 };
 
 // Builds the model for a catalog product, normalised so its largest dimension equals `size` metres.
 export function productModel(product, { size = 1 } = {}) {
   const kind = archetypeFor(product);
-  const accent = ACCENT[product?.category] || P.cyan;
+  const accent = 0x799fae;
   const colors = { body: 0xe8edf2, dark: 0x2a3448, metal: 0x9eb5c3, accent, glow: accent };
-  if (['sofa', 'bed', 'chair', 'canopy'].includes(kind)) colors.body = new THREE.Color(accent).lerp(new THREE.Color(0xe8edf2), 0.55).getHex();
   const built = (BUILDERS[kind] || BUILDERS.parcel)(colors);
   const wrap = new THREE.Group();
   wrap.add(built.group);

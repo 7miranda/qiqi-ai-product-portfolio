@@ -2,13 +2,13 @@
 // No walking and no camera follow — a fixed oblique camera with the near wall cut away, and the player clicks
 // what they want to use. Player actions go through the engine's own select / commit calls; no rule is re-implemented.
 import * as THREE from 'three';
-import { FIRST_MILE } from '../../v2/catalog.js?v=01295b5f6d';
-import { balanceRules } from '../../v11/balance.js?v=01295b5f6d';
-import { WORLDS, QUALITY, PICKS_KEY, downgrade, createFpsMonitor, taskFor, nearestInteractable, pickShowcase, money, cashPlan } from './logic.js?v=01295b5f6d';
-import { createUI, createSounds } from './ui.js?v=01295b5f6d';
-import { buildShowroom, SUPPLIERS, STANDS } from './showroom.js?v=01295b5f6d';
-import { buildFinance, buildWarehouse } from './rooms.js?v=01295b5f6d';
-import { lightPillar, PALETTE, disposeTree } from './kit.js?v=01295b5f6d';
+import { FIRST_MILE } from '../../v2/catalog.js?v=13cef6754e';
+import { balanceRules } from '../../v11/balance.js?v=13cef6754e';
+import { WORLDS, QUALITY, PICKS_KEY, downgrade, createFpsMonitor, taskFor, nearestInteractable, pickShowcase, money, cashPlan } from './logic.js?v=13cef6754e';
+import { createUI, createSounds } from './ui.js?v=13cef6754e';
+import { buildShowroom, SUPPLIERS, STANDS } from './showroom.js?v=13cef6754e';
+import { buildFinance, buildWarehouse } from './rooms.js?v=13cef6754e';
+import { lightPillar, PALETTE, disposeTree } from './kit.js?v=13cef6754e';
 
 const FLY_MS = 400;                 // F-002: pick-up flight
 const OPEN_MS = 900;                // F-003: open animation

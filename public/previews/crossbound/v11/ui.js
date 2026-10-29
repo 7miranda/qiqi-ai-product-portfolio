@@ -1,9 +1,9 @@
-import { feedbackState } from '../v2/records.js?v=01295b5f6d';
-import { HELP, PROMOTIONS } from './model.js?v=01295b5f6d';
-import { countryBadgeAsset } from './badges.js?v=01295b5f6d';
-import { explorationAwards } from '../v2/progress.js?v=01295b5f6d';
-import { goal, goalChannelText } from '../v2/release.js?v=01295b5f6d';
-import { STOCK_CARRYOVER } from './balance.js?v=01295b5f6d';
+import { feedbackState } from '../v2/records.js?v=13cef6754e';
+import { HELP, PROMOTIONS } from './model.js?v=13cef6754e';
+import { countryBadgeAsset } from './badges.js?v=13cef6754e';
+import { explorationAwards } from '../v2/progress.js?v=13cef6754e';
+import { goal, goalChannelText } from '../v2/release.js?v=13cef6754e';
+import { STOCK_CARRYOVER } from './balance.js?v=13cef6754e';
 
 // Reuse the demo's React instance, buttons, panels and visual classes.
 export function createCrossboundUI({ React, Button, engine, Passport, passportData, growth }) {

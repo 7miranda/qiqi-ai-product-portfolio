@@ -1,9 +1,9 @@
 // W1 选品展厅 (3D-018 ~ 3D-022): product stands, three supplier booths, exit door.
 // F-001: each stand carries a recognisable product model; F-004: selected = steady green ring, ×1.2 and a floating "已选" tag.
 import * as THREE from 'three';
-import { PALETTE as P, toon, neon, block, mesh, textPlane, neonSign, addOutline, character } from './kit.js?v=01295b5f6d';
-import { fitTier } from './logic.js?v=01295b5f6d';
-import { productModel } from './products.js?v=01295b5f6d';
+import { PALETTE as P, toon, neon, block, mesh, textPlane, neonSign, addOutline, character } from './kit.js?v=13cef6754e';
+import { fitTier } from './logic.js?v=13cef6754e';
+import { productModel } from './products.js?v=13cef6754e';
 
 const COLS = [-5.5, -2, 1.5, 5, 8.5];
 const ROWS = [-6, -2.5, 1, 4.5];
