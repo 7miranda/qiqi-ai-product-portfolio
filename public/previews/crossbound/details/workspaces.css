@@ -13,7 +13,7 @@
   --ws-lime: #a6ff32;
   --ws-glass: var(--spatial-panel);
   --ws-glass-shadow: var(--spatial-shadow);
-  --ws-well: linear-gradient(180deg,#193748de,#254858d4);
+  --ws-well: linear-gradient(180deg,#112c3cde,#1b394bd9);
   --ws-well-shadow: var(--spatial-inset);
 }
 .campaign .campaign-panel {

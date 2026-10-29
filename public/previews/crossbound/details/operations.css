@@ -7,7 +7,7 @@
   --room-ink: #e1edf1;
   --room-glass: var(--spatial-panel);
   --room-rim: var(--spatial-shadow);
-  --room-well: linear-gradient(180deg,#193748de,#254858d4);
+  --room-well: linear-gradient(180deg,#112c3cde,#1b394bd9);
   --room-inset: var(--spatial-inset);
 }
 .v3s:has(>.v3s-lead) { grid-template-rows: auto auto minmax(max-content,1fr) auto; }
