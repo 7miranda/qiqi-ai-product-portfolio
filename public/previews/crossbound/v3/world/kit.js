@@ -1,6 +1,6 @@
 // Shared building blocks for the neon-toon world: materials, labels, signs, characters.
 import * as THREE from 'three';
-import { industrialColor } from '../../details/room-materials.js?v=01295b5f6d';
+import { industrialColor } from '../../details/room-materials.js?v=13cef6754e';
 
 export const PALETTE = Object.fromEntries(Object.entries({
   night: 0x0a1020, asphalt: 0x1e2636, curb: 0x34405a, wall: 0x2a3650, wallDark: 0x1a2232, glass: 0x2a5878,

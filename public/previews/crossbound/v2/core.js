@@ -1,7 +1,7 @@
-import { BALANCE_VERSION, friendly, balanceRules, balanceOptions, acquisitionRisk, STOCK_CARRYOVER, STOCK_RETURN_FEE, CREATOR_RANGE, CREATOR_MATCH, EVENT_FLOOR } from '../v11/balance.js?v=01295b5f6d';
-import { TAX, taxQuote, PLATFORMS, FIRST_MILE, BIDS, TIME_SLOTS, OFFSITE, CONFIG_DEFAULTS, season } from './catalog.js?v=01295b5f6d';
-import { productFit } from './product-fit.js?v=01295b5f6d';
-import { GOAL_VERSION, goal, goalPasses, financeSnapshot } from './release.js?v=01295b5f6d';
+import { BALANCE_VERSION, friendly, balanceRules, balanceOptions, acquisitionRisk, STOCK_CARRYOVER, STOCK_RETURN_FEE, CREATOR_RANGE, CREATOR_MATCH, EVENT_FLOOR } from '../v11/balance.js?v=13cef6754e';
+import { TAX, taxQuote, PLATFORMS, FIRST_MILE, BIDS, TIME_SLOTS, OFFSITE, CONFIG_DEFAULTS, season } from './catalog.js?v=13cef6754e';
+import { productFit } from './product-fit.js?v=13cef6754e';
+import { GOAL_VERSION, goal, goalPasses, financeSnapshot } from './release.js?v=13cef6754e';
 // Crossbound v1.1: pure operating rules. The bridge supplies the existing demo data.
 export const money = value => Math.round((value + Number.EPSILON) * 100) / 100;
 const copy = value => structuredClone(value);

@@ -7,6 +7,8 @@ import { createHash } from 'node:crypto';
 import { versionImports } from '../scripts/crossbound-details/imports.mjs';
 import { roomMaterials } from '../scripts/crossbound-details/materials.mjs';
 import { industrialColor } from '../public/previews/crossbound/details/room-materials.js';
+import { catalogPreview } from '../public/previews/crossbound/details/catalog-preview.js';
+import { productModel } from '../public/previews/crossbound/v3/world/products.js';
 
 const baseline = '367b11104922d1dbcb7126d2f7fdfa0b3369ea4f';
 const folder = 'public/previews/crossbound/';
@@ -73,6 +75,12 @@ for (const file of ['index.html', 'preview.html']) {
     const before = app(upstream(file));
     let after = app(current(file))
       .replace(/^import \{ createServicesUI \} from "\.\/services\/ui\.js\?v=[^"]+";\n/, '')
+      .replace('Object.defineProperty(window,"CrossboundProductPreview",{configurable:true,value:s1t});\n', '')
+      .replace('studio:!0,active:!1,onTouch:', 'active:!1,onTouch:')
+      .replace('onTouch:r,subject:s,studio}', 'onTouch:r,subject:s}')
+      .replace('Xpt,{product:n,active:i,reduced:e,studio}', 'Xpt,{product:n,active:i,reduced:e}')
+      .replace('function Xpt({product:n,active:e,reduced:t,studio})', 'function Xpt({product:n,active:e,reduced:t})')
+      .replace('(studio?[]:[-1,1]).map(l=>(0,X.jsxs)(Cd,{position:[l*1.68,.58,-.65]', '[-1,1].map(l=>(0,X.jsxs)(Cd,{position:[l*1.68,.58,-.65]')
       .replace('const ServicesUI = createServicesUI({ React: li, Button: Ge });\n', '');
     const names = new Set(['Roe', 'Rse', 'Cse', 'Ese']);
     function functions(source) {
@@ -93,3 +101,48 @@ for (const file of ['index.html', 'preview.html']) {
     assert.equal(canonical(after), canonical(before));
   });
 }
+
+test('studio preview reuses cached and queued catalog images and releases each subscription', async () => {
+  let stopped = 0, requested, deliver;
+  const cached = await catalogPreview((id, callback) => {
+    requested = id; callback({ image: 'data:cached' }); return () => stopped++;
+  }, 'patio-set');
+  assert.equal(requested, 'patio-set');
+  assert.equal(cached, 'data:cached');
+  const queued = catalogPreview((id, callback) => { deliver = callback; return () => stopped++; }, 'chair');
+  deliver({ image: 'data:queued' });
+  assert.equal(await queued, 'data:queued');
+  assert.equal(stopped, 2);
+});
+
+test('unavailable or failed catalog renders allow the existing procedural preview', async t => {
+  assert.equal(await catalogPreview(null, 'chair'), null);
+  assert.equal(await catalogPreview(() => { throw Error('WebGL unavailable'); }, 'chair'), null);
+  assert.equal(await catalogPreview((id, callback) => { callback({ failed: true }); return () => {}; }, 'chair'), null);
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  let stopped = false;
+  const pending = catalogPreview(() => () => { stopped = true; }, 'chair');
+  t.mock.timers.tick(4001);
+  assert.equal(await pending, null);
+  assert.equal(stopped, true);
+});
+
+test('procedural product fallback has neutral furniture and stays below the geometry budget through opening', () => {
+  for (const name of ['耳机', '音箱', '风扇', '移动电源', '茶几', '收纳套装', '个护', '杯', '快充', '镜', '床', '工位', '长凳', '灯', '阳台休闲桌椅', '沙发', '遮阳', '种植', '推车', '柜', 'parcel']) {
+    const model = productModel({ name, category: 'outdoor' });
+    let triangles = 0;
+    model.group.traverse(o => { if (o.isMesh) triangles += (o.geometry.index?.count ?? o.geometry.attributes.position.count) / 3; });
+    assert.ok(triangles < 5000, `${name}: ${triangles} triangles`);
+    model.open(1, 1, .016);
+    model.group.traverse(o => {
+      assert.ok(o.position.toArray().every(Number.isFinite), `${name}: invalid opening transform`);
+      o.geometry?.dispose(); o.material?.dispose();
+    });
+  }
+  const chair = productModel({ name: '阳台休闲桌椅', category: 'outdoor' });
+  const colors = new Set();
+  chair.group.traverse(o => { if (o.isMesh) { colors.add(o.material.color.getHex()); o.geometry.dispose(); o.material.dispose(); } });
+  assert.ok(colors.has(0xe8edf2));
+  assert.ok(!colors.has(0xff9f43));
+  assert.ok(!colors.has(0xffd3b1));
+});

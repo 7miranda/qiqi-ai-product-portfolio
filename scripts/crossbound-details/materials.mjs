@@ -23,5 +23,17 @@ export function roomMaterials(source, file) {
     once('new THREE.Fog(0x0b1020, 26, 48)', 'new THREE.Fog(0x071218, 26, 48)');
     once('new THREE.HemisphereLight(0x9aa8ff, 0x2a2238, 2.6)', 'new THREE.HemisphereLight(0xd6edf4, 0x152a31, 2.6)');
   }
+  if (file === 'v3/world/products.js') {
+    once("import { toon, neon, block, mesh, PALETTE as P } from './kit.js';", "import { toon, neon, mesh, PALETTE as P } from './kit.js';\nimport { RoundedBoxGeometry } from '../../vendor/three/RoundedBoxGeometry.js';\nconst block = (w, h, d, material, opts) => mesh(new RoundedBoxGeometry(w, h, d, 1, Math.min(w, h, d) * 0.2), material, opts);");
+    once('const accent = ACCENT[product?.category] || P.cyan;', 'const accent = 0x799fae;');
+    once("const ACCENT = { home: P.cyan, electronics: P.violet, lifestyle: P.magenta, future: P.gold, furniture: P.lime, outdoor: 0xff9f43 };\n", '');
+    once("  if (['sofa', 'bed', 'chair', 'canopy'].includes(kind)) colors.body = new THREE.Color(accent).lerp(new THREE.Color(0xe8edf2), 0.55).getHex();\n", '');
+  }
+  if (file === 'v3/world/scenes.js') {
+    once("import { PROMOTIONS }", "import { catalogPreview } from '../../details/catalog-preview.js';\nimport { PROMOTIONS }");
+    once('  try {\n    shotKit ||=', '  try {\n    const studio = await catalogPreview(window.CrossboundProductPreview, p.id);\n    if (studio) { shots.set(p.id, studio); return studio; }\n    shotKit ||=');
+    once('renderer.setSize(360, 360, false); renderer.outputColorSpace = THREE.SRGBColorSpace;', 'renderer.setSize(512, 512, false); renderer.outputColorSpace = THREE.SRGBColorSpace;\n      renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1;');
+    once('new THREE.HemisphereLight(0xffffff, 0x8899aa, 2.4)', 'new THREE.HemisphereLight(0xd6edf4, 0x243944, 1.6)');
+  }
   return source;
 }

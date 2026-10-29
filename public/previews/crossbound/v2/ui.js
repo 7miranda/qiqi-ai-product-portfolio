@@ -1,7 +1,7 @@
-import { createReleaseUI } from './release-ui.js?v=01295b5f6d';
-import { TAX, TAX_NOTE, taxQuote, PLATFORMS, FIRST_MILE, BIDS, TIME_SLOTS, OFFSITE, season } from './catalog.js?v=01295b5f6d';
-import { passport, explorationAwards, assessment, benchmark, badgeCelebration, rememberBadgeCelebration } from './progress.js?v=01295b5f6d';
-import { productFit } from './product-fit.js?v=01295b5f6d';
+import { createReleaseUI } from './release-ui.js?v=13cef6754e';
+import { TAX, TAX_NOTE, taxQuote, PLATFORMS, FIRST_MILE, BIDS, TIME_SLOTS, OFFSITE, season } from './catalog.js?v=13cef6754e';
+import { passport, explorationAwards, assessment, benchmark, badgeCelebration, rememberBadgeCelebration } from './progress.js?v=13cef6754e';
+import { productFit } from './product-fit.js?v=13cef6754e';
 
 export function createV2UI({ React, Button, engine, Base, tasks, facilities=[] }) {
   const h = React.createElement, cash = n => `$${Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;

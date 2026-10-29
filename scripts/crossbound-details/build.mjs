@@ -23,7 +23,7 @@ const fromBaseline = file => execFileSync('git', ['show', `${baseline}:${folder}
 const moduleFiles = execFileSync('git', ['ls-tree', '-r', '--name-only', baseline, `${folder}/`], { cwd: root, encoding: 'utf8' })
   .split('\n').filter(file => new RegExp(`^${folder}/(?:v11|v2|v3)/.*\\.js$`).test(file)).map(file => file.slice(folder.length + 1));
 const modules = moduleFiles.map(file => [file, roomMaterials(fromBaseline(file), file)]);
-const releaseVersion = createHash('sha256').update(modules.map(([file, source]) => file + source).join('') + read('details/room-materials.js')).digest('hex').slice(0, 10);
+const releaseVersion = createHash('sha256').update(modules.map(([file, source]) => file + source).join('') + read('details/room-materials.js') + read('details/catalog-preview.js') + read('vendor/three/RoundedBoxGeometry.js')).digest('hex').slice(0, 10);
 for (const [file, source] of modules) fs.writeFileSync(path.join(root, folder, file), versionImports(source, releaseVersion));
 
 function once(source, from, to) {
@@ -78,6 +78,11 @@ for (const file of ['index.html', 'preview.html']) {
     source = once(source, 'function L7(){', 'function L7(){if(l==="services"){u(serviceReturn);requestAnimationFrame(()=>{if(serviceReturn==="complete")xs.current?.querySelector("[data-service-review-trigger]")?.focus();else serviceTrigger.current?.focus()});return}');
     return once(source, 'l==="decision"?(0,re.jsxs)(re.Fragment,{children:[', 'l==="services"?(0,re.jsx)(ServicesUI.Workspace,{context:serviceReturn==="complete"?[ks.find(x=>x.id===t.marketId)?.countryLabel,Zn.find(x=>x.id===t.productId)?.name].filter(Boolean).join(" / "):null}):l==="decision"?(0,re.jsxs)(re.Fragment,{children:[');
   });
+  script = once(script, 'function s1t(', 'Object.defineProperty(window,"CrossboundProductPreview",{configurable:true,value:s1t});\nfunction s1t(');
+  // Studio photos show the sellable patio set, without the interactive concept sunshade.
+  script = patchFunction(script, 'dxe', source => once(source, 'active:!1,onTouch:', 'studio:!0,active:!1,onTouch:'));
+  script = patchFunction(script, 'cxe', source => once(once(source, 'onTouch:r,subject:s}', 'onTouch:r,subject:s,studio}'), 'Xpt,{product:n,active:i,reduced:e}', 'Xpt,{product:n,active:i,reduced:e,studio}'));
+  script = patchFunction(script, 'Xpt', source => once(once(source, 'active:e,reduced:t}', 'active:e,reduced:t,studio}'), '[-1,1].map(l=>(0,X.jsxs)(Cd,{position:[l*1.68,.58,-.65]', '(studio?[]:[-1,1]).map(l=>(0,X.jsxs)(Cd,{position:[l*1.68,.58,-.65]'));
   script = patchFunction(script, 'Rse', source => {
     source = once(source, 'onSupply:o,onMarkets:a})', 'onSupply:o,onMarkets:a,onServices:serviceOpen})');
     source = once(source, 'onExample:B,hasProgress:e})', 'onExample:B,hasProgress:e,onServices:serviceOpen})');

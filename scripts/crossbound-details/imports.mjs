@@ -10,7 +10,7 @@ export function versionImports(source, version) {
     if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) literal = node.arguments[0];
     if (literal && ts.isStringLiteral(literal)) {
       const file = literal.text.split('?')[0];
-      if (/^\.{1,2}\//.test(file) && file.endsWith('.js') && !file.includes('/vendor/') && !file.includes('/services/')) {
+      if (/^\.{1,2}\//.test(file) && file.endsWith('.js') && !file.includes('/services/')) {
         edits.push([literal.getStart(sf) + 1, literal.end - 1, `${file}?v=${version}`]);
       }
     }
