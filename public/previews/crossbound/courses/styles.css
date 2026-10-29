@@ -59,5 +59,7 @@
 .course-table td{color:#c0d3dc}.course-table td small{color:#9bbbc9}
 .course-tutoring article,.course-prepare-grid>section{border-color:#70919e99;background:linear-gradient(180deg,#35516073,transparent 78%);box-shadow:inset 0 1px 0 #bad8e033;border-radius:2px}
 .course-view-switch .cut-action{border-radius:2px}
+.course-view-label{display:block}.course-view-label>span{display:inline-block}
 .course-view-switch [aria-pressed=true]{box-shadow:inset 3px 0 0 #b7e288,inset 0 1px 0 #def4c855,inset 0 -2px 0 #06170d,0 5px 12px #0005}
 .course-chapter>summary:focus-visible,.course-table-wrap:focus-visible{outline:2px solid #8ecbd8;outline-offset:3px}
+@media(max-width:700px){.course-facts{padding-inline:16px}}
