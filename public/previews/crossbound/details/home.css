@@ -14,9 +14,9 @@
   --home-edge: var(--spatial-edge, #597785);
   --home-shadow: var(--spatial-shadow, inset 0 1px 0 #d5ecf15c,inset 0 -2px 1px #020a10b3,0 18px 36px #0008,0 3px 6px #0005);
 }
-.campaign .arrival-v15 .arrival-portal { background: transparent; }
+.campaign .arrival-v15 .arrival-portal { background: #03080b; }
 .campaign .arrival-v15 .portal-shade {
-  background: linear-gradient(90deg,#102735de,#1027358c 35%,transparent 65%);
+  background: linear-gradient(90deg,#03080b 0%,#03080bf5 30%,#03080bb3 42%,transparent 63%),linear-gradient(180deg,#03080b 0%,transparent 19%,transparent 78%,#03080b 100%);
 }
 
 /* Keep the header's controls separate from the amount they describe. */
@@ -429,6 +429,7 @@
 }
 
 @media (max-width: 760px) {
+  .campaign .arrival-v15 .portal-shade { background: linear-gradient(180deg,#03080b 0%,#03080b 37%,transparent 55%,transparent 84%,#03080b 99%); }
   .campaign .arrival-v15 { --home-gutter: 20px; }
   .campaign-arrival .arrival-header-actions { gap: 14px; }
   .campaign-arrival .campaign-wallet { gap: 12px; }
