@@ -1,15 +1,16 @@
 /* One lighting direction and three material depths: environment, glass, inset controls. */
 .campaign,#v3-world,.v3s {
   --spatial-edge: #5c7c8c;
-  --spatial-panel: linear-gradient(132deg,#526d7e75 0%,#233d50c7 26%,#122835de 64%,#0a1925ed 100%);
-  --spatial-shadow: inset 0 1px 0 #d7edf64d,inset 1px 0 0 #d7edf614,inset 0 -2px 0 #02080d99,0 16px 32px #01060b80,0 2px 5px #01060b66;
-  --spatial-inset: inset 0 3px 9px #01060b66,inset 0 -1px 0 #b6d7e414;
+  --spatial-panel: linear-gradient(132deg,#7598ad70 0%,#35596bc2 26%,#254958c9 64%,#1a3949d4 100%);
+  --spatial-shadow: inset 0 1px 0 #d7edf64d,inset 1px 0 0 #d7edf614,0 18px 35px #061f2e55,0 2px 5px #08233333;
+  --spatial-inset: inset 0 2px 7px #081d2c44,inset 0 -1px 0 #b6d7e426;
 }
 
 /* The existing campus remains the physical scene. Its controls sit in front of it. */
 .campaign-playing {
   background: radial-gradient(ellipse at 50% 70%,#233e4b50,transparent 65%),linear-gradient(155deg,#0b1822,#03090e 74%);
 }
+.campaign-playing>.campaign-header { background: #213f4fe8; backdrop-filter: blur(14px); }
 .campaign .mission-guidance-v24 {
   position: relative;
   isolation: isolate;
@@ -49,34 +50,34 @@
 /* A real manufacturing hall behind the workstation supplies perspective and light. */
 .v3s {
   background:
-    linear-gradient(90deg,#06111bc9,#0a1a27a8 48%,#051019c9),
-    linear-gradient(0deg,#061019e8,transparent 72%),
+    linear-gradient(90deg,#173648b3,#193b4c70 48%,#183547b0),
+    linear-gradient(0deg,#122d3cbd,transparent 60%),
     url('../assets/industrial-atmosphere.png') center/cover fixed;
 }
 .v3s-head {
-  background: linear-gradient(110deg,#304c5fbd,#0a1c2be8 72%);
+  background: linear-gradient(110deg,#395c6ed9,#244758e8 72%);
   box-shadow: inset 0 1px 0 #c9e6f22b,0 12px 32px #0005;
   backdrop-filter: blur(16px);
 }
 .v3s-foot {
-  background: linear-gradient(110deg,#2b4659ed,#0c1b29f7 65%);
+  background: linear-gradient(110deg,#35586aee,#254556f5 65%);
   border-top: 1px solid #7197a16b;
   box-shadow: inset 0 1px 0 #cce7ee1c,0 -10px 28px #01070b66;
 }
 
 /* Dialogs use the same rear environment, a thick outer frame and a clear inner plane. */
 .campaign .campaign-dialog::backdrop {
-  background: linear-gradient(#02070db3,#02070de8),url('../assets/industrial-atmosphere.png') center/cover;
+  background: linear-gradient(#19374799,#112d3bb3),url('../assets/industrial-atmosphere.png') center/cover;
   backdrop-filter: blur(4px);
 }
 .campaign dialog.campaign-dialog {
   border-radius: 4px;
   border-color: #7a9eab !important;
-  background: #142734;
+  background: #294958;
   box-shadow: inset 0 1px 0 #d4edf25c,inset 0 -3px 0 #03090d,0 28px 100px #000b,0 0 0 4px #1c354480;
 }
 .campaign dialog.campaign-dialog .campaign-panel {
-  background: linear-gradient(145deg,#3b566666,#172b39d9 33%,#091924f2 86%);
+  background: linear-gradient(145deg,#7091a259,#335462c7 33%,#203f50de 86%);
 }
 .campaign .panel-topbar {
   background: linear-gradient(115deg,#405b6bca,#1c3443e8 40%,#0b1d2be8);
@@ -107,26 +108,16 @@
     linear-gradient(#83b0c180,#83b0c180) right bottom/1px 22px no-repeat;
 }
 
-/* Convex actions, recessed fields. Color remains an action cue rather than decoration. */
+/* Compact controls and tinted fields. Color remains an action cue. */
 .campaign .cut-outline>button.cut-inner {
   border-radius: 3px;
 }
 .campaign .cut-solid,.v3s-primary,#v3-world .v3-btn.is-primary {
   border-radius: 4px;
-  background: linear-gradient(160deg,#ddff99 0%,#b5f653 34%,#9bdb2b 75%,#84ba24 100%);
-  color: #14200e;
-  box-shadow: inset 0 1px 0 #f1ffc6cc,inset 0 -3px 0 #50751588,0 8px 19px #020a0e66,0 0 17px #a4db3014;
-}
-.campaign .cut-outline>button.cut-inner:not([aria-pressed=true]),
-.v3s :is(.v3s-back,.v3s-ghost),#v3-world .v3-back {
-  border-radius: 3px;
-  background: linear-gradient(155deg,#45627399,#1d3442d9 45%,#0b1d2beb);
-  border-color: #718f9b80;
-  box-shadow: inset 0 1px 0 #cbe3ef3b,inset 0 -2px 0 #02090d80,0 5px 13px #01060b55;
 }
 .campaign :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea),
 .v3s :is(select,input:not([type=range])) {
-  background: linear-gradient(#06131ee8,#102330ed);
+  background: #1c3a4bd9;
   border-color: #607f8b80;
   border-radius: 2px;
   box-shadow: var(--spatial-inset);
@@ -146,14 +137,125 @@
   box-shadow: inset 0 1px 0 #d7eef43b,0 7px 18px #0007;
 }
 
-@media(hover:hover) and (pointer:fine) {
-  .campaign .cut-solid:not(:disabled):hover,.v3s-primary:not(:disabled):hover {
-    background: linear-gradient(160deg,#ebffbd,#c1ff67 45%,#a5e039);
-    box-shadow: inset 0 1px 0 #ffffe5,inset 0 -3px 0 #66911a88,0 8px 22px #01070b80;
-  }
-}
 @media(max-width:760px) {
   .v3s { background-attachment: scroll; }
   .v3s-head,.campaign .panel-topbar { backdrop-filter: blur(8px); }
   .campaign dialog.campaign-dialog { box-shadow: inset 0 1px 0 #d4edf24d,0 16px 50px #0009; }
+}
+
+/* Flat controls retain one keyline; the surrounding display surfaces keep their depth. */
+.campaign .cut-solid,
+.campaign .cut-solid:not(:disabled):is(:hover,:active) {
+  background: #a6ff32;
+  color: #14200e;
+  box-shadow: inset 0 0 0 1px #8ebf43;
+  transform: none;
+}
+.campaign .cut-outline>button.cut-inner:not([aria-pressed=true]),
+.campaign .cut-outline>button.cut-inner:not([aria-pressed=true]):not(:disabled):is(:hover,:active) {
+  background: #294959cc;
+  border-color: #567784;
+  box-shadow: inset 0 0 0 1px #567784;
+  transform: none;
+}
+.campaign .cut-outline>button.cut-inner[aria-pressed=true],
+.campaign .cut-outline>button.cut-inner[aria-pressed=true]:not(:disabled):is(:hover,:active) {
+  background: #2d4b3a;
+  color: #d9f1c9;
+  box-shadow: inset 0 0 0 1px #8aaf6c;
+  transform: none;
+}
+.campaign .cut-action:not(:disabled):is(:hover,:active) { transform: none; }
+.campaign .company-more>summary {
+  background: #294959cc;
+  box-shadow: inset 0 0 0 1px #567784;
+  transform: none;
+}
+.campaign .company-more[open]>summary { background: #355969; color: #d7edf1; }
+.campaign .arrival-v15 :is(.portal-nav-v21,.agent-bridge-roles) {
+  background: #203d4b9c;
+  box-shadow: inset 0 0 0 1px #486977;
+}
+.campaign .arrival-v15 :is(.portal-nav-v21 a,.case-story-choices .cut-action,.agent-bridge .agent-bridge-role .cut-action,.arrival-life .arrival-scene-picks .cut-action,.arrival-life-actions .cut-inner),
+.campaign .arrival-v15 :is(.portal-nav-v21 a,.case-story-choices .cut-action,.agent-bridge .agent-bridge-role .cut-action,.arrival-life .arrival-scene-picks .cut-action,.arrival-life-actions .cut-inner):not(:disabled):is(:hover,:active,:focus-visible) {
+  background: var(--flat-control-bg,#294959cc);
+  color: var(--flat-control-ink,#cadde5);
+  box-shadow: inset 0 0 0 1px var(--flat-control-edge,#587987);
+  transform: none;
+}
+.campaign .arrival-v15 .agent-bridge-role.is-selected .cut-action,
+.campaign .arrival-v15 :is(.case-story-choices,.arrival-scene-picks) .cut-action[aria-pressed=true] {
+  --flat-control-bg: #2d4b3a;
+  --flat-control-ink: #dcf4c9;
+  --flat-control-edge: #8fb371;
+}
+.campaign .arrival-v15 .agent-bridge-expand {
+  background: #294959cc;
+  box-shadow: inset 0 0 0 1px #5e8391;
+}
+.campaign .arrival-v15 .portal-launch,
+.campaign .arrival-v15 .portal-launch:not(:disabled):is(:hover,:active,:focus-visible) {
+  background: #a6ff32;
+  background-image: none;
+  box-shadow: inset 0 0 0 1px #8ebf43;
+  transform: none;
+}
+.campaign .arrival-v15 .portal-launch :is(.portal-launch-arrow,svg),
+.campaign .arrival-v15 .portal-launch:hover :is(.portal-launch-arrow,svg) { background: none; box-shadow: none; transform: none; }
+/* The course selector already uses an important selected fill in its own stylesheet. */
+.campaign .course-view-switch [aria-pressed=true] {
+  background: #2d4b3a !important;
+  box-shadow: inset 0 0 0 1px #8fb371;
+}
+.campaign .enterprise-campus-v18__label .cut-outline>button.cut-inner,
+.campaign .enterprise-campus-v18__label .cut-outline>button.cut-inner:not(:disabled):is(:hover,:active) {
+  background: var(--flat-control-bg,#294959dc);
+  border-color: var(--flat-control-edge,#5d7c88);
+  box-shadow: none;
+  transform: none;
+}
+.campaign .enterprise-campus-v18__label:is(.is-active,[data-v3-progress=current]) .cut-action {
+  --flat-control-bg: #2d4b3a;
+  --flat-control-edge: #94b578;
+}
+.v3s :is(.v3s-primary,.v3s-back,.v3s-ghost,.v3s-tab),
+.v3s :is(.v3s-primary,.v3s-back,.v3s-ghost,.v3s-tab):is(.is-on,[aria-pressed=true],:hover,:active,:focus-visible),
+#v3-world :is(.v3-btn,.v3-back,.v3-inbox-head),
+#v3-world :is(.v3-btn,.v3-back,.v3-inbox-head):is(.is-primary,:hover,:active,:focus-visible):not(:disabled) {
+  background: var(--flat-control-bg,#294959dc);
+  color: var(--flat-control-ink,#d2e3e9);
+  box-shadow: inset 0 0 0 1px var(--flat-control-edge,#597b89);
+  transform: none;
+}
+.v3s .v3s-primary,#v3-world .v3-btn.is-primary {
+  --flat-control-bg: #a6ff32;
+  --flat-control-ink: #14200e;
+  --flat-control-edge: #8ebf43;
+  background: var(--flat-control-bg);
+  box-shadow: inset 0 0 0 1px var(--flat-control-edge);
+}
+.v3s .v3s-tab:is(.is-on,[aria-pressed=true]) {
+  --flat-control-bg: #2d4b3a;
+  --flat-control-ink: #dcf4c9;
+  --flat-control-edge: #8fb371;
+}
+.campaign .cut-action:disabled,
+.v3s :is(.v3s-primary,.v3s-back,.v3s-ghost,.v3s-tab):disabled,
+#v3-world :is(.v3-btn,.v3-back,.v3-inbox-head):disabled { opacity: .45; box-shadow: none; transform: none; cursor: not-allowed; }
+.campaign :is(.company-more>summary,.portal-nav-v21 a,.portal-launch):focus-visible,
+.v3s :is(.v3s-primary,.v3s-back,.v3s-ghost,.v3s-tab):focus-visible,
+#v3-world :is(.v3-btn,.v3-back,.v3-inbox-head):focus-visible { outline: 2px solid #8ecbd8; outline-offset: 3px; }
+@media(hover:hover) and (pointer:fine) {
+  .campaign .cut-solid:not(:disabled):hover,.campaign .arrival-v15 .portal-launch:not(:disabled):hover { background: #b5ff55; }
+  .campaign .cut-outline>button.cut-inner:not([aria-pressed=true]):not(:disabled):hover { background: #35586acc; box-shadow: inset 0 0 0 1px #84a5b3; }
+  .campaign .arrival-v15 :is(.portal-nav-v21 a,.case-story-choices .cut-action:not([aria-pressed=true]),.agent-bridge-role:not(.is-selected) .cut-action,.arrival-life .arrival-scene-picks .cut-action:not([aria-pressed=true]),.arrival-life-actions .cut-inner):not(:disabled):hover {
+    --flat-control-bg: #35586acc;
+    --flat-control-edge: #84a5b3;
+  }
+  .campaign .company-more>summary:hover { box-shadow: inset 0 0 0 1px #84a5b3; }
+  .v3s :is(.v3s-back,.v3s-ghost,.v3s-tab:not(.is-on)):not([aria-pressed=true]):not(:disabled):hover,
+  #v3-world :is(.v3-back,.v3-inbox-head,.v3-btn:not(.is-primary)):not(:disabled):hover {
+    --flat-control-bg: #35586adc;
+    --flat-control-edge: #84a5b3;
+  }
 }

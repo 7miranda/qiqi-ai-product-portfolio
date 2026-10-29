@@ -5,10 +5,10 @@
   --room-edge: #2b4651;
   --room-muted: #91aeb9;
   --room-ink: #e1edf1;
-  --room-glass: linear-gradient(115deg,#d4e9f31b,transparent 33%,transparent 75%,#88a6b30a),linear-gradient(180deg,#2b424ee0,#132a35e8 48%,#0a1923f0);
-  --room-rim: inset 0 1px 0 #d7ebf14d,inset 1px 0 0 #a9cbd51a,inset 0 -1px 0 #020b12c7,0 14px 28px #010a114d;
-  --room-well: linear-gradient(180deg,#06131de8,#142d38e8);
-  --room-inset: inset 0 3px 8px #01080d99,inset 0 -1px 0 #b4cedb2e;
+  --room-glass: var(--spatial-panel);
+  --room-rim: var(--spatial-shadow);
+  --room-well: linear-gradient(180deg,#193748de,#254858d4);
+  --room-inset: var(--spatial-inset);
 }
 .v3s:has(>.v3s-lead) { grid-template-rows: auto auto minmax(max-content,1fr) auto; }
 .v3s-head {
