@@ -10,7 +10,7 @@
 .campaign-playing {
   background: radial-gradient(ellipse at 50% 70%,#233e4b50,transparent 65%),linear-gradient(155deg,#0b1822,#03090e 74%);
 }
-.campaign-playing>.campaign-header { background: #173343ed; backdrop-filter: blur(14px); }
+.campaign-playing>.campaign-header { background: #071015ed; backdrop-filter: blur(14px); }
 .campaign .mission-guidance-v24 {
   position: relative;
   isolation: isolate;
@@ -117,7 +117,7 @@
 }
 .campaign :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea),
 .v3s :is(select,input:not([type=range])) {
-  background: #142f40de;
+  background: #0b1b23ed;
   border-color: #607f8b80;
   border-radius: 2px;
   box-shadow: var(--spatial-inset);
@@ -153,45 +153,45 @@
 }
 .campaign .cut-outline>button.cut-inner:not([aria-pressed=true]),
 .campaign .cut-outline>button.cut-inner:not([aria-pressed=true]):not(:disabled):is(:hover,:active) {
-  background: #1d3b4bcc;
-  border-color: #567784;
-  box-shadow: inset 0 0 0 1px #567784;
+  background: #0f2027e8;
+  border-color: #2b434d;
+  box-shadow: inset 0 0 0 1px #2b434d;
   transform: none;
 }
 .campaign .cut-outline>button.cut-inner[aria-pressed=true],
 .campaign .cut-outline>button.cut-inner[aria-pressed=true]:not(:disabled):is(:hover,:active) {
-  background: #2d4b3a;
+  background: #1c3529;
   color: #d9f1c9;
   box-shadow: inset 0 0 0 1px #8aaf6c;
   transform: none;
 }
 .campaign .cut-action:not(:disabled):is(:hover,:active) { transform: none; }
 .campaign .company-more>summary {
-  background: #1d3b4bcc;
-  box-shadow: inset 0 0 0 1px #567784;
+  background: #0f2027e8;
+  box-shadow: inset 0 0 0 1px #2b434d;
   transform: none;
 }
-.campaign .company-more[open]>summary { background: #355969; color: #d7edf1; }
+.campaign .company-more[open]>summary { background: #17313a; color: #d7edf1; }
 .campaign .arrival-v15 :is(.portal-nav-v21,.agent-bridge-roles) {
-  background: #173343b3;
-  box-shadow: inset 0 0 0 1px #486977;
+  background: #09171ee6;
+  box-shadow: inset 0 0 0 1px #2b434d;
 }
 .campaign .arrival-v15 :is(.portal-nav-v21 a,.case-story-choices .cut-action,.agent-bridge .agent-bridge-role .cut-action,.arrival-life .arrival-scene-picks .cut-action,.arrival-life-actions .cut-inner),
 .campaign .arrival-v15 :is(.portal-nav-v21 a,.case-story-choices .cut-action,.agent-bridge .agent-bridge-role .cut-action,.arrival-life .arrival-scene-picks .cut-action,.arrival-life-actions .cut-inner):not(:disabled):is(:hover,:active,:focus-visible) {
-  background: var(--flat-control-bg,#1d3b4bcc);
+  background: var(--flat-control-bg,#0f2027e8);
   color: var(--flat-control-ink,#cadde5);
-  box-shadow: inset 0 0 0 1px var(--flat-control-edge,#587987);
+  box-shadow: inset 0 0 0 1px var(--flat-control-edge,#2b434d);
   transform: none;
 }
 .campaign .arrival-v15 .agent-bridge-role.is-selected .cut-action,
 .campaign .arrival-v15 :is(.case-story-choices,.arrival-scene-picks) .cut-action[aria-pressed=true] {
-  --flat-control-bg: #2d4b3a;
+  --flat-control-bg: #1c3529;
   --flat-control-ink: #dcf4c9;
   --flat-control-edge: #8fb371;
 }
 .campaign .arrival-v15 .agent-bridge-expand {
-  background: #1d3b4bcc;
-  box-shadow: inset 0 0 0 1px #5e8391;
+  background: #0f2027e8;
+  box-shadow: inset 0 0 0 1px #35545f;
 }
 .campaign .arrival-v15 .portal-launch,
 .campaign .arrival-v15 .portal-launch:not(:disabled):is(:hover,:active,:focus-visible) {
@@ -204,27 +204,27 @@
 .campaign .arrival-v15 .portal-launch:hover :is(.portal-launch-arrow,svg) { background: none; box-shadow: none; transform: none; }
 /* The course selector already uses an important selected fill in its own stylesheet. */
 .campaign .course-view-switch [aria-pressed=true] {
-  background: #2d4b3a !important;
+  background: #1c3529 !important;
   box-shadow: inset 0 0 0 1px #8fb371;
 }
 .campaign .enterprise-campus-v18__label .cut-outline>button.cut-inner,
 .campaign .enterprise-campus-v18__label .cut-outline>button.cut-inner:not(:disabled):is(:hover,:active) {
-  background: var(--flat-control-bg,#1d3b4bdc);
-  border-color: var(--flat-control-edge,#5d7c88);
+  background: var(--flat-control-bg,#0f2027ed);
+  border-color: var(--flat-control-edge,#2b434d);
   box-shadow: none;
   transform: none;
 }
 .campaign .enterprise-campus-v18__label:is(.is-active,[data-v3-progress=current]) .cut-action {
-  --flat-control-bg: #2d4b3a;
+  --flat-control-bg: #1c3529;
   --flat-control-edge: #94b578;
 }
 .v3s :is(.v3s-primary,.v3s-back,.v3s-ghost,.v3s-tab),
 .v3s :is(.v3s-primary,.v3s-back,.v3s-ghost,.v3s-tab):is(.is-on,[aria-pressed=true],:hover,:active,:focus-visible),
 #v3-world :is(.v3-btn,.v3-back,.v3-inbox-head),
 #v3-world :is(.v3-btn,.v3-back,.v3-inbox-head):is(.is-primary,:hover,:active,:focus-visible):not(:disabled) {
-  background: var(--flat-control-bg,#1d3b4bdc);
+  background: var(--flat-control-bg,#0f2027ed);
   color: var(--flat-control-ink,#d2e3e9);
-  box-shadow: inset 0 0 0 1px var(--flat-control-edge,#597b89);
+  box-shadow: inset 0 0 0 1px var(--flat-control-edge,#2b434d);
   transform: none;
 }
 .v3s .v3s-primary,#v3-world .v3-btn.is-primary {
@@ -235,7 +235,7 @@
   box-shadow: inset 0 0 0 1px var(--flat-control-edge);
 }
 .v3s .v3s-tab:is(.is-on,[aria-pressed=true]) {
-  --flat-control-bg: #2d4b3a;
+  --flat-control-bg: #1c3529;
   --flat-control-ink: #dcf4c9;
   --flat-control-edge: #8fb371;
 }
@@ -247,15 +247,15 @@
 #v3-world :is(.v3-btn,.v3-back,.v3-inbox-head):focus-visible { outline: 2px solid #8ecbd8; outline-offset: 3px; }
 @media(hover:hover) and (pointer:fine) {
   .campaign .cut-solid:not(:disabled):hover,.campaign .arrival-v15 .portal-launch:not(:disabled):hover { background: #b5ff55; }
-  .campaign .cut-outline>button.cut-inner:not([aria-pressed=true]):not(:disabled):hover { background: #2a4b5dcc; box-shadow: inset 0 0 0 1px #84a5b3; }
+  .campaign .cut-outline>button.cut-inner:not([aria-pressed=true]):not(:disabled):hover { background: #17313ae8; box-shadow: inset 0 0 0 1px #84a5b3; }
   .campaign .arrival-v15 :is(.portal-nav-v21 a,.case-story-choices .cut-action:not([aria-pressed=true]),.agent-bridge-role:not(.is-selected) .cut-action,.arrival-life .arrival-scene-picks .cut-action:not([aria-pressed=true]),.arrival-life-actions .cut-inner):not(:disabled):hover {
-    --flat-control-bg: #2a4b5dcc;
+    --flat-control-bg: #17313ae8;
     --flat-control-edge: #84a5b3;
   }
   .campaign .company-more>summary:hover { box-shadow: inset 0 0 0 1px #84a5b3; }
   .v3s :is(.v3s-back,.v3s-ghost,.v3s-tab:not(.is-on)):not([aria-pressed=true]):not(:disabled):hover,
   #v3-world :is(.v3-back,.v3-inbox-head,.v3-btn:not(.is-primary)):not(:disabled):hover {
-    --flat-control-bg: #2a4b5ddc;
+    --flat-control-bg: #17313aed;
     --flat-control-edge: #84a5b3;
   }
 }
