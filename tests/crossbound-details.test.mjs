@@ -74,6 +74,7 @@ for (const file of ['index.html', 'preview.html']) {
   test(`${file}: UI integration preserves every unrelated application byte`, () => {
     const before = app(upstream(file));
     let after = app(current(file))
+      .replace(/^import \{ createCoursesUI \} from "\.\/courses\/ui\.js\?v=[^"]+";\n/, '')
       .replace(/^import \{ createServicesUI \} from "\.\/services\/ui\.js\?v=[^"]+";\n/, '')
       .replace('Object.defineProperty(window,"CrossboundProductPreview",{configurable:true,value:s1t});\n', '')
       .replace('studio:!0,active:!1,onTouch:', 'active:!1,onTouch:')
@@ -81,7 +82,8 @@ for (const file of ['index.html', 'preview.html']) {
       .replace('Xpt,{product:n,active:i,reduced:e,studio}', 'Xpt,{product:n,active:i,reduced:e}')
       .replace('function Xpt({product:n,active:e,reduced:t,studio})', 'function Xpt({product:n,active:e,reduced:t})')
       .replace('(studio?[]:[-1,1]).map(l=>(0,X.jsxs)(Cd,{position:[l*1.68,.58,-.65]', '[-1,1].map(l=>(0,X.jsxs)(Cd,{position:[l*1.68,.58,-.65]')
-      .replace('const ServicesUI = createServicesUI({ React: li, Button: Ge });\n', '');
+      .replace('const ServicesUI = createServicesUI({ React: li, Button: Ge });\n', '')
+      .replace('const CoursesUI = createCoursesUI({ React: li, Button: Ge });\n', '');
     const names = new Set(['Roe', 'Rse', 'Cse', 'Ese']);
     function functions(source) {
       const sf = ts.createSourceFile('app.js', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
