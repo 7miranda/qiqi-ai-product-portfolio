@@ -1,5 +1,5 @@
-/* One lighting direction and three material depths: environment, glass, inset controls. */
-.campaign,#v3-world,.v3s {
+/* One lighting direction and three material depths: environment,glass,inset controls. */
+.campaign {
   --spatial-edge: #5c7c8c;
   --spatial-panel: linear-gradient(132deg,#486a8066 0%,#254555cc 26%,#1a3849d1 64%,#112c3dd9 100%);
   --spatial-shadow: inset 0 1px 0 #d7edf64d,inset 1px 0 0 #d7edf614,0 18px 35px #061f2e55,0 2px 5px #08233333;
@@ -35,8 +35,7 @@
   box-shadow: inset 0 1px 0 #c6e6ef28,0 7px 18px #0008;
   backdrop-filter: blur(10px);
 }
-.campaign .enterprise-campus-v18__label.is-active .cut-action,
-.campaign .enterprise-campus-v18__label[data-v3-progress=current] .cut-action {
+.campaign .enterprise-campus-v18__label.is-active .cut-action,.campaign .enterprise-campus-v18__label[data-v3-progress=current] .cut-action {
   background: linear-gradient(135deg,#526648d9,#1b3835eb 65%,#102a2df2);
   border-color: #c1e18a66;
 }
@@ -47,25 +46,7 @@
   box-shadow: inset 0 1px 0 #d2e8f329,0 8px 20px #0005;
 }
 
-/* A real manufacturing hall behind the workstation supplies perspective and light. */
-.v3s {
-  background:
-    linear-gradient(90deg,#0d2738c7,#15324599 48%,#102b3cc4),
-    linear-gradient(0deg,#102838cc,transparent 60%),
-    url('../assets/industrial-atmosphere.png') center/cover fixed;
-}
-.v3s-head {
-  background: linear-gradient(110deg,#294958e3,#173747ed 72%);
-  box-shadow: inset 0 1px 0 #c9e6f22b,0 12px 32px #0005;
-  backdrop-filter: blur(16px);
-}
-.v3s-foot {
-  background: linear-gradient(110deg,#274858f2,#193747f5 65%);
-  border-top: 1px solid #7197a16b;
-  box-shadow: inset 0 1px 0 #cce7ee1c,0 -10px 28px #01070b66;
-}
-
-/* Dialogs use the same rear environment, a thick outer frame and a clear inner plane. */
+/* Dialogs use the same rear environment,a thick outer frame and a clear inner plane. */
 .campaign .campaign-dialog::backdrop {
   background: linear-gradient(#102b3baa,#0e2533c4),url('../assets/industrial-atmosphere.png') center/cover;
   backdrop-filter: blur(4px);
@@ -112,54 +93,35 @@
 .campaign .cut-outline>button.cut-inner {
   border-radius: 3px;
 }
-.campaign .cut-solid,.v3s-primary,#v3-world .v3-btn.is-primary {
+.campaign .cut-solid {
   border-radius: 4px;
 }
-.campaign :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea),
-.v3s :is(select,input:not([type=range])) {
+.campaign :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea) {
   background: #0b1b23ed;
   border-color: #607f8b80;
   border-radius: 2px;
   box-shadow: var(--spatial-inset);
 }
 
-#v3-world :is(.v3-panel,.v3-dialog,.v3-hud-money,.v3-hud-task,.v3-inbox-head,.v3-inbox-link,.v3-notice) {
-  border-radius: 3px;
-  background: var(--spatial-panel);
-  border-color: #6c94a1a6;
-  box-shadow: var(--spatial-shadow);
-  backdrop-filter: blur(14px);
-}
-#v3-world .v3-bubble {
-  background: linear-gradient(135deg,#456475ed,#142b39f2);
-  color: #e2eff4;
-  border: 1px solid #8ab4c08c;
-  box-shadow: inset 0 1px 0 #d7eef43b,0 7px 18px #0007;
-}
-
 @media(max-width:760px) {
-  .v3s { background-attachment: scroll; }
-  .v3s-head,.campaign .panel-topbar { backdrop-filter: blur(8px); }
+  .campaign .panel-topbar { backdrop-filter: blur(8px); }
   .campaign dialog.campaign-dialog { box-shadow: inset 0 1px 0 #d4edf24d,0 16px 50px #0009; }
 }
 
 /* Flat controls retain one keyline; the surrounding display surfaces keep their depth. */
-.campaign .cut-solid,
-.campaign .cut-solid:not(:disabled):is(:hover,:active) {
+.campaign .cut-solid,.campaign .cut-solid:not(:disabled):is(:hover,:active) {
   background: #a6ff32;
   color: #14200e;
   box-shadow: inset 0 0 0 1px #8ebf43;
   transform: none;
 }
-.campaign .cut-outline>button.cut-inner:not([aria-pressed=true]),
-.campaign .cut-outline>button.cut-inner:not([aria-pressed=true]):not(:disabled):is(:hover,:active) {
+.campaign .cut-outline>button.cut-inner:not([aria-pressed=true]),.campaign .cut-outline>button.cut-inner:not([aria-pressed=true]):not(:disabled):is(:hover,:active) {
   background: #0f2027e8;
   border-color: #2b434d;
   box-shadow: inset 0 0 0 1px #2b434d;
   transform: none;
 }
-.campaign .cut-outline>button.cut-inner[aria-pressed=true],
-.campaign .cut-outline>button.cut-inner[aria-pressed=true]:not(:disabled):is(:hover,:active) {
+.campaign .cut-outline>button.cut-inner[aria-pressed=true],.campaign .cut-outline>button.cut-inner[aria-pressed=true]:not(:disabled):is(:hover,:active) {
   background: #1c3529;
   color: #d9f1c9;
   box-shadow: inset 0 0 0 1px #8aaf6c;
@@ -176,15 +138,13 @@
   background: #09171ee6;
   box-shadow: inset 0 0 0 1px #2b434d;
 }
-.campaign .arrival-v15 :is(.portal-nav-v21 a,.case-story-choices .cut-action,.agent-bridge .agent-bridge-role .cut-action,.arrival-life .arrival-scene-picks .cut-action,.arrival-life-actions .cut-inner),
-.campaign .arrival-v15 :is(.portal-nav-v21 a,.case-story-choices .cut-action,.agent-bridge .agent-bridge-role .cut-action,.arrival-life .arrival-scene-picks .cut-action,.arrival-life-actions .cut-inner):not(:disabled):is(:hover,:active,:focus-visible) {
+.campaign .arrival-v15 :is(.portal-nav-v21 a,.case-story-choices .cut-action,.agent-bridge .agent-bridge-role .cut-action,.arrival-life .arrival-scene-picks .cut-action,.arrival-life-actions .cut-inner),.campaign .arrival-v15 :is(.portal-nav-v21 a,.case-story-choices .cut-action,.agent-bridge .agent-bridge-role .cut-action,.arrival-life .arrival-scene-picks .cut-action,.arrival-life-actions .cut-inner):not(:disabled):is(:hover,:active,:focus-visible) {
   background: var(--flat-control-bg,#0f2027e8);
   color: var(--flat-control-ink,#cadde5);
   box-shadow: inset 0 0 0 1px var(--flat-control-edge,#2b434d);
   transform: none;
 }
-.campaign .arrival-v15 .agent-bridge-role.is-selected .cut-action,
-.campaign .arrival-v15 :is(.case-story-choices,.arrival-scene-picks) .cut-action[aria-pressed=true] {
+.campaign .arrival-v15 .agent-bridge-role.is-selected .cut-action,.campaign .arrival-v15 :is(.case-story-choices,.arrival-scene-picks) .cut-action[aria-pressed=true] {
   --flat-control-bg: #1c3529;
   --flat-control-ink: #dcf4c9;
   --flat-control-edge: #8fb371;
@@ -193,22 +153,19 @@
   background: #0f2027e8;
   box-shadow: inset 0 0 0 1px #35545f;
 }
-.campaign .arrival-v15 .portal-launch,
-.campaign .arrival-v15 .portal-launch:not(:disabled):is(:hover,:active,:focus-visible) {
+.campaign .arrival-v15 .portal-launch,.campaign .arrival-v15 .portal-launch:not(:disabled):is(:hover,:active,:focus-visible) {
   background: #a6ff32;
   background-image: none;
   box-shadow: inset 0 0 0 1px #8ebf43;
   transform: none;
 }
-.campaign .arrival-v15 .portal-launch :is(.portal-launch-arrow,svg),
-.campaign .arrival-v15 .portal-launch:hover :is(.portal-launch-arrow,svg) { background: none; box-shadow: none; transform: none; }
+.campaign .arrival-v15 .portal-launch :is(.portal-launch-arrow,svg),.campaign .arrival-v15 .portal-launch:hover :is(.portal-launch-arrow,svg) { background: none; box-shadow: none; transform: none; }
 /* The course selector already uses an important selected fill in its own stylesheet. */
 .campaign .course-view-switch [aria-pressed=true] {
   background: #1c3529 !important;
   box-shadow: inset 0 0 0 1px #8fb371;
 }
-.campaign .enterprise-campus-v18__label .cut-outline>button.cut-inner,
-.campaign .enterprise-campus-v18__label .cut-outline>button.cut-inner:not(:disabled):is(:hover,:active) {
+.campaign .enterprise-campus-v18__label .cut-outline>button.cut-inner,.campaign .enterprise-campus-v18__label .cut-outline>button.cut-inner:not(:disabled):is(:hover,:active) {
   background: var(--flat-control-bg,#0f2027ed);
   border-color: var(--flat-control-edge,#2b434d);
   box-shadow: none;
@@ -218,33 +175,8 @@
   --flat-control-bg: #1c3529;
   --flat-control-edge: #94b578;
 }
-.v3s :is(.v3s-primary,.v3s-back,.v3s-ghost,.v3s-tab),
-.v3s :is(.v3s-primary,.v3s-back,.v3s-ghost,.v3s-tab):is(.is-on,[aria-pressed=true],:hover,:active,:focus-visible),
-#v3-world :is(.v3-btn,.v3-back,.v3-inbox-head),
-#v3-world :is(.v3-btn,.v3-back,.v3-inbox-head):is(.is-primary,:hover,:active,:focus-visible):not(:disabled) {
-  background: var(--flat-control-bg,#0f2027ed);
-  color: var(--flat-control-ink,#d2e3e9);
-  box-shadow: inset 0 0 0 1px var(--flat-control-edge,#2b434d);
-  transform: none;
-}
-.v3s .v3s-primary,#v3-world .v3-btn.is-primary {
-  --flat-control-bg: #a6ff32;
-  --flat-control-ink: #14200e;
-  --flat-control-edge: #8ebf43;
-  background: var(--flat-control-bg);
-  box-shadow: inset 0 0 0 1px var(--flat-control-edge);
-}
-.v3s .v3s-tab:is(.is-on,[aria-pressed=true]) {
-  --flat-control-bg: #1c3529;
-  --flat-control-ink: #dcf4c9;
-  --flat-control-edge: #8fb371;
-}
-.campaign .cut-action:disabled,
-.v3s :is(.v3s-primary,.v3s-back,.v3s-ghost,.v3s-tab):disabled,
-#v3-world :is(.v3-btn,.v3-back,.v3-inbox-head):disabled { opacity: .45; box-shadow: none; transform: none; cursor: not-allowed; }
-.campaign :is(.company-more>summary,.portal-nav-v21 a,.portal-launch):focus-visible,
-.v3s :is(.v3s-primary,.v3s-back,.v3s-ghost,.v3s-tab):focus-visible,
-#v3-world :is(.v3-btn,.v3-back,.v3-inbox-head):focus-visible { outline: 2px solid #8ecbd8; outline-offset: 3px; }
+.campaign .cut-action:disabled { opacity: .45; box-shadow: none; transform: none; cursor: not-allowed; }
+.campaign :is(.company-more>summary,.portal-nav-v21 a,.portal-launch):focus-visible { outline: 2px solid #8ecbd8; outline-offset: 3px; }
 @media(hover:hover) and (pointer:fine) {
   .campaign .cut-solid:not(:disabled):hover,.campaign .arrival-v15 .portal-launch:not(:disabled):hover { background: #b5ff55; }
   .campaign .cut-outline>button.cut-inner:not([aria-pressed=true]):not(:disabled):hover { background: #17313ae8; box-shadow: inset 0 0 0 1px #84a5b3; }
@@ -253,9 +185,4 @@
     --flat-control-edge: #84a5b3;
   }
   .campaign .company-more>summary:hover { box-shadow: inset 0 0 0 1px #84a5b3; }
-  .v3s :is(.v3s-back,.v3s-ghost,.v3s-tab:not(.is-on)):not([aria-pressed=true]):not(:disabled):hover,
-  #v3-world :is(.v3-back,.v3-inbox-head,.v3-btn:not(.is-primary)):not(:disabled):hover {
-    --flat-control-bg: #17313aed;
-    --flat-control-edge: #84a5b3;
-  }
 }

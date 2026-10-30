@@ -1,5 +1,5 @@
-/* Precision pass: retain the campus, palette, typography and layout dimensions. */
-.campaign,#v3-world,.v3s {
+/* Precision pass: retain the campus,palette,typography and layout dimensions. */
+.campaign {
   --detail-line: #2b434d;
   --detail-line-soft: #243a43;
   --detail-cyan: #77cad5;
@@ -55,7 +55,7 @@
   .campaign .cut-action:not(:disabled):active { transform: translateY(1px); }
 }
 
-/* Fine structural edges and two short corner marks, rather than luminous frames. */
+/* Fine structural edges and two short corner marks,rather than luminous frames. */
 .campaign .campaign-dialog {
   border: 1px solid var(--detail-line) !important;
   border-radius: 18px;
@@ -101,7 +101,7 @@
 .campaign .v11-notification-dismiss .cut-action { min-height: 36px; width: 36px; }
 .campaign .v11-notification-link .cut-action { box-shadow: none; }
 
-/* Inputs use the same cool rim; selection, validation and disabled states stay distinct. */
+/* Inputs use the same cool rim; selection,validation and disabled states stay distinct. */
 .campaign :is(input:not([type=range]):not([type=checkbox]):not([type=radio]),select,textarea) {
   border-color: #3c5965;
   color-scheme: dark;
@@ -181,69 +181,6 @@
 .campaign .portal-nav a { box-shadow: inset 0 0 0 1px var(--detail-line-soft); transition: background-color 160ms ease, box-shadow 160ms ease; }
 .campaign .portal-nav a:hover { box-shadow: inset 0 0 0 1px #547c83; }
 
-/* The newer full-screen rooms share the headquarters palette and control language. */
-.v3s {
-  --v3s-accent: #77cad5 !important;
-  overscroll-behavior: contain;
-  background: radial-gradient(1000px 500px at 70% -10%,#24454d55,transparent 60%),linear-gradient(#081419,#040b0f);
-}
-.v3s :is(.v3s-shelf,.v3s-bench,.v3s-screen,.v3s-desk,.v3s-card) {
-  background: linear-gradient(145deg,#142c3333,transparent 55%),#0b1a22;
-  border-color: var(--detail-line);
-}
-.v3s :is(.v3s-chip,.v3s-screen,.v3s-plan,.v3s-market,.v3s-tab).is-on {
-  border-color: #91b96f;
-  background: #142b25;
-  box-shadow: inset 3px 0 0 #a6ff32;
-  transform: none;
-}
-#v3-world .v3-panel {
-  border-color: #426a74;
-  background: #0a1922f5;
-  box-shadow: 0 16px 55px #0007, inset 0 1px 0 #83bcc522;
-}
-#v3-world .v3-panel::before { background: none; }
-#v3-world .v3-hud-task { border-color: #507782; box-shadow: 0 4px 18px #0005; }
-#v3-world .v3-hud-task::before { color: #77cad5; }
-#v3-world .v3-panel>.v3-kicker,#v3-world .v3-panel>h3 { padding-right: 88px; }
-#v3-world .v3-close { min-height: 44px; }
-#v3-world .v3-inbox-x { min-width: 44px; min-height: 44px; }
-#v3-world .v3-inbox-link { padding-right: 50px; }
-#v3-world .v3-dialog { max-height: calc(100dvh - 150px); overflow: auto; }
-#v3-world :is(.v3-dialog,.v3-panel,.v3-inbox-list),.v3s-statements {
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: #42636e #0b171e;
-}
-.v3s-statements { max-width: 100%; overflow-x: auto; }
-.v3s-ledger dd { min-width: 0; overflow-wrap: anywhere; }
-.v3s-market>b,.v3s-platform>span { color: #b6d3db; }
-.v3s-foot { background: #08121bf5; box-shadow: 0 -1px 0 #36515d; }
-.v3s-rooms li.is-current { color: #cbe3e9; background: #18343d; border-color: #507782; }
-.v3s :is(.v3s-chip,.v3s-screen,.v3s-plan,.v3s-market)[aria-pressed=true] { position: relative; }
-.v3s :is(.v3s-chip,.v3s-screen,.v3s-plan,.v3s-market)[aria-pressed=true]::after {
-  content: '';
-  position: absolute;
-  top: 9px;
-  right: 10px;
-  width: 7px;
-  height: 4px;
-  border-left: 2px solid #c5edab;
-  border-bottom: 2px solid #c5edab;
-  transform: rotate(-45deg);
-}
-.v3s :is(button,select,input),#v3-world button {
-  touch-action: manipulation;
-  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
-}
-.v3s :is(button,select,input):focus-visible,#v3-world button:focus-visible {
-  outline: 2px solid var(--detail-cyan);
-  outline-offset: 3px;
-  box-shadow: 0 0 0 4px #77cad51a;
-}
-.v3s button:not(:disabled):hover,#v3-world .v3-btn:not(:disabled):hover { border-color: #6a9da7; }
-.v3s button:disabled,#v3-world button:disabled { cursor: not-allowed; box-shadow: none; }
-
 @media(pointer:coarse) {
   .campaign .v11-notification-heading .cut-action { min-height: 44px; }
   .campaign .v11-notification-dismiss { flex-basis: 44px; }
@@ -269,9 +206,8 @@
   .campaign .services-choices .cut-action { padding: 16px 8px 8px; }
   .campaign .services-choice-label>span { display: block; white-space: nowrap; }
   .campaign .panel-topbar>.panel-close { flex: none; width: auto; margin-right: auto; }
-  #v3-world .v3-layer.is-busy .v3-back { top: 78px; bottom: auto; }
 }
 @media(prefers-reduced-motion:reduce) {
-  .campaign .cut-action,.campaign .portal-nav a,.campaign :is(input,select,textarea),.v3s :is(button,select,input),#v3-world button { transition: none; }
+  .campaign .cut-action,.campaign .portal-nav a,.campaign :is(input,select,textarea) { transition: none; }
   .campaign .cut-action:not(:disabled):is(:hover,:active) { transform: none; }
 }

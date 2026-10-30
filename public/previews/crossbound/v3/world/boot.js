@@ -1,8 +1,8 @@
 // REQ-053 §3 single mode: the campus is the one 2.5D headquarters map; each step opens its own full-screen scene.
 // No mode choice, no walkable street, no avatar. W1/W2/W5 are 3D rooms (lazy-loaded three.js); W3/W4/W6 are
 // 2D scenes. Entering the current step goes through the game's nr(), patched to call CrossboundScenes.enter().
-import { track, userId } from '../../v2/records.js?v=13cef6754e';
-import { parseMode, variantFor, qualityFor, currentWorld, zoneStates, ROOMS_3D, VARIANT_KEY, QUALITY_KEY } from './logic.js?v=13cef6754e';
+import { track, userId } from '../../v2/records.js';
+import { parseMode, variantFor, qualityFor, currentWorld, zoneStates, ROOMS_3D, VARIANT_KEY, QUALITY_KEY } from './logic.js';
 
 const root = document.documentElement;
 const local = {
@@ -47,8 +47,8 @@ const store = {
 
 // ---------- Scene host ----------
 let worldModule = null, scenesModule = null;
-const loadWorld = () => (worldModule ||= import('./world.js?v=13cef6754e').catch(e => { worldModule = null; throw e; }));
-const loadScenes = () => (scenesModule ||= import('./scenes.js?v=13cef6754e').catch(e => { scenesModule = null; throw e; }));
+const loadWorld = () => (worldModule ||= import('./world.js').catch(e => { worldModule = null; throw e; }));
+const loadScenes = () => (scenesModule ||= import('./scenes.js').catch(e => { scenesModule = null; throw e; }));
 const idle = (fn, ms) => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: ms }) : setTimeout(fn, ms));
 
 function closeScene() {
@@ -141,7 +141,17 @@ function markCampus() {
     if (label.dataset.v3Progress !== st) label.dataset.v3Progress = st;
   }
 }
+// Render the chosen product's picture as soon as it is chosen, so the listing studio (W3) opens with it.
+let warmedProduct = null;
+function warmShot(s) {
+  const c = s?.company, id = c?.productId;
+  if (!id || id === warmedProduct || c.stage < 2 || c.stage > 3) return;
+  warmedProduct = id;
+  const p = s.engine?.products?.find(x => x.id === id);
+  if (p) loadScenes().then(m => m.warmProductShot?.(p)).catch(() => {});
+}
 function evaluate() {
+  warmShot(state.snapshot);
   const s = state.snapshot;
   root.dataset.v3Mode = scenesOn() ? 'scenes' : 'classic';
   if (!inGame() && state.scene) closeScene();

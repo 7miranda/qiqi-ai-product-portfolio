@@ -1,9 +1,9 @@
-import { feedbackState } from '../v2/records.js?v=13cef6754e';
-import { HELP, PROMOTIONS } from './model.js?v=13cef6754e';
-import { countryBadgeAsset } from './badges.js?v=13cef6754e';
-import { explorationAwards } from '../v2/progress.js?v=13cef6754e';
-import { goal, goalChannelText } from '../v2/release.js?v=13cef6754e';
-import { STOCK_CARRYOVER } from './balance.js?v=13cef6754e';
+import { feedbackState } from '../v2/records.js';
+import { HELP, PROMOTIONS } from './model.js';
+import { countryBadgeAsset } from './badges.js?v=2';
+import { explorationAwards } from '../v2/progress.js';
+import { goal, goalChannelText } from '../v2/release.js';
+import { STOCK_CARRYOVER } from './balance.js';
 
 // Reuse the demo's React instance, buttons, panels and visual classes.
 export function createCrossboundUI({ React, Button, engine, Passport, passportData, growth }) {
@@ -77,7 +77,11 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
   }
   function ReviewTask({ task, onSubmit, feedback }) {
     const [selected, setSelected] = React.useState('');
-    if (!task) return null;
+    // Opened from a stale notification after the task was answered: say so instead of showing an empty panel.
+    if (!task) return h(React.Fragment, null,
+      h('span', { className: 'eyebrow' }, '总部来电 / 售后复盘'),
+      h('h2', { id: 'campaign-dialog-title' }, '这条售后复盘已经处理完了'),
+      h('p', { className: 'panel-lead' }, '差评任务回答过就不会再出现。点左上角「返回公司」继续经营；下一次有买家差评时，总部会再打电话来。'));
     return h(React.Fragment, null, h(CallIntro, { round: task.rewardRound, title: '买家差评，需要回应' }),
       h('span', { className: 'eyebrow' }, `总部来电 / 第${task.round}轮售后复盘`), h('h2', { id: 'campaign-dialog-title' }, task.title),
       h('p', { className: 'panel-lead' }, task.mission),

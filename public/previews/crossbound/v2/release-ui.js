@@ -1,8 +1,8 @@
-import {questions} from './questionnaire.js?v=13cef6754e';
-import {createTutorialUI} from './tutorial.js?v=13cef6754e';
-import { goal, financialStatements, rank, seasonRank } from './release.js?v=13cef6754e';
-import { assessment } from './progress.js?v=13cef6754e';
-import { feedbackState, saveFeedback, validComment, saveLead, leadRecords, publishedAdoptions, communityBadgeNumber, track, enqueue, userId } from './records.js?v=13cef6754e';
+import {questions} from './questionnaire.js';
+import {createTutorialUI} from './tutorial.js';
+import { goal, financialStatements, rank, seasonRank } from './release.js';
+import { assessment } from './progress.js';
+import { feedbackState, saveFeedback, validComment, saveLead, leadRecords, publishedAdoptions, communityBadgeNumber, track, enqueue, userId } from './records.js';
 
 export function createReleaseUI({React,Button,engine,tasks,profitRows}) {
   const h=React.createElement, money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n||0);

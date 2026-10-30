@@ -2,8 +2,8 @@
 // Crates show the round's stock (3D-025: one stack = 100 units). REQ-052: at settlement the W5 crates
 // ship out along the chosen belt, and the unsold ones lift away into a "+$X 按成本退回" counter.
 import * as THREE from 'three';
-import { PALETTE as P, toon, neon, block, mesh, textPlane, neonSign, addOutline } from './kit.js?v=13cef6754e';
-import { crateLayout, settlementSplit, money, cashPlan } from './logic.js?v=13cef6754e';
+import { PALETTE as P, toon, neon, block, mesh, textPlane, neonSign, addOutline } from './kit.js';
+import { crateLayout, settlementSplit, money, cashPlan } from './logic.js';
 
 const CRATE = 0.7, GAP = 0.18;
 const ease = p => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);

@@ -38,13 +38,13 @@ export function archetypeFor(product) {
 // REQ-053 §3: one map, one full-screen scene per step. W1/W2/W5 are the 3D rooms (fixed camera, click to act);
 // W0/W3/W4/W6 are 2D scenes. REQ-056: choosing the market (stage 0) is its own scene, opened from 市场研究.
 export const WORLDS = Object.freeze([
-  { id: 'w0', name: '市场研究所', step: '选市场与平台', zone: 'market', render: '2d' },
-  { id: 'w1', name: '选品展厅', step: '挑商品、选供应商', zone: 'product', render: '3d' },
-  { id: 'w2', name: '定价财务室', step: '定价与备货', zone: 'supply', render: '3d' },
-  { id: 'w3', name: '商品页工作室', step: '制作商品页并上架', zone: 'growth', render: '2d' },
-  { id: 'w4', name: '推广室', step: '选推广渠道', zone: 'growth', render: '2d' },
-  { id: 'w5', name: '物流仓', step: '选头程与履约、发货', zone: 'fulfillment', render: '3d' },
-  { id: 'w6', name: '财报结算厅', step: '安排下轮并结算', zone: 'headquarters', render: '2d' },
+  { id: 'w0', code: 'W0 · MARKET', name: '市场研究所', step: '选市场与平台', zone: 'market', render: '2d' },
+  { id: 'w1', code: 'W1 · SHOWROOM', name: '选品展厅', step: '挑商品、选供应商', zone: 'product', render: '3d' },
+  { id: 'w2', code: 'W2 · PRICING', name: '定价财务室', step: '定价与备货', zone: 'supply', render: '3d' },
+  { id: 'w3', code: 'W3 · LISTING', name: '商品页工作室', step: '制作商品页并上架', zone: 'growth', render: '2d' },
+  { id: 'w4', code: 'W4 · PROMOTION', name: '推广室', step: '选推广渠道', zone: 'growth', render: '2d' },
+  { id: 'w5', code: 'W5 · FULFILMENT', name: '物流仓', step: '选头程与履约、发货', zone: 'fulfillment', render: '3d' },
+  { id: 'w6', code: 'W6 · SETTLEMENT', name: '财报结算厅', step: '安排下轮并结算', zone: 'headquarters', render: '2d' },
 ]);
 export const ROOMS_3D = new Set(WORLDS.filter(w => w.render === '3d').map(w => w.id));
 

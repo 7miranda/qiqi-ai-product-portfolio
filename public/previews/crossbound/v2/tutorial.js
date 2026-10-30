@@ -1,5 +1,5 @@
-import {track,userId} from './records.js?v=13cef6754e';
-import {createWalkthrough,activeWalkthrough} from './walkthrough.js?v=13cef6754e';
+import {track,userId} from './records.js';
+import {createWalkthrough,activeWalkthrough} from './walkthrough.js';
 const key=n=>`crossbound-tutorial-v2:${userId(n)}`;
 export function tutorialState(n){try{return JSON.parse(localStorage.getItem(key(n))||'null')}catch{return null}}
 function baseSteps(n,view){

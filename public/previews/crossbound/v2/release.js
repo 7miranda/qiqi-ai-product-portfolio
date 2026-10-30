@@ -1,4 +1,4 @@
-import { friendly, balanceOptions } from '../v11/balance.js?v=13cef6754e';
+import { friendly, balanceOptions } from '../v11/balance.js';
 // October 21 rules. Historical reports retain their recorded rule version.
 export const GOAL_VERSION = 'dual-20261021';
 export const orderTarget = round => Math.min(450, 250 + Math.max(0, round - 1) * 50);

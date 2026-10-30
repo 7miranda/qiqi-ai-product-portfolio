@@ -1,13 +1,13 @@
 // REQ-053 §3 2.5D scenes opened full-screen from the campus map: W3 商品页工作室, W4 推广室, W6 财报结算厅.
 // Each has its own layout and interaction (no shared panel template); all choices go into the game's own draft
 // state and are committed with the same calls as the classic panel, so the engine stays authoritative.
-import { catalogPreview } from '../../details/catalog-preview.js?v=13cef6754e';
-import { PROMOTIONS } from '../../v11/model.js?v=13cef6754e';
-import { BIDS, TIME_SLOTS, OFFSITE, PLATFORMS } from '../../v2/catalog.js?v=13cef6754e';
-import { goal, goalChannelText, financialStatements } from '../../v2/release.js?v=13cef6754e';
-import { profitRows } from '../../v2/ui.js?v=13cef6754e';
-import { countryBadgeAsset } from '../../v11/badges.js?v=13cef6754e';
-import { WORLDS, roomStates, budgetCurve, money, cashPlan, capacityBar } from './logic.js?v=13cef6754e';
+import { catalogPreview } from '../../details/catalog-preview.js';
+import { PROMOTIONS } from '../../v11/model.js';
+import { BIDS, TIME_SLOTS, OFFSITE, PLATFORMS } from '../../v2/catalog.js';
+import { goal, goalChannelText, financialStatements } from '../../v2/release.js';
+import { profitRows } from '../../v2/ui.js';
+import { countryBadgeAsset } from '../../v11/badges.js';
+import { WORLDS, roomStates, budgetCurve, money, cashPlan, capacityBar } from './logic.js';
 
 // The three listing benches mirror the original editor (same ids, same points); costs come from the engine quote.
 const BENCHES = [
@@ -31,17 +31,27 @@ function h(tag, attrs = {}, ...children) {
 }
 const pct = n => `${Math.round((n || 0) * 100)}%`;
 
-// 商品实物 (REQ-053 §3): the W1 low-poly model rendered once to an image for the 2D page preview; glyph if no WebGL.
-const shots = new Map();
+// 商品实物 (REQ-053 §3): the W1 low-poly model rendered to an image for the 2D page preview, straight away; the
+// catalog's studio photo replaces it when it arrives. shots: undefined = not started, null = rendering,
+// false = no WebGL (glyph), string = image.
+const shots = new Map(), shotWaiters = new Map();
 let shotKit = null;
-async function productShot(p) {
-  if (!p || shots.has(p.id)) return shots.get(p?.id);
+function setShot(id, src) {
+  shots.set(id, src);
+  for (const fn of shotWaiters.get(id) || []) fn(src);
+}
+// Start early (when the product is chosen) so W3 opens with the picture already there.
+export function warmProductShot(p) { if (p && !shots.has(p.id)) productShot(p); }
+async function productShot(p, onChange) {
+  if (!p) return null;
+  if (onChange) { if (!shotWaiters.has(p.id)) shotWaiters.set(p.id, new Set()); shotWaiters.get(p.id).add(onChange); }
+  if (shots.has(p.id)) return shots.get(p.id);
   shots.set(p.id, null);
+  // The studio photo is an upgrade; it never delays the first picture.
+  catalogPreview(window.CrossboundProductPreview, p.id).then(studio => { if (studio) setShot(p.id, studio); }).catch(() => {});
   try {
-    const studio = await catalogPreview(window.CrossboundProductPreview, p.id);
-    if (studio) { shots.set(p.id, studio); return studio; }
     shotKit ||= (async () => {
-      const [THREE, { productModel }] = await Promise.all([import('three'), import('./products.js?v=13cef6754e')]);
+      const [THREE, { productModel }] = await Promise.all([import('three'), import('./products.js')]);
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
       renderer.setSize(512, 512, false); renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1;
@@ -56,9 +66,10 @@ async function productShot(p) {
     const model = productModel(p, { size: 1.15 });
     model.group.position.y = 0; scene.add(model.group);
     renderer.render(scene, camera);
-    shots.set(p.id, renderer.domElement.toDataURL('image/png'));
+    const src = renderer.domElement.toDataURL('image/png');
+    if (!shots.get(p.id)) setShot(p.id, src);   // a studio photo that already arrived wins
     scene.traverse(o => { o.geometry?.dispose?.(); (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => m?.dispose?.()); });
-  } catch { shots.set(p.id, null); }
+  } catch { if (!shots.get(p.id)) setShot(p.id, false); }
   return shots.get(p.id);
 }
 
@@ -67,27 +78,36 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
   document.body.append(root);
   requestAnimationFrame(() => root.classList.add('is-in'));
   let id = firstId, signature = '', closed = false, busy = false, finTab = 'income';
+  const shotSubscribed = new Set();
 
   const act = () => store.snapshot()?.actions;
   const product = s => s.engine?.products?.find(p => p.id === s.company.productId);
 
   // ---------- Shell: room title, map progress, cash, back to map; one primary action in the footer ----------
+  // Design handoff §6.2: sticky top bar (back · code + title + round/room · cash / this step's spend) over a 7-cell
+  // room progress (✓ done · ▲ current · 01–07 upcoming); lead; content; sticky bottom bar with the one primary action.
   function shell(s, { accent, kicker, title, lead }, body, footer) {
-    const rooms = roomStates(s);
+    const rooms = roomStates(s), world = WORLDS.find(w => w.id === id);
+    const spend = s.company.stage >= 6 ? 0 : Math.max(0, -(s.preview?.cashDelta || 0));
     root.dataset.scene = id;
     root.style.setProperty('--v3s-accent', accent);
     root.replaceChildren(...[
       h('header', { class: 'v3s-head' },
-        h('button', { type: 'button', class: 'v3s-back', onclick: () => leave() }, '← 返回总部地图'),
-        h('div', { class: 'v3s-title' }, h('small', {}, kicker), h('h2', {}, title)),
-        h('ol', { class: 'v3s-rooms', 'aria-label': '本轮进度' }, WORLDS.map(w => h('li', { class: `is-${rooms[w.id]}`, title: w.step }, rooms[w.id] === 'done' ? '✓ ' : rooms[w.id] === 'current' ? '⚑ ' : '', w.name))),
-        h('div', { class: 'v3s-cash' }, h('small', {}, '经营现金'), h('strong', {}, money(s.company.cash)))),
+        h('button', { type: 'button', class: 'v3s-back', onclick: () => leave() }, h('span', { class: 'v3s-arrow' }, '←'), '返回园区地图'),
+        h('div', { class: 'v3s-title' }, h('span', { class: 'v3s-code' }, world?.code || ''), h('h2', {}, title), h('small', {}, kicker)),
+        h('div', { class: 'v3s-cash' },
+          h('div', {}, h('small', {}, '经营现金'), h('strong', {}, money(s.company.cash))),
+          h('div', {}, h('small', {}, '本步花费'), h('strong', { class: 'is-spend' }, money(spend)))),
+        h('ol', { class: 'v3s-rooms', 'aria-label': '本轮进度' }, WORLDS.map((w, i) => h('li', { class: `is-${rooms[w.id]}`, title: w.step },
+          h('i', {}), h('span', {}, h('b', {}, rooms[w.id] === 'done' ? '✓' : rooms[w.id] === 'current' ? '▲' : String(i + 1).padStart(2, '0')), w.name))))),
       lead ? h('p', { class: 'v3s-lead' }, lead) : null,
       h('main', { class: 'v3s-body' }, body),
       h('footer', { class: 'v3s-foot' }, footer)].filter(Boolean));
   }
+  // §5.1: one primary per screen, arrow on the right; when disabled the note says what is still missing.
   function primary(label, onclick, { disabled, note } = {}) {
-    return [note ? h('span', { class: 'v3s-foot-note' }, note) : null, h('button', { type: 'button', class: 'v3s-primary', disabled: disabled || busy, onclick }, label)];
+    return [note ? h('span', { class: 'v3s-foot-note' }, note) : null,
+      h('button', { type: 'button', class: 'v3s-primary', disabled: disabled || busy, onclick }, h('span', {}, label), h('span', { class: 'v3s-arrow' }, '→'))];
   }
 
   // REQ-006 regression (v1.2): pay $300 once a round to lift an existing page by 5 points (max 95).
@@ -126,8 +146,10 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
           h('strong', {}, label), h('small', {}, detail), h('b', {}, alt ? `${alt.score} 分 · $${Math.round(alt.cost)}` : ''));
       }))));
     const shot = p && shots.get(p.id);
-    if (p && !shots.has(p.id)) productShot(p).then(src => { if (src) update(true); });
-    const picture = cls => shot ? h('img', { class: cls, src: shot, alt: p?.name || '', width: 360, height: 360 }) : h('span', { class: 'v3s-glyph' }, p?.glyph || '◆');
+    if (p && !shotSubscribed.has(p.id)) { shotSubscribed.add(p.id); productShot(p, () => { if (!closed) update(true); }); }
+    // While the picture renders (well under a second) show a quiet blank; the glyph is only for no-WebGL devices.
+    const picture = cls => shot ? h('img', { class: cls, src: shot, alt: p?.name || '', width: 360, height: 360 })
+      : shot === false ? h('span', { class: 'v3s-glyph' }, p?.glyph || '◆') : h('span', { class: `${cls} v3s-shot-wait`, 'aria-hidden': 'true' });
     const image = h('div', { class: `v3s-shot is-${sel.imageId || 'product'}` },
       picture('v3s-glyph'),
       sel.imageId === 'annotated' ? h('ul', { class: 'v3s-tags' }, (p?.specs || []).slice(0, 2).map(t => h('li', {}, t))) : null);
@@ -346,7 +368,7 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
     shell(s, { accent: '#52cadd', kicker: `第 ${c.round} 轮 · 市场研究所`, title: '先选在哪个平台、哪个市场卖', lead: '一步两个决定：平台和市场。容量条是按默认推广估的本轮到访，超过容量的部分只算一半。' },
       h('div', { class: 'v3s-w0' },
         h('section', { class: 'v3s-card' }, h('header', {}, h('strong', {}, '开店平台'), h('small', {}, '三家各有代价')), h('div', { class: 'v3s-platforms' }, platforms)),
-        h('div', { class: 'v3s-markets' }, cards)),
+        h('section', { class: 'v3s-card v3s-section' }, h('header', {}, h('strong', {}, '销售市场'), h('small', {}, '容量条按默认推广估算本轮到访，超出容量的部分只算一半')), h('div', { class: 'v3s-markets' }, cards))),
       primary(chosen ? `确认${chosen.name}${spend > 0 ? ` · 先付 ${money(spend)}` : ''}` : '先选一个市场', () => commit(0),
         { disabled: !chosen || pv.affordable === false, note: chosen ? (pv.affordable === false ? `现金不够，还差 ${money(pv.cashShortfall)}` : '确认后进入选品展厅') : '点一张市场卡' }));
   }
@@ -372,7 +394,16 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
   function hand(next) { if (closed) return; onNext ? onNext(next) : leave(); }
   function leave() { if (!closed) onExit?.(); }
   const off = store.subscribe(() => update());
-  const onKey = e => { if (e.key === 'Escape' && !store.dialogOpen) leave(); };
+  // §7 keyboard: Esc returns to the map; Enter is the primary action unless a text field or select has focus.
+  const onKey = e => {
+    if (store.dialogOpen) return;
+    if (e.key === 'Escape') return leave();
+    const el = document.activeElement, busyField = el && (/^(SELECT|TEXTAREA|BUTTON)$/.test(el.tagName) || (el.tagName === 'INPUT' && el.type !== 'range'));
+    if (e.key === 'Enter' && !e.isComposing && !busyField) {
+      const btn = root.querySelector('.v3s-primary:not(:disabled)');
+      if (btn) { e.preventDefault(); btn.click(); }
+    }
+  };
   addEventListener('keydown', onKey);
   update(true);
 

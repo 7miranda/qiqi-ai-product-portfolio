@@ -2,13 +2,13 @@
 // No walking and no camera follow — a fixed oblique camera with the near wall cut away, and the player clicks
 // what they want to use. Player actions go through the engine's own select / commit calls; no rule is re-implemented.
 import * as THREE from 'three';
-import { FIRST_MILE } from '../../v2/catalog.js?v=13cef6754e';
-import { balanceRules } from '../../v11/balance.js?v=13cef6754e';
-import { WORLDS, QUALITY, PICKS_KEY, downgrade, createFpsMonitor, taskFor, nearestInteractable, pickShowcase, money, cashPlan } from './logic.js?v=13cef6754e';
-import { createUI, createSounds } from './ui.js?v=13cef6754e';
-import { buildShowroom, SUPPLIERS, STANDS } from './showroom.js?v=13cef6754e';
-import { buildFinance, buildWarehouse } from './rooms.js?v=13cef6754e';
-import { lightPillar, PALETTE, disposeTree } from './kit.js?v=13cef6754e';
+import { FIRST_MILE } from '../../v2/catalog.js';
+import { balanceRules } from '../../v11/balance.js';
+import { WORLDS, QUALITY, PICKS_KEY, downgrade, createFpsMonitor, taskFor, nearestInteractable, pickShowcase, money, cashPlan } from './logic.js';
+import { createUI, createSounds } from './ui.js';
+import { buildShowroom, SUPPLIERS, STANDS } from './showroom.js';
+import { buildFinance, buildWarehouse } from './rooms.js';
+import { lightPillar, PALETTE, disposeTree } from './kit.js';
 
 const FLY_MS = 400;                 // F-002: pick-up flight
 const OPEN_MS = 900;                // F-003: open animation
@@ -16,7 +16,7 @@ const HOLD_SIZE = 1.1;              // held model size (m)
 // Fixed oblique cameras (2.5D dollhouse): the whole 24 × 18 m room in frame, near wall hidden.
 const VIEWS = {
   w1: { pos: [0, 15.5, 15], look: [0, 0, -0.8] },
-  w2: { pos: [-2, 11.5, 11.5], look: [-2.5, 0, -0.5] },
+  w2: { pos: [0, 15, 14.5], look: [0, 0, -1] },   // same framing as W1 / W5: room centred, nothing cut at the top
   w5: { pos: [0, 15, 14.5], look: [0, 0, -1.5] },
 };
 const nextFrame = () => new Promise(r => requestAnimationFrame(() => r()));
@@ -49,19 +49,19 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
   const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 200);
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(PALETTE.night);
-  scene.fog = new THREE.Fog(0x071218, 26, 48);
+  scene.fog = new THREE.Fog(0x03080b, 30, 60);  // design handoff §6.4: fog 30–60
 
-  // Lights: dim neon night. Only the key light casts shadows (性能红线).
-  const hemi = new THREE.HemisphereLight(0xd6edf4, 0x152a31, 2.6);
-  const ambient = new THREE.AmbientLight(0xffffff, 0.8);
-  const key = new THREE.DirectionalLight(0xd2e0ff, 2.6);
+  // Lights (design handoff §6.4): hemisphere + soft-shadow key + a cyan rim at the back right. Only the key casts shadows.
+  const hemi = new THREE.HemisphereLight(0xe2f6f9, 0x0b1a1f, 1.45);
+  const ambient = new THREE.AmbientLight(0xffffff, 0.25);
+  const key = new THREE.DirectionalLight(0xffffff, 1.7);
   key.position.set(-14, 22, 12);
   key.shadow.mapSize.set(2048, 2048);
   Object.assign(key.shadow.camera, { left: -16, right: 16, top: 12, bottom: -12, far: 80 });
   key.shadow.bias = -0.0005;
-  const neonA = new THREE.PointLight(PALETTE.magenta, 60, 22, 2);
-  const neonB = new THREE.PointLight(PALETTE.cyan, 60, 22, 2);
-  neonA.position.set(-6, 5, -4); neonB.position.set(6, 5, 2);
+  const neonA = new THREE.DirectionalLight(0x9fe6ef, 0.5);
+  const neonB = new THREE.PointLight(0x3fd0e0, 40, 34, 2);
+  neonA.position.set(9, 6, 12); neonB.position.set(10, 5, -7);
   scene.add(hemi, ambient, key, neonA, neonB);
   const pillar = lightPillar(PALETTE.gold);
   scene.add(pillar);
@@ -83,7 +83,7 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
     renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2) * q.pixelRatio);
     renderer.shadowMap.enabled = q.shadows;
     key.castShadow = q.shadows;
-    neonA.intensity = neonB.intensity = 36 + 24 * q.glow;   // 3D-074: neon strength follows the tier
+    neonB.intensity = 24 + 16 * q.glow;   // 3D-074: the cyan rim follows the tier; the fill stays at 0.5
     active?.setGlow?.(q.glow);
     scene.traverse(o => { if (o.material) o.material.needsUpdate = true; });
     resize();
