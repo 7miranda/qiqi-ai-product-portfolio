@@ -46,6 +46,20 @@ export default function ProjectsPage() {
             <i style={{ background: project.accent }} aria-hidden="true" />
           </Link>
         ))}
+        <a className="project-directory-row" href="/previews/aoji-export-studio/">
+          <span className="project-no">LAB</span>
+          <div className="project-title-block">
+            <span>工厂出海 · 本地桌面客户端</span>
+            <h2>奥吉科技 · 出海工作台</h2>
+          </div>
+          <p>把专家会商、工厂资料与阶段任务放进同一个工作台。悬停看专家进展，随时呼出聊天。</p>
+          <div className="project-evidence">
+            <strong>11<em>类</em></strong>
+            <span>专业分工 · 可体验界面预览</span>
+          </div>
+          <ArrowUpRight />
+          <i style={{ background: "#8ca8cf" }} aria-hidden="true" />
+        </a>
       </section>
       <Footer8 dense
         statement="复杂能力需要被组织成清晰的产品判断，才有机会真正进入业务。"
