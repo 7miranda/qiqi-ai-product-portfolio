@@ -1,7 +1,9 @@
 import { goal } from './release.js';
 import { apiPath } from './api.js';
 import { assessment } from './progress.js';
-export const DATA_VERSION='2026-10-22';
+import { COMMUNITY_CAPITAL } from './recovery.js';
+// 2026-11-01: 售后复盘 answers are no longer reported; mainline rounds carry feature_set (v2/catalog.js FEATURE_SET).
+export const DATA_VERSION='2026-11-01';
 export const userId=company=>company.v2?.collectionIdentity || company.v2?.identity || `legacy-${company.runSeed}`;
 const uid=()=>globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 const KEY='crossbound-outbox-20261021';
@@ -13,7 +15,7 @@ export function enqueue(type,id,data) {
     const queue=read(KEY).filter(row=>row.id!==id);
     // REQ-051: tag events with the view group (rooms/classic) once the room layer has assigned one.
     const variant=type==='events'?globalThis.CrossboundView?.variant:null;
-    queue.push({id,type,data:{schema_version:DATA_VERSION,game_version:'crossbound-20261022',...(variant?{view_variant:variant}:{}),...data},at:new Date().toISOString()});
+    queue.push({id,type,data:{schema_version:DATA_VERSION,game_version:'crossbound-20261101',...(variant?{view_variant:variant}:{}),...data},at:new Date().toISOString()});
     localStorage.setItem(KEY,JSON.stringify(queue));
   } catch { /* Storage/network trouble must never block play. */ }
 }
@@ -48,18 +50,18 @@ export function capture(company,ops,started,tasks=[],engine) {
   enqueue('events',`${user}:${company.round}:stage:${company.stage}`,{...base,event:'stage_reach',stage:company.stage});
   const detail=(state,report=state)=>({category:engine?.products.find(p=>p.id===state.productId)?.category,quantity:report.quantity??state.decisions?.[2]?.quantity,fulfillment:state.fulfillmentPlanId??state.decisions?.[4]?.id,promotion:state.decisions?.[3]?.promotionChoice?.id,rating_after:report.ratingAfter,bad_reviews:report.badReviews});
   for(const old of company.history){
-    enqueue('round_reports',`${user}:round:${old.round}`,{...base,...detail(old),round:old.round,balance_version:old.balanceVersion||'historical',goal_version:old.goalVersion||'historical',completed:true,exit_stage:6,market:old.marketId,product:old.productId,price:old.price,channel:old.decisions?.[3]?.id,decisions:old.decisions||[],listing_score:old.listingScore,orders:old.orders,refunds:old.refunds,kept_orders:old.keptOrders,profit:old.profit,passed:goal(old).passed,used_default:(old.decisions||[]).map(d=>d.used_default??null)});
+    enqueue('round_reports',`${user}:round:${old.round}`,{...base,...detail(old),round:old.round,feature_set:old.featureSet||'legacy',balance_version:old.balanceVersion||'historical',goal_version:old.goalVersion||'historical',completed:true,exit_stage:6,market:old.marketId,product:old.productId,price:old.price,channel:old.decisions?.[3]?.id,decisions:old.decisions||[],listing_score:old.listingScore,orders:old.orders,refunds:old.refunds,kept_orders:old.keptOrders,profit:old.profit,passed:goal(old).passed,used_default:(old.decisions||[]).map(d=>d.used_default??null)});
     enqueue('events',`${user}:${old.round}:complete`,{...base,round:old.round,event:'round_complete'});
   }
   const completed=company.stage===6, report=company.report;
-  enqueue('round_reports',`${user}:round:${company.round}`,{...base,...detail(company,report||{}),completed,exit_stage:company.stage,
+  enqueue('round_reports',`${user}:round:${company.round}`,{...base,...detail(company,report||{}),feature_set:company.featureSet||'legacy',completed,exit_stage:company.stage,
     market:company.marketId,product:company.productId,price:company.price,channel:company.trafficPlanId,
     decisions:company.decisions,listing_score:company.currentListing?.score || report?.listingScore,
     ...(report?{orders:report.orders,refunds:report.refunds,kept_orders:report.keptOrders,profit:report.profit,passed:goal(report).passed}:{}),
     used_default:company.decisions.map(d=>d.used_default ?? null)});
   (ops.history || []).forEach((event,index)=>{
-    if(!['operation','review'].includes(event.type))return;
-    enqueue('quiz_answers',`${user}:quiz:${index}`,{...base,round:event.round??null,task_type:event.type==='review'?'review':'hq',task_id:event.operationId || `review:${event.evidence?.round}`,choice:event.choiceId,correct:event.type==='review'?event.choiceId==='investigate':!!tasks.find(t=>t.id===event.operationId)?.choices.find(c=>c.id===event.choiceId)?.correct,operation:event});
+    if(event.type!=='operation')return; // old 售后复盘 answers in the growth ledger are not reported again
+    enqueue('quiz_answers',`${user}:quiz:${index}`,{...base,round:event.round??null,task_type:'hq',task_id:event.operationId,choice:event.choiceId,correct:!!tasks.find(t=>t.id===event.operationId)?.choices.find(c=>c.id===event.choiceId)?.correct,operation:event});
   });
   if(engine&&company.history.length){const a=assessment(company,ops,engine.markets,tasks);enqueue('assessments',`${user}:assessment:${company.history.length}`,{...base,...assessmentData(a)});}
   flush();
@@ -72,12 +74,25 @@ export function captureExit(company) {
 export function feedbackState(company) {
   try{return JSON.parse(localStorage.getItem(`crossbound-feedback:${userId(company)}`)||localStorage.getItem(`crossbound-feedback:${company.runSeed}`)||'{}')}catch{return {}}
 }
+export function feedbackDraft(company) {
+  try{
+    const d=JSON.parse(localStorage.getItem(`crossbound-feedback-draft:${userId(company)}`)||'{}');
+    return {answers:Array.isArray(d.answers)&&d.answers.length<=3&&d.answers.every(x=>Number.isInteger(x)&&x>=0&&x<4)?d.answers:[],comment:typeof d.comment==='string'?d.comment.slice(0,100):''};
+  }catch{return {answers:[],comment:''};}
+}
+export function saveFeedbackDraft(company, draft) {
+  try{localStorage.setItem(`crossbound-feedback-draft:${userId(company)}`,JSON.stringify(draft));}catch{}
+}
 export function saveFeedback(company,value) {
   const user=userId(company);
-  const claim={type:'community',id:value.deep?'deep':'first',run:user,rounds:company.history.length,substantive:!!value.comment?.trim()};
-  const next={...feedbackState(company),...value,[value.deep?'deepClaim':'firstClaim']:claim};
+  const saved=feedbackState(company);
+  if(saved[value.deep?'deep':'first'])return saved;
+  if(!validComment(value.comment||'')||!value.deep&&(!Array.isArray(value.answers)||value.answers.length!==3||value.answers.some(x=>!Number.isInteger(x)||x<0||x>3)))throw Error('请完成问卷后提交。');
+  const claim={type:'community',id:value.deep?'deep':'first',run:user,rounds:company.history.length,substantive:!!value.comment?.trim(),...(!value.deep?{capital:COMMUNITY_CAPITAL}:{})};
+  const next={...saved,...value,[value.deep?'deepClaim':'firstClaim']:claim};
   localStorage.setItem(`crossbound-feedback:${user}`,JSON.stringify(next));
-  enqueue('feedback',`${user}:${value.deep?'deep':'first'}`,{user_id:user,rounds_played:company.history.length,survey_version:'v2',...value});
+  try{localStorage.removeItem(`crossbound-feedback-draft:${user}`)}catch{}
+  enqueue('feedback',`${user}:${value.deep?'deep':'first'}`,{user_id:user,rounds_played:company.history.length,survey_version:'v2',...value,...(!value.deep?{reward_version:'capital-20261104'}:{})});
   track(company,'feedback_submit',{survey_version:'v2',deep:!!value.deep},`feedback:${value.deep?'deep':'first'}`);flush();
   return next;
 }

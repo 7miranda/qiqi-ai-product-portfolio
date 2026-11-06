@@ -1,0 +1,9 @@
+.back{padding:8px 12px;border-color:#4f6974;color:#b9ced3;font-size:14px;white-space:nowrap}
+.plan-price strong{font-size:24px}.plan-price em{font:12px 'Noto Sans SC';font-style:normal;margin-left:3px}
+.plan-note{min-height:36px;white-space:normal}.plan-band>b{font-size:15px}.plan-stat{gap:4px}.plan-stat b{font-family:Oxanium;font-size:13px}
+#supplier{font-size:12px;color:#b4c5c9}.cost-heading{font-size:15px}.cost-heading b{font-size:20px}
+#funding{display:block;margin:5px auto 0;padding:2px 8px;color:#a3c5cc}.forecast strong.loss{color:#ff927d}
+.host-modal{pointer-events:none}.journey{gap:7px;max-width:calc(100% - var(--side) - 60px);font-size:12px}.journey span,.journey b{white-space:nowrap}
+.price-labels{font-size:11px}.plan:disabled{opacity:.65}#price-slider .danger-zone{transition:none}
+@media(max-width:1200px){.journey span:nth-last-child(-n+3),.journey i:nth-last-child(-n+4){display:none}}
+@media(max-width:800px){header{padding-inline:12px;gap:10px}.back{font-size:12px;padding:6px}.scene-heading h1{font-size:24px}.scene-heading .scene-code{font-size:8px}.head-right{gap:6px}.cash strong{font-size:20px}.plan-note{min-height:0}.journey{display:none}.price-labels{font-size:10px}}

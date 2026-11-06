@@ -1,0 +1,32 @@
+/* Homepage handoff: sections 4.2, 5.1, 5.4, 5.5 and 6.2.
+   Shared type roles; compact layouts keep the same size hierarchy. */
+:root{--font-ui:'Noto Sans SC','Microsoft YaHei',sans-serif;--font-number:'Oxanium',sans-serif;--font-code:'JetBrains Mono',monospace;--type-code:11px;--type-note:12px;--type-label:13px;--type-body:14px;--type-action:16px;--type-section:17px;--type-panel:22px;--type-scene:28px;--type-value:28px;--side:440px}
+body{font-family:var(--font-ui);font-size:var(--type-body);line-height:1.6;font-weight:400;-webkit-font-smoothing:antialiased}
+button,input{font-family:var(--font-ui)}button{white-space:nowrap}
+header{height:90px;padding-inline:32px;gap:24px}
+.scene-heading{display:flex;flex-direction:column;gap:2px;flex:none}.scene-heading .scene-code{font:400 var(--type-code)/1.5 var(--font-code);letter-spacing:.14em;color:var(--cyan)}
+.scene-heading h1{margin:0;font:900 var(--type-scene)/1.3 var(--font-ui);letter-spacing:.06em;color:#f4f8f9}
+.round,.cash small{font:400 var(--type-note)/1.6 var(--font-ui);color:#8aa3a9}
+.cash strong{font:600 24px/1.2 var(--font-number);font-variant-numeric:tabular-nums}
+.square{width:40px;height:40px;font-size:var(--type-label)}
+aside{top:110px}.panel-head{padding:16px 22px 14px}.room-heading h2{margin:0;font:900 var(--type-panel)/1.4 var(--font-ui);letter-spacing:.02em;color:#f4f8f9}
+.room-heading>span{font:500 var(--type-note)/1.5 var(--font-number);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.panel-head p{font:400 var(--type-note)/1.6 var(--font-ui);color:#8aa3a9;margin-top:6px}
+.panel-body{padding:0 22px 16px}.section-title{font:700 var(--type-section)/1.5 var(--font-ui);margin:18px 0 12px;gap:10px}
+.section-title>span{font:500 var(--type-code)/1.5 var(--font-code)}.section-title>small,.cost-heading button{font:400 var(--type-note)/1.5 var(--font-ui)}
+.plans{gap:10px}.plan-band{padding:6px 9px 7px}.plan-band>small{font:400 10px/1.4 var(--font-code);letter-spacing:.14em}.plan-band>b{font:700 var(--type-body)/1.5 var(--font-ui)}
+.plan-paper{padding:8px 9px 10px}.plan-price small,.plan-stat,.plan-note{font:400 var(--type-note)/1.5 var(--font-ui)}
+.plan-price strong{font:600 24px/1.2 var(--font-number);font-variant-numeric:tabular-nums}.plan-stat b{font:500 var(--type-note)/1.5 var(--font-number);font-variant-numeric:tabular-nums}.plan-stat{margin:4px 0}.plan-note{display:block;margin-top:7px}.selection-mark{font:700 11px/16px var(--font-ui);width:16px}
+.input-head label{font:400 var(--type-body)/1.6 var(--font-ui)}.input-head label small{font:400 var(--type-note)/1.5 var(--font-ui)}
+.stepper button{width:32px;height:36px;font-size:var(--type-section)}.stepper output{font:600 var(--type-value)/36px var(--font-number);height:36px;min-width:96px;font-variant-numeric:tabular-nums}.stepper output small{font:400 var(--type-note)/1.5 var(--font-ui)}
+.range-label,.price-labels{font:400 var(--type-note)/1.5 var(--font-number);font-variant-numeric:tabular-nums;gap:4px}.range-label #demand-label{font:400 var(--type-note)/1.5 var(--font-ui)}.stock-head{margin-top:16px}
+#cost-total{font:600 16px/1.5 var(--font-number);font-variant-numeric:tabular-nums}
+.cost-overview>div,#details button,.unit-profit{font:400 var(--type-label)/1.6 var(--font-ui)}.cost-overview small{font-size:var(--type-note)}.cost-overview b,#details b{font:600 16px/1.5 var(--font-number);font-variant-numeric:tabular-nums}.unit-profit strong{font:600 24px/1.4 var(--font-number);font-variant-numeric:tabular-nums}
+.panel-foot{padding:12px 22px 14px}.risk{font:400 var(--type-note)/1.6 var(--font-ui);margin:0 0 10px}.forecast small,.sell small{font:400 var(--type-note)/1.5 var(--font-ui)}.forecast strong{font:600 var(--type-value)/1.4 var(--font-number);font-variant-numeric:tabular-nums}.sell b{font:600 16px/1.6 var(--font-number);font-variant-numeric:tabular-nums}#explain{font:500 var(--type-note)/1.5 var(--font-ui)}
+.primary{min-height:54px;padding:0 24px;font:700 var(--type-action)/1.5 var(--font-ui);letter-spacing:.04em}.primary b{font:600 24px/1.4 var(--font-number);font-variant-numeric:tabular-nums}.primary>span:last-child{font:600 20px/1.4 var(--font-number)}
+.footnote{font:400 var(--type-note)/1.5 var(--font-ui);margin-top:10px}.journey{font:400 var(--type-note)/1.5 var(--font-ui);gap:12px}.journey b{font-weight:500}
+dialog h2{font:900 var(--type-panel)/1.5 var(--font-ui)}dialog p{font:400 var(--type-body)/1.65 var(--font-ui)}dialog .eyebrow{font:500 var(--type-code)/1.6 var(--font-code)}dialog .receipt{font:400 var(--type-label)/1.6 var(--font-ui)}dialog .receipt b{font:600 16px/1.6 var(--font-number);font-variant-numeric:tabular-nums}dialog .dialog-note{font:400 var(--type-note)/1.65 var(--font-ui)}.setting-button,.text-button{font:500 var(--type-label)/1.6 var(--font-ui)}.cost-value{font:600 var(--type-value)/1.4 var(--font-number);font-variant-numeric:tabular-nums}#toast{font:400 var(--type-label)/1.6 var(--font-ui)}
+@media(max-width:1200px){:root{--side:420px}.round{display:none}.panel-head,.panel-body,.panel-foot{padding-inline:18px}}
+@media(max-height:900px) and (min-width:801px){.panel-head{padding-block:12px}.section-title{margin:12px 0 9px}.plan-band{padding-block:5px}.plan-paper{padding-block:6px}.plan-stat{margin:2px 0}.plan-note{margin-top:5px}.stock-head{margin-top:10px}.panel-foot{padding-block:10px}.risk{margin-bottom:7px}.forecast{margin-bottom:8px}.footnote{margin-top:7px}}
+@media(max-height:800px) and (min-width:801px){.plan-note{display:none}}
+@media(max-width:800px){header{height:90px;padding-inline:16px;gap:12px}.scene-heading{gap:2px}.scene-heading .scene-code{font-size:10px;letter-spacing:.08em}.scene-heading h1{font-size:28px}.head-right{gap:8px}.cash strong{font-size:24px}.square{width:32px;height:36px}.cash small{display:none}#world{top:90px;height:390px}.vignette{height:490px}aside{top:auto;margin-top:480px}.panel-head,.panel-body,.panel-foot{padding-inline:16px}.plans{gap:6px}.plan-band{padding-inline:6px}.plan-paper{padding-inline:6px}.plan-price{gap:2px}.plan-price strong{font-size:22px}.plan-note{display:block}.price-labels{font-size:11px}.stepper output{min-width:84px}.forecast small{font-size:12px}.footnote{font-size:12px}#toast{top:430px}}

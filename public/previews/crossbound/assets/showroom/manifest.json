@@ -1,0 +1,607 @@
+{
+  "sourceCommit": "8b5d0f5097f8c9f32012a9b7da083f3b69ff3ce9",
+  "approvedReference": "Crossbound-Showroom-v5",
+  "count": 100,
+  "products": [
+    {
+      "id": "living",
+      "modelBytes": 26042,
+      "modelSha256": "de75c10945185ae6b60845ef79acb8addafe2142755885d62338cba880b16f89",
+      "imageSha256": "96d7a5586d18f3afdcc142aef4c2bc0c9ad413be18cb5a91eee5dee9a97c7081"
+    },
+    {
+      "id": "tech",
+      "modelBytes": 36541,
+      "modelSha256": "8b237c05c111b70cca3fa32744b2af00b8ff1da9a228761b3ac6862915521efa",
+      "imageSha256": "b36ad5e840c2381ca780fab266c231222909c8e9edac61ac8addd061c0550b4d"
+    },
+    {
+      "id": "care",
+      "modelBytes": 38661,
+      "modelSha256": "1300224f35514c43c3919794bf43485a3110b0112abd546822f4e33ded6edf08",
+      "imageSha256": "017a7704892cd672f8cf7804cfba56c72f1d7a35f9d2632bcb1d04dd546d81bb"
+    },
+    {
+      "id": "lamp",
+      "modelBytes": 14906,
+      "modelSha256": "b327a810079b3a32ae68ec5c7ace19a8978b7e686e67f92dbac5c72391be59cd",
+      "imageSha256": "ef86112f24914b75fa5d4e7b300552c0d15844415aa2da515b9f07923fdbe743"
+    },
+    {
+      "id": "fan",
+      "modelBytes": 75966,
+      "modelSha256": "d44403a5df10b6d03da88a931b6ecf9e367b67960cb95de485db97cdb85bcc85",
+      "imageSha256": "9bfb6fe3a7041a3261e2826b9d5e52c33503987cf0fbbad52d60c56c91f300dd"
+    },
+    {
+      "id": "powerbank",
+      "modelBytes": 57347,
+      "modelSha256": "bab79c872510bdec2ecd60074356b8d7ea8ea910ec8b5fe9d2fe86ecb44e84b0",
+      "imageSha256": "88b07e5842572bc3a75da97a8896c23eff0830d03260738210b607a3ccd43544"
+    },
+    {
+      "id": "earbuds",
+      "modelBytes": 36340,
+      "modelSha256": "20679ae8359afe92efe9ed49f65548fcbd9403abadad44a76fc8afd7886d10b4",
+      "imageSha256": "69a42e16363063afad6f60e2885abed1b936782e234c938a862c06ac106498c9"
+    },
+    {
+      "id": "speaker",
+      "modelBytes": 30984,
+      "modelSha256": "8a5dd58a7f764b3152b64cb80180b8b055bdb065d23ec61b0b253a9b8d125f24",
+      "imageSha256": "f6ec10c7827cc94dce7266f8560a3642d7f5a1e31253779cef42c74a8a4c978a"
+    },
+    {
+      "id": "bottle",
+      "modelBytes": 57001,
+      "modelSha256": "7114162cdfd6e93dc64bff71cbc9eed816c29796855603ba24cccf4d47740251",
+      "imageSha256": "09ce56e82e1b87bf19b2e9ccd026ca638517f6ffb4bc0c32435fdbb6c39be686"
+    },
+    {
+      "id": "adaptive-sofa",
+      "modelBytes": 70333,
+      "modelSha256": "8692112d1e2a770ce1fc599a57c2ad391de955faa322862cb68f4b186770ce8a",
+      "imageSha256": "29df8d3170c9f36b1cf82ce165e250ae0450ebee65215a024743b694b86efded"
+    },
+    {
+      "id": "luma-bed",
+      "modelBytes": 81566,
+      "modelSha256": "af987ab578b27180597745ce51470706b4bb869b483c028c8e54d712b76dcb9e",
+      "imageSha256": "a43247081373295be6003c7cd5e6d02e7d863b704b13b268b44763c5f97a4570"
+    },
+    {
+      "id": "guide-cabinet",
+      "modelBytes": 87890,
+      "modelSha256": "ffeef36efde59ed43ad7455bc88869f4b6cd3e82962d49e6d4587a1fd9547c9d",
+      "imageSha256": "21c2ca1e6d97d65bada87019d4458b31412f2260a2f96104b7427825b3893bba"
+    },
+    {
+      "id": "modular-sofa",
+      "modelBytes": 57356,
+      "modelSha256": "1ba223575b2b03c916183aba1540465a7cacde4811fc22c04365438b0eaff12a",
+      "imageSha256": "3302a5d9a739b3781a3b70009a53b8df1cfa96e76098228011e9b802ce8f2fff"
+    },
+    {
+      "id": "lift-desk",
+      "modelBytes": 94614,
+      "modelSha256": "b608bfe6166baa684164416cf3df639a0bf2d721bd5345c02208a4ec623da024",
+      "imageSha256": "0156c58b0cc24d4bf2fa40f4a72748ee70fc1506b8e813c4a64a4ea713f99acd"
+    },
+    {
+      "id": "ergo-chair",
+      "modelBytes": 37431,
+      "modelSha256": "d9592f3084b041cb0461633c83d68d5fe9be1765ec488bd417f2d4c3fe87a9b0",
+      "imageSha256": "0783d266e44d1ad5b4ba4de47dc483b12305a86553d18f7386ce5b2b4a16c141"
+    },
+    {
+      "id": "storage-bed",
+      "modelBytes": 87731,
+      "modelSha256": "e8303b3de3313fc44f3340747f7d02baf6081b0989c85ed7bb729efb3f1c47ac",
+      "imageSha256": "cc41a338eadad00535d725eb0c278fe36df37f5d0e4990019b2be6ddd5bdd7ae"
+    },
+    {
+      "id": "vanity",
+      "modelBytes": 83683,
+      "modelSha256": "185b2ecc0955a752597edf0a68cb87a1b983fae92fb8aa289188e2cbcef08034",
+      "imageSha256": "4d83b30d8e12983b5a29b633b2041129a33882b234c0b7c39914fcf3411be8d8"
+    },
+    {
+      "id": "bookcase",
+      "modelBytes": 78047,
+      "modelSha256": "2043d406595e8c3e94fecbfb40813b7346c8db2cd25719eecbef5638f8ca4a8f",
+      "imageSha256": "d59e844ef63e298898a664b4192c73025bca7a5de7dbdb712264207adb29ac24"
+    },
+    {
+      "id": "sideboard",
+      "modelBytes": 90001,
+      "modelSha256": "3579559a30c621dcd03df01b2838f342ccb39c013c222d86db0665d76ac887e9",
+      "imageSha256": "d0780aeb2fafcebe6dbe1c23411561858eda0114826ceb3f92fd89b40361d669"
+    },
+    {
+      "id": "shoe-cabinet",
+      "modelBytes": 77055,
+      "modelSha256": "7458d79bce5973dbb9c26b1d9350220b401f27c7127679903c6c2d9341160206",
+      "imageSha256": "45a6dbadba89527935513814e612795cf4867ec957be02dd9b528787d6031b2f"
+    },
+    {
+      "id": "dining-set",
+      "modelBytes": 77439,
+      "modelSha256": "12bc05c5086eebd36637cab791de8686d342393d167490dc6ff551df9d2d1393",
+      "imageSha256": "108c4ded4924e2ddf595aa542d5bf40f160a6c18a569a918383c32496bbbca9c"
+    },
+    {
+      "id": "nesting-tables",
+      "modelBytes": 97977,
+      "modelSha256": "9113ad505f5bca510a3a13beec63a828a79ff55ef33fb9e7872fec955f03c437",
+      "imageSha256": "bdde8ec61a9f088ad735802b9a13f57f3fac5e7b43cdb14d355a8314587f8880"
+    },
+    {
+      "id": "balcony-set",
+      "modelBytes": 86561,
+      "modelSha256": "41e5585f42fb2316548914528e9b3d9dcef7b8e1a9ead4f2516301628f401ef9",
+      "imageSha256": "2c063a26d517ec5a4d32339925898e9e581c1cb8f83d970ca6372bd23019baab"
+    },
+    {
+      "id": "ambient-mirror",
+      "modelBytes": 14897,
+      "modelSha256": "d0c74a7cb7aa4b3d416fc51bc57db610b146c34f9f9f2107aa4ab39490913ad6",
+      "imageSha256": "ea611e6f605216bfa19f84c32317fcb7445d1b9a6e12ad51fbdf525f040e0126"
+    },
+    {
+      "id": "f-sound-sofa",
+      "modelBytes": 187498,
+      "modelSha256": "d3335b680730f752f149af209c473f834fd3158dab8c5b632f64ecec46ad36d7",
+      "imageSha256": "39e4ce09ae1235110425c653d73884350dac59e6359558049a3cfdd622aeeee8"
+    },
+    {
+      "id": "f-shared-sofa",
+      "modelBytes": 186532,
+      "modelSha256": "5c13ff09e0b7fa883089395d487ba06552bb19f127a7a4d154820faf71e8856a",
+      "imageSha256": "3c40cfedbc165c959b6a73a4900b4758022ce4a30c08631ca518523f41e04d9d"
+    },
+    {
+      "id": "f-work-sofa",
+      "modelBytes": 188217,
+      "modelSha256": "766b539994ad08af5bf8633233634d694bb3d09f677a28dccad00cadb52a46a9",
+      "imageSha256": "dc7c78e9dcfb53b6624b47983d621b643ba064267c36ecb5d1f9c14e6d411b96"
+    },
+    {
+      "id": "f-rise-sofa",
+      "modelBytes": 156850,
+      "modelSha256": "797fbef55424ecc0aa0cadd3ab3996349288bcfdcd3b2234ea49232c0411e9b9",
+      "imageSha256": "cd61888fc8264a20ec22162c009d9f179e0154ec94aba88282634720bf359338"
+    },
+    {
+      "id": "f-pet-sofa",
+      "modelBytes": 188629,
+      "modelSha256": "1837fc243b1101cd131e65d89c981b704fb820fc5a6b228d599bdeae4254fff8",
+      "imageSha256": "81559c31e2881de15ee3685f3170004d7b5d69b52864b56c240cb19b15910691"
+    },
+    {
+      "id": "f-guest-sofa",
+      "modelBytes": 160179,
+      "modelSha256": "cfc7c735a5df2fda456a7ef079fbb138d097ab86399505df9ed59386dbf921e4",
+      "imageSha256": "7a1ab2ddca689fdbbc7516cf376ddf224a999ca9d9cdeb142c8d2d187963d64f"
+    },
+    {
+      "id": "f-cool-bed",
+      "modelBytes": 186200,
+      "modelSha256": "21087410c5669f7e4562ec480163a42ef9f8e1eabb340afbf2c14c40f88eed2c",
+      "imageSha256": "2d1a5fb9076c6845478a5d6e81b82188caf3fee0d2e9e45e12c38e53d9e8fc66"
+    },
+    {
+      "id": "f-reading-bed",
+      "modelBytes": 201276,
+      "modelSha256": "115fcc599f3be06351637c83bb6e85d75693eaa62c949d52eb2a2c31b8b5e6a6",
+      "imageSha256": "ee01ffedfb9da316b8434d422119d8f0ff4377685a8b2b2c434fb40531eabe37"
+    },
+    {
+      "id": "f-care-bed",
+      "modelBytes": 186179,
+      "modelSha256": "e8bc41a7016442087bf58b07f4f034ee370e51826e6530ec9dcd2b87a361372a",
+      "imageSha256": "b6721e9fbed9c2b2689a8aa655eb144fe933d0778786f2566da9299be8f0f9e6"
+    },
+    {
+      "id": "f-wall-bed",
+      "modelBytes": 94097,
+      "modelSha256": "63a3babd5837e75671a2603fa3161f1f616f3758bd2481855bc97be91863dc13",
+      "imageSha256": "94989ddb33b92bb3a1028ca48efe177ff634c7c14b1c1467200f424895567153"
+    },
+    {
+      "id": "f-air-bed",
+      "modelBytes": 200127,
+      "modelSha256": "d946844ef3faaf6dade60a6fc688b6d8db0a5b3632636581a6421334f97417eb",
+      "imageSha256": "28662ceafe90063816469f926edba9c2c0dee83e7d5854aae3e3d896b03e64e6"
+    },
+    {
+      "id": "f-easy-assembly-bed",
+      "modelBytes": 186278,
+      "modelSha256": "33fcf400d8b8817c7ca32d12cfa0f91291a6d833c8a457da7af6e722e38bdb6f",
+      "imageSha256": "aeafa76a9961cfb57796e1e82d99a8998258376c3ab7444e9e027b963ed57e50"
+    },
+    {
+      "id": "f-arrival-cabinet",
+      "modelBytes": 142434,
+      "modelSha256": "1223cdc70d526e9e153bce0ab1d626a565bbe9c2382ab2899f42df11ee62127d",
+      "imageSha256": "a0d1e792d47c78a0a55ccf8547d952641187607324d76ff4665f0db54f87de97"
+    },
+    {
+      "id": "f-dry-shoe",
+      "modelBytes": 168692,
+      "modelSha256": "9bebff3775ac3774ef9fdd0c11a2149a154e8d6b78003d279b77bc1457ab07a7",
+      "imageSha256": "2aef1393d0ed5387feadb05329f59c8197cf094f9b628a2df335b4a1894e59a2"
+    },
+    {
+      "id": "f-pantry-rail",
+      "modelBytes": 173929,
+      "modelSha256": "965ab28ca0c5e5b25f1268892eacf5d5d8844990ded936e365694fd031c9cee7",
+      "imageSha256": "a036505915e9e99eaa5eb104fc377ca4d56151e6aca91384bde432d595eea184"
+    },
+    {
+      "id": "f-wardrobe-carousel",
+      "modelBytes": 85840,
+      "modelSha256": "7dd2f20725eca9a550c4c9fdfce1988d9e4d260ffbc55d19cb10db9b9aac7b18",
+      "imageSha256": "fdb511ebdf7d020b90ce6f26734dabd10c9d15094aaf68916381617dd44465af"
+    },
+    {
+      "id": "f-book-rail",
+      "modelBytes": 157771,
+      "modelSha256": "03778ece90e1acf7b3111503af7439316243bd761b5037371e598b72f9dd782b",
+      "imageSha256": "fcb00c20bfe03cd64c0d25fa0878fd794bab2ed585b9b4c01f7c6f8239ea97b2"
+    },
+    {
+      "id": "f-join-cabinet",
+      "modelBytes": 214329,
+      "modelSha256": "ef6a4ae0d04b647b8d806ba5d1ebfbe36877ab1733bfcc54b6ef70b09db51856",
+      "imageSha256": "de8c3e8cef6db0b6f0c1b6e0d9f6661d409be9c7c733976da163c1c85874936f"
+    },
+    {
+      "id": "f-laundry-cabinet",
+      "modelBytes": 212693,
+      "modelSha256": "342f172877ce36c17add760fe2901eae8434f4bf5a79d3e7b08bed199926a4aa",
+      "imageSha256": "bab631b7eb919f3e1ae7728f9bed19b871ca23c7a6267084698c7f9660b78c80"
+    },
+    {
+      "id": "f-safe-drawer",
+      "modelBytes": 152771,
+      "modelSha256": "c80cbb6c56ec81802884ffed7fa18b6641330459c70d5e3e397cbaa07589548b",
+      "imageSha256": "f254870c160e9448f074c1c85bfc1b3e7f6d58d2015d3c985e5bc1cad3a9472a"
+    },
+    {
+      "id": "f-sort-bin",
+      "modelBytes": 182961,
+      "modelSha256": "eab3c030727976fa8520b79e105993967a0fd2135c25c4d39fc07fededb09cb3",
+      "imageSha256": "9073b90a25bec97e9f9566ed53d6e54dec487aaa8dd3aa150c174c5f0b673703"
+    },
+    {
+      "id": "f-tool-wall",
+      "modelBytes": 121920,
+      "modelSha256": "222bc981de1283d81a727084a6bb02e9061e8416001a6cfc590a23901a4e889a",
+      "imageSha256": "43aa238767a1e4b3cdc19c831882393e51532c6c978f6e7ba24957baaa855bfe"
+    },
+    {
+      "id": "f-parcel-cabinet",
+      "modelBytes": 152793,
+      "modelSha256": "5f1a400ed07c8bfcfe18c311b142dec5f567eb1c93c682db7aeb410dca5fdfb7",
+      "imageSha256": "62db7dc3bd79aaa92cd526dd8a325f130cb0bb7323f998ad68fa7d66a75ff670"
+    },
+    {
+      "id": "f-media-cabinet",
+      "modelBytes": 169379,
+      "modelSha256": "f03e79b2acd6b9be9d78ad96098d53ee892863fbbf7a13b254ffb619ed1a1836",
+      "imageSha256": "9862bd862f053ed0d67a5f0b1563b3f44590fbb46d4faed26795280f5d2f4c0a"
+    },
+    {
+      "id": "f-aware-desk",
+      "modelBytes": 148095,
+      "modelSha256": "1e9915c502d4c27b4dd76f4eb60afe58f6e1b1fb3fb9315e44d2605039922626",
+      "imageSha256": "8099d436ea7e0ae18cf165384341f1df27db7ce3878a6b2afafd7a118937085d"
+    },
+    {
+      "id": "f-fold-workdesk",
+      "modelBytes": 75975,
+      "modelSha256": "290c53589ba0c65e7b39635f7ce43f17fa45b5161f609d6a442792fdeef12c15",
+      "imageSha256": "a552fa83158b41d17cc299926276aec0f298e855e47e4e1f096fc32cd1b20dd9"
+    },
+    {
+      "id": "f-growing-desk",
+      "modelBytes": 148165,
+      "modelSha256": "7d2cd0bd8df991d216b294f32ae37f40f42a04ae3b9002f2ffd87b06f9d7ac61",
+      "imageSha256": "bd3a3dd59c84688d575ccd313e8f095dbbe87aa44289d6ba5bff7c8e5b40f8ef"
+    },
+    {
+      "id": "f-meeting-desk",
+      "modelBytes": 147874,
+      "modelSha256": "ba63a3e2512aee7ce9e5cef895320944cf54335f89336eecabbad2e9110480d3",
+      "imageSha256": "ee2aafc1f184c5bb87273d30283af4da9f01d582f09bc11b4d9a8ad353859f50"
+    },
+    {
+      "id": "f-tangible-desk",
+      "modelBytes": 162888,
+      "modelSha256": "e305c94d1b7c9aae117255c6510e4edd1364074ee740e5b38e809fd0cf491792",
+      "imageSha256": "6f1c193a2679aa4811f2828a2c5366d96c17d1c684a13e12fbbefd0432b578bf"
+    },
+    {
+      "id": "f-quiet-workpod",
+      "modelBytes": 180208,
+      "modelSha256": "9fdf738b60be11b747be4250cc26eb61991c9c10d2acd24357b5c259d607698d",
+      "imageSha256": "63b30250c745eddc2059a8dd55309ca99606daff55e04e404f234e31c0024e22"
+    },
+    {
+      "id": "f-switch-workstation",
+      "modelBytes": 161505,
+      "modelSha256": "b517a00fefc97a703e492bdda8233eacc77065a985ec2ed8439f0805ded69635",
+      "imageSha256": "43e3b5a91e4d8cae7e6d2205a346b8979cb9fb8ce21065211125910b9b94cdeb"
+    },
+    {
+      "id": "f-guided-bench",
+      "modelBytes": 178798,
+      "modelSha256": "fed4ce6c421da360f861da5a4de6ce5e5b2942fab2537a46347c04c47bee4d79",
+      "imageSha256": "2dbb8c97ea16d19e2bd6598c064bf99594d7e0323abbcc5e44e5feba338b1092"
+    },
+    {
+      "id": "f-body-chair",
+      "modelBytes": 157555,
+      "modelSha256": "ac3b31b4ce1c755a8f1cc6723d05f1cefc0e7f3997ac22911a8a86cdf2270d91",
+      "imageSha256": "1c8f660003cd80f4c913397f5976b3fd5f7ab1c87967b2311778ef3de32cef88"
+    },
+    {
+      "id": "f-warm-chair",
+      "modelBytes": 173381,
+      "modelSha256": "7dbfb54ec43b38b9d2d39d5cd8d1378c3bedc725a8fc8a2bc111254e77ae5417",
+      "imageSha256": "35fc33476e3aef32ef1be79c1e03917afb8f20a4827daf691e045a1a03e25fe5"
+    },
+    {
+      "id": "f-stand-chair",
+      "modelBytes": 152968,
+      "modelSha256": "ef562548a11194f7d7b121119ee5f9b13f03bd402d513a6cfeb71635e2ade2d2",
+      "imageSha256": "fb288069fff1f10442c9576562e1e202ed39fce96d5d445355db57441a0790e0"
+    },
+    {
+      "id": "f-floor-chair",
+      "modelBytes": 171234,
+      "modelSha256": "1b007b3317a4aaac0c3b67d51face42a91b2fbb0d17b40d690a9f0fcad46a0e1",
+      "imageSha256": "877694c3db5980b97fc60026605239d43cf9c988d227daeb17dd99670812e295"
+    },
+    {
+      "id": "f-rock-chair",
+      "modelBytes": 165742,
+      "modelSha256": "067ea98fc6a11ebc8c76d6e0be94f714e2789343724b35bd1c558c1879cf54f1",
+      "imageSha256": "31927ae55000bc4eea79850f19fe6dd50e87f3746a7f8fd923244809f2c1339e"
+    },
+    {
+      "id": "f-join-chair",
+      "modelBytes": 186065,
+      "modelSha256": "467fc5b10a040c38ca5dcb827421965c3a82f34d7142593a0122927f35f15544",
+      "imageSha256": "588d0e6e580da319fec85ad1888defb16e718fb3569d39d4cecdbc9e603fff21"
+    },
+    {
+      "id": "f-extend-dining",
+      "modelBytes": 77620,
+      "modelSha256": "e2fd1ca34050bb86787600ef4aea840772ea284b4a3b5d7e5b885509d3601977",
+      "imageSha256": "7e5811ac935476b1bbc281e7f35df0d914d0b2f4a15604e3ab3b1a024ddc807f"
+    },
+    {
+      "id": "f-prep-table",
+      "modelBytes": 103603,
+      "modelSha256": "49908ea15da70c6ca83783bb25466f1d91fd5ab07fb4b7b7a99fef0573d0e43d",
+      "imageSha256": "5bf25c1806886cae28db2be3005b3642542348dfd8f77350caccbe24201138bf"
+    },
+    {
+      "id": "f-rise-coffee",
+      "modelBytes": 91883,
+      "modelSha256": "26027188ed1aa773b93eba1a9e9661b406a60360fc5785ec25a2643b9353c327",
+      "imageSha256": "1c710b6c4dbdb0525e14ee18aa5bcdc9535a09ca9c2ca01a9eecfc5bf9351036"
+    },
+    {
+      "id": "f-nest-charge",
+      "modelBytes": 102536,
+      "modelSha256": "e180b2c702ec552150724a424b76373f60dfe01560c33de8d5f76a98dc97363c",
+      "imageSha256": "d5065e34f645aa4627d0418487273406dc349b5f128277e8835b564b91de5db5"
+    },
+    {
+      "id": "f-wall-table",
+      "modelBytes": 60798,
+      "modelSha256": "141acad0be4e6d2d07792a47738cbbc3c873b8b4ae12aa70aca2037622ba5f6d",
+      "imageSha256": "ef119a98652ac101880e78a0f53e07a10318d8a589527a62746c74c8e97f8bcf"
+    },
+    {
+      "id": "f-play-table",
+      "modelBytes": 122269,
+      "modelSha256": "36d9c72a9663be6d865c5b8a03df0be7050c34a6a0d9b76b8d3d67a63b0b7511",
+      "imageSha256": "6e3d813fb6136fd34d816888d0c07c42f502f0d70ed6e5d38a3d875269d56ff9"
+    },
+    {
+      "id": "f-access-tray",
+      "modelBytes": 60640,
+      "modelSha256": "f99d280f1d1296b569d41c675c6ac76668449f2f7a8026126cc538a8a31ff32c",
+      "imageSha256": "fa08f0c6f94604ae8a6ba4cee4a25634e55e4214867265be46747c2eb79f206c"
+    },
+    {
+      "id": "f-task-arm",
+      "modelBytes": 102194,
+      "modelSha256": "2ecfde96ebac1162d7ba8403f595ce2f0c58899142d87604e91259d1585c7b4c",
+      "imageSha256": "cd85052f4c5a5c00e1439a62c43350668ef457f6be0b73377f2be6002d79d157"
+    },
+    {
+      "id": "f-ceiling-rail",
+      "modelBytes": 62911,
+      "modelSha256": "ef6dac4b56315f157da00f6387d949642be0c0d1ad9b91da649df3789442b50a",
+      "imageSha256": "924cdaeeb1133eaf0827caea8ba3a46cca7b35cf760a6b8d20dcb68b17a14de9"
+    },
+    {
+      "id": "f-night-path",
+      "modelBytes": 61869,
+      "modelSha256": "602b7e1ed80963fb6b7f1b2b538199dfe360a2dd448ed43d34ab1b7724ac3843",
+      "imageSha256": "ba8a3f9cd6ff46ff0b1f693bc763aa7c207c83c6b0f7bb81e2b8fb8d040631b9"
+    },
+    {
+      "id": "f-ambient-panel",
+      "modelBytes": 47428,
+      "modelSha256": "1bd86653e35e027e4860827ba002fe48f01860bc7754fd92f5eaa1eb3b175390",
+      "imageSha256": "eafd1bf9479ff0d5f2fa4c76dac93705f8337b731381bb515c0878dc5127815d"
+    },
+    {
+      "id": "f-daily-rhythm",
+      "modelBytes": 79281,
+      "modelSha256": "060bd05f73bd78e2b48956ebbe45622d5339d0c3942b8446f0030413759a2bfa",
+      "imageSha256": "e286083b93d2cca6f05f08e04a13cfae6a086beca1d34358b7fd865237ac9b68"
+    },
+    {
+      "id": "f-assembly-light",
+      "modelBytes": 116679,
+      "modelSha256": "d2da1145e56460bd4277a4db030b1f5a3ccb129989f475ab3f6d244d78fa8ecd",
+      "imageSha256": "c7b9432369db081f6c0deb5d07771eb76c41f77d5748987e0bc6be4cca531322"
+    },
+    {
+      "id": "f-portable-light",
+      "modelBytes": 55813,
+      "modelSha256": "9fb936acb715ebf27e44394792c9574e73318ead33f1f9c8cf081413b82683fc",
+      "imageSha256": "eac338e4a7b32821b30a5dc28bd778c978041622913f8daf2953a634adb71a13"
+    },
+    {
+      "id": "f-focus-divider",
+      "modelBytes": 62106,
+      "modelSha256": "6ca0997b184ff44fd2986b5fbff018ae5211e2e648bdb59553bc7f19d532256f",
+      "imageSha256": "253013412996f25142f81bf2ca4be3d4f88f7258b18cd48719816a2e9dba49b3"
+    },
+    {
+      "id": "f-arrival-mirror",
+      "modelBytes": 136020,
+      "modelSha256": "d1d61c8a324158228d9adf3c0b094d3853bedb02b44ed0c692a1f63236de7c01",
+      "imageSha256": "6c9a37d47bc06505fefa986370dd8e7a3161d51ac47b10098297f1f30bbbb17f"
+    },
+    {
+      "id": "f-dress-mirror",
+      "modelBytes": 123675,
+      "modelSha256": "1b296aa2481ab8b5d859e369212fb3de2c25a3e982929c1a23436e7bbc44481d",
+      "imageSha256": "5386578ce36c863969a50e02ad97840baf1083f3ef9cd9394768106146f82a51"
+    },
+    {
+      "id": "f-access-mirror",
+      "modelBytes": 121625,
+      "modelSha256": "bb208e050208f1b870fcf50a1a46b589750dc345d204956a371eeb07bb445d7f",
+      "imageSha256": "cd0c4164f2c32bff28ad582e75fc32411ce74ca33386d4d96203d9caf10f97e0"
+    },
+    {
+      "id": "f-steam-mirror",
+      "modelBytes": 151548,
+      "modelSha256": "291ba1899eccbd7dc0105cf043721e81daa5ddd10f98df9b83bead86d2bf381c",
+      "imageSha256": "3361c9e46b65de05cde1e4c1821e17910df30e7caeacdb03b0bbb1be68aaf1c3"
+    },
+    {
+      "id": "f-air-side",
+      "modelBytes": 91354,
+      "modelSha256": "1ba1346b7a7107b4fed546ab33ffac723253bf6b288dfe1050c86c7f6378f8f1",
+      "imageSha256": "c18f63eb513db0539e30db69460da2183d86ab109a934d726813fa7e4f373c8e"
+    },
+    {
+      "id": "f-air-cabinet",
+      "modelBytes": 107106,
+      "modelSha256": "f8213998a258a913d638c9e5ace145ae0db46e7af45b042c9130c779ceb7ac4a",
+      "imageSha256": "94e8285a43196464a3cbcbf2c307387424d6167c6c70fb2765b7fa757b5a6221"
+    },
+    {
+      "id": "f-vent-cook",
+      "modelBytes": 91378,
+      "modelSha256": "3f1d351ddc0bcdd91c02ece91e7b74ac8bf3787ad24951558a21cc3758f2e52a",
+      "imageSha256": "a10c2a585396efcc0971acba4bf5f796fc1efa805f3d1b6bec41cfe91cbc8d13"
+    },
+    {
+      "id": "f-coffee-hub",
+      "modelBytes": 112886,
+      "modelSha256": "f50090c49ea54213d82f0be1ba321b02e402bba440b3a46a2b2f24975f25abb2",
+      "imageSha256": "0b72193540a6f3b2b78e280c22879c8dc4bdb19bf70c3d3048baa01cff7860f3"
+    },
+    {
+      "id": "f-cool-pantry",
+      "modelBytes": 75497,
+      "modelSha256": "6edc531c56ec7677ec42e05b3193a1dfd0e460656b11eb75f10a58405389b4d2",
+      "imageSha256": "15a09956c7ed7eba973dbf5361d04b724491b933ae6f57b01795c26a0c17e57c"
+    },
+    {
+      "id": "f-serve-tray",
+      "modelBytes": 49671,
+      "modelSha256": "66762b6c782d7f32f8bad9dba00ce00482b649d2f30c270427e89f8c60280c45",
+      "imageSha256": "297051856f50459c061e1013f71e41c83f2311c8ff88f91f104a468e36d8df12"
+    },
+    {
+      "id": "f-robot-cart",
+      "modelBytes": 76365,
+      "modelSha256": "0098962fdef7e5f83b4b80e5964b028b37f67e05aa6d8f378213b4aa8db05e73",
+      "imageSha256": "cd6fc4c7334d7ee746437f5332708569a1717e4290abe4e62c1c991427cdf9d0"
+    },
+    {
+      "id": "f-shared-dock",
+      "modelBytes": 100188,
+      "modelSha256": "a5be1d49b689a3a5c52d5ee9f77dd3f0544b81388458296c33337cfcbc8f85b5",
+      "imageSha256": "19bab80831a2ab1bea325c79d01d6e15b9aa063e9658a9300594ff5339bcfa81"
+    },
+    {
+      "id": "f-daily-organizer",
+      "modelBytes": 100077,
+      "modelSha256": "5c03777f8b72c2ec1aed51c2356301a47e6be3c39380b26fc25267a0bee71161",
+      "imageSha256": "7f4fd774d1447ddd76581e688eb0c23a1516498ab089bd541a77fa1ddb345d14"
+    },
+    {
+      "id": "f-quiet-fan",
+      "modelBytes": 63613,
+      "modelSha256": "82df27f3a345c1b37809242dfcbaefbb9d5f565001e3c7a5e4fe24afc452da0b",
+      "imageSha256": "dc967bf51844be0da3bb3562065b64dd98e41cf2ad8dd60d9d8ae791f14b7d64"
+    },
+    {
+      "id": "f-plant-station",
+      "modelBytes": 128172,
+      "modelSha256": "cb19b5dfb3ad79a4676cf8841abfb983ab0da425a7efc8188d4c9ad5530ada1e",
+      "imageSha256": "9244dfb78d5e466ad1eec9be517d4f6705c7a7a239c19d68eb22c9e37d404c3b"
+    },
+    {
+      "id": "f-shade-canopy",
+      "modelBytes": 61544,
+      "modelSha256": "a83538b4e0e36cefa51354eacde121a50317e22b77a5665c3b3f5d8c02bfb920",
+      "imageSha256": "0c2a547e311fa99042f4cb2de923f2c2ecc016555b260f2c0d36f32cf7843cf1"
+    },
+    {
+      "id": "f-shelter-chair",
+      "modelBytes": 124024,
+      "modelSha256": "092bda34f1424f1f755c6186c06f52fae34298f15fba691eca3f0a7e780c5b26",
+      "imageSha256": "32313a6f3c91ce818c626b0fdf4638f2fc1194ff1d29d4638adb7c59e944d09e"
+    },
+    {
+      "id": "f-solar-table",
+      "modelBytes": 132434,
+      "modelSha256": "52e78bfd7b95f2690621571101a040c11482b660a46a737f998cfdac5bc65fb2",
+      "imageSha256": "2c743613a02850b6afdfb32d93549d1643bc7b0eaa0d7c30c8f4ed576adcc3ae"
+    },
+    {
+      "id": "f-boot-station",
+      "modelBytes": 106971,
+      "modelSha256": "47ad1ed63fb4bff8d2132ca4012ef52ac7fa1d580142681c4920b973e2bb0a58",
+      "imageSha256": "38a0b9388e5e7b79e306d75b465933bb34d78a0a72ff1c811a7fc4122dc23701"
+    },
+    {
+      "id": "f-gear-dry",
+      "modelBytes": 139308,
+      "modelSha256": "94fa7fe246a8897d90adcbfa9c1f8a9bd08718e96d3ee093e0fb42859a76e543",
+      "imageSha256": "627a0b481e82c670e6b8d3c0ed0afab0f0aa05747f517013c518dfd73e55459e"
+    },
+    {
+      "id": "f-modular-bench",
+      "modelBytes": 95701,
+      "modelSha256": "38e9ae0eba5059cc61df1f46f128694653f6f9647d018282007335c683ef61ef",
+      "imageSha256": "0ac59382e32d113d66adf590b41d2d64fdb88603e921452a40eec43b57bee120"
+    },
+    {
+      "id": "f-grill-prep",
+      "modelBytes": 122537,
+      "modelSha256": "bebc4d0ac895802e8476362be43f0ba21d14fc860c6b6dc41f71f7a213a6ecec",
+      "imageSha256": "2f3c26dd7a824317e35f9f386e8789034afcfbde56780052f9d684d994df1cf8"
+    },
+    {
+      "id": "f-kayak-dock",
+      "modelBytes": 154460,
+      "modelSha256": "f2b65ce827a5649475bda4fc058da2d19fa39d18deb8aa4baf7649d13516735b",
+      "imageSha256": "365fcfe826f8b55d2eb9f89a8c22db894b00592b910d6e69f89b5cfa85672868"
+    }
+  ]
+}

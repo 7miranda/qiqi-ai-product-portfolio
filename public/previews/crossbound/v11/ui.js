@@ -49,17 +49,16 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
       build: () => save({ ...value, phase: 'build' }), finish: () => save({ ...value, phase: 'done' }) };
   }
   function SettlementProgress({ view, flow }) {
-    const step = view === 'complete' ? 0 : ['operations', 'review-task'].includes(view) ? 1 : 2;
+    const step = view === 'complete' ? 0 : view === 'operations' ? 1 : 2;
     return h('ol', { className: 'listing-local-steps v11-settlement-steps', 'aria-label': '本轮收尾进度' },
       ['看本轮战报', '接总部来电', '领取奖励与建设'].map((label, i) => h('li', { key: label, className: step === i ? 'is-current' : i < step ? 'is-done' : '', 'aria-current': step === i ? 'step' : undefined }, h('b', null, i < step ? '✓' : `0${i + 1}`), label)),
       flow.done && h('li', { className: 'v11-settlement-finished' }, '本轮引导已结束'));
   }
-  function SettlementActions({ company, ops, flow, onContinue, onSkip, onAdjust, onHQ }) {
-    const g = growth(company, ops), ready = g.facilities.some(f => f.ready);
+  function SettlementActions({ company, onContinue, onAdjust }) {
     const label = '开启下一轮';
     return h('div', { className: 'result-next-v23' },
       h('article', null, h('span', null, STOCK_CARRYOVER ? '继续经营 / 现金与余货保留' : '继续经营 / 现金保留'), h('h3', null, '下一轮，带着经验出发'),
-        h('p', null, `现有现金${cash(company.cash)}${STOCK_CARRYOVER ? '和余货会保留' : '会保留，下一轮重新备货'}。${!flow.done && g.nextTask?.available ? '总部还有一条经营线索，看看再出发。' : '可以继续经营原市场，也可以去下一站。'}`),
+        h('p', null, `现有现金${cash(company.cash)}${STOCK_CARRYOVER ? '和余货会保留' : '会保留，下一轮重新备货'}。可以继续经营原市场，也可以去下一站。`),
         h('div', { className: 'result-next-actions' }, button(label + ' →', onContinue, { variant: 'solid', 'data-guide':'next-round' }),
           button('调整本轮方案', onAdjust))));
   }
@@ -74,26 +73,6 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
         h('p', { className: g.passed ? 'signal-text' : '' }, goalChannelText(g)),
         h('p', null, `收入 ${cash(r.netRevenue)} · 成本 ${cash(r.totalCosts)} · 利润 ${cash(r.profit)} · 现金变化 ${cash(r.cashChange)}${r.receivables > 0 ? `（货款 ${cash(r.receivables)} 下一轮开局到账）` : ''}`)),
       button('成长、成就与四维评估在总部 →', onOpen));
-  }
-  function ReviewTask({ task, onSubmit, feedback }) {
-    const [selected, setSelected] = React.useState('');
-    // Opened from a stale notification after the task was answered: say so instead of showing an empty panel.
-    if (!task) return h(React.Fragment, null,
-      h('span', { className: 'eyebrow' }, '总部来电 / 售后复盘'),
-      h('h2', { id: 'campaign-dialog-title' }, '这条售后复盘已经处理完了'),
-      h('p', { className: 'panel-lead' }, '差评任务回答过就不会再出现。点左上角「返回公司」继续经营；下一次有买家差评时，总部会再打电话来。'));
-    return h(React.Fragment, null, h(CallIntro, { round: task.rewardRound, title: '买家差评，需要回应' }),
-      h('span', { className: 'eyebrow' }, `总部来电 / 第${task.round}轮售后复盘`), h('h2', { id: 'campaign-dialog-title' }, task.title),
-      h('p', { className: 'panel-lead' }, task.mission),
-      h('div', { className: 'operation-signals' }, task.metrics.map(m => h('article', { key: m.label }, h('small', null, m.label), h('strong', null, m.value), h('p', null, m.detail)))),
-      h('div', { className: 'operation-actions' }, [
-        ['amplify', '增加推广预算', '先拉新订单，把销量补回来'],
-        ['investigate', '回复买家，核查退款原因', '对照商品描述与交付，确定下轮改进方向'],
-        ['erase', '隐藏差评，再继续卖', '先让商品页看起来更好'],
-      ].map(([id, label, detail], i) => button(h(React.Fragment, null, h('span', null, `0${i + 1}`), h('strong', null, label), h('small', null, detail)), () => setSelected(id), { key: id, 'aria-pressed': selected === id }))),
-      feedback && h('div', { className: 'operation-feedback', role: 'status' }, h('b', null, '再看一下线索'), h('p', null, feedback)),
-      h('div', { className: 'operation-bottom' }, h('span', null, `首次完成 +${task.xp}经验 / +${task.research}建设点`), button('确认处理方案', () => onSubmit(selected), { disabled: !selected })),
-      h('p', { className: 'panel-note' }, '这是经营判断练习。完成排查后，仍需在下一轮实际调整方案；历史差评和评分会保留。'));
   }
   function LevelUp({ reward }) {
     if (!reward?.promotion) return null;
@@ -116,11 +95,9 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
     const feedback=feedbackState(company);
     if(company.history.length>=1&&!feedback.first) messages.push({id:'community-first',title:'总部来电 · 共建者专线',detail:'三句话告诉总部你的体验 · 50建设点',action:onCommunity,persistent:true});
     else if(company.history.length>=3&&!feedback.deep) messages.push({id:'community-deep',title:'总部回访',detail:'三轮之后，聊聊哪里还值得打磨',action:onCommunity,persistent:true});
-    const event = company.v2?.events.find(e => e.dueRound === company.round && company.stage >= e.stage && !e.choice);
-    if (event) messages.push({ id: `event:${event.id}`, title: '总部来电 · 新经营事件', detail: event.title, action: onTask });
     if (company.v2?.firstEntry) messages.push({ id: `first:${company.v2.firstEntry.marketId}`, title: '新市场足迹 · +5建设点', detail: '到公司总部看看这个国家的小知识', action: onHQ });
     if (unread.length) messages.push({ id: `achievements:${unread.map(x => x.key).join('|')}`, title: `新成就 · ${unread.length}项`, detail: unread.at(-1).name, action: onAchievements });
-    if (g.nextTask?.available) messages.push({ id: `task:${g.nextTask.id}`, title: g.reviewTask ? '总部来电 · 售后提醒' : '总部来电', detail: g.nextTask.title, action: onTask });
+    if (g.nextTask?.available) messages.push({ id: `task:${g.nextTask.id}`, title: '总部来电', detail: g.nextTask.title, action: onTask });
     if (ready.length) messages.push({ id: `build:${ready.map(f => f.id).join('|')}`, title: '公司可以建设了', detail: ready.map(f => f.name).join('、'), action: onHQ });
     const visible = messages.filter(m => m.persistent || !dismissed.includes(m.id));
     if (!visible.length) return null;
@@ -320,5 +297,5 @@ export function createCrossboundUI({ React, Button, engine, Passport, passportDa
       h('span', { className: 'v11-call-avatar', 'aria-hidden': true }, '林'), h('b', null, '总部来电 · 运营伙伴'),
       h('p', null, title || '有一条经营线索，想和你一起拿个主意。')), h('strong', { className: 'signal-text' }, round <= 3 ? '+200经验 · +40建设点' : '+100经验 · +20建设点'));
   }
-  return { range, Help, Handbook, useSettlement, SettlementProgress, SettlementActions, SettlementGoal, ReviewTask, LevelUp, RewardActions, NotificationDock, ListingOptimization, Promotion, MarketFacts, CountryBadge, AchievementHall, useAchievements, RoundAchievements, Report, Clearance, History, Cockpit, GrowthSummary, CallIntro };
+  return { range, Help, Handbook, useSettlement, SettlementProgress, SettlementActions, SettlementGoal, LevelUp, RewardActions, NotificationDock, ListingOptimization, Promotion, MarketFacts, CountryBadge, AchievementHall, useAchievements, RoundAchievements, Report, Clearance, History, Cockpit, GrowthSummary, CallIntro };
 }

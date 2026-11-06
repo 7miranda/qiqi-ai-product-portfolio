@@ -26,7 +26,7 @@ function shell(group, title, color) {
   for (const [minX, maxX, minZ, maxZ] of [[-13, 13, -10, -9], [-13, -12, -10, 10], [12, 13, -10, 10], [-13, -1.6, 9, 10], [1.6, 13, 9, 10], [-13, 13, 10, 11]]) boxes.push({ minX, maxX, minZ, maxZ });
   for (const [x, z, w, d] of [[0, -8.95, 23.6, 0.06], [-11.95, 0, 0.06, 17.6], [11.95, 0, 0.06, 17.6]]) glowStrips.push(block(w, 0.08, d, neon(color, 0.8), { x, y: 5.3, z, parent: group, shadow: false }));
   const sign = neonSign(title, color, { width: 8, height: 1.3 });
-  sign.position.set(0, 3.9, -8.95); group.add(sign);
+  sign.position.set(0, 4.7, -8.95); group.add(sign);   // high on the back wall: clear of the consoles at eye level
   // Exit: green, the step is done by the time the player walks back out.
   const exitMat = neon(P.green);
   for (const [fx, fy, fw, fh] of [[-1.6, 1.75, 0.1, 3.5], [1.6, 1.75, 0.1, 3.5], [0, 3.5, 3.3, 0.1]]) block(fw, fh, 0.12, exitMat, { x: fx, y: fy, z: 8.95, parent: group, shadow: false });
@@ -118,7 +118,7 @@ export function buildFinance({ snapshot }) {
   const termScreen = textPlane([{ text: '高级选项', size: 0.32, color: '#52cadd' }, { text: '账期·谈判·贷款', size: 0.2, color: '#c7d3dc', weight: 500 }], { width: 0.9, height: 0.6, px: 160, bg: '#0a1220', border: '#52cadd' });
   termScreen.position.set(-4.4, 1.75, -2.74); group.add(termScreen);
   boxes.push({ minX: -4.8, maxX: -4, minZ: -3.25, maxZ: -2.75 });
-  interactables.push({ id: 'finetune', kind: 'finetune', x: -4.4, z: -1.8, y: 2.2, label: '高级选项：账期、谈判、备战、贷款', setHighlight: addOutline(term) });
+  interactables.push({ id: 'finetune', kind: 'finetune', x: -4.4, z: -1.8, y: 2.2, label: '高级选项：账期、谈判、贷款', setHighlight: addOutline(term) });
 
   // Corner crate yard (3D-023): ghost crates preview the chosen plan, solid crates once bought.
   const yard = crateYard(group, { x: -9.6, z: 3 });
@@ -206,7 +206,7 @@ export function buildWarehouse({ snapshot }) {
     for (let i = 0; i < 6; i++) slats.push(block(1.36, 0.02, 0.12, edge, { x: b.x, y: 0.65, z: BELT_FRONT - i * len / 6, parent: group, shadow: false }));
     boxes.push({ minX: b.x - 0.8, maxX: b.x + 0.8, minZ: BELT_BACK, maxZ: BELT_FRONT });
     belts.set(b.id, { ...b, o, surface, slats, edge });
-    interactables.push({ id: `belt:${b.id}`, kind: 'belt', fulfillmentId: b.id, x: b.x, z: BELT_FRONT + 1, y: 2.2, label: `选「${o?.name || b.id}」发货`, enabled: !!o && !o.disabled, setHighlight: addOutline(surface) });
+    interactables.push({ id: `belt:${b.id}`, kind: 'belt', fulfillmentId: b.id, x: b.x, z: BELT_FRONT + 1, zSpan: [BELT_BACK, BELT_FRONT + 1], y: 2.2, label: `选「${o?.name || b.id}」发货`, enabled: !!o, setHighlight: addOutline(surface) });
   }
 
   // Stock in the middle of the floor: what W2 bought this round.

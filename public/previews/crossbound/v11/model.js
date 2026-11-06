@@ -143,8 +143,10 @@ export function createCrossboundV11(a) {
     const selected = find(options, input?.id) || options.at(-1);
     const category = products.some(x => x.category === input?.category) ? input.category : p?.category;
     const matched = channelId === 'creator' ? selected.id === 'vertical' && category === p?.category : !!selected.categories?.includes(p?.category);
-    return { ...selected, category, matched, trafficFactor: selected.visitors * (channelId === 'content' && matched ? 1.1 : 1),
-      conversionFactor: channelId === 'ads' ? matched ? 1.1 : .95 : channelId === 'creator' && matched ? CREATOR_MATCH : 1 };
+    const audience = channelId === 'ads' && ['tech','broad'].includes(input?.audience) ? input.audience : null;
+    const creatorId = channelId === 'creator' && ['lena','kai','noor'].includes(input?.creatorId) ? input.creatorId : null;
+    return { ...selected, category, matched, ...(audience ? {audience} : {}), ...(creatorId ? {creatorId} : {}), trafficFactor: selected.visitors * (audience === 'broad' ? 1.3 : 1) * (channelId === 'content' && matched ? 1.1 : 1),
+      conversionFactor: channelId === 'ads' ? (matched ? 1.1 : .95) * (audience === 'broad' ? .7 : audience === 'tech' ? 1.1 : 1) : channelId === 'creator' && matched ? CREATOR_MATCH : 1 };
   }
   function normalize(n, input) {
     const raw = typeof input === 'string' ? { id: input } : input;
@@ -163,7 +165,7 @@ export function createCrossboundV11(a) {
       if (n.currentListing) out.listing = copy(n.currentListing.selection);
       else if (raw.listing && listingQuote(n, raw.listing)) out.listing = copy(raw.listing);
       const c = choice(out.id, raw.promotionChoice, find(products, n.productId));
-      out.promotionChoice = { id: c.id, category: c.category };
+      out.promotionChoice = { id: c.id, category: c.category, ...(c.audience ? {audience:c.audience} : {}), ...(c.creatorId ? {creatorId:c.creatorId} : {}) };
     }
     return out;
   }
@@ -352,6 +354,10 @@ export function createCrossboundV11(a) {
     for (const d of n.decisions.slice(0, stage)) r = commit(r, d);
     return feedback(r, '已回到本轮选择', '本轮市场波动保持相同，相同方案得到相同结果；已购优化与对应费用保留。');
   }
+  function restartRound(n) {
+    if(!valid(n)||n.stage>=6)return n;
+    return {...restoreStart(n,n.roundStart),attempt:(n.attempt||0)+1,recoveryOps:n.recoveryOps};
+  }
   function next(n) {
     if (n.stage !== 6) return n;
     const r = create(n.runSeed);
@@ -409,5 +415,5 @@ export function createCrossboundV11(a) {
     if (oldZero) defs.push(['zero-refunds', '完美交付 · 历史纪念', '旧版已获得的零退款徽章，永久保留', r => r === oldZero]);
     return defs.map(([id, name, description, predicate]) => { const found = history.find(predicate); return { id, name, description, earned: !!found, round: found?.round }; });
   }
-  return { valid, create, migrate, snapshot, listingProduct, listingQuote, publish, optimize, choice, normalize, simulate, preview, commit, rollback, next, previous, clearStock, serialize, deserialize, milestones, scale, options, products, markets, channels };
+  return { valid, create, migrate, snapshot, listingProduct, listingQuote, publish, optimize, choice, normalize, simulate, preview, commit, rollback, restartRound, next, previous, clearStock, serialize, deserialize, milestones, scale, options, products, markets, channels };
 }

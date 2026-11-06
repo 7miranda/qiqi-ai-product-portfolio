@@ -22,7 +22,6 @@ export function walkthroughPlan(id,view){
     '2:platform':[{...choice('[data-guide="platform"]','第二轮：多了经营平台','点击平台卡比较流量、入驻费和佣金。这里决定通过哪种店铺模式经营；也可以沿用推荐平台。','保留当前平台'),event:'click'}],
     '2:first-mile':[{...choice('[data-guide="first-mile"]','货先怎么运到海外？','点击头程方案比较海运、空运和海空联运。这段运费和到货时间，会影响本轮能卖多少货。','保留当前头程'),event:'click'}],
     '2:credit':[{...choice('[data-guide="credit"]','采购款现在付，还是下轮付？','展开的谈判方案里可以争取账期。账期暂时保留现金，但下轮仍要还货款。','保留当前付款方案'),event:'click'}],
-    '2:event':[{target:'.v2-event .decision-choice-list',title:'这次轮到你处理经营事件',body:'阅读这通总部来电，点击一个应对方案。选择会真实改变费用或后续经营效果；有成本的选项会直接执行。',event:'click'}],
     '2:report':view==='financials'?[{target:'[data-guide="balance"]',title:'看看利润为什么还没变成现金',body:'点击「资产负债表」，找到现金、应收账款和应付采购款。卖出了货，也可能还要等回款。',event:'click'},read('[data-guide="balance-table"] tbody tr:nth-child(3)','这轮的钱主要卡在哪里？','应收是卖了货还没收到的钱，存货是还没卖出的商品，应付是以后要还的采购款。看完这张表，再决定下轮能投入多少。','看懂了，接下来自己经营')]:[{target:'[data-guide="financials"]',title:'第二轮重点：利润不等于现金',body:'点击「财报」，这次只看新增的应收、应付和平台费用，第一轮学过的步骤不再重复。',wait:true}],
   };
   return plans[id]||[];

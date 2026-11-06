@@ -1,3 +1,4 @@
+import {entrySource} from './entry-source.mjs';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
@@ -190,7 +191,7 @@ test('the example contact is never a live handoff and the workspace has no sendi
 });
 
 function integratedPage(file) {
-  const html = read(file);
+  const html = entrySource(read(file));
   const script = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)]
     .map(match => match[1]).find(value => value.includes('ServicesUI.Workspace'));
   assert.ok(script, `${file} contains the generated application module`);

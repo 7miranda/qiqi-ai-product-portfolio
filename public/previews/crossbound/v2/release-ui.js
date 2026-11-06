@@ -1,8 +1,9 @@
 import {questions} from './questionnaire.js';
+import {createRecoveryUI} from './recovery-ui.js';
 import {createTutorialUI} from './tutorial.js';
 import { goal, financialStatements, rank, seasonRank } from './release.js';
 import { assessment } from './progress.js';
-import { feedbackState, saveFeedback, validComment, saveLead, leadRecords, publishedAdoptions, communityBadgeNumber, track, enqueue, userId } from './records.js';
+import { feedbackState, feedbackDraft, saveFeedbackDraft, saveFeedback, validComment, saveLead, leadRecords, publishedAdoptions, communityBadgeNumber, track, enqueue, userId } from './records.js';
 
 export function createReleaseUI({React,Button,engine,tasks,profitRows}) {
   const h=React.createElement, money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n||0);
@@ -44,39 +45,42 @@ export function createReleaseUI({React,Button,engine,tasks,profitRows}) {
         ['已售货品成本',-(report.cogs||0)],['毛利',net-(report.cogs||0)],...income.filter(r=>!['netRevenue','cogs'].includes(r.id)).map(r=>[r.label,r.amount]),['净利润',report.profit]]),h('p',null,`本轮赚了${money(report.profit)}；采购形成的未售库存不重复扣为费用。`)):
       tab==='balance'?panel('资产负债表',table('本轮期末资产与负债',rows),f.cashRisk&&h('p',{className:'v3-warning'},'现金可能接不上应付，请先核对待到账货款和到期债务。'),h('p',null,`净资产${money(c.equity)}。利润和现金的差别包括应收变化${money(c.receivables-o.receivables)}、存货变化${money(c.inventory-o.inventory)}以及负债变化${money(c.liabilities-o.liabilities)}。`)):
       panel('现金流量表',table('本轮实际收付', [['期初现金',o.cash],...f.flow.map(r=>[r.label,r.amount]),['现金净变动',f.movement],['期末现金',f.cashEnd]]),h('p',null,'贷款本金和应收到账是现金流，不再重复计入利润。')),
-      !f.legacy&&panel('三表核对',h('ul',null,['资产＝负债＋净资产','净资产变动＝本轮净利润','期末现金＝资产负债表现金＝实际现金'].map((label,i)=>h('li',{key:label,className:f.checks[i]?'signal-text':'v3-warning'},`${f.checks[i]?'✓':'核对异常'} ${label}`)))),
+      !f.legacy&&panel('三表核对',h('ul',null,['资产＝负债＋净资产','净资产变动＝本轮净利润＋共建补助','期末现金＝资产负债表现金＝实际现金'].map((label,i)=>h('li',{key:label,className:f.checks[i]?'signal-text':'v3-warning'},`${f.checks[i]?'✓':'核对异常'} ${label}`)))),
       f.reason&&h('p',null,f.reason));
   }
   const communityBadge='./assets/badges/community-v3/co-creator-star.webp';
   const badgeArt=(className='')=>h('img',{className:`v3-community-badge ${className}`,src:communityBadge,alt:'共建者徽章：淡黄色珠光四角星，香槟金曲线与 CO-CREATOR 铭文',width:240,height:240});
-  function Community({company,onReward,onDone}) {
+  function Community({company,onReward,onDone,recovery=false}) {
     const saved=feedbackState(company);
     // Keep the entry mode stable when saving the first survey causes a parent render.
-    const [deep]=React.useState(()=>!!saved.first&&company.history.length>=3);
-    const [answers,setAnswers]=React.useState([]),[comment,setComment]=React.useState(''),[receipt,setReceipt]=React.useState(null),[error,setError]=React.useState(''),[response,setResponse]=React.useState('');
+    const [deep]=React.useState(()=>!recovery&&!!saved.first&&company.history.length>=3);
+    const [answers,setAnswers]=React.useState(()=>deep?[]:feedbackDraft(company).answers),[comment,setComment]=React.useState(()=>deep?'':feedbackDraft(company).comment),[receipt,setReceipt]=React.useState(null),[error,setError]=React.useState(''),[response,setResponse]=React.useState('');
     const complete=deep?!!saved.deep:!!saved.first,step=answers.length,length=Array.from(comment.trim()).length;
     const claim=deep?saved.deepClaim:saved.firstClaim,earned=!deep||!!claim?.substantive;
+    React.useEffect(()=>{if(!deep&&!saved.first)saveFeedbackDraft(company,{answers,comment})},[answers,comment,deep,saved.first]);
     const submit=()=>{try{
       if(complete||receipt||!validComment(comment)||(!deep&&answers.length!==3))return;
       const substantive=!!comment.trim();
       const value=deep?{deep:true,comment:comment.trim()}:{first:true,answers,...Object.fromEntries(questions.map((q,i)=>[q.key,q.values[answers[i]]])),comment:comment.trim()};
-      saveFeedback(company,value);onReward({type:'community',id:deep?'deep':'first',run:String(company.v2?.identity||company.runSeed),rounds:company.history.length,substantive});
+      const stored=saveFeedback(company,value);
+      onReward(stored[deep?'deepClaim':'firstClaim']);
       setError('');setReceipt({points:deep?(substantive?30:0):(substantive?70:50),earned:!deep||substantive});
     }catch{setError('本机保存失败，请重试；已保存的奖励记录会自动核对，不会重复发放。')}};
     const showBadge=receipt?receipt.earned:earned;
+    const continueGame=()=>{try{setError('');onDone()}catch(e){setError(e.message||'恢复未完成，请重试。')}};
     return h(React.Fragment,null,h('span',{className:'eyebrow'},'总部来电 / 一起把公司做得更好'),h('h2',{id:'campaign-dialog-title'},deep?'总部回访':'共建者专线'),
       complete||receipt?panel('总部回执',h('div',{className:'v3-community-receipt',role:'status'},
         showBadge&&badgeArt(),h('h3',null,showBadge?`${receipt?'恭喜获得':'已获得'}${deep?'深度共建者':'共建者'}徽章`:'谢谢你回来看看'),
-        h('p',null,receipt?`总部已收到，${receipt.points?`${receipt.points}建设点已入账。`:'这次回访已记录。'}`:'这次共建已经记录，奖励不会重复发放。'),
-        showBadge&&h('p',{className:'v3-community-caption'},'你的声音，让下一次出海更好。徽章已收入「出海成就」。'),button('返回公司',onDone,{variant:'solid'}))):
-      !deep&&step<3?panel(questions[step].title,h('p',null,'三句话，让总部知道你想怎么出海、需要什么帮助。完成后自动获得50建设点和共建者徽章。'),
+        h('p',null,receipt?`总部已收到，${receipt.points?`${receipt.points}建设点已入账。`:'这次回访已记录。'}${!deep?' $10,000 经营现金已到账。':''}`:'这次共建已经记录，奖励不会重复发放。'),
+        showBadge&&h('p',{className:'v3-community-caption'},'你的声音，让下一次出海更好。徽章已收入「出海成就」。'),error&&h('p',{role:'alert'},error),button('继续游戏',continueGame,{variant:'solid'}))):
+      !deep&&step<3?panel(questions[step].title,h('p',null,'三句话，让总部知道你想怎么出海、需要什么帮助。完成后自动获得 $10,000 经营现金、50建设点和共建者徽章。'),
         h('div',{className:'operation-actions v3-community-options'},questions[step].options.map((label,i)=>button(label,()=>{const q=questions[step];enqueue('quiz_answers',`${userId(company)}:survey:v2:${step}`,{user_id:userId(company),round:company.round,task_id:q.key,task_type:'cobuilder',choice:q.values[i],correct:null});setResponse(q.responses[i]);setAnswers([...answers,i])},{key:label}))),
-        step>0&&h('p',{role:'status'},response)):
+        step>0&&h('p',{role:'status'},response),step>0&&button('← 上一题',()=>setAnswers(answers.slice(0,-1)))):
       panel(deep?'如果总部只能先帮你做一件事，你最想是哪件？':'如果总部能帮你把一单生意真的做成，你最想我们帮你搞定哪件事？',
-        response&&h('p',{role:'status'},response),h('div',{className:'v3-community-incentive'},badgeArt(),h('div',null,h('strong',null,deep?'再留一句建议，点亮深度共建者徽章':'提交后，领取你的共建者徽章'),h('p',null,deep?'选填；15–100字建议可获得30建设点和深度共建者徽章。':'完成三问即可获得50建设点和共建者徽章；再写15–100字建议，额外获得20建设点。'))),
+        response&&h('p',{role:'status'},response),h('div',{className:'v3-community-incentive'},badgeArt(),h('div',null,h('strong',null,deep?'再留一句建议，点亮深度共建者徽章':'提交后，领取你的共建者徽章'),h('p',null,deep?'选填；15–100字建议可获得30建设点和深度共建者徽章。':'完成三问即可获得 $10,000 经营现金、50建设点和共建者徽章；再写15–100字建议，额外获得20建设点。'))),
         h('label',null,'给总部的建议',h('textarea',{value:comment,maxLength:100,onChange:e=>setComment(e.target.value),rows:4,'aria-describedby':'community-comment-hint'})),
         h('p',{id:'community-comment-hint',role:'status'},length&&length<15?`再写${15-length}字${deep?'，即可领取30建设点和深度共建者徽章':'，即可额外获得20建设点'}；也可以清空跳过。`:`${length}/100字 · ${deep?'有效建议可领取深度共建者徽章':'提交即可领取共建者徽章'}`),
-        error&&h('p',{role:'alert'},error),button('发送给总部',submit,{variant:'solid',disabled:!validComment(comment)})));
+        !deep&&button('← 返回上一题',()=>setAnswers(answers.slice(0,-1))),error&&h('p',{role:'alert'},error),button('发送给总部',submit,{variant:'solid',disabled:!validComment(comment)})));
   }
   function CommunityCollection({company,ops}) {
     const run=String(company.v2?.identity||company.runSeed),first=ops.completed.includes(`community:${run}:first`),deep=ops.history.some(e=>e.type==='community'&&e.run===run&&e.id==='deep'&&e.substantive);
@@ -128,5 +132,5 @@ export function createReleaseUI({React,Button,engine,tasks,profitRows}) {
         button('更新领取信息',()=>setForm(true)),button('下载这份报告',()=>download(reportText(),'crossbound-经营评估报告.txt'),{variant:'solid'})),
       message&&h('p',{role:'status'},message)),h(CommunityCollection,{company,ops}));
   }
-  return {...createTutorialUI({React,Button}),ReportTabs,GoalCard,GrowthProgress,Financials,Community,CommunityCollection,Assessment};
+  return {...createTutorialUI({React,Button}),ReportTabs,GoalCard,GrowthProgress,Financials,Community,CommunityCollection,Assessment,Recovery:createRecoveryUI({React,engine})};
 }

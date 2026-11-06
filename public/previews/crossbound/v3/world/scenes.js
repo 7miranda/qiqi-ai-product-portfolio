@@ -1,9 +1,10 @@
 // REQ-053 §3 2.5D scenes opened full-screen from the campus map: W3 商品页工作室, W4 推广室, W6 财报结算厅.
 // Each has its own layout and interaction (no shared panel template); all choices go into the game's own draft
 // state and are committed with the same calls as the classic panel, so the engine stays authoritative.
+import { cashFailure } from '../../v2/recovery.js';
 import { catalogPreview } from '../../details/catalog-preview.js';
 import { PROMOTIONS } from '../../v11/model.js';
-import { BIDS, TIME_SLOTS, OFFSITE, PLATFORMS } from '../../v2/catalog.js';
+import { PLATFORMS } from '../../v2/catalog.js';
 import { goal, goalChannelText, financialStatements } from '../../v2/release.js';
 import { profitRows } from '../../v2/ui.js';
 import { countryBadgeAsset } from '../../v11/badges.js';
@@ -172,7 +173,7 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
     shell(s, { accent: '#8a7dff', kicker: `第 ${s.company.round} 轮 · 商品页工作室`, title: '先把商品页做好，再去推广', lead: '每张台子选一项，大屏实时变化。分数换算成购买意愿，费用按商品价位计算。' },
       h('div', { class: 'v3s-w3' }, shelf, screen, h('div', { class: 'v3s-benches' }, benches, costs)),
       primary(`发布上架 · $${Math.round(quote.cost || 0)}`, () => { busy = true; act()?.publishListing?.(); setTimeout(() => { busy = false; update(true); }, 1500); },
-        { disabled: !quote || quote.cost > s.company.cash, note: quote.cost > s.company.cash ? `现金不够，还差 ${money(quote.cost - s.company.cash)}` : '发布后锁定本轮商品页，直接进入推广室' }));
+        { disabled: !quote, note: quote.cost > s.company.cash ? `现金不够，还差 ${money(quote.cost - s.company.cash)}` : '发布后锁定本轮商品页，直接进入推广室' }));
   }
 
   // REQ-057: the gap is shown before the spend, with the bridge loan in the same place.
@@ -190,12 +191,11 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
   // ---------- W4 推广室：三块屏幕选渠道 + 打法 + 预算曲线 ----------
   function renderW4(s) {
     const engine = s.engine, p = product(s), channel = s.choice?.id || s.recommendedId || 'content';
-    const c = engine.config(s.company), selection = s.draft?.promotion?.[channel], choice = engine.choice(channel, selection, p);
+    const selection = s.draft?.promotion?.[channel], choice = engine.choice(channel, selection, p);
     const pv = s.preview || {}, budget = s.draft?.budget ?? pv.budget ?? 900;
-    const configure = patch => act()?.setCompany?.(engine.configure(s.company, patch));
     const screens = (s.options || []).map(o => {
       const [room, mark] = CHANNEL_LOOK[o.id] || [o.name, '◆'], on = o.id === channel;
-      return h('button', { type: 'button', class: `v3s-screen${on ? ' is-on' : ''}`, 'aria-pressed': String(on), disabled: o.disabled, onclick: () => act()?.choose?.(o.id) },
+      return h('button', { type: 'button', class: `v3s-screen${on ? ' is-on' : ''}`, 'aria-pressed': String(on), disabled: busy, onclick: () => act()?.choose?.(o.id) },
         h('span', { class: 'v3s-screen-mark' }, mark), h('small', {}, room), h('strong', {}, o.name), h('b', {}, `建议预算 ${money(o.budget)}`), h('p', {}, o.summary || ''));
     });
     const plays = h('div', { class: 'v3s-chips' }, (PROMOTIONS[channel] || []).map(opt => h('button', { type: 'button', class: `v3s-chip${choice.id === opt.id ? ' is-on' : ''}`, 'aria-pressed': String(choice.id === opt.id),
@@ -218,20 +218,16 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
         h('section', { class: 'v3s-card' }, h('header', {}, h('strong', {}, '打法'), h('small', {}, channel === 'creator' ? '找谁合作' : channel === 'ads' ? '广告先讲什么' : '内容先拍什么')), plays,
           channel === 'creator' && choice.id === 'vertical' ? h('label', { class: 'v3s-select' }, '达人擅长的领域 ',
             h('select', { onchange: e => act()?.setPromotion?.(channel, { id: 'vertical', category: e.target.value }) }, categories.map(([cid, name]) => h('option', { value: cid, selected: cid === choice.category }, name)))) : null,
-          h('p', { class: 'v3s-note' }, channel === 'creator' ? `${choice.matched ? '领域对口：购买意愿 +30%' : '不对口：没有加成'} · 成交分佣 ${pct(choice.commission)}` : choice.matched ? '与品类匹配，有加成' : '与品类不匹配，可以换个讲法'),
-          channel === 'ads' ? h('div', { class: 'v3s-inline' }, h('span', {}, '出价 · 时段'),
-            h('select', { 'aria-label': '关键词出价', onchange: e => configure({ bid: e.target.value }) }, BIDS.map(b => h('option', { value: b.id, selected: b.id === c.bid }, b.name))),
-            h('select', { 'aria-label': '投放时段', onchange: e => configure({ timeSlot: e.target.value }) }, TIME_SLOTS.map(t => h('option', { value: t.id, selected: t.id === c.timeSlot }, t.name)))) : null),
+          h('p', { class: 'v3s-note' }, channel === 'creator' ? `${choice.matched ? '领域对口：购买意愿 +30%' : '不对口：没有加成'} · 成交分佣 ${pct(choice.commission)}` : choice.matched ? '与品类匹配，有加成' : '与品类不匹配，可以换个讲法')),
         h('section', { class: 'v3s-card' }, h('header', {}, h('strong', {}, '预算'), out), slider, graph,
-          h('p', { class: 'v3s-note' }, `本轮预计到访 ${(pv.visitors || 0).toLocaleString()} 次；再加 $1,000 只多约 ${curve.extra.toLocaleString()} 次（到访按预算的平方根增长）。`),
-          h('div', { class: 'v3s-inline' }, h('span', {}, '站外补充'), h('select', { 'aria-label': '站外补充', onchange: e => configure({ offsite: e.target.value }) }, OFFSITE.map(o => h('option', { value: o.id, selected: o.id === c.offsite }, `${o.name} · ${o.detail}`))))),
+          h('p', { class: 'v3s-note' }, `本轮预计到访 ${(pv.visitors || 0).toLocaleString()} 次；再加 $1,000 只多约 ${curve.extra.toLocaleString()} 次（到访按预算的平方根增长）。`)),
         h('dl', { class: 'v3s-ledger' },
           h('dt', {}, '预计订单'), h('dd', {}, `${pv.orders ?? '-'} 单`),
           h('dt', {}, '预计利润'), h('dd', {}, money(pv.profit)),
           h('dt', {}, '获客成本'), h('dd', { class: risk ? 'is-warn' : '' }, risk ? `${risk.name} CAC 超过单件毛利一半，小心赚不回来` : '在安全线内')),
         cashCard(s, pv)),
-      primary(`启动推广 · 花 ${money(budget + (pv.offsiteCost || 0))}`, () => commit(3),
-        { disabled: pv.affordable === false, note: pv.affordable === false ? `现金不够，还差 ${money(pv.cashShortfall)}（发货结算也算在内）` : '启动后进入物流仓发货' }));
+      primary(`启动推广 · 花 ${money(budget)}`, () => commit(3),
+        { disabled: pv.affordable === false && !cashFailure(s.company,pv), note: pv.affordable === false ? `现金不够，还差 ${money(pv.cashShortfall)}（发货结算也算在内）` : '启动后进入物流仓发货' }));
   }
 
   // ---------- W6 财报结算厅：一张结算桌 ----------
@@ -242,7 +238,7 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
     const options = (s.options || []).map(o => {
       const on = s.choice?.id === o.id;
       const effects = [o.cost ? `花 ${money(o.cost)}` : '不花钱', o.trafficBonus ? `下轮到访 +${o.trafficBonus.toLocaleString()} 次` : null, o.newMarket ? '下轮必须换市场，不能再选本市场' : null].filter(Boolean);
-      return h('button', { type: 'button', class: `v3s-plan${on ? ' is-on' : ''}`, 'aria-pressed': String(on), disabled: o.disabled, onclick: () => act()?.choose?.(o.id) },
+      return h('button', { type: 'button', class: `v3s-plan${on ? ' is-on' : ''}`, 'aria-pressed': String(on), disabled: busy, onclick: () => act()?.choose?.(o.id) },
         h('strong', {}, o.name), h('span', {}, effects.join(' · ')), h('small', {}, o.summary || ''));
     });
     shell(s, { accent: '#ffd34d', kicker: `第 ${s.company.round} 轮 · 财报结算厅`, title: '安排下一轮，然后结算', lead: '只有一个决定：把这轮赚的钱怎么用。每个选项写清花多少、换来什么、锁住什么。' },
@@ -275,7 +271,7 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
       const c = f.closing, o = f.opening;
       body = table([['现金', c.cash, c.cash - o.cash, '现在能用的钱'], ['存货', c.inventory, c.inventory - o.inventory, '余货按采购成本计'], ['应收账款', c.receivables, c.receivables - o.receivables, '货卖了、钱还没到账的部分'], ['资产合计', c.assets, c.assets - o.assets, null, true],
         ['应付采购款', c.payables, c.payables - o.payables, '货已采购、钱还没付'], ['过桥贷未还本金', c.principal, c.principal - o.principal], ['应付利息', c.interest, c.interest - o.interest], ['负债合计', c.liabilities, c.liabilities - o.liabilities, null, true], ['净资产', c.equity, c.equity - o.equity, '资产减负债', true]]);
-      line = f.cashRisk ? '现金可能接不上应付：先核对待到账货款和到期债务。' : `净资产 ${money(c.equity)}，比本轮开始 ${arrow(f.equityChange)}，正好等于本轮净利润。`;
+      line = f.cashRisk ? '现金可能接不上应付：先核对待到账货款和到期债务。' : `净资产 ${money(c.equity)}，比本轮开始 ${arrow(f.equityChange)}，等于本轮净利润加共建补助 ${money(f.capitalContribution)}。`;
     } else {
       body = table([['期初现金', f.opening.cash, null, null, true], ...f.flow.filter(x => Math.abs(x.amount) >= .005).map(x => [x.label, x.amount]), ['现金净变动', f.movement, null, null, true], ['期末现金', f.cashEnd, null, null, true]]);
       line = '贷款本金和应收到账是现金流，不重复计入利润。';
@@ -316,6 +312,7 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
   // The engine opens its next panel after a commit; the scene shows the next step instead.
   async function commit(stage) {
     if (busy) return;
+    const current=store.snapshot();if(cashFailure(current.company,current.preview)){act()?.recover?.(current.preview);return;}
     busy = true; update(true);
     act()?.commit();
     const after = await store.waitFor(x => x.company?.stage !== stage, 2500);
@@ -370,7 +367,7 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
         h('section', { class: 'v3s-card' }, h('header', {}, h('strong', {}, '开店平台'), h('small', {}, '三家各有代价')), h('div', { class: 'v3s-platforms' }, platforms)),
         h('section', { class: 'v3s-card v3s-section' }, h('header', {}, h('strong', {}, '销售市场'), h('small', {}, '容量条按默认推广估算本轮到访，超出容量的部分只算一半')), h('div', { class: 'v3s-markets' }, cards))),
       primary(chosen ? `确认${chosen.name}${spend > 0 ? ` · 先付 ${money(spend)}` : ''}` : '先选一个市场', () => commit(0),
-        { disabled: !chosen || pv.affordable === false, note: chosen ? (pv.affordable === false ? `现金不够，还差 ${money(pv.cashShortfall)}` : '确认后进入选品展厅') : '点一张市场卡' }));
+        { disabled: !chosen || pv.affordable === false && !cashFailure(s.company,pv), note: chosen ? (pv.affordable === false ? `现金不够，还差 ${money(pv.cashShortfall)}` : '确认后进入选品展厅') : '点一张市场卡' }));
   }
 
   const RENDER = { w0: renderW0, w3: renderW3, w4: renderW4, w6: renderW6 };
@@ -382,7 +379,7 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
     if (id === 'w0' && s.company.stage === 1) return hand('w1');
     if (id === 'w3' && s.company.currentListing) return hand('w4');
     if (id === 'w4' && s.company.stage === 4) return hand('w5');
-    if (id === 'w6' && s.company.stage === 0) return leave();
+    if (id === 'w6' && s.company.stage === 0) return hand('w0');
     if (id === 'w4' && s.company.stage === 3 && !s.company.currentListing) return hand('w3');
     const sig = JSON.stringify([id, busy, s.company.stage, s.company.cash, s.choice?.id, s.draft, s.preview?.profit, s.preview?.visitors, s.company.v2?.config, s.company.report?.round]);
     if (!force && sig === signature) return;
@@ -409,10 +406,10 @@ export function openScene({ store, id: firstId, onExit, onNext }) {
 
   return {
     get id() { return id; },
+    element:root,
     dispose() {
       closed = true; off(); removeEventListener('keydown', onKey);
-      root.classList.remove('is-in'); root.classList.add('is-out');
-      setTimeout(() => root.remove(), 300);
+      root.remove();
     },
   };
 }

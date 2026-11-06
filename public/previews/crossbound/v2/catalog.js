@@ -61,3 +61,12 @@ export const SEASONS = ['备战期', '预热期', '收割期'];
 export function season(round) { return { index: (round - 1) % 3, name: SEASONS[(round - 1) % 3], untilHarvest: 2 - (round - 1) % 3 }; }
 // Explicit product × city values are materialized in product-fit.json. This is
 // editorial game calibration, never claimed as real sales or market research.
+// 2026-11-01 主线简化：以下支线暂时下线，玩法与计算一起关掉，只保留历史读取。
+// 经营事件（跟卖／老K、慢递、需求变化、税务台账、归类、包装核验）不再调度、不生效、不提醒、不提供应对；
+// 已结算的战报与账本（商标、投诉、包装费、事件处理费）保持原记录。
+export const FEATURE_SET = 'mainline-20261101';
+export const RETIRED_EVENTS = ['rival', 'slow-delivery', 'demand-shift', 'vat-review', 'classification-review', 'packaging-review'];
+export const liveEvent = e => !RETIRED_EVENTS.includes(e?.kind);
+// 主动策略（关键词出价、投放时段、站外推广、旺季备战）固定为中性取值：旧状态和直接调用都不能再启用。
+export const RETIRED_CONFIG = { bid: 'balanced', timeSlot: 'all', offsite: 'none', seasonPrep: false };
+export const liveConfig = c => Object.fromEntries(Object.entries(c || {}).filter(([k]) => !(k in RETIRED_CONFIG)));

@@ -10,6 +10,20 @@ html[data-v3-mode="scenes"] .enterprise-campus-v18__label[data-v3-progress="upco
 /* While a scene is open the flat coach overlay (panel-based) stays hidden; the scene carries its own guidance. */
 html[data-v3-scene] .v5-walkthrough, html[data-v3-scene] .v5-spotlight, html[data-v3-scene] .v5-coach { display: none !important; }
 html[data-v3-scene], html[data-v3-scene] body { overflow: hidden; overscroll-behavior: none; }
+/* Scene changes have one opaque loading surface; the old campus/dialog never flashes through. */
+#v3-transition { position:fixed;inset:0;z-index:1000;background:transparent;color:#e4eef0;font:inherit;outline:none;cursor:progress; }
+#v3-transition .v3-transition-status { position:absolute;bottom:max(32px,env(safe-area-inset-bottom));left:50%;transform:translate(-50%,8px);display:flex;align-items:center;gap:28px;padding:14px 20px;background:#071217ed;border:1px solid #b6d1d32b;box-shadow:0 12px 48px #0005;opacity:0;visibility:hidden;transition:opacity .25s,transform .35s;max-width:calc(100vw - 32px); }
+#v3-transition.is-slow .v3-transition-status { opacity:1;visibility:visible;transform:translate(-50%,0); }
+#v3-transition p { margin:0;font-size:13px;letter-spacing:.06em; }
+#v3-transition button { font:inherit;font-size:12px;padding:8px 0;background:none;border:0;border-bottom:1px solid #8caca566;color:#c6da9c;cursor:pointer;white-space:nowrap; }
+#v3-transition.is-error { background:#03080b66;cursor:auto; }
+#v3-transition.is-error .v3-transition-status { border-color:#c6da9c66; }
+[data-scene-layer] { transform-origin:50% 48%;animation:none!important; }
+[data-scene-layer="incoming"] { pointer-events:none; }
+@media(max-width:600px) { #v3-transition .v3-transition-status { gap:16px;width:max-content;flex-wrap:wrap; } }
+@media(prefers-reduced-motion:reduce) { #v3-transition .v3-transition-status { transition:none;transform:translate(-50%,0); } }
+html[data-v3-transition] .v5-walkthrough,html[data-v3-transition] .v5-spotlight,html[data-v3-transition] .v5-coach { display:none!important; }
+html[data-v3-scene] #v3-world,html[data-v3-transition] #v3-world { animation:none; }
 
 /* ---------- 3D room scenes (W1 / W2 / W5): fixed camera, click to act ---------- */
 #v3-world { position: fixed; inset: 0; z-index: 60; background: #070b14; color: #f2f6f8; user-select: none; -webkit-user-select: none;

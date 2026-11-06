@@ -1,5 +1,5 @@
 import { createCrossboundV11 } from '../v11/model.js';
-import { createV2Core } from './core.js?v=http-uuid-1';
+import { createV2Core } from './core.js?v=no-rival-1';
 
 // Frozen rules for a saved v1.1 round; promote only at the next round boundary.
 export function createCrossboundV2(adapter) {
@@ -10,6 +10,7 @@ export function createCrossboundV2(adapter) {
   }
   api.valid = n => modern.valid(n) || old.valid(n);
   api.next = n => modern.valid(n) ? modern.next(n) : modern.upgrade(old.next(n));
+  api.restartRound = n => modern.valid(n) ? modern.restartRound(n) : n.stage<6 ? modern.upgrade(old.restartRound(n)) : n;
   api.previous = n => n.history.find(r => r.round === n.round - 1)?.roundStart?.engineVersion === 'v11' ? old.previous(n) : modern.valid(n) ? modern.previous(n) : old.previous(n);
   api.migrate = n => modern.valid(n) ? n : modern.upgrade(old.valid(n) ? n : old.migrate(n));
   api.deserialize = raw => {
