@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crossbound · 市场研究所</title>
+<style>html,body{margin:0;background:#081216}x-dc{display:none!important}</style>
+</head>
+<body>
+<p id="market-loading" style="position:absolute;inset:45% 20%;text-align:center;color:#8fb3ba;font-family:sans-serif">正在连接市场研究所…</p>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<style>
+html,body{margin:0;background:#081216;}button:disabled{opacity:.45;cursor:not-allowed!important}button:focus-visible,a:focus-visible{outline:2px solid #3fd0d8;outline-offset:3px}
+*{box-sizing:border-box}
+a{color:#3fd0d8;text-decoration:none}
+a:hover{color:#c6f432}
+button{font-family:inherit}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-thumb{background:#1f343b}
+::-webkit-scrollbar-track{background:transparent}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./assets/numeric-00.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./assets/numeric-01.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./assets/numeric-02.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./assets/numeric-03.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./assets/numeric-04.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./assets/numeric-05.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(./assets/numeric-00.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(./assets/numeric-01.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(./assets/numeric-02.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(./assets/numeric-03.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(./assets/numeric-04.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(./assets/numeric-05.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(./assets/numeric-00.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(./assets/numeric-01.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(./assets/numeric-02.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(./assets/numeric-03.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(./assets/numeric-04.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(./assets/numeric-05.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Oxanium';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(./assets/numeric-06.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Oxanium';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(./assets/numeric-07.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Oxanium';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(./assets/numeric-06.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Oxanium';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(./assets/numeric-07.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
+
+
+
+
+
+
+
+
+
+@font-face {
+  font-family: 'Noto Sans SC';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./assets/chinese-game-0.woff2) format('woff2');
+  unicode-range: U+3001-3002, U+4e00, U+4e09, U+4e0b, U+4e0d-4e0e, U+4e13, U+4e1c, U+4e24, U+4e2a, U+4e2d, U+4e39-4e3a, U+4e5f, U+4e70, U+4e9a, U+4ea7, U+4eac, U+4eba, U+4ec5, U+4ecd-4ece, U+4ed3, U+4ed8, U+4ee3, U+4ee5, U+4ef6-4ef7, U+4f1a, U+4f26, U+4f30, U+4f4d-4f4f, U+4f59, U+4f5c, U+4f63, U+4fdd, U+505a, U+505c, U+5148, U+514d, U+5165, U+5168, U+5170, U+5176-5177, U+5185, U+518d, U+51b3, U+51cf, U+51fa-51fb, U+5206, U+5217, U+521d, U+5229, U+5230, U+524d, U+52a0-52a1, U+52a8, U+5316-5317, U+5339-533a, U+534a, U+5355-5357, U+5360-5361, U+5385, U+538b, U+53d8, U+53e6, U+53ea, U+53ef-53f0, U+5403-5404, U+5408, U+540c, U+540e, U+5468, U+548c, U+54c1, U+54cd, U+54e5, U+54ea, U+552e, U+5546, U+56de, U+56ed, U+56fd-56fe, U+5723, U+5728, U+5730, U+573a, U+5761, U+57ce, U+57df, U+5854, U+589e, U+58a8, U+5907, U+5916, U+591a, U+5927, U+592a, U+5931, U+597d, U+59c6, U+59cb, U+5b58, U+5b8c, U+5b9a, U+5b9c, U+5ba4, U+5bb6, U+5bb9, U+5bf9, U+5c0f, U+5c11, U+5c3c, U+5c40, U+5c42, U+5c45, U+5c55, U+5c65, U+5de5, U+5dee, U+5df2, U+5df4, U+5e02, U+5e26, U+5e38, U+5e73, U+5e7f, U+5e93, U+5e97, U+5ea6, U+5efa, U+5f00, U+5f20, U+5f31, U+5f53, U+5f71, U+5f85, U+5fb7, U+5fc3, U+5fc5, U+6001, U+603b, U+6089, U+60ac, U+610f, U+613f, U+6210, U+6216, U+6237, U+6240, U+624b, U+6267, U+6269, U+6295, U+62a4-62a5, U+62d6, U+62dc, U+62df, U+62e9, U+62ff, U+6309, U+6362, U+6389, U+63a5, U+63a8, U+63d0, U+64ad, U+6536, U+653e, U+6548, U+6566, U+6570, U+65af-65b0, U+65b9, U+65cb, U+65e0, U+65e5, U+65f6, U+660e, U+6613, U+663e, U+666f, U+6682, U+66f4, U+6700, U+6709, U+671f, U+672a, U+672c, U+673a, U+6749, U+6761, U+6765, U+6797, U+679c, U+67b6, U+67cf, U+67e5, U+6838, U+6848, U+684c, U+68c0, U+6905, U+697c, U+6a21, U+6b21, U+6b27, U+6b63, U+6b65, U+6bcf, U+6bd4, U+6c42, U+6cbf, U+6cd5, U+6d0b, U+6d1b, U+6d32, U+6d3b, U+6d41, U+6e05, U+6f14, U+6fb3, U+70b9, U+7167, U+7247, U+724c, U+7269, U+7279, U+72b6, U+72ec, U+73af-73b0, U+7403, U+751f, U+7528, U+7535, U+754c, U+7559, U+767d, U+7684, U+76ef, U+76f4, U+770b, U+771f, U+7740, U+77f6, U+7801, U+7814, U+786e, U+793a, U+79bb, U+7a0b, U+7a76, U+7a7a, U+7acb, U+7ad9, U+7b2c, U+7b51, U+7b97, U+7cfb, U+7ea6, U+7eb3, U+7ec4, U+7ec8, U+7ecf, U+7ed3, U+7ed9, U+7ee7, U+7eed, U+7ef4, U+7f29, U+7f57, U+7f8e, U+8054, U+80fd, U+81ea, U+82b1, U+82f1, U+8377, U+8425, U+884c, U+8857, U+8868, U+897f, U+8981, U+89c4, U+89c6, U+89e6, U+8ba1-8ba2, U+8ba4, U+8bbf, U+8bc1, U+8bd5, U+8bf7, U+8d22, U+8d25, U+8d27, U+8d2d, U+8d35, U+8d39, U+8d44, U+8d5a, U+8d85, U+8db3, U+8ddd, U+8de8, U+8f6c, U+8f6e, U+8f7d, U+8f83, U+8f93, U+8fbe, U+8fc7, U+8fd0, U+8fd4, U+8fd8, U+8fdb-8fdc, U+8fde, U+8fea, U+9001-9002, U+9009, U+901a, U+90e8, U+90fd, U+914b, U+914d, U+91c7, U+91cd, U+91cf, U+91d1, U+94b1, U+94f6, U+94fa, U+9500, U+95f4, U+963f, U+96f6, U+9700, U+9762, U+9875, U+987b, U+9884, U+989d, U+9996, U+9a7b, U+9a8c, U+9ad8, U+9ece, U+9ed8, U+ff0c, U+ff1a;
+}
+@font-face {
+  font-family: 'Noto Sans SC';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(./assets/chinese-game-0.woff2) format('woff2');
+  unicode-range: U+3001-3002, U+4e00, U+4e09, U+4e0b, U+4e0d-4e0e, U+4e13, U+4e1c, U+4e24, U+4e2a, U+4e2d, U+4e39-4e3a, U+4e5f, U+4e70, U+4e9a, U+4ea7, U+4eac, U+4eba, U+4ec5, U+4ecd-4ece, U+4ed3, U+4ed8, U+4ee3, U+4ee5, U+4ef6-4ef7, U+4f1a, U+4f26, U+4f30, U+4f4d-4f4f, U+4f59, U+4f5c, U+4f63, U+4fdd, U+505a, U+505c, U+5148, U+514d, U+5165, U+5168, U+5170, U+5176-5177, U+5185, U+518d, U+51b3, U+51cf, U+51fa-51fb, U+5206, U+5217, U+521d, U+5229, U+5230, U+524d, U+52a0-52a1, U+52a8, U+5316-5317, U+5339-533a, U+534a, U+5355-5357, U+5360-5361, U+5385, U+538b, U+53d8, U+53e6, U+53ea, U+53ef-53f0, U+5403-5404, U+5408, U+540c, U+540e, U+5468, U+548c, U+54c1, U+54cd, U+54e5, U+54ea, U+552e, U+5546, U+56de, U+56ed, U+56fd-56fe, U+5723, U+5728, U+5730, U+573a, U+5761, U+57ce, U+57df, U+5854, U+589e, U+58a8, U+5907, U+5916, U+591a, U+5927, U+592a, U+5931, U+597d, U+59c6, U+59cb, U+5b58, U+5b8c, U+5b9a, U+5b9c, U+5ba4, U+5bb6, U+5bb9, U+5bf9, U+5c0f, U+5c11, U+5c3c, U+5c40, U+5c42, U+5c45, U+5c55, U+5c65, U+5de5, U+5dee, U+5df2, U+5df4, U+5e02, U+5e26, U+5e38, U+5e73, U+5e7f, U+5e93, U+5e97, U+5ea6, U+5efa, U+5f00, U+5f20, U+5f31, U+5f53, U+5f71, U+5f85, U+5fb7, U+5fc3, U+5fc5, U+6001, U+603b, U+6089, U+60ac, U+610f, U+613f, U+6210, U+6216, U+6237, U+6240, U+624b, U+6267, U+6269, U+6295, U+62a4-62a5, U+62d6, U+62dc, U+62df, U+62e9, U+62ff, U+6309, U+6362, U+6389, U+63a5, U+63a8, U+63d0, U+64ad, U+6536, U+653e, U+6548, U+6566, U+6570, U+65af-65b0, U+65b9, U+65cb, U+65e0, U+65e5, U+65f6, U+660e, U+6613, U+663e, U+666f, U+6682, U+66f4, U+6700, U+6709, U+671f, U+672a, U+672c, U+673a, U+6749, U+6761, U+6765, U+6797, U+679c, U+67b6, U+67cf, U+67e5, U+6838, U+6848, U+684c, U+68c0, U+6905, U+697c, U+6a21, U+6b21, U+6b27, U+6b63, U+6b65, U+6bcf, U+6bd4, U+6c42, U+6cbf, U+6cd5, U+6d0b, U+6d1b, U+6d32, U+6d3b, U+6d41, U+6e05, U+6f14, U+6fb3, U+70b9, U+7167, U+7247, U+724c, U+7269, U+7279, U+72b6, U+72ec, U+73af-73b0, U+7403, U+751f, U+7528, U+7535, U+754c, U+7559, U+767d, U+7684, U+76ef, U+76f4, U+770b, U+771f, U+7740, U+77f6, U+7801, U+7814, U+786e, U+793a, U+79bb, U+7a0b, U+7a76, U+7a7a, U+7acb, U+7ad9, U+7b2c, U+7b51, U+7b97, U+7cfb, U+7ea6, U+7eb3, U+7ec4, U+7ec8, U+7ecf, U+7ed3, U+7ed9, U+7ee7, U+7eed, U+7ef4, U+7f29, U+7f57, U+7f8e, U+8054, U+80fd, U+81ea, U+82b1, U+82f1, U+8377, U+8425, U+884c, U+8857, U+8868, U+897f, U+8981, U+89c4, U+89c6, U+89e6, U+8ba1-8ba2, U+8ba4, U+8bbf, U+8bc1, U+8bd5, U+8bf7, U+8d22, U+8d25, U+8d27, U+8d2d, U+8d35, U+8d39, U+8d44, U+8d5a, U+8d85, U+8db3, U+8ddd, U+8de8, U+8f6c, U+8f6e, U+8f7d, U+8f83, U+8f93, U+8fbe, U+8fc7, U+8fd0, U+8fd4, U+8fd8, U+8fdb-8fdc, U+8fde, U+8fea, U+9001-9002, U+9009, U+901a, U+90e8, U+90fd, U+914b, U+914d, U+91c7, U+91cd, U+91cf, U+91d1, U+94b1, U+94f6, U+94fa, U+9500, U+95f4, U+963f, U+96f6, U+9700, U+9762, U+9875, U+987b, U+9884, U+989d, U+9996, U+9a7b, U+9a8c, U+9ad8, U+9ece, U+9ed8, U+ff0c, U+ff1a;
+}
+@font-face {
+  font-family: 'Noto Sans SC';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(./assets/chinese-game-0.woff2) format('woff2');
+  unicode-range: U+3001-3002, U+4e00, U+4e09, U+4e0b, U+4e0d-4e0e, U+4e13, U+4e1c, U+4e24, U+4e2a, U+4e2d, U+4e39-4e3a, U+4e5f, U+4e70, U+4e9a, U+4ea7, U+4eac, U+4eba, U+4ec5, U+4ecd-4ece, U+4ed3, U+4ed8, U+4ee3, U+4ee5, U+4ef6-4ef7, U+4f1a, U+4f26, U+4f30, U+4f4d-4f4f, U+4f59, U+4f5c, U+4f63, U+4fdd, U+505a, U+505c, U+5148, U+514d, U+5165, U+5168, U+5170, U+5176-5177, U+5185, U+518d, U+51b3, U+51cf, U+51fa-51fb, U+5206, U+5217, U+521d, U+5229, U+5230, U+524d, U+52a0-52a1, U+52a8, U+5316-5317, U+5339-533a, U+534a, U+5355-5357, U+5360-5361, U+5385, U+538b, U+53d8, U+53e6, U+53ea, U+53ef-53f0, U+5403-5404, U+5408, U+540c, U+540e, U+5468, U+548c, U+54c1, U+54cd, U+54e5, U+54ea, U+552e, U+5546, U+56de, U+56ed, U+56fd-56fe, U+5723, U+5728, U+5730, U+573a, U+5761, U+57ce, U+57df, U+5854, U+589e, U+58a8, U+5907, U+5916, U+591a, U+5927, U+592a, U+5931, U+597d, U+59c6, U+59cb, U+5b58, U+5b8c, U+5b9a, U+5b9c, U+5ba4, U+5bb6, U+5bb9, U+5bf9, U+5c0f, U+5c11, U+5c3c, U+5c40, U+5c42, U+5c45, U+5c55, U+5c65, U+5de5, U+5dee, U+5df2, U+5df4, U+5e02, U+5e26, U+5e38, U+5e73, U+5e7f, U+5e93, U+5e97, U+5ea6, U+5efa, U+5f00, U+5f20, U+5f31, U+5f53, U+5f71, U+5f85, U+5fb7, U+5fc3, U+5fc5, U+6001, U+603b, U+6089, U+60ac, U+610f, U+613f, U+6210, U+6216, U+6237, U+6240, U+624b, U+6267, U+6269, U+6295, U+62a4-62a5, U+62d6, U+62dc, U+62df, U+62e9, U+62ff, U+6309, U+6362, U+6389, U+63a5, U+63a8, U+63d0, U+64ad, U+6536, U+653e, U+6548, U+6566, U+6570, U+65af-65b0, U+65b9, U+65cb, U+65e0, U+65e5, U+65f6, U+660e, U+6613, U+663e, U+666f, U+6682, U+66f4, U+6700, U+6709, U+671f, U+672a, U+672c, U+673a, U+6749, U+6761, U+6765, U+6797, U+679c, U+67b6, U+67cf, U+67e5, U+6838, U+6848, U+684c, U+68c0, U+6905, U+697c, U+6a21, U+6b21, U+6b27, U+6b63, U+6b65, U+6bcf, U+6bd4, U+6c42, U+6cbf, U+6cd5, U+6d0b, U+6d1b, U+6d32, U+6d3b, U+6d41, U+6e05, U+6f14, U+6fb3, U+70b9, U+7167, U+7247, U+724c, U+7269, U+7279, U+72b6, U+72ec, U+73af-73b0, U+7403, U+751f, U+7528, U+7535, U+754c, U+7559, U+767d, U+7684, U+76ef, U+76f4, U+770b, U+771f, U+7740, U+77f6, U+7801, U+7814, U+786e, U+793a, U+79bb, U+7a0b, U+7a76, U+7a7a, U+7acb, U+7ad9, U+7b2c, U+7b51, U+7b97, U+7cfb, U+7ea6, U+7eb3, U+7ec4, U+7ec8, U+7ecf, U+7ed3, U+7ed9, U+7ee7, U+7eed, U+7ef4, U+7f29, U+7f57, U+7f8e, U+8054, U+80fd, U+81ea, U+82b1, U+82f1, U+8377, U+8425, U+884c, U+8857, U+8868, U+897f, U+8981, U+89c4, U+89c6, U+89e6, U+8ba1-8ba2, U+8ba4, U+8bbf, U+8bc1, U+8bd5, U+8bf7, U+8d22, U+8d25, U+8d27, U+8d2d, U+8d35, U+8d39, U+8d44, U+8d5a, U+8d85, U+8db3, U+8ddd, U+8de8, U+8f6c, U+8f6e, U+8f7d, U+8f83, U+8f93, U+8fbe, U+8fc7, U+8fd0, U+8fd4, U+8fd8, U+8fdb-8fdc, U+8fde, U+8fea, U+9001-9002, U+9009, U+901a, U+90e8, U+90fd, U+914b, U+914d, U+91c7, U+91cd, U+91cf, U+91d1, U+94b1, U+94f6, U+94fa, U+9500, U+95f4, U+963f, U+96f6, U+9700, U+9762, U+9875, U+987b, U+9884, U+989d, U+9996, U+9a7b, U+9a8c, U+9ad8, U+9ece, U+9ed8, U+ff0c, U+ff1a;
+}
+@font-face {
+  font-family: 'Noto Sans SC';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(./assets/chinese-game-0.woff2) format('woff2');
+  unicode-range: U+3001-3002, U+4e00, U+4e09, U+4e0b, U+4e0d-4e0e, U+4e13, U+4e1c, U+4e24, U+4e2a, U+4e2d, U+4e39-4e3a, U+4e5f, U+4e70, U+4e9a, U+4ea7, U+4eac, U+4eba, U+4ec5, U+4ecd-4ece, U+4ed3, U+4ed8, U+4ee3, U+4ee5, U+4ef6-4ef7, U+4f1a, U+4f26, U+4f30, U+4f4d-4f4f, U+4f59, U+4f5c, U+4f63, U+4fdd, U+505a, U+505c, U+5148, U+514d, U+5165, U+5168, U+5170, U+5176-5177, U+5185, U+518d, U+51b3, U+51cf, U+51fa-51fb, U+5206, U+5217, U+521d, U+5229, U+5230, U+524d, U+52a0-52a1, U+52a8, U+5316-5317, U+5339-533a, U+534a, U+5355-5357, U+5360-5361, U+5385, U+538b, U+53d8, U+53e6, U+53ea, U+53ef-53f0, U+5403-5404, U+5408, U+540c, U+540e, U+5468, U+548c, U+54c1, U+54cd, U+54e5, U+54ea, U+552e, U+5546, U+56de, U+56ed, U+56fd-56fe, U+5723, U+5728, U+5730, U+573a, U+5761, U+57ce, U+57df, U+5854, U+589e, U+58a8, U+5907, U+5916, U+591a, U+5927, U+592a, U+5931, U+597d, U+59c6, U+59cb, U+5b58, U+5b8c, U+5b9a, U+5b9c, U+5ba4, U+5bb6, U+5bb9, U+5bf9, U+5c0f, U+5c11, U+5c3c, U+5c40, U+5c42, U+5c45, U+5c55, U+5c65, U+5de5, U+5dee, U+5df2, U+5df4, U+5e02, U+5e26, U+5e38, U+5e73, U+5e7f, U+5e93, U+5e97, U+5ea6, U+5efa, U+5f00, U+5f20, U+5f31, U+5f53, U+5f71, U+5f85, U+5fb7, U+5fc3, U+5fc5, U+6001, U+603b, U+6089, U+60ac, U+610f, U+613f, U+6210, U+6216, U+6237, U+6240, U+624b, U+6267, U+6269, U+6295, U+62a4-62a5, U+62d6, U+62dc, U+62df, U+62e9, U+62ff, U+6309, U+6362, U+6389, U+63a5, U+63a8, U+63d0, U+64ad, U+6536, U+653e, U+6548, U+6566, U+6570, U+65af-65b0, U+65b9, U+65cb, U+65e0, U+65e5, U+65f6, U+660e, U+6613, U+663e, U+666f, U+6682, U+66f4, U+6700, U+6709, U+671f, U+672a, U+672c, U+673a, U+6749, U+6761, U+6765, U+6797, U+679c, U+67b6, U+67cf, U+67e5, U+6838, U+6848, U+684c, U+68c0, U+6905, U+697c, U+6a21, U+6b21, U+6b27, U+6b63, U+6b65, U+6bcf, U+6bd4, U+6c42, U+6cbf, U+6cd5, U+6d0b, U+6d1b, U+6d32, U+6d3b, U+6d41, U+6e05, U+6f14, U+6fb3, U+70b9, U+7167, U+7247, U+724c, U+7269, U+7279, U+72b6, U+72ec, U+73af-73b0, U+7403, U+751f, U+7528, U+7535, U+754c, U+7559, U+767d, U+7684, U+76ef, U+76f4, U+770b, U+771f, U+7740, U+77f6, U+7801, U+7814, U+786e, U+793a, U+79bb, U+7a0b, U+7a76, U+7a7a, U+7acb, U+7ad9, U+7b2c, U+7b51, U+7b97, U+7cfb, U+7ea6, U+7eb3, U+7ec4, U+7ec8, U+7ecf, U+7ed3, U+7ed9, U+7ee7, U+7eed, U+7ef4, U+7f29, U+7f57, U+7f8e, U+8054, U+80fd, U+81ea, U+82b1, U+82f1, U+8377, U+8425, U+884c, U+8857, U+8868, U+897f, U+8981, U+89c4, U+89c6, U+89e6, U+8ba1-8ba2, U+8ba4, U+8bbf, U+8bc1, U+8bd5, U+8bf7, U+8d22, U+8d25, U+8d27, U+8d2d, U+8d35, U+8d39, U+8d44, U+8d5a, U+8d85, U+8db3, U+8ddd, U+8de8, U+8f6c, U+8f6e, U+8f7d, U+8f83, U+8f93, U+8fbe, U+8fc7, U+8fd0, U+8fd4, U+8fd8, U+8fdb-8fdc, U+8fde, U+8fea, U+9001-9002, U+9009, U+901a, U+90e8, U+90fd, U+914b, U+914d, U+91c7, U+91cd, U+91cf, U+91d1, U+94b1, U+94f6, U+94fa, U+9500, U+95f4, U+963f, U+96f6, U+9700, U+9762, U+9875, U+987b, U+9884, U+989d, U+9996, U+9a7b, U+9a8c, U+9ad8, U+9ece, U+9ed8, U+ff0c, U+ff1a;
+}
+
+/* Typography only, matching the supplied homepage handoff section 4.2. */
+html,body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-synthesis:none}
+.cb-cash{white-space:nowrap;font-kerning:normal}
+
+</style>
+</helmet>
+<div style="position:relative;width:100%;height:100vh;min-height:760px;display:flex;flex-direction:column;overflow:hidden;color:#e4eef0;font-family:'Noto Sans SC',sans-serif;background-color:#081216;background-image:linear-gradient(rgba(63,208,216,.035) 1px, transparent 1px),linear-gradient(90deg, rgba(63,208,216,.035) 1px, transparent 1px);background-size:48px 48px">
+
+  <header ref="{{ headerRef }}" style="position:relative;z-index:5;padding:24px 40px 18px;pointer-events:none;background:linear-gradient(180deg, rgba(5,12,15,0.92) 0%, rgba(5,12,15,0.7) 60%, rgba(5,12,15,0) 100%)">
+    <div style="display:flex;align-items:center;gap:16px 28px;flex-wrap:wrap">
+      <a href="#" onClick="{{ exitMarket }}" style="pointer-events:auto;display:flex;align-items:center;gap:10px;height:46px;padding:0 20px;white-space:nowrap;border:1px solid #22383f;background:rgba(14,28,33,.7);color:#d8e4e6;font-size:15px;flex-shrink:0" style-hover="border-color:#3fd0d8;color:#ffffff">← 返回园区地图</a>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.24em;color:#3fd0d8;flex-shrink:0">W0 · MARKET</div>
+      <h1 style="margin:0;font-size:clamp(22px,2.3vw,30px);font-weight:900;letter-spacing:.02em;white-space:nowrap">市场研究所</h1>
+      <div style="font-size:15px;color:#7f969c;white-space:nowrap">第 {{ round }} 轮 · 市场研究所</div>
+      <div style="display:flex;align-items:stretch;gap:24px;flex-shrink:0;margin-left:auto">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <span style="font-size:11px;letter-spacing:.08em;color:#7d949a">经营现金</span>
+          <span class="cb-cash" style="font-family:Oxanium,'Noto Sans SC',sans-serif;font-weight:600;font-size:30px;line-height:1.1;font-variant-numeric:tabular-nums;letter-spacing:.01em;color:#c4f53a">{{ cashText }}</span>
+        </div>
+        <div style="width:1px;background:#1d3138"></div>
+        <div style="display:flex;flex-direction:column;gap:2px;min-width:72px">
+          <span style="font-size:11px;letter-spacing:.08em;color:#7d949a">本步花费</span>
+          <span style="font-family:Oxanium,'Noto Sans SC',sans-serif;font-weight:600;font-size:30px;line-height:1.1;font-variant-numeric:tabular-nums;letter-spacing:.01em;color:#ffffff">{{ costText }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:22px">
+      <div style="display:flex;flex-direction:column;gap:10px"><div style="height:3px;background:#3fd0d8"></div><div style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:#f5b82e"><span style="font-size:10px">▲</span>市场研究所</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><div style="height:3px;background:#17272d"></div><div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#6f868c"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4c6268">02</span>选品展厅</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><div style="height:3px;background:#17272d"></div><div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#6f868c"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4c6268">03</span>定价财务室</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><div style="height:3px;background:#17272d"></div><div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#6f868c"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4c6268">04</span>商品页工作室</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><div style="height:3px;background:#17272d"></div><div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#6f868c"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4c6268">05</span>推广室</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><div style="height:3px;background:#17272d"></div><div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#6f868c"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4c6268">06</span>物流仓</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><div style="height:3px;background:#17272d"></div><div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#6f868c"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4c6268">07</span>财报结算厅</div></div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:18px;flex-wrap:wrap">
+      <div style="font-size:15px;color:#b7c7cb">一步两个决定：先定市场，再进入平台空间选平台。容量条按默认推广估算本轮到访，超出容量的部分只算一半。</div>
+      <div style="display:flex;align-items:stretch;border:1px solid rgba(63,208,216,.18);background:rgba(8,18,22,.55);backdrop-filter:blur(10px)">
+        <button disabled="{{ busy }}" onClick="{{ backToGlobe }}" style="pointer-events:auto;display:flex;align-items:center;gap:10px;padding:8px 16px;border:0;background:{{ aBg }};color:#e4eef0;cursor:pointer;font-size:14px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:{{ aTag }}">A</span>
+          <span style="color:#9fb2b7">销售市场</span>
+          <span style="font-weight:700;color:{{ aTag }}">{{ selName }}</span>
+          <span style="color:#c6f432;font-size:12px">{{ aCheck }}</span>
+        </button>
+        <div style="width:1px;background:#1d3138"></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;background:{{ bBg }};font-size:14px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:{{ bTag }}">B</span>
+          <span style="color:#9fb2b7">开店平台</span>
+          <span style="font-weight:700;color:{{ bTag }}">{{ bVal }}</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main style="position:relative;flex:1;min-height:0">
+
+    <div style="position:absolute;top:{{ canvasTop }}px;left:0;right:{{ canvasRight }};bottom:{{ canvasBottom }}px">
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 56% 50%, rgba(63,208,216,.07), transparent 70%);pointer-events:none"></div>
+      <div ref="{{ glRef }}" style="position:absolute;inset:0"></div>
+
+      <sc-if value="{{ isGlobe }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
+          <sc-for list="{{ markets }}" as="m" hint-placeholder-count="0">
+            <div ref="{{ m.labelRef }}" style="position:absolute;left:0;top:0;width:0;height:0;opacity:0;visibility:hidden;will-change:transform;z-index:{{ m.z }}">
+              <div style="position:absolute;left:0;top:0;height:1px;width:{{ m.len }}px;background:{{ m.lineC }};transform-origin:0 0;transform:rotate({{ m.ang }}deg)"></div>
+              <button onClick="{{ m.onPick }}" onMouseEnter="{{ m.onEnter }}" onMouseLeave="{{ m.onLeave }}" style="position:absolute;top:{{ m.ct }}px;left:{{ m.cl }};right:{{ m.cr }};display:flex;align-items:center;gap:7px;height:24px;padding:0 9px 0 7px;white-space:nowrap;background:{{ m.lbg }};border:1px solid {{ m.lb }};color:{{ m.lc }};font-size:12px;font-weight:500;cursor:pointer;pointer-events:auto">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:{{ m.lcode }}">{{ m.code }}</span>
+                <span>{{ m.name }}</span>
+                <span style="font-size:10px;color:{{ m.lcode }}">{{ m.tick }}</span>
+              </button>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="position:absolute;left:40px;top:{{ overlayTop }}px;display:flex;flex-direction:column;gap:6px;pointer-events:none;max-width:38%">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;color:#3fd0d8">A · GLOBAL MARKET MAP</div>
+          <div style="font-size:22px;font-weight:700">选择销售市场</div>
+          <div style="font-size:13px;color:#7f969c">全球已开放 {{ marketCount }} 个市场，其余地区暂未开放</div>
+        </div>
+
+        <div style="position:absolute;left:40px;bottom:96px;width:min(300px,calc(100% - 64px),max(240px,26vw));padding:16px 18px 18px 20px;background:rgba(7,16,20,.62);border:1px solid rgba(63,208,216,.16);border-left:3px solid #c6f432;display:flex;flex-direction:column;gap:10px;backdrop-filter:blur(6px)">
+          <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:#6f868c"><span>SELECTED · {{ selCode }}</span><span>{{ selCoords }}</span></div>
+          <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:28px;font-weight:900">{{ selName }}</span><span style="font-size:14px;color:#7f969c">{{ selRegion }}</span></div>
+          <div style="font-family:Oxanium,'Noto Sans SC',sans-serif;font-variant-numeric:tabular-nums;font-size:14px;font-weight:600;color:{{ selStatusColor }}">{{ selStatus }}</div>
+          <div style="height:4px;background:#16262c;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:{{ selPct }}%;background:linear-gradient(90deg,#3fd0d8,#c6f432)"></div></div>
+          <div style="font-family:Oxanium,'Noto Sans SC',sans-serif;font-size:12px;font-weight:500;font-variant-numeric:tabular-nums;color:#7f969c">预计到访 {{ selVisits }} / 容量 {{ selCap }}</div>
+          <div style="font-size:13px;line-height:1.6;color:#c4d3d7;text-wrap:pretty;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ selDesc }}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isPlatform }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
+          <sc-for list="{{ platforms }}" as="p" hint-placeholder-count="0">
+            <div ref="{{ p.labelRef }}" style="position:absolute;left:0;top:0;width:0;height:0;opacity:0;will-change:transform">
+              <div style="position:absolute;left:0;bottom:0;width:1px;height:22px;background:{{ p.lb }}"></div>
+              <button onClick="{{ p.onPick }}" style="position:absolute;left:-12px;bottom:22px;display:flex;flex-direction:column;gap:3px;padding:8px 14px 9px 12px;text-align:left;white-space:nowrap;background:rgba(9,19,23,.92);border:1px solid #1f343b;border-left:3px solid {{ p.lb }};color:#e4eef0;cursor:pointer;pointer-events:auto">
+                <span style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700">{{ p.name }}<span style="color:#c6f432;font-size:14px">{{ p.check }}</span></span>
+                <span data-sub="1" style="font-family:Oxanium,'Noto Sans SC',sans-serif;font-variant-numeric:tabular-nums;font-size:12px;color:#8fa4a9">{{ p.sub }}</span>
+              </button>
+            </div>
+          </sc-for>
+        </div>
+        <div style="position:absolute;left:40px;top:24px;display:flex;flex-direction:column;align-items:flex-start;gap:8px">
+          <button disabled="{{ busy }}" onClick="{{ backToGlobe }}" style="display:flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid #22383f;background:rgba(10,22,27,.8);color:#b7c7cb;font-size:13px;white-space:nowrap;cursor:pointer;margin-bottom:6px" style-hover="border-color:#3fd0d8;color:#ffffff">← 重选市场</button>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;color:#3fd0d8">B · PLATFORM SPACE · {{ selCode }}</div>
+          <div style="font-size:22px;font-weight:700">{{ selName }} · 选择开店平台</div>
+          <div style="font-size:13px;color:#7f969c">三家各有代价。点击建筑或下方卡片选择，拖动可环视。</div>
+        </div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ isGlobe }}" hint-placeholder-val="{{ true }}">
+      <aside style="position:absolute;top:4px;right:24px;bottom:96px;width:max(300px,min(400px,34vw));display:flex;flex-direction:column;z-index:4;border:1px solid rgba(63,208,216,.16);background:rgba(7,16,20,.58);backdrop-filter:blur(14px)">
+        <div style="padding:22px 24px 14px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:baseline;gap:12px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#3fd0d8">01</span>
+            <span style="font-size:20px;font-weight:700">销售市场</span>
+            <span style="font-size:13px;color:#7f969c">点击卡片定位到地球</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ regions }}" as="r" hint-placeholder-count="6">
+              <button onClick="{{ r.onPick }}" style="display:inline-flex;align-items:center;white-space:nowrap;height:28px;padding:0 11px;font-size:12px;cursor:pointer;background:{{ r.bg }};border:1px solid {{ r.border }};color:{{ r.color }}">{{ r.label }}<span style="font-family:'JetBrains Mono',monospace;font-size:10px;margin-left:5px;opacity:.7">{{ r.count }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+        <div ref="{{ listRef }}" style="position:relative;flex:1;min-height:0;overflow-y:auto;padding:2px 24px 24px;display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ list }}" as="m" hint-placeholder-count="8">
+            <button class="market-card" disabled="{{ m.disabled }}" aria-pressed="{{ m.active }}" ref="{{ m.cardRef }}" onClick="{{ m.onPick }}" onMouseEnter="{{ m.onEnter }}" onMouseLeave="{{ m.onLeave }}" style="display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;column-gap:14px;row-gap:10px;padding:13px 14px;text-align:left;background:{{ m.cardBg }};border:1px solid {{ m.cardBorder }};color:#e4eef0;cursor:pointer;flex-shrink:0;transition:transform .18s" style-hover="transform:translateX(-3px)">
+              <span style="width:42px;height:42px;display:flex;align-items:center;justify-content:center;border:1px solid {{ m.codeBorder }};font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.04em;color:{{ m.codeColor }}">{{ m.code }}</span>
+              <span style="display:flex;flex-direction:column;gap:3px;min-width:0">
+                <span style="font-size:16px;font-weight:700">{{ m.name }}</span>
+                <span style="font-size:12px;color:#7f969c">{{ m.region }}</span>
+              </span>
+              <span style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;white-space:nowrap">
+                <span style="font-family:Oxanium,'Noto Sans SC',sans-serif;font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:{{ m.feeColor }}">{{ m.feeText }}</span>
+                <span style="font-size:11px;color:#6f868c">{{ m.feeLabel }}</span>
+              </span>
+              <span style="grid-column:1 / -1;display:flex;align-items:center;gap:10px">
+                <span style="flex:1;height:3px;background:#16262c;position:relative"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ m.pct }}%;background:linear-gradient(90deg,#3fd0d8,#c6f432)"></span></span>
+                <span style="font-family:Oxanium,sans-serif;font-size:12px;font-weight:500;font-variant-numeric:tabular-nums;color:#6f868c;white-space:nowrap">{{ m.capText }}</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+      </aside>
+    </sc-if>
+
+    <sc-if value="{{ isPlatform }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:40px;right:40px;bottom:88px;height:132px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+        <sc-for list="{{ platforms }}" as="p" hint-placeholder-count="3">
+          <button class="platform-card" disabled="{{ busy }}" aria-pressed="{{ p.active }}" onClick="{{ p.onPick }}" style="position:relative;display:flex;flex-direction:column;gap:10px;padding:16px 20px;min-width:0;overflow:hidden;text-align:left;background:{{ p.bg }};border:1px solid {{ p.border }};box-shadow:{{ p.shadow }};color:#e4eef0;cursor:pointer;transition:transform .18s" style-hover="transform:translateY(-3px)">
+            <span style="display:flex;align-items:center;gap:10px;min-width:0;white-space:nowrap">
+              <span style="flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;padding:3px 6px;border:1px solid {{ p.codeBorder }};color:{{ p.codeColor }}">{{ p.code }}</span>
+              <span style="font-size:clamp(17px,1.6vw,22px);font-weight:700;flex-shrink:0">{{ p.name }}</span>
+              <span style="font-size:12px;color:#7f969c;overflow:hidden;text-overflow:ellipsis;min-width:0">{{ p.tag }}</span>
+              <span style="flex:1"></span>
+              <span style="flex-shrink:0;width:18px;height:18px;display:flex;align-items:center;justify-content:center;transform:rotate(45deg);border:1.5px solid {{ p.dBorder }};background:{{ p.dBg }}"><span style="transform:rotate(-45deg);font-size:11px;font-weight:900;color:#0a1418">{{ p.check }}</span></span>
+            </span>
+            <span style="font-family:Oxanium,'Noto Sans SC',sans-serif;font-variant-numeric:tabular-nums;flex-shrink:0;font-size:14px;line-height:1.5;color:#cfdcdf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="{{ p.terms }}">{{ p.terms }}</span>
+            <span style="display:flex;justify-content:space-between;gap:12px;font-size:13px;color:#7f969c;white-space:nowrap;margin-top:auto"><span style="overflow:hidden;text-overflow:ellipsis;min-width:0">{{ p.note }}</span><span style="flex-shrink:0;font-family:Oxanium,'Noto Sans SC',sans-serif;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;color:{{ p.costColor }}">{{ p.costText }}</span></span>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <footer style="position:absolute;left:0;right:0;bottom:0;height:72px;display:flex;align-items:center;gap:24px;padding:0 40px;pointer-events:none;background:linear-gradient(0deg, rgba(5,12,15,.92) 0%, rgba(5,12,15,.6) 55%, rgba(5,12,15,0) 100%);z-index:6">
+      <sc-if value="{{ isGlobe }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;gap:16px;font-size:12px;color:#9fb2b7;white-space:nowrap">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:7px;height:7px;background:#c6f432;transform:rotate(45deg)"></span>当前选择</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:7px;height:7px;background:#3fd0d8;transform:rotate(45deg)"></span>可进入</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="color:#c6f432">✓</span>已进入</span>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:#4f666c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">DRAG 旋转 · SCROLL 缩放 · CLICK 定位</div>
+        <div style="flex:1"></div>
+        <div style="font-size:14px;color:#9fb2b7;white-space:nowrap">{{ marketHint }}</div>
+        <button disabled="{{ marketBlocked }}" onClick="{{ enterMarket }}" style="pointer-events:auto;flex-shrink:0;white-space:nowrap;display:flex;align-items:center;justify-content:space-between;gap:40px;height:52px;min-width:240px;padding:0 24px 0 28px;border:0;background:#c6f432;color:#0a1418;font-size:18px;font-weight:900;cursor:pointer;clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%)" style-hover="background:#d6ff4a"><span>进入{{ selName }}</span><span>→</span></button>
+      </sc-if>
+      <sc-if value="{{ isPlatform }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#9fb2b7;white-space:nowrap;min-width:0;flex-shrink:1"><span style="color:#e4eef0;font-weight:700;flex-shrink:0">{{ selName }}</span><span style="flex-shrink:0">·</span><span style="color:#e4eef0;font-weight:700;overflow:hidden;text-overflow:ellipsis;min-width:0">{{ bVal }}</span><span style="flex-shrink:0;margin-left:8px">本步合计 <span style="font-family:Oxanium,'Noto Sans SC',sans-serif;font-weight:600;font-variant-numeric:tabular-nums;color:#c4f53a">{{ costText }}</span></span></div>
+        <div style="flex:1"></div>
+        <div style="font-size:14px;color:#9fb2b7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex-shrink:1">{{ confirmHint }}</div>
+        <button disabled="{{ confirmDisabled }}" onClick="{{ confirm }}" style="pointer-events:auto;flex-shrink:0;white-space:nowrap;display:flex;align-items:center;justify-content:space-between;gap:28px;height:52px;min-width:240px;padding:0 24px 0 28px;border:0;background:#c6f432;color:#0a1418;font-size:18px;font-weight:900;cursor:pointer;clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%)" style-hover="background:#d6ff4a"><span>{{ confirmText }}</span><span>→</span></button>
+      </sc-if>
+    </footer>
+
+    <div ref="{{ fadeRef }}" aria-hidden="true" style="position:fixed;inset:0;z-index:100;opacity:0;pointer-events:none;background:#081216"></div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;idleSpin&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;labelMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;全部显示&quot;,&quot;仅选中与悬停&quot;],&quot;default&quot;:&quot;全部显示&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  MK = window.marketModel.markets;
+  OFF = [[14,8],[-16,-40],[-16,4],[22,-6],[-16,8],[16,-30],[16,6],[16,-34],[16,-26],[-16,10],[16,4],[18,-46]];
+  PF = window.marketModel.platforms;
+  REG = [['全部',null],['亚洲',[22,95]],['欧洲',[50,8]],['北美洲',[36,-98]],['南美洲',[-18,-55]],['大洋洲',[-27,140]]];
+  state = {phase:'globe',market:window.marketModel.marketIndex,platform:window.marketModel.platformIndex,region:'全部',confirmed:false,fadeText:'',fadeSub:''};
+  mLabelEls = []; pLabelEls = []; cardEls = [];
+  rot = {x:0,y:0}; rotT = {x:0,y:0}; vel = {x:0,y:0}; zoom = 1; zoomT = 1; yaw = 0; yawT = 0;
+  mode = 'globe'; hoverIdx = -1; labelA = 1; lastInteract = 0;
+  glRef = el => { this.glEl = el; };
+  fadeRef = el => { this.fadeEl = el; };
+  listRef = el => { this.listEl = el; };
+  headerRef = el => { this.headerEl = el; };
+
+  componentDidMount() {
+    this.onHostMotion=e=>{if(e.source===parent&&e.origin===location.origin&&e.data?.channel==='crossbound-market-v1'&&e.data.type==='suspend')this.suspended=true;};addEventListener('message',this.onHostMotion);
+    window.marketComponent=this;
+    const m = this.MK[this.state.market], R = Math.PI / 180;
+    this.rot = {x: m.lat * R + 0.25, y: -Math.PI / 2 - m.lon * R + 0.9};
+    this.flyTo(m.lat, m.lon);
+    if (this.headerEl) {
+      this.hro = new ResizeObserver(() => { const hh = this.headerEl.offsetHeight; if (hh !== this.hh) { this.hh = hh; this.setState({hh}); if (this.renderer) this.resize(); } });
+      this.hro.observe(this.headerEl);
+    }
+    this.init().then(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{if(!this.dead)window.CrossboundMarket.send("mounted");}))).catch(()=>window.CrossboundMarket.send("failed"));
+  }
+  componentWillUnmount() {removeEventListener('message',this.onHostMotion);
+    window.marketComponent=null;
+    this.dead = true; cancelAnimationFrame(this.raf); this.hro && this.hro.disconnect();
+    this.ro && this.ro.disconnect();
+    if (this.renderer) { this.renderer.dispose(); this.renderer.domElement.remove(); }
+  }
+
+  applyView(model) {
+    this.MK=model.markets;this.PF=model.platforms;
+    this.setState({market:model.marketIndex,platform:model.platformIndex,liveRevision:(this.state.liveRevision||0)+1});
+  }
+
+  ll(lat, lon, r) {
+    const R = Math.PI / 180, a = lat * R, b = lon * R;
+    return new this.T.Vector3(Math.cos(a) * Math.cos(b) * r, Math.sin(a) * r, -Math.cos(a) * Math.sin(b) * r);
+  }
+  flyTo(lat, lon) {
+    const R = Math.PI / 180, tx = lat * R, ty = -Math.PI / 2 - lon * R;
+    let dy = ty - this.rot.y;
+    dy = ((dy + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
+    this.rotT = {x: Math.max(-1.1, Math.min(1.1, tx)), y: this.rot.y + dy};
+    this.flying = true; this.vel = {x:0, y:0};
+  }
+
+  async init() {
+    const T=window.THREE;this.RB=window.RoundedBoxGeometry;
+    await document.fonts.ready;
+    if (this.dead || !this.glEl) return;
+    this.T = T;
+    let r;try{r=this.renderer=new T.WebGLRenderer({antialias:true,alpha:false,premultipliedAlpha:false});}catch{this.glEl.innerHTML='<p style="position:absolute;left:35%;top:45%;color:#8fb3ba;font-size:13px">三维场景暂不可用，可通过列表继续选择。</p>';return;}
+    r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    r.setClearColor(0x071114, 1);
+    r.outputColorSpace = T.SRGBColorSpace;
+    r.toneMapping = T.ACESFilmicToneMapping; r.toneMappingExposure = 1.05;
+    r.shadowMap.enabled = false; r.shadowMap.type = T.PCFShadowMap;
+    const c = r.domElement;
+    c.style.cssText = 'display:block;width:100%;height:100%;cursor:grab;touch-action:none;outline:none';
+    this.glEl.appendChild(c);
+    this.camera = new T.PerspectiveCamera(32, 1, 0.01, 200);
+    this.ray = new T.Raycaster(); this.v = new T.Vector3();
+    this.buildGlobe(); this.buildCity();
+    this.scene = this.gScene;
+    this.ro = new ResizeObserver(() => this.resize()); this.ro.observe(this.glEl); this.resize();
+    this.bindEvents(c);
+    this.loadEarth();
+    this.loop();
+  }
+
+  resize() {
+    if (!this.renderer) return;
+    const w = this.glEl.clientWidth, h = this.glEl.clientHeight;
+    if (!w || !h) return;
+    this.w = w; this.h = h;
+    this.renderer.setSize(w, h, false);
+    const a = w / h;
+    this.camera.aspect = a;
+    const hh = this.hh || 0, sideW = Math.max(300, Math.min(400, w * 0.34)) + 24;
+    const availH = Math.max(200, h - hh - 72), availW = Math.max(240, w - sideW - 40);
+    this.gzBase = Math.max(h / (0.9 * availH * 0.2867), h / (0.85 * availW * 0.2867));
+    this.cityFit = Math.max(1, 2.3 / a) * (h < 320 ? 0.9 : 1);
+    this.applyOffset();
+  }
+  applyOffset() {
+    const cam = this.camera;
+    if (this.mode === 'globe' && this.w) {
+      const sideW = Math.max(300, Math.min(400, this.w * 0.34)) + 24, hh = this.hh || 0;
+      const sx = -sideW / 2 + Math.min(60, this.w * 0.03), sy = (hh - 72) / 2;
+      cam.setViewOffset(this.w, this.h, -sx, -sy, this.w, this.h);
+    } else cam.clearViewOffset();
+    cam.updateProjectionMatrix();
+  }
+
+  bindEvents(c) {
+    c.addEventListener('pointerdown', e => {
+      if (this.tw) return;
+      this.dragging = true; this.moved = 0; this.lx = e.clientX; this.ly = e.clientY;
+      c.setPointerCapture(e.pointerId); c.style.cursor = 'grabbing'; this.lastInteract = performance.now();
+    });
+    c.addEventListener('pointermove', e => {
+      const dx = e.clientX - (this.lx ?? e.clientX), dy = e.clientY - (this.ly ?? e.clientY);
+      this.lx = e.clientX; this.ly = e.clientY;
+      if (this.dragging) {
+        this.moved += Math.abs(dx) + Math.abs(dy);
+        if (this.mode === 'globe') {
+          const k = 0.0052 * this.zoom;
+          this.rot.y += dx * k; this.rot.x += dy * k; this.vel = {x: dy * k, y: dx * k}; this.flying = false;
+        } else this.yawT = Math.max(-0.45, Math.min(0.45, this.yawT + dx * 0.004));
+        this.lastInteract = performance.now();
+      } else if (!this.tw) {
+        const hit = this.pick(e);
+        if (this.mode === 'globe') this.hoverIdx = hit;
+        c.style.cursor = hit >= 0 ? 'pointer' : 'grab';
+      }
+    });
+    const up = e => {
+      if (!this.dragging) return;
+      this.dragging = false; c.style.cursor = 'grab';
+      if (this.moved < 5) {
+        const hit = this.pick(e);
+        if (hit >= 0) this.mode === 'globe' ? this.pickMarket(hit, true) : this.pickPlatform(hit);
+      }
+    };
+    c.addEventListener('pointerup', up);
+    c.addEventListener('pointercancel', up);
+    c.addEventListener('pointerleave', () => { if (!this.dragging) this.hoverIdx = -1; });
+    c.addEventListener('wheel', e => {
+      if (this.mode !== 'globe' || this.tw) return;
+      e.preventDefault();
+      this.zoomT = Math.max(0.6, Math.min(1.2, this.zoomT + e.deltaY * 0.0008));
+    }, {passive:false});
+  }
+
+  pick(e) {
+    const rc = this.renderer.domElement.getBoundingClientRect();
+    const ndc = new this.T.Vector2(((e.clientX - rc.left) / rc.width) * 2 - 1, -((e.clientY - rc.top) / rc.height) * 2 + 1);
+    this.ray.setFromCamera(ndc, this.camera);
+    if (this.mode === 'globe') {
+      const hs = this.ray.intersectObjects([this.globeMesh, ...this.hits], false);
+      return hs.length && hs[0].object.userData.idx != null ? hs[0].object.userData.idx : -1;
+    }
+    const hs = this.ray.intersectObjects(this.bGroups, true);
+    if (!hs.length) return -1;
+    let o = hs[0].object;
+    while (o && o.userData.idx == null) o = o.parent;
+    return o ? o.userData.idx : -1;
+  }
+
+  buildGlobe() {
+    const T = this.T, s = this.gScene = new T.Scene();
+    s.add(new T.AmbientLight(0xbcd8de, 0.22));
+    const dl = new T.DirectionalLight(0xfff6ea, 2.6); dl.position.set(-4, 1.6, 2.6); s.add(dl);
+    const g = this.globe = new T.Group(); s.add(g);
+    { const sp = []; for (let i = 0; i < 1600; i++) { const u = Math.random() * 2 - 1, th = Math.random() * Math.PI * 2, rr = 40; const q = Math.sqrt(1 - u * u); sp.push(q * Math.cos(th) * rr, u * rr, q * Math.sin(th) * rr); }
+      const sg = new T.BufferGeometry(); sg.setAttribute('position', new T.Float32BufferAttribute(sp, 3));
+      this.stars = new T.Points(sg, new T.PointsMaterial({color:0x9fc7cc, size:1.6, sizeAttenuation:false, transparent:true, opacity:0.45, depthWrite:false, toneMapped:false})); s.add(this.stars); }
+    const cv = this.texCanvas = document.createElement('canvas'); cv.width = 2048; cv.height = 1024;
+    this.paintTex(null);
+    const tex = this.tex = new T.CanvasTexture(cv); tex.colorSpace = T.SRGBColorSpace; tex.anisotropy = 8;
+    const gm = new T.MeshPhongMaterial({map:tex, specular:new T.Color(0x3a5a66), shininess:22});
+    gm.onBeforeCompile = sh => {
+      sh.uniforms.uSun = {value: new T.Vector3(-4, 1.6, 2.6).normalize()};
+      sh.fragmentShader = 'uniform vec3 uSun;\n' + sh.fragmentShader
+        .replace('#include <map_fragment>', '#include <map_fragment>\n float lum = dot(diffuseColor.rgb, vec3(0.299,0.587,0.114)); diffuseColor.rgb = mix(diffuseColor.rgb, vec3(lum)*vec3(0.86,1.0,1.04), 0.42) * 0.95;')
+        .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n totalEmissiveRadiance *= smoothstep(0.08, -0.3, dot(normal, uSun));');
+    };
+    gm.customProgramCacheKey = () => 'globe-v2';
+    this.globeMesh = new T.Mesh(new T.SphereGeometry(1, 96, 64), gm);
+    g.add(this.globeMesh);
+    const rim = new T.Mesh(new T.SphereGeometry(1.004, 64, 48), new T.ShaderMaterial({
+      uniforms:{c:{value:new T.Color(0x47d6e0)}},
+      vertexShader:'varying vec3 vN; varying vec3 vP; void main(){ vN=normalize(normalMatrix*normal); vec4 mv=modelViewMatrix*vec4(position,1.0); vP=mv.xyz; gl_Position=projectionMatrix*mv; }',
+      fragmentShader:'uniform vec3 c; varying vec3 vN; varying vec3 vP; void main(){ float f=1.0-max(dot(normalize(-vP),normalize(vN)),0.0); f=pow(f,2.4); gl_FragColor=vec4(c,f*0.85); }',
+      transparent:true, blending:T.AdditiveBlending, depthWrite:false
+    }));
+    s.add(rim);
+    const hc = document.createElement('canvas'); hc.width = hc.height = 512;
+    const hx = hc.getContext('2d'), gr = hx.createRadialGradient(256, 256, 0, 256, 256, 256);
+    gr.addColorStop(0.62, 'rgba(63,208,216,0)'); gr.addColorStop(0.685, 'rgba(63,208,216,0.42)');
+    gr.addColorStop(0.75, 'rgba(63,208,216,0.12)'); gr.addColorStop(0.88, 'rgba(63,208,216,0.03)'); gr.addColorStop(1, 'rgba(63,208,216,0)');
+    hx.fillStyle = gr; hx.fillRect(0, 0, 512, 512);
+    const halo = new T.Sprite(new T.SpriteMaterial({map:new T.CanvasTexture(hc), transparent:true, depthWrite:false, blending:T.AdditiveBlending, toneMapped:false}));
+    halo.scale.set(3, 3, 1); s.add(halo);
+    const ring = (r, tilt, op, dash) => {
+      const pts = []; for (let i = 0; i <= 256; i++) { const a = i / 256 * Math.PI * 2; pts.push(new T.Vector3(Math.cos(a) * r, 0, Math.sin(a) * r)); }
+      const geo = new T.BufferGeometry().setFromPoints(pts);
+      const mat = dash ? new T.LineDashedMaterial({color:0x3fd0d8, transparent:true, opacity:op, dashSize:0.03, gapSize:0.05}) : new T.LineBasicMaterial({color:0x3fd0d8, transparent:true, opacity:op});
+      const l = new T.Line(geo, mat); if (dash) l.computeLineDistances();
+      const h = new T.Group(); h.rotation.set(tilt[0], 0, tilt[1]); h.add(l); s.add(h); return l;
+    };
+    this.orb = [ring(1.42, [1.3, 0.25], 0.22, false), ring(1.64, [1.44, -0.35], 0.18, true)];
+    const Z = new T.Vector3(0, 0, 1);
+    this.markers = []; this.hits = [];
+    this.MK.forEach((m, i) => {
+      const n = this.ll(m.lat, m.lon, 1);
+      const mk = new T.Group(); mk.position.copy(n); mk.quaternion.setFromUnitVectors(Z, n.clone().normalize());
+      const col = new T.MeshBasicMaterial({color:0x3fd0d8, transparent:true, side:T.DoubleSide, depthWrite:false, toneMapped:false});
+      const bg = new T.CylinderGeometry(0.0035, 0.0035, 1, 8); bg.rotateX(Math.PI / 2); bg.translate(0, 0, 0.5);
+      const beam = new T.Mesh(bg, col); beam.scale.set(1, 1, 0.07);
+      const rg = new T.Mesh(new T.RingGeometry(0.016, 0.022, 40), col); rg.position.z = 0.002;
+      const pulse = new T.Mesh(new T.RingGeometry(0.02, 0.024, 40), new T.MeshBasicMaterial({color:0xc6f432, transparent:true, side:T.DoubleSide, depthWrite:false, toneMapped:false})); pulse.position.z = 0.003;
+      const dot = new T.Mesh(new T.CircleGeometry(0.008, 24), col); dot.position.z = 0.003;
+      const head = new T.Mesh(new T.OctahedronGeometry(0.011), col);
+      const anchor = new T.Object3D();
+      const hit = new T.Mesh(new T.SphereGeometry(0.05, 12, 8), new T.MeshBasicMaterial({transparent:true, opacity:0, depthWrite:false, colorWrite:false}));
+      hit.userData.idx = i;
+      mk.add(beam, rg, pulse, dot, head, anchor, hit); g.add(mk);
+      this.markers.push({beam, pulse, head, anchor, col, bs:1}); this.hits.push(hit);
+    });
+  }
+
+  paintTex(polys) {
+    const cv = this.texCanvas, x = cv.getContext('2d'), W = cv.width, H = cv.height;
+    x.fillStyle = '#0a1c22'; x.fillRect(0, 0, W, H);
+    x.strokeStyle = 'rgba(80,200,210,0.10)'; x.lineWidth = 1.2;
+    for (let lo = -180; lo <= 180; lo += 15) { const px = (lo + 180) / 360 * W; x.beginPath(); x.moveTo(px, 0); x.lineTo(px, H); x.stroke(); }
+    for (let la = -75; la <= 75; la += 15) { const py = (90 - la) / 180 * H; x.beginPath(); x.moveTo(0, py); x.lineTo(W, py); x.stroke(); }
+    if (!polys) return;
+    const path = (ctx, w, h) => { ctx.beginPath(); polys.forEach(p => p.forEach(r => { r.forEach((pt, k) => { const px = (pt[0] + 180) / 360 * w, py = (90 - pt[1]) / 180 * h; k ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }); ctx.closePath(); })); };
+    path(x, W, H); x.fillStyle = '#1a3239'; x.fill('evenodd');
+    x.strokeStyle = 'rgba(110,196,206,0.55)'; x.lineWidth = 1.6; x.stroke();
+    const mc = document.createElement('canvas'); mc.width = 1440; mc.height = 720;
+    const mx = mc.getContext('2d'); path(mx, 1440, 720); mx.fillStyle = '#fff'; mx.fill('evenodd');
+    return mx.getImageData(0, 0, 1440, 720).data;
+  }
+
+  async loadEarth() {
+    const T = this.T, L = new T.TextureLoader(); L.setCrossOrigin('anonymous');
+    const maps={"earth_atmos_2048.jpg":"./assets/earth.jpg","earth_specular_2048.jpg":"./assets/specular.jpg","earth_normal_2048.jpg":"./assets/normal.jpg","earth_lights_2048.png":"./assets/lights.png","earth_clouds_1024.png":"./assets/clouds.png"};
+    const ld = u => new Promise(res => L.load(maps[u], res, undefined, () => res(null)));
+    const [day, spec, nrm, lights, clouds] = await Promise.all(['earth_atmos_2048.jpg','earth_specular_2048.jpg','earth_normal_2048.jpg','earth_lights_2048.png','earth_clouds_1024.png'].map(ld));
+    if (this.dead) return;
+    if (!day) { return; }
+    const m = this.globeMesh.material;
+    day.colorSpace = T.SRGBColorSpace; day.anisotropy = 8; m.map = day;
+    if (spec) m.specularMap = spec;
+    if (nrm) { m.normalMap = nrm; m.normalScale.set(0.8, 0.8); }
+    if (lights) { lights.colorSpace = T.SRGBColorSpace; m.emissiveMap = lights; m.emissive.set(0xffd49a); m.emissiveIntensity = 1.4; }
+    m.needsUpdate = true;
+    if (clouds) {
+      clouds.colorSpace = T.SRGBColorSpace;
+      this.clouds = new T.Mesh(new T.SphereGeometry(1.008, 64, 48), new T.MeshPhongMaterial({map:clouds, transparent:true, opacity:0.42, depthWrite:false}));
+      this.globe.add(this.clouds);
+    }
+  }
+
+  buildCity() {
+    const T = this.T, s = this.cScene = new T.Scene(), RB = this.RB;
+    s.add(new T.HemisphereLight(0xdbe9ec, 0x0e191d, 0.6));
+    const key = new T.DirectionalLight(0xfff3e2, 2.5); key.position.set(-6, 11, 6); key.castShadow = true;
+    key.shadow.mapSize.set(1024, 1024);
+    const sc = key.shadow.camera; sc.left = -8; sc.right = 8; sc.top = 8; sc.bottom = -8; sc.near = 1; sc.far = 30;
+    key.shadow.bias = -0.0003; key.shadow.normalBias = 0.015; key.shadow.radius = 4;
+    s.add(key);
+    const rimL = new T.DirectionalLight(0x6fdde6, 0.5); rimL.position.set(8, 4, -6); s.add(rimL);
+
+    const ct = (w, h, draw, rep) => { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new T.CanvasTexture(c); t.colorSpace = T.SRGBColorSpace; t.wrapS = t.wrapT = T.RepeatWrapping; t.anisotropy = 8; if (rep) t.repeat.set(rep[0], rep[1]); return t; };
+    const speck = (x, w, h, n, a) => { for (let i = 0; i < n; i++) { x.fillStyle = (Math.random() < 0.5 ? 'rgba(255,255,255,' : 'rgba(0,0,0,') + (Math.random() * a) + ')'; x.fillRect(Math.random() * w, Math.random() * h, 1 + Math.random() * 1.5, 1 + Math.random() * 1.5); } };
+    const gridLines = (x, w, h, step, col) => { x.strokeStyle = col; x.lineWidth = 1; for (let i = 0; i <= w; i += step) { x.beginPath(); x.moveTo(i + 0.5, 0); x.lineTo(i + 0.5, h); x.stroke(); } for (let j = 0; j <= h; j += step) { x.beginPath(); x.moveTo(0, j + 0.5); x.lineTo(w, j + 0.5); x.stroke(); } };
+    const concrete = ct(256, 256, (x, w, h) => { x.fillStyle = '#bcc7cb'; x.fillRect(0, 0, w, h); speck(x, w, h, 2600, 0.08); x.strokeStyle = 'rgba(40,60,66,0.10)'; for (let i = 0; i <= w; i += 64) { x.beginPath(); x.moveTo(i + 0.5, 0); x.lineTo(i + 0.5, h); x.stroke(); } });
+    const corrugated = ct(256, 64, (x, w, h) => { for (let i = 0; i < w; i += 8) { const g = x.createLinearGradient(i, 0, i + 8, 0); g.addColorStop(0, '#97a4a8'); g.addColorStop(0.5, '#c6d0d3'); g.addColorStop(1, '#8b989c'); x.fillStyle = g; x.fillRect(i, 0, 8, h); } speck(x, w, h, 400, 0.05); }, [5, 1]);
+    const roofT = ct(256, 256, (x, w, h) => { x.fillStyle = '#6c787d'; x.fillRect(0, 0, w, h); speck(x, w, h, 6000, 0.12); }, [2, 2]);
+    const paveT = ct(256, 256, (x, w, h) => { x.fillStyle = '#33414a'; x.fillRect(0, 0, w, h); speck(x, w, h, 3000, 0.06); gridLines(x, w, h, 32, 'rgba(0,0,0,0.28)'); }, [12, 8]);
+    const walkT = ct(128, 128, (x, w, h) => { x.fillStyle = '#7a878c'; x.fillRect(0, 0, w, h); speck(x, w, h, 1200, 0.08); gridLines(x, w, h, 16, 'rgba(20,30,34,0.25)'); }, [5, 5]);
+    const asphaltT = ct(256, 256, (x, w, h) => { x.fillStyle = '#1c262b'; x.fillRect(0, 0, w, h); speck(x, w, h, 5000, 0.07); }, [8, 1]);
+    const doorT = ct(64, 64, (x, w, h) => { x.fillStyle = '#69767b'; x.fillRect(0, 0, w, h); for (let j = 0; j < h; j += 4) { x.fillStyle = 'rgba(0,0,0,0.22)'; x.fillRect(0, j, w, 1); } });
+    const grilleT = ct(64, 64, (x, w, h) => { x.fillStyle = '#8a979b'; x.fillRect(0, 0, w, h); for (let i = 2; i < w; i += 4) { x.fillStyle = 'rgba(0,0,0,0.3)'; x.fillRect(i, 6, 2, h - 12); } });
+    this.glassMats = [];
+    const glass = (cols, rows, idx) => {
+      const cw = 24, chh = 32, w = cols * cw, h = rows * chh, lit = [];
+      for (let i = 0; i < cols * rows; i++) lit.push(Math.random() < 0.24 ? (Math.random() < 0.7 ? '#f2dfae' : '#cfe9ee') : null);
+      const map = ct(w, h, x => {
+        const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#3d6670'); g.addColorStop(0.45, '#18343c'); g.addColorStop(1, '#0c1f25'); x.fillStyle = g; x.fillRect(0, 0, w, h);
+        for (let c = 0; c < cols; c++) for (let r = 0; r < rows; r++) {
+          const L = lit[r * cols + c], px = c * cw, py = r * chh;
+          if (L) { x.globalAlpha = 0.55; x.fillStyle = L; x.fillRect(px + 2, py + 3, cw - 4, chh - 6); x.globalAlpha = 1; }
+          else if (Math.random() < 0.25) { x.fillStyle = 'rgba(180,205,210,0.10)'; for (let k = py + 5; k < py + chh - 4; k += 3) x.fillRect(px + 2, k, cw - 4, 1); }
+        }
+        x.fillStyle = 'rgba(150,172,178,0.75)';
+        for (let c = 0; c <= cols; c++) x.fillRect(c * cw - 1, 0, 2, h);
+        for (let r = 0; r <= rows; r++) x.fillRect(0, r * chh - 1, w, 2);
+        const rg = x.createLinearGradient(0, 0, w, h); rg.addColorStop(0, 'rgba(255,255,255,0.10)'); rg.addColorStop(0.4, 'rgba(255,255,255,0)'); rg.addColorStop(0.6, 'rgba(255,255,255,0.05)'); rg.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = rg; x.fillRect(0, 0, w, h);
+      });
+      const emi = ct(w, h, x => { x.fillStyle = '#000'; x.fillRect(0, 0, w, h); for (let c = 0; c < cols; c++) for (let r = 0; r < rows; r++) { const L = lit[r * cols + c]; if (L) { x.fillStyle = L; x.fillRect(c * cw + 2, r * chh + 3, cw - 4, chh - 6); } } });
+      const m = new T.MeshStandardMaterial({map, emissiveMap:emi, emissive:0xffffff, emissiveIntensity:0.28, roughness:0.18, metalness:0.15});
+      this.glassMats.push({m, i:idx}); return m;
+    };
+    const signTex = (text, w, h) => ct(w, h, x => { x.fillStyle = '#0b1a1f'; x.fillRect(0, 0, w, h); x.fillStyle = '#e8f3f4'; x.font = '700 ' + Math.round(h * 0.5) + 'px "Noto Sans SC", sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(text, w / 2, h / 2 + 2); x.fillStyle = '#3fd0d8'; x.fillRect(0, h - 4, w, 4); });
+    const signMat = t => new T.MeshStandardMaterial({map:t, emissiveMap:t, emissive:0xffffff, emissiveIntensity:0.55, roughness:0.4});
+    const ledT = ct(256, 128, (x, w, h) => { const g = x.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#0f3b44'); g.addColorStop(1, '#081a20'); x.fillStyle = g; x.fillRect(0, 0, w, h); x.fillStyle = '#ff4d5e'; x.beginPath(); x.arc(30, 40, 9, 0, 7); x.fill(); x.fillStyle = '#f1f7f8'; x.font = '700 30px "JetBrains Mono", monospace'; x.textBaseline = 'middle'; x.fillText('LIVE', 48, 41); x.font = '500 22px "Noto Sans SC", sans-serif'; x.fillStyle = '#9fe6ec'; x.fillText('直播带货 · 达人专场', 22, 88); for (let j = 0; j < h; j += 3) { x.fillStyle = 'rgba(0,0,0,0.18)'; x.fillRect(0, j, w, 1); } });
+
+    const M = o => new T.MeshStandardMaterial(Object.assign({roughness:0.8, metalness:0.05}, o));
+    const wall = M({map:concrete, roughness:0.85}), trim = M({color:0xe8eef0, roughness:0.55}), trimDark = M({color:0x56656b, roughness:0.6, metalness:0.3});
+    const metal = M({map:corrugated, roughness:0.5, metalness:0.35}), roof = M({map:roofT, roughness:1}), dark = M({color:0x162127, roughness:0.5, metalness:0.2});
+    const rubber = M({color:0x0d1214, roughness:0.9}), grille = M({map:grilleT, roughness:0.6, metalness:0.4}), doorM = M({map:doorT, roughness:0.6, metalness:0.3});
+    const walk = M({map:walkT, roughness:0.95}), asphalt = M({map:asphaltT, roughness:0.95}), paint = M({color:0xdfe6e8, roughness:0.7});
+    const leaf = M({color:0x4a6359, roughness:0.9, flatShading:true}), trunk = M({color:0x5d5048, roughness:0.9});
+    const lampMat = M({color:0xfff1d0, emissive:0xffe2a8, emissiveIntensity:1.5});
+    const glassDark = M({color:0x143039, roughness:0.15, metalness:0.2});
+    const wood = M({color:0x7a6a58}), card = M({color:0xa38e6f});
+    const beaconMat = this.beaconMat = M({color:0x330000, emissive:0xff3b3b, emissiveIntensity:2});
+
+    const add = (p, geo, mat, x, y, z) => { const m = new T.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = m.receiveShadow = true; p.add(m); return m; };
+    const box = (p, w, h, d, mat, x, y, z, r) => add(p, r && RB ? new RB(w, h, d, 2, r) : new T.BoxGeometry(w, h, d), mat, x, y, z);
+    const plane = (p, w, h, mat, x, y, z, ry) => { const m = add(p, new T.PlaneGeometry(w, h), mat, x, y, z); if (ry) m.rotation.y = ry; m.castShadow = false; return m; };
+    const cyl = (p, rt, rb, h, mat, x, y, z, seg) => add(p, new T.CylinderGeometry(rt, rb, h, seg || 12), mat, x, y, z);
+    const flat = m => { m.castShadow = false; return m; };
+    const tree = (x, y, z, k) => { const g = new T.Group(); g.position.set(x, y, z); cyl(g, 0.016, 0.022, 0.22, trunk, 0, 0.11, 0, 6); add(g, new T.IcosahedronGeometry(0.15, 0), leaf, 0, 0.32, 0); add(g, new T.IcosahedronGeometry(0.1, 0), leaf, 0.04, 0.44, -0.02); g.scale.setScalar(k || 1); g.rotation.y = Math.random() * 6; s.add(g); };
+    const lamp = (x, z, dir) => { const g = new T.Group(); g.position.set(x, 0.02, z); cyl(g, 0.009, 0.013, 0.5, trimDark, 0, 0.25, 0, 6); box(g, 0.012, 0.012, 0.14, trimDark, 0, 0.5, 0.07 * dir); box(g, 0.045, 0.015, 0.07, lampMat, 0, 0.49, 0.14 * dir); s.add(g); };
+
+    // site
+    const plate = add(s, RB ? new RB(10.6, 0.42, 6.6, 3, 0.08) : new T.BoxGeometry(10.6, 0.42, 6.6), M({color:0x1f2b31, roughness:0.7, metalness:0.2}), 0, -0.21, 0);
+    plate.castShadow = false;
+    const edge = new T.LineSegments(new T.EdgesGeometry(new T.BoxGeometry(10.6, 0.42, 6.6)), new T.LineBasicMaterial({color:0x56747d, transparent:true, opacity:0.45, toneMapped:false}));
+    edge.position.y = -0.21; s.add(edge);
+    flat(box(s, 10.3, 0.02, 6.3, M({map:paveT, roughness:0.95}), 0, 0.01, 0));
+    flat(box(s, 10.3, 0.03, 0.72, asphalt, 0, 0.03, 2.2));
+    [-1.6, 1.6].forEach(x => flat(box(s, 0.56, 0.03, 6.3, asphalt, x, 0.031, 0)));
+    for (let x = -4.9; x <= 4.9; x += 0.5) if (Math.abs(Math.abs(x) - 1.6) > 0.5) flat(box(s, 0.24, 0.004, 0.022, paint, x, 0.047, 2.2));
+    [-1.6, 1.6].forEach(cx => { for (let k = 0; k < 5; k++) { flat(box(s, 0.05, 0.004, 0.6, paint, cx - 0.62 + k * 0.08, 0.047, 2.2)); flat(box(s, 0.05, 0.004, 0.6, paint, cx + 0.3 + k * 0.08, 0.047, 2.2)); } });
+    [-3.2, 0, 3.2].forEach(x => box(s, 2.7, 0.07, 2.6, walk, x, 0.055, -0.3, 0.02));
+
+    const flow = new T.MeshBasicMaterial({color:0x3fd0d8, toneMapped:false, transparent:true, opacity:0.85});
+    const loopPts = [[-4.8,-2.8],[-1.6,-2.85],[1.6,-2.8],[4.8,-2.8],[4.85,0],[4.8,1.65],[1.6,1.7],[-1.6,1.65],[-4.8,1.7],[-4.85,0]].map(p => new T.Vector3(p[0], 0.055, p[1]));
+    const curve = this.curve = new T.CatmullRomCurve3(loopPts, true, 'catmullrom', 0.3);
+    s.add(new T.Mesh(new T.TubeGeometry(curve, 300, 0.011, 6, true), flow));
+    [-3.2, 0, 3.2].forEach(x => s.add(new T.Mesh(new T.TubeGeometry(new T.LineCurve3(new T.Vector3(x, 0.055, 1.68), new T.Vector3(x, 0.1, 1.0)), 4, 0.009, 6, false), flow)));
+    this.runners = [];
+    for (let i = 0; i < 7; i++) { const m = new T.Mesh(new T.SphereGeometry(0.026, 10, 8), new T.MeshBasicMaterial({color: i % 3 === 0 ? 0xc6f432 : 0xaaf3f7, toneMapped:false})); s.add(m); this.runners.push({m, t: i / 7}); }
+
+    this.bGroups = [];
+    // 0 · TikTok Shop — 两层沿街店铺 + 直播演播楼
+    let g = new T.Group(); g.position.set(-3.2, 0.09, -0.3);
+    const gA = glass(8, 1, 0), gB = glass(10, 1, 0), gC = glass(3, 7, 0);
+    box(g, 1.9, 0.48, 1.3, gA, 0, 0.24, 0.2);
+    for (let i = 0; i < 5; i++) box(g, 0.035, 0.48, 0.035, trimDark, -0.9 + i * 0.45, 0.24, 0.86);
+    box(g, 2.0, 0.06, 1.4, trim, 0, 0.51, 0.2, 0.01);
+    box(g, 1.92, 0.44, 1.32, wall, 0, 0.76, 0.2);
+    plane(g, 1.6, 0.15, gB, 0, 0.78, 0.861);
+    plane(g, 1.1, 0.15, gB, 0.961, 0.78, 0.2, Math.PI / 2);
+    box(g, 1.98, 0.08, 1.38, trim, 0, 1.02, 0.2, 0.01);
+    flat(box(g, 1.84, 0.01, 1.24, roof, 0, 1.065, 0.2));
+    box(g, 1.5, 0.03, 0.32, M({color:0x1e4850, roughness:0.6}), -0.05, 0.46, 1.0);
+    box(g, 1.0, 0.16, 0.03, dark, -0.25, 1.16, 0.86);
+    plane(g, 0.96, 0.13, signMat(signTex('TikTok Shop', 512, 72)), -0.25, 1.16, 0.876);
+    box(g, 0.9, 0.46, 0.05, dark, 0.45, 1.36, -0.2);
+    plane(g, 0.86, 0.42, new T.MeshStandardMaterial({map:ledT, emissiveMap:ledT, emissive:0xffffff, emissiveIntensity:0.9, roughness:0.3}), 0.45, 1.36, -0.174);
+    cyl(g, 0.012, 0.012, 0.12, trimDark, 0.15, 1.1, -0.2, 6); cyl(g, 0.012, 0.012, 0.12, trimDark, 0.75, 1.1, -0.2, 6);
+    box(g, 0.26, 0.12, 0.2, grille, -0.15, 1.13, 0.55); box(g, 0.2, 0.1, 0.18, grille, 0.2, 1.12, 0.6);
+    box(g, 0.66, 1.75, 0.66, gC, -0.55, 0.875, -0.52);
+    for (let i = 1; i < 7; i++) box(g, 0.7, 0.022, 0.7, trim, -0.55, i * 0.25, -0.52);
+    box(g, 0.72, 0.07, 0.72, trim, -0.55, 1.79, -0.52, 0.01);
+    const dish = cyl(g, 0.09, 0.05, 0.03, trim, -0.42, 1.9, -0.42, 16); dish.rotation.x = 0.5;
+    flat(box(g, 0.4, 0.006, 0.2, rubber, 0.45, 0.003, 0.95));
+    g.userData.idx = 0; s.add(g); this.bGroups.push(g);
+    // 1 · Amazon — 仓配中心
+    g = new T.Group(); g.position.set(0, 0.09, -0.3);
+    const gO = glass(4, 5, 1);
+    box(g, 2.52, 0.12, 1.82, M({color:0x7e8b90, roughness:0.8}), 0, 0.06, 0);
+    box(g, 2.5, 0.86, 1.8, metal, 0, 0.55, 0);
+    box(g, 2.54, 0.06, 1.84, trim, 0, 1.0, 0, 0.01);
+    flat(box(g, 2.4, 0.01, 1.7, roof, 0, 1.035, 0));
+    [-0.7, 0, 0.7].forEach(x => box(g, 0.16, 0.05, 1.3, glassDark, x, 1.06, 0.05));
+    box(g, 0.22, 0.12, 0.22, grille, 1.0, 1.1, 0.6); box(g, 0.22, 0.12, 0.22, grille, 1.0, 1.1, 0.3);
+    [-0.75, 0, 0.75].forEach(x => {
+      plane(g, 0.5, 0.56, doorM, x, 0.34, 0.901);
+      box(g, 0.56, 0.03, 0.03, trimDark, x, 0.635, 0.91); box(g, 0.03, 0.56, 0.03, trimDark, x - 0.265, 0.34, 0.91); box(g, 0.03, 0.56, 0.03, trimDark, x + 0.265, 0.34, 0.91);
+      box(g, 0.05, 0.08, 0.04, rubber, x - 0.2, 0.17, 0.92); box(g, 0.05, 0.08, 0.04, rubber, x + 0.2, 0.17, 0.92);
+      box(g, 0.06, 0.02, 0.02, lampMat, x, 0.7, 0.93);
+    });
+    box(g, 2.3, 0.03, 0.3, trim, 0, 0.74, 1.04);
+    box(g, 1.0, 0.15, 0.03, dark, 0, 0.88, 0.915);
+    plane(g, 0.96, 0.12, signMat(signTex('Amazon', 512, 64)), 0, 0.88, 0.931);
+    box(g, 0.8, 1.4, 0.6, gO, 0.75, 0.7, -0.55);
+    box(g, 0.84, 0.025, 0.64, trim, 0.75, 1.2, -0.55); box(g, 0.84, 0.06, 0.64, trim, 0.75, 1.42, -0.55, 0.01);
+    box(g, 0.2, 0.03, 0.2, wood, -1.05, 0.015, 1.12); box(g, 0.17, 0.14, 0.17, card, -1.05, 0.1, 1.12); box(g, 0.2, 0.03, 0.2, wood, -1.05, 0.015, 1.36); box(g, 0.15, 0.1, 0.15, card, -1.06, 0.08, 1.36);
+    g.userData.idx = 1; s.add(g); this.bGroups.push(g);
+    const truck = new T.Group(); truck.position.set(0, 0.02, 1.08);
+    box(truck, 0.34, 0.34, 0.92, M({color:0xe2e8ea, roughness:0.5}), 0, 0.27, 0, 0.02);
+    box(truck, 0.345, 0.03, 0.9, M({color:0x3fd0d8, roughness:0.5}), 0, 0.2, 0);
+    box(truck, 0.32, 0.27, 0.26, M({color:0x2c4f59, roughness:0.4, metalness:0.3}), 0, 0.2, 0.6, 0.03);
+    plane(truck, 0.26, 0.1, glassDark, 0, 0.27, 0.731);
+    [[-0.17, -0.3], [0.17, -0.3], [-0.17, 0.25], [0.17, 0.25], [-0.16, 0.62], [0.16, 0.62]].forEach(([x, z]) => { const w = cyl(truck, 0.05, 0.05, 0.04, rubber, x, 0.05, z, 12); w.rotation.z = Math.PI / 2; });
+    s.add(truck);
+    // 2 · 独立站 — 品牌总部塔楼
+    g = new T.Group(); g.position.set(3.2, 0.09, -0.3);
+    const gP = glass(6, 1, 2), gT = glass(5, 11, 2);
+    box(g, 1.6, 0.4, 1.6, wall, 0, 0.2, 0, 0.015);
+    plane(g, 1.3, 0.24, gP, 0, 0.15, 0.801); plane(g, 1.3, 0.24, gP, 0.801, 0.15, 0, Math.PI / 2);
+    box(g, 1.08, 2.56, 1.08, gT, 0, 1.68, 0);
+    for (let i = 0; i < 12; i++) box(g, 1.12, 0.022, 1.12, trim, 0, 0.4 + i * 0.232, 0);
+    [[-0.55, -0.55], [0.55, -0.55], [-0.55, 0.55], [0.55, 0.55]].forEach(([x, z]) => box(g, 0.06, 2.58, 0.06, trim, x, 1.69, z));
+    box(g, 1.16, 0.16, 1.16, trim, 0, 3.04, 0, 0.01);
+    flat(box(g, 1.04, 0.01, 1.04, roof, 0, 3.125, 0));
+    box(g, 0.5, 0.2, 0.4, grille, -0.15, 3.23, -0.1);
+    cyl(g, 0.11, 0.11, 0.22, trim, 0.3, 3.24, 0.25, 16);
+    cyl(g, 0.009, 0.012, 0.6, trimDark, 0.3, 3.43, -0.3, 6);
+    add(g, new T.SphereGeometry(0.025, 10, 8), beaconMat, 0.3, 3.74, -0.3).castShadow = false;
+    box(g, 0.7, 0.025, 0.3, trim, 0, 0.3, 0.95);
+    cyl(g, 0.01, 0.01, 0.3, trimDark, -0.32, 0.15, 1.07, 6); cyl(g, 0.01, 0.01, 0.3, trimDark, 0.32, 0.15, 1.07, 6);
+    box(g, 0.8, 0.1, 0.02, dark, 0, 0.34, 0.812);
+    plane(g, 0.76, 0.08, signMat(signTex('独立站 · DTC', 512, 54)), 0, 0.34, 0.823);
+    g.userData.idx = 2; s.add(g); this.bGroups.push(g);
+
+    [[-4.4, 0.85], [-2.0, 0.85], [-1.2, -1.45], [1.2, -1.45], [2.0, 0.85], [4.4, 0.85], [4.4, -1.45], [2.0, -1.45]].forEach(([x, z]) => tree(x, 0.09, z, 0.9 + Math.random() * 0.25));
+    [-4.2, -2.6, -0.9, 0.9, 2.6, 4.2].forEach(x => tree(x, 0.02, -2.35, 0.8 + Math.random() * 0.3));
+    [-4.2, -2.4, -0.8, 0.8, 2.4, 4.2].forEach(x => lamp(x, 1.5, 1));
+    [-3.4, -0.1, 3.4].forEach(x => lamp(x, 2.75, -1));
+    this.cars = [];
+    [[0xe6ebec, 2.03, 0.006, -4], [0x8a979c, 2.03, 0.006, 0.5], [0x2f3c42, 2.37, -0.005, 2], [0xb7a586, 2.37, -0.005, -2.5], [0x5e7d86, 2.03, 0.006, 3.6]].forEach(([c, z, v, x]) => {
+      const cg = new T.Group(); cg.position.set(x, 0.045, z); if (v < 0) cg.rotation.y = Math.PI;
+      box(cg, 0.34, 0.075, 0.16, M({color:c, roughness:0.35, metalness:0.4}), 0, 0.06, 0, 0.025);
+      box(cg, 0.18, 0.065, 0.14, glassDark, -0.02, 0.12, 0, 0.02);
+      s.add(cg); this.cars.push({g:cg, v});
+    });
+
+    const selM = new T.MeshBasicMaterial({color:0xc6f432, toneMapped:false});
+    const frame = (mat, w, d, t) => { const f = new T.Group(); [[0, d / 2, w, t], [0, -d / 2, w, t]].forEach(([x, z, ww, tt]) => { const m = new T.Mesh(new T.BoxGeometry(ww, 0.012, tt), mat); m.position.set(x, 0, z); f.add(m); }); [w / 2, -w / 2].forEach(x => { const m = new T.Mesh(new T.BoxGeometry(t, 0.012, d), mat); m.position.set(x, 0, 0); f.add(m); }); return f; };
+    const sg = this.selG = new T.Group(); sg.position.set(-3.2, 0.1, -0.3);
+    sg.add(frame(selM, 2.86, 2.76, 0.018));
+    [[1, 1], [1, -1], [-1, 1], [-1, -1]].forEach(([sx, sz]) => { const a = new T.Mesh(new T.BoxGeometry(0.34, 0.016, 0.05), selM); a.position.set(sx * (1.43 + 0.04) - sx * 0.15, 0.002, sz * (1.38 + 0.04)); const b = new T.Mesh(new T.BoxGeometry(0.05, 0.016, 0.34), selM); b.position.set(sx * (1.43 + 0.04), 0.002, sz * (1.38 + 0.04) - sz * 0.15); sg.add(a, b); });
+    this.selPulseMat = new T.MeshBasicMaterial({color:0xc6f432, toneMapped:false, transparent:true, opacity:0.5, depthWrite:false});
+    this.selPulse = frame(this.selPulseMat, 2.86, 2.76, 0.01); sg.add(this.selPulse);
+    const fill = new T.Mesh(new T.PlaneGeometry(2.8, 2.7), new T.MeshBasicMaterial({color:0xc6f432, transparent:true, opacity:0.05, depthWrite:false, toneMapped:false}));
+    fill.rotation.x = -Math.PI / 2; sg.add(fill); s.add(sg);
+    this.pAnch = [new T.Vector3(-3.2, 2.3, -0.75), new T.Vector3(0, 1.9, -0.3), new T.Vector3(3.2, 4.0, -0.3)];
+  }
+
+  loop = () => {
+    if (this.dead) return;
+    this.raf = requestAnimationFrame(this.loop);
+    const now=performance.now();if(!this.w||document.hidden||this.suspended)return;
+    if(!this.tw&&this.lastRender&&now-this.lastRender<32)return;this.lastRender=now;
+    const t0 = performance.now();
+    this.tick(t0);
+    this.renderer.render(this.scene, this.camera);
+    const dt = performance.now() - t0;
+    this.fAvg = this.fAvg == null ? dt : this.fAvg * 0.9 + dt * 0.1;
+    this.fN = (this.fN || 0) + 1;
+    if (!this.lowPerf && this.fN > 20 && this.fAvg > 45) {
+      this.lowPerf = true; this.renderer.setPixelRatio(1); this.renderer.shadowMap.enabled = false;
+      if (this.clouds) this.clouds.visible = false;
+      this.resize();
+    }
+    this.updateLabels();
+  };
+
+  tick(now) {
+    const tw = this.tw, p = tw ? Math.min(1, (now - tw.t0) / tw.dur) : 0;
+    const eIO = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2, eOut = t => 1 - Math.pow(1 - t, 3);
+    let fade = 0, la = 1;
+    const cam = this.camera;
+    if (this.mode === 'globe') {
+      this.zoom += (this.zoomT - this.zoom) * 0.1;
+      let gz = this.gzBase * this.zoom;
+      if (tw && tw.kind === 'enter') { gz = gz + (2.1 - gz) * eIO(p); fade = Math.max(0, (p - 0.62) / 0.38); la = 1 - Math.min(1, p * 4); }
+      if (tw && tw.kind === 'globeIn') { gz = 2.1 + (gz - 2.1) * eOut(p); fade = 1 - Math.min(1, p / 0.4); la = Math.max(0, (p - 0.6) / 0.4); }
+      cam.position.set(0, 0, gz); cam.lookAt(0, 0, 0);
+      const R = this.rot, RT = this.rotT;
+      if (!this.dragging) {
+        if (this.flying) {
+          const k = tw ? 0.12 : 0.075;
+          R.x += (RT.x - R.x) * k; R.y += (RT.y - R.y) * k;
+          if (Math.abs(RT.x - R.x) + Math.abs(RT.y - R.y) < 0.0005) this.flying = false;
+        } else {
+          R.x += this.vel.x; R.y += this.vel.y; this.vel.x *= 0.92; this.vel.y *= 0.92;
+          if (this.props.idleSpin && now - this.lastInteract > 5000) R.y += 0.0007;
+        }
+      }
+      R.x = Math.max(-1.1, Math.min(1.1, R.x));
+      this.globe.rotation.set(R.x, R.y, 0);
+      if (this.clouds) this.clouds.rotation.y += 0.00008;
+      this.orb[0].parent.rotation.y = now * 0.00004; this.orb[1].parent.rotation.y = -now * 0.00003;
+      const sel = this.state.market;
+      this.markers.forEach((o, i) => {
+        const isS = i === sel, isH = i === this.hoverIdx;
+        o.col.color.setHex(isS ? 0xc6f432 : isH ? 0xffffff : 0x3fd0d8);
+        o.bs += ((isS ? 2.2 : isH ? 1.4 : 1) - o.bs) * 0.12;
+        const h = 0.07 * o.bs;
+        o.beam.scale.z = h; o.head.position.z = h; o.anchor.position.z = h + 0.006; o.head.rotation.z = now * 0.0012;
+        const f = (now / 1400) % 1;
+        o.pulse.visible = isS; o.pulse.scale.setScalar(1 + f * 2.6); o.pulse.material.opacity = (1 - f) * 0.9;
+      });
+      if (tw && p >= 1 && tw.kind === 'enter') {
+        this.mode = 'city'; this.scene = this.cScene; this.yaw = this.yawT = 0; this.applyOffset();
+        this.renderer.shadowMap.enabled = !this.lowPerf;this.renderer.shadowMap.autoUpdate=false;this.renderer.shadowMap.needsUpdate=true;
+        this.tw = {kind:'cityIn', t0:now, dur:650};
+        this.setState({phase:'platform'});
+      } else if (tw && p >= 1) this.tw = null;
+    } else {
+      let R = 13, el = 0.68;
+      if (tw && tw.kind === 'cityIn') { const e = eOut(p); R = 26 + (13 - 26) * e; el = 1.2 + (0.68 - 1.2) * e; fade = 1 - Math.min(1, p / 0.45); la = Math.max(0, (p - 0.55) / 0.45); }
+      if (tw && tw.kind === 'exit') { fade = p; la = 1 - p; }
+      this.yaw += (this.yawT - this.yaw) * 0.08;
+      const yaw = 0.62 + this.yaw; R *= this.cityFit;
+      cam.position.set(R * Math.cos(el) * Math.sin(yaw), R * Math.sin(el), R * Math.cos(el) * Math.cos(yaw));
+      cam.lookAt(0, 0.8, -0.3);
+      const sel = this.state.platform, tx = [-3.2, 0, 3.2][sel];
+      this.selG.position.x += (tx - this.selG.position.x) * 0.14;
+      const f = (now / 1600) % 1;
+      this.selPulse.scale.set(1 + f * 0.08, 1, 1 + f * 0.08); this.selPulseMat.opacity = (1 - f) * 0.7;
+      this.glassMats.forEach(g => { const t = g.i === sel ? 1.1 : 0.28; g.m.emissiveIntensity += (t - g.m.emissiveIntensity) * 0.08; });
+      this.runners.forEach(r => { r.t = (r.t + 0.0006) % 1; r.m.position.copy(this.curve.getPointAt(r.t)); });
+      this.cars.forEach(c => { c.g.position.x += c.v; if (c.g.position.x > 5) c.g.position.x = -5; if (c.g.position.x < -5) c.g.position.x = 5; });
+      this.beaconMat.emissiveIntensity = (now % 1800) < 220 ? 4 : 0.15;
+      if (tw && p >= 1 && tw.kind === 'exit') {
+        this.mode = 'globe'; this.scene = this.gScene; this.zoom = this.zoomT = 1; this.applyOffset();
+        this.renderer.shadowMap.enabled = false;
+        this.tw = {kind:'globeIn', t0:now, dur:650};
+        this.setState({phase:'globe'});
+      } else if (tw && p >= 1) this.tw = null;
+    }
+    this.labelA = la;
+    if (this.fadeEl) { this.fadeEl.style.opacity = fade; this.fadeEl.style.pointerEvents = fade > 0.02 ? 'auto' : 'none'; }
+  }
+
+  updateLabels() {
+    const w = this.w, h = this.h, v = this.v, cam = this.camera;
+    if (this.mode === 'globe') {
+      const cd = cam.position.clone().normalize(), sel = this.state.market, only = this.props.labelMode === '仅选中与悬停';
+      this.markers.forEach((o, i) => {
+        const el = this.mLabelEls[i]; if (!el) return;
+        o.anchor.getWorldPosition(v);
+        const facing = v.clone().normalize().dot(cd);
+        v.project(cam);
+        const x = (v.x + 1) / 2 * w, y = (1 - v.y) / 2 * h;
+        let a = Math.max(0, Math.min(1, (facing - 0.25) / 0.2)) * this.labelA;
+        if (only && i !== sel && i !== this.hoverIdx) a = 0;
+        const hh0 = this.hh || 0, sw0 = Math.max(300, Math.min(400, w * 0.34)) + 24;
+        if ((x < 340 && y < hh0 + 120) || y < hh0 - 6 || x > w - sw0 - 10) a = 0;
+        el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
+        el.style.opacity = a; el.style.visibility = a < 0.05 ? 'hidden' : 'visible';
+      });
+    } else {
+      const compact = w < 1000, pos = [];
+      this.pAnch.forEach((pt, i) => {
+        const el = this.pLabelEls[i]; if (!el) return;
+        const sub = el.querySelector('[data-sub]'); if (sub) sub.style.display = compact ? 'none' : '';
+        const chip = el.querySelector('button');
+        v.copy(pt).project(cam);
+        pos.push({el, x:(v.x + 1) / 2 * w, y:(1 - v.y) / 2 * h, cw:(chip ? chip.offsetWidth : 150), ch:(chip ? chip.offsetHeight : 50)});
+      });
+      for (let i = 1; i < pos.length; i++) { const a = pos[i - 1], b = pos[i]; const minX = a.x - 12 + a.cw + 10 + 12; if (b.x < minX) b.x = minX; }
+      const over = pos.length ? pos[pos.length - 1].x - 12 + pos[pos.length - 1].cw - (w - 12) : 0;
+      if (over > 0) pos.forEach(p => p.x -= over);
+      pos.forEach(p => {
+        const y = Math.max(p.ch + 22 + 8, p.y);
+        p.el.style.transform = 'translate(' + p.x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
+        p.el.style.opacity = this.labelA;
+      });
+    }
+  }
+
+  pickMarket(i, fromGlobe) {
+    if (this.state.phase !== 'globe' || window.marketModel.busy || this.MK[i]?.disabled) return;
+    const m = this.MK[i], patch = {market:i};
+    if (fromGlobe && this.state.region !== '全部' && this.state.region !== m.region) patch.region = '全部';
+    this.setState(patch, () => {
+      if (fromGlobe) { const c = this.cardEls[i]; if (c && this.listEl) this.listEl.scrollTo({top: c.offsetTop - 12, behavior:'smooth'}); }
+    });
+    if (this.T) this.flyTo(m.lat, m.lon);
+    window.CrossboundMarket.send('market',{id:m.id});
+    this.lastInteract = performance.now();
+  }
+  pickPlatform(i) {
+    if (this.state.phase !== 'platform' || window.marketModel.busy) return;
+    this.setState({platform:i, confirmed:false});
+    window.CrossboundMarket.send('platform',{id:this.PF[i].id});
+  }
+  enterMarket = () => {
+    if (this.state.phase !== 'globe' || this.tw || this.MK[this.state.market]?.disabled || window.marketModel.busy) return;
+    const m = this.MK[this.state.market];
+    if (!this.renderer) { this.setState({phase:'platform'}); return; }
+    this.flyTo(m.lat, m.lon);
+    this.tw = {kind:'enter', t0:performance.now(), dur:650};
+    this.setState({phase:'enter', fadeText:'正在进入 · ' + m.name, fadeSub: m.code + ' · PLATFORM SPACE'});
+  };
+  backToGlobe = () => {
+    if (this.state.phase !== 'platform' || this.tw || window.marketModel.busy) return;
+    if (!this.renderer) { this.setState({phase:'globe'}); return; }
+    this.tw = {kind:'exit', t0:performance.now(), dur:350};
+    this.setState({phase:'exit', confirmed:false, fadeText:'返回全球市场', fadeSub:'GLOBAL MARKET MAP'});
+  };
+
+  renderVals() {
+    const s = this.state, sel = this.MK[s.market], pf = this.PF[s.platform];
+    const fmt = n => n.toLocaleString('en-US');
+    const isGlobe = s.phase === 'globe' || s.phase === 'enter';
+    const isPlatform = !isGlobe;
+    const mFee = sel.entered ? 0 : sel.fee;
+    const vm=window.marketModel;
+    const cost = isPlatform ? vm.cost : mFee;
+    const markets = this.MK.map((d, i) => {
+      const on = i === s.market, off = this.OFF[i] || [14,8], tx = off[0], ty = off[1] + 12;
+      return {
+        ...d, i, active:on, z: on ? 3 : 1,
+        feeText: d.disabled ? '本轮不可选' : d.entered ? '已进入' : '$' + fmt(d.fee), feeLabel: d.disabled ? '需换市场' : d.entered ? '免进入费' : '进入费',
+        feeColor: d.entered ? '#c6f432' : '#e4eef0',
+        capText: fmt(d.visits) + ' / ' + fmt(d.cap), pct: d.cap ? Math.min(100,Math.round(d.visits / d.cap * 100)) : 0,
+        cardBorder: on ? '#c6f432' : '#1a2d33', cardBg: on ? 'rgba(198,244,50,0.08)' : 'rgba(10,22,27,0.42)',
+        codeColor: on ? '#c6f432' : '#8fb3ba', codeBorder: on ? 'rgba(198,244,50,0.55)' : '#24393f',
+        len: Math.hypot(tx, ty).toFixed(1), ang: (Math.atan2(ty, tx) * 180 / Math.PI).toFixed(1),
+        cl: tx >= 0 ? tx + 'px' : 'auto', cr: tx < 0 ? (-tx) + 'px' : 'auto', ct: off[1],
+        lb: on ? '#c6f432' : 'rgba(63,208,216,0.45)', lbg: on ? '#c6f432' : 'rgba(7,16,20,0.88)',
+        lc: on ? '#0a1418' : '#d8e6e8', lcode: on ? '#0a1418' : '#3fd0d8', lineC: on ? '#c6f432' : 'rgba(63,208,216,0.55)',
+        tick: d.entered ? '✓' : '',
+        onPick: () => this.pickMarket(i, false),
+        onEnter: () => { this.hoverIdx = i; }, onLeave: () => { if (this.hoverIdx === i) this.hoverIdx = -1; },
+        labelRef: el => { this.mLabelEls[i] = el; }, cardRef: el => { this.cardEls[i] = el; }
+      };
+    });
+    const list = s.region === '全部' ? markets : markets.filter(m => m.region === s.region);
+    const regions = this.REG.map(([label, c]) => {
+      const on = s.region === label;
+      return {label, count: label === '全部' ? this.MK.length : this.MK.filter(m => m.region === label).length,
+        bg: on ? 'rgba(198,244,50,0.1)' : 'transparent', border: on ? '#c6f432' : '#22383f', color: on ? '#c6f432' : '#9fb2b7',
+        onPick: () => { this.setState({region:label}); if (c && this.T) this.flyTo(c[0], c[1]); if (this.listEl) this.listEl.scrollTop = 0; }};
+    });
+    const platforms = this.PF.map((d, i) => {
+      const on = i === s.platform;
+      return {...d, active:on,
+        bg: on ? 'rgba(198,244,50,0.06)' : 'rgba(11,23,28,0.88)', border: on ? '#c6f432' : '#1d3138',
+        shadow: on ? '0 0 0 1px rgba(198,244,50,0.25), 0 12px 32px rgba(0,0,0,0.35)' : 'none',
+        codeColor: on ? '#c6f432' : '#8fb3ba', codeBorder: on ? 'rgba(198,244,50,0.5)' : '#24393f',
+        dBorder: on ? '#c6f432' : '#3a5158', dBg: on ? '#c6f432' : 'transparent', check: on ? '✓' : '',
+        lb: on ? '#c6f432' : '#3fd0d8',
+        costText: '本轮 +$' + fmt(d.cost), costColor: d.cost ? '#e4eef0' : '#c6f432',
+        onPick: () => this.pickPlatform(i), labelRef: el => { this.pLabelEls[i] = el; }
+      };
+    });
+    const R = Math.PI / 180;
+    return {
+      isGlobe, isPlatform, markets, list, regions, platforms,
+      round:vm.round,cashText:'$'+fmt(vm.cash),marketCount:this.MK.length,busy:vm.busy,
+      marketBlocked:!!sel.disabled||vm.busy,confirmDisabled:!vm.canConfirm&&!vm.canRecover,
+      marketHint:sel.disabled?'跨区试销：本轮必须换市场':'确认市场后进入平台空间',
+      exitMarket:e=>{e.preventDefault();if(!vm.busy)window.CrossboundMarket.send('exit');},
+      canvasRight: '0px', canvasBottom: isGlobe ? 0 : 228,
+      canvasTop: isGlobe ? -(s.hh || 0) : 0, overlayTop: (s.hh || 0) + 8,
+      costText: '$' + fmt(cost),
+      selName: sel.name, selCode: sel.code, selRegion: sel.region,
+      selCoords: Math.abs(sel.lat).toFixed(2) + (sel.lat >= 0 ? '°N ' : '°S ') + Math.abs(sel.lon).toFixed(2) + (sel.lon >= 0 ? '°E' : '°W'),
+      selStatus: sel.entered ? '已进入 · 不再收进入费' : '首次进入 · 进入费 $' + fmt(sel.fee),
+      selStatusColor: sel.entered ? '#c6f432' : '#e4eef0',
+      selPct: sel.cap ? Math.min(100,Math.round(sel.visits / sel.cap * 100)) : 0, selVisits: fmt(sel.visits), selCap: fmt(sel.cap), selDesc: sel.desc,
+      aBg: isGlobe ? 'rgba(63,208,216,0.08)' : 'transparent', aTag: isGlobe ? '#3fd0d8' : '#e4eef0', aCheck: isPlatform ? '✓' : '',
+      bBg: isPlatform ? 'rgba(63,208,216,0.08)' : 'transparent', bTag: isPlatform ? '#3fd0d8' : '#4f666c', bVal: isPlatform ? pf.name : '待选择',
+      confirmText: vm.busy ? '正在确认…' : vm.canRecover?'现金不足 · 查看恢复方案': '确认' + sel.name + ' · ' + pf.name,
+      confirmHint: vm.notice || '确认后进入选品展厅',
+      confirm: () => {if(window.marketModel.canRecover){window.CrossboundMarket.send('recover');return;}if(window.marketModel.canConfirm)window.CrossboundMarket.send('confirm');},
+      enterMarket: this.enterMarket, backToGlobe: this.backToGlobe,
+      glRef: this.glRef, fadeRef: this.fadeRef, listRef: this.listRef, headerRef: this.headerRef,
+      fadeText: s.fadeText, fadeSub: s.fadeSub
+    };
+  }
+}
+</script>
+<script>
+(async()=>{
+  const files=['vendor/react.js','vendor/react-dom.js','vendor/three.js','vendor/RoundedBoxGeometry.js','frame.js'];
+  await Promise.all(files.map(file=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.async=false;s.src='./'+file+location.search;s.onload=resolve;s.onerror=reject;document.body.append(s);})));
+})().catch(()=>{document.getElementById('market-loading').textContent='市场界面加载失败，请返回园区重试。';});
+</script>
+</body></html>

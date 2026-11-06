@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { BADGE_MARKETS, BADGE_TIERS } from '../../public/previews/crossbound/v11/badges.js';
 
-const root = fileURLToPath(new URL('../../public/previews/crossbound/assets/badges/countries-v1/', import.meta.url));
+const root = fileURLToPath(new URL('../../public/previews/crossbound/assets/badges/countries-v2/', import.meta.url));
 const manifest = JSON.parse(await fs.readFile(path.join(root, 'manifest.json'), 'utf8'));
 if (manifest.countries.length !== BADGE_MARKETS.length ||
     manifest.countries.some(c => !BADGE_MARKETS.includes(c.marketId))) throw new Error('Badge catalog differs from the game market list.');

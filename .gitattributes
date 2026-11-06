@@ -3,3 +3,7 @@ public/previews/crossbound/*.html text eol=lf
 public/previews/crossbound/v11/* text eol=lf
 public/previews/crossbound/v2/* text eol=lf
 scripts/crossbound-v11/* text eol=lf
+public/previews/crossbound/**/*.js text eol=lf
+public/previews/crossbound/**/*.css text eol=lf
+scripts/crossbound-details/* text eol=lf
+src/baseline/*.html text eol=lf

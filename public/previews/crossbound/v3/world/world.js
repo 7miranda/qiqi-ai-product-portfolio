@@ -4,21 +4,26 @@
 import * as THREE from 'three';
 import { FIRST_MILE } from '../../v2/catalog.js';
 import { balanceRules } from '../../v11/balance.js';
-import { WORLDS, QUALITY, PICKS_KEY, downgrade, createFpsMonitor, taskFor, nearestInteractable, pickShowcase, money, cashPlan } from './logic.js';
+import { cashFailure } from '../../v2/recovery.js';
+import { WORLDS, QUALITY, PICKS_KEY, downgrade, createFpsMonitor, taskFor, nearestInteractable, pickShowcase, money } from './logic.js';
 import { createUI, createSounds } from './ui.js';
 import { buildShowroom, SUPPLIERS, STANDS } from './showroom.js';
-import { buildFinance, buildWarehouse } from './rooms.js';
+import { buildWarehouse } from './rooms.js';
 import { lightPillar, PALETTE, disposeTree } from './kit.js';
 
 const FLY_MS = 400;                 // F-002: pick-up flight
 const OPEN_MS = 900;                // F-003: open animation
 const HOLD_SIZE = 1.1;              // held model size (m)
-// Fixed oblique cameras (2.5D dollhouse): the whole 24 × 18 m room in frame, near wall hidden.
+// Product feedback 2026-10-30: eye level, as if standing in the doorway (no more top-down view). The camera stands
+// behind the cut-away south wall at a standing eye line, looking into the room with a slight downward tilt.
+// fit: the half-width (m) that must stay in frame at the nearest interactive depth (m from the camera) — at eye level
+// the front corners are what fall out of frame first, not the room centre.
 const VIEWS = {
-  w1: { pos: [0, 15.5, 15], look: [0, 0, -0.8] },
-  w2: { pos: [0, 15, 14.5], look: [0, 0, -1] },   // same framing as W1 / W5: room centred, nothing cut at the top
-  w5: { pos: [0, 15, 14.5], look: [0, 0, -1.5] },
+  w1: { pos: [0, 3.4, 20], look: [0, 2.0, -3], fit: { half: 12.2, depth: 12.7 } },   // 换一批 kiosk at z 7.3, x 8.2
+  w2: { pos: [0, 3.4, 19], look: [0, 1.9, -3], fit: { half: 12.2, depth: 13 } },
+  w5: { pos: [0, 3.4, 19.5], look: [0, 1.8, -3], fit: { half: 12.2, depth: 15 } },   // first-mile terminal at z 3.2, x 8.6
 };
+const PARALLAX = { x: 1.1, y: 0.3 };   // metres the eye shifts with the mouse (design handoff §6.4 ±0.06 rad)
 const nextFrame = () => new Promise(r => requestAnimationFrame(() => r()));
 const ease = p => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
 const readJSON = key => { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch { return null; } };
@@ -26,6 +31,7 @@ const writeJSON = (key, value) => { try { localStorage.setItem(key, JSON.stringi
 
 // onExit(): back to the map. onNext(id): hand over to the next scene (a 2D scene the host opens).
 export function mountRoom({ store, room: firstRoom, quality: initialQuality, onExit, onNext }) {
+  if(firstRoom==='w2')throw Error('请通过场景入口进入新版定价室');
   const touch = matchMedia('(pointer: coarse)').matches;
   const root = document.createElement('div');
   root.id = 'v3-world';
@@ -63,13 +69,31 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
   const neonB = new THREE.PointLight(0x3fd0e0, 40, 34, 2);
   neonA.position.set(9, 6, 12); neonB.position.set(10, 5, -7);
   scene.add(hemi, ambient, key, neonA, neonB);
+  // Entrance apron (eye-level view): the floor and side walls continue from the room's open south edge to behind the
+  // camera, so the bottom of the screen is floor, not empty space. Shared by all three rooms; same tones as their shells.
+  {
+    const apron = new THREE.Group();
+    // Same material as the room floors (kit toon → industrial standard, tone 0x0c181d) and the same lengthwise strips.
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(24.6, 16), new THREE.MeshStandardMaterial({ color: 0x0c181d, roughness: 0.48, metalness: 0.18 }));
+    floor.rotation.x = -Math.PI / 2; floor.position.set(0, 0, 9 + 8); floor.receiveShadow = true; apron.add(floor);
+    const lines = [];
+    for (let x = -11; x <= 11; x += 2) lines.push(x, 0.012, 9, x, 0.012, 25);
+    const grid = new THREE.BufferGeometry(); grid.setAttribute('position', new THREE.Float32BufferAttribute(lines, 3));
+    apron.add(new THREE.LineSegments(grid, new THREE.LineBasicMaterial({ color: 0x324b55, toneMapped: false })));
+    const wallMat = new THREE.MeshStandardMaterial({ color: 0x0f1d23, roughness: 0.48, metalness: 0.18 }), trim = new THREE.MeshBasicMaterial({ color: 0x3fd0e0, transparent: true, opacity: 0.55 });
+    for (const sx of [-1, 1]) {
+      const wall = new THREE.Mesh(new THREE.BoxGeometry(0.3, 5.5, 16), wallMat); wall.position.set(sx * 12.15, 2.75, 17); apron.add(wall);
+      const edge = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.06, 16), trim); edge.position.set(sx * 11.98, 5.3, 17); apron.add(edge);
+    }
+    scene.add(apron);
+  }
   const pillar = lightPillar(PALETTE.gold);
   scene.add(pillar);
 
   let active = null, inside = null, transitioning = false, roomBusy = false, enteredAt = performance.now(), showPage = 0;
   const picks = loadPicks();
 
-  function roundKey() { const c = store.snapshot()?.company; return c ? `${c.runSeed}:${c.round}` : null; }
+  function roundKey() { const c = store.snapshot()?.company; return c ? `${c.runSeed}:${c.round}${c.attempt?':retry'+c.attempt:''}` : null; }
   function loadPicks() {
     const saved = readJSON(PICKS_KEY);
     if (saved && saved.key === roundKey()) return { product: saved.product, supplier: saved.supplier };
@@ -99,7 +123,7 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
       const products = all.slice(showPage * STANDS, (showPage + 1) * STANDS);
       return buildShowroom({ products, recommendedId: s?.recommendedId, marketId: s?.company?.marketId, marketLabel: s?.market?.name, batch: { page: showPage, pages, total: all.length } });
     },
-    w2: () => buildFinance({ snapshot: store.snapshot() }),
+    w2: () => { throw Error('定价室已由独立场景接管'); },
     w5: () => buildWarehouse({ snapshot: store.snapshot() }),
   };
   // Dollhouse cut: the south wall, exit frame and exit sign stand between the camera and the room.
@@ -128,6 +152,7 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
     refresh();
   }
   async function switchRoom(id) {
+    if(id==='w2'){onNext?.('w2');return;}
     if (transitioning) return;
     transitioning = true;
     sound.door();
@@ -171,7 +196,7 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
     },
   };
   // The engine opens the next step's panel right after a commit; keep it shut while a room is on screen.
-  function closeNextPanel() { const s = store.snapshot(); if (s?.view) s.actions?.close(); }
+  function closeNextPanel() { const s = store.snapshot(); if (s?.view === 'decision') s.actions?.close(); }
 
   // ---------- Held product (F-002 / F-003): lifts off its stand toward the camera, opens, returns ----------
   let held = null;
@@ -230,7 +255,7 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
   // ---------- Interactions ----------
   function bubbleAt(text, x, z, y = 2.6) { const p = project(x, y, z); ui.bubble(text, p?.x, p?.y); }
   async function interact(item) {
-    if (!item || ui.busy || transitioning || held || roomBusy) return;
+    if (!item || ui.busy || transitioning || held || roomBusy || viewing) return;
     switch (item.kind) {
       case 'product': return productStand(item.productId);
       case 'shuffle': showPage++; return switchRoom('w1');
@@ -245,21 +270,84 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
   }
 
   // ---------- W1 选品展厅 ----------
+  // Product feedback 2026-10-30 / design handoff §6.4: clicking a product opens the product library's own
+  // interactive model (drag to rotate, 日常状态 / function demo) in a right-hand panel; the panel button confirms.
+  let viewing = false;
+  function productViewer(p, stand) {
+    const api = window.CrossboundProductViewer;
+    if (!api?.mount) return null;
+    return new Promise(resolve => {
+      const demo = api.demo?.(p.id);
+      const dom = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+      const box = dom('aside', 'v3-viewer'); box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', `${p.name} · 商品详情`);
+      const head = dom('div', 'v3-viewer-head');
+      head.append(dom('span', 'v3-viewer-kicker', `${p.categoryLabel || '商品'}${p.english ? ` · ${p.english}` : ''}`), dom('h3', '', p.name));
+      const stageEl = dom('div', 'v3-viewer-stage');
+      const hint = dom('span', 'v3-viewer-hint', '点击演示功能 · 拖动旋转查看');
+      const stageWrap = dom('div', 'v3-viewer-model'); stageWrap.append(stageEl, hint);
+      const modes = dom('div', 'v3-viewer-modes');
+      const feedback = dom('p', 'v3-viewer-feedback');
+      const rows = dom('dl', 'v3-viewer-rows');
+      for (const [k, v] of [['参考价', `$${p.basePrice ?? '-'}`], ['进货成本', `$${p.cost ?? '-'}`], ['供货交期', p.supplierDays ? `${p.supplierDays} 天` : '-'], ...(stand?.recommended ? [['总部推荐', '★ 推荐']] : [])]) rows.append(dom('dt', '', k), dom('dd', '', v));
+      const body = p.sellingPoint ? dom('p', 'v3-viewer-body', p.sellingPoint) : null;
+      const actions = dom('div', 'v3-viewer-actions');
+      const back = dom('button', 'v3-btn', '放回去'); back.type = 'button';
+      const pick = dom('button', 'v3-btn is-primary', '就选这件 →'); pick.type = 'button';
+      actions.append(back, pick);
+      box.append(...[head, stageWrap, demo ? modes : null, demo ? feedback : null, body, rows, actions].filter(Boolean));
+      root.append(box);
+      let mode = 'rest', pulse = 0, view = null;
+      const props = () => ({ product: p.id, designMode: mode, pulseKey: pulse, onDesignModeChange: m => { mode = m; paint(); } });
+      const buttons = demo ? [['rest', demo.restLabel || '日常状态'], ['active', `${demo.demoLabel || '功能演示'} ↗`]].map(([m, label]) => {
+        const b = dom('button', 'v3-btn', label); b.type = 'button';
+        b.onclick = () => { mode = m; pulse++; paint(); };
+        modes.append(b); return [m, b];
+      }) : [];
+      function paint() {
+        view?.update(props());
+        for (const [m, b] of buttons) b.setAttribute('aria-pressed', String(mode === m));
+        if (demo) feedback.textContent = mode === 'active' ? (demo.feedback || '') : '当前为日常状态。点击模型或功能按钮，查看变化。';
+      }
+      try { view = api.mount(stageEl, props()); } catch { view = null; }
+      paint();
+      const onKey = e => { if (e.key === 'Escape') { e.stopImmediatePropagation(); e.preventDefault(); close('back'); } };
+      addEventListener('keydown', onKey, true);
+      function close(action) {
+        removeEventListener('keydown', onKey, true);
+        try { view?.unmount(); } catch { /* already gone */ }
+        box.classList.add('is-out');
+        setTimeout(() => box.remove(), 200);
+        resolve(action);
+      }
+      back.onclick = () => close('back');
+      pick.onclick = () => close('pick');
+      requestAnimationFrame(() => box.classList.add('is-in'));
+    });
+  }
   async function productStand(productId) {
     const s = store.snapshot();
     const p = (s?.options || []).find(o => o.id === productId);
     if (!p) return;
     const stand = active.stand?.(productId);
     sound.door();
-    await liftProduct(stand);          // F-002: 0.4 s flight, then the open animation runs
-    const r = await ui.screen({
-      side: true,
-      kicker: `${p.categoryLabel || '商品'} · ${p.english || ''}`,
-      title: p.name,
-      body: p.sellingPoint || '',
-      rows: [['参考价', `$${p.basePrice ?? '-'}`], ['进货成本', `$${p.cost ?? '-'}`], ['供货交期', p.supplierDays ? `${p.supplierDays} 天` : '-'], ...(stand?.recommended ? [['总部推荐', '★ 推荐']] : [])],
-      actions: [{ label: '放回去', value: 'back' }, { label: '就它了', value: 'pick', primary: true }],
-    });
+    let r, lifted = false;
+    const viewer = productViewer(p, stand);
+    if (viewer) {
+      viewing = true;
+      r = { action: await viewer };
+      viewing = false;
+    } else {
+      await liftProduct(stand);          // F-002: 0.4 s flight, then the open animation runs
+      lifted = true;
+      r = await ui.screen({
+        side: true,
+        kicker: `${p.categoryLabel || '商品'} · ${p.english || ''}`,
+        title: p.name,
+        body: p.sellingPoint || '',
+        rows: [['参考价', `$${p.basePrice ?? '-'}`], ['进货成本', `$${p.cost ?? '-'}`], ['供货交期', p.supplierDays ? `${p.supplierDays} 天` : '-'], ...(stand?.recommended ? [['总部推荐', '★ 推荐']] : [])],
+        actions: [{ label: '放回去', value: 'back' }, { label: '就它了', value: 'pick', primary: true }],
+      });
+    }
     if (r?.action === 'pick') {
       if (picks.product !== productId) picks.supplier = null;   // quotes depend on the product
       picks.product = productId;
@@ -270,7 +358,7 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
       picks.product = null; picks.supplier = null; savePicks();
     }
     refresh();   // selection ring / ×1.2 first, so the model flies back to its final size
-    await returnProduct();
+    if (lifted) await returnProduct();
     if (r?.action === 'pick') {
       if (picks.supplier) await finishShowroom();
       else bubbleAt('选好了！再点左边的供应商谈一家', -8, -1.5, 3);
@@ -310,7 +398,7 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
   async function stockLever() {
     const s = store.snapshot();
     if (s?.company?.stage !== 2) return;
-    const list = (s.options || []).map(o => ({ id: o.id, title: o.name, badge: o.preview ? `采购 ${money(-o.preview.cashDelta)}` : '', detail: `${o.summary || ''}${o.preview ? ` 预计利润 ${money(o.preview.profit)}` : ''}`, disabled: o.disabled || o.preview?.affordable === false }));
+    const list = (s.options || []).map(o => ({ id: o.id, title: o.name, badge: o.preview ? `采购 ${money(-o.preview.cashDelta)}` : '', detail: `${o.summary || ''}${o.preview ? ` 预计利润 ${money(o.preview.profit)}` : ''}`, disabled: false }));
     const r = await ui.screen({ kicker: 'STOCK LEVER · 备货拉杆', title: '这一轮备多少货？', body: '先选一档，再到中央控制台微调售价和数量。没卖完的货按成本退回（扣5%手续费）。', list, selected: s.choice?.id || s.recommendedId, actions: [{ label: '拉到这一档', value: 'set', primary: true, needsSelection: true }] });
     if (r?.action !== 'set' || !r.id) return;
     await engine.choose(r.id);
@@ -341,27 +429,13 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
     if (r?.action === 'advanced') return advancedOptions();
     if (r?.action !== 'ok') return;
     s = store.snapshot();
-    if (s.preview?.affordable === false) { if (!s.preview.supplyBlockedReason && await offerLoan(s)) return; sound.error(); ui.notice(s.preview.supplyBlockedReason || `现金不够：还差 ${money(s.preview.cashShortfall)}，减少数量或换一档`, 4200); return; }
+    if (s.preview?.affordable === false) { if (cashFailure(s.company,s.preview)) { engine.act()?.recover?.(s.preview); return; } sound.error(); ui.notice(s.preview.supplyBlockedReason || `现金不够：还差 ${money(s.preview.cashShortfall)}，减少数量或换一档`, 4200); return; }
     engine.act()?.commit();
     if (!await store.waitFor(x => x.company?.stage !== 2, 2500)) { sound.error(); ui.notice('这一档暂时买不起，换一档或减少数量', 3600); }
   }
-  // REQ-057: a cash gap (settlement included) is met before the spend, with the bridge loan offered right there.
-  // Returns true when the player saw the offer (borrowed or chose to adjust), false when no loan is possible.
-  async function offerLoan(s) {
-    const plan = cashPlan(s.preview), c = s.company;
-    if (!plan?.short || !s.engine || (c.v2?.loans || []).some(l => l.round === c.round)) return false;
-    const r = await ui.screen({ side: true, kicker: 'CASH · 资金缺口', title: `现金还差 ${money(plan.short)}`,
-      body: `${plan.text}。可以回去减少数量，或借过桥贷：下轮开局还 ${money(plan.loan * 1.12)}（含 12% 利息）。`,
-      actions: [{ label: '回去调整', value: 'back' }, { label: `借 ${money(plan.loan)}`, value: 'loan', primary: true }] });
-    if (r?.action !== 'loan') return true;
-    engine.act()?.setCompany?.(s.engine.act(c, { type: 'loan', amount: plan.loan }));
-    sound.confirm(); ui.notice(`已借入 ${money(plan.loan)}，下轮开局偿还`, 3000);
-    return true;
-  }
-  // 账期、谈判、备战、测款、商标、贷款 stay in the classic panel as advanced options (REQ-053 §4.3 ③).
+  // Keep the original finance controls without reopening the retired step page.
   function advancedOptions() {
-    ui.notice('高级选项：账期、谈判、备战、测款、商标与贷款。确认后会回到这里', 3600);
-    engine.act()?.open();
+    engine.act()?.panel?.('funding');
   }
 
   // ---------- W5 物流仓 (3D-038 / 3D-040; REQ-053 §4.6 头程移到这一步) ----------
@@ -394,9 +468,14 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
     });
     if (r?.action !== 'ship') return;
     const now = store.snapshot();
-    if (now?.preview?.affordable === false && await offerLoan(now)) return;
+    if (cashFailure(now?.company,now?.preview)) { engine.act()?.recover?.(now.preview); return; }
     engine.act()?.commit();
-    if (!await store.waitFor(x => x.company?.stage !== 4, 2500)) { sound.error(); ui.notice('发货前现金不够，先在高级选项里看资金方案', 3600); engine.act()?.open(); }
+    if (!await store.waitFor(x => x.company?.stage !== 4, 2500)) {
+      const latest=store.snapshot();
+      sound.error();
+      if(cashFailure(latest?.company,latest?.preview))engine.act()?.recover?.(latest.preview);
+      else ui.notice('发货尚未确认，请核对当前方案后重试。',3600);
+    }
   }
 
   // Stage changes can come from the room or from the classic panel; both finish the room the same way.
@@ -477,10 +556,10 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
     const w = root.clientWidth || innerWidth, h = root.clientHeight || innerHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    // Fit the room's full width (≈ 26 m incl. the supplier booths) on narrow screens too; never zoom in past 52°.
-    const v = VIEWS[inside], dist = v ? Math.hypot(v.pos[0] - v.look[0], v.pos[1] - v.look[1], v.pos[2] - v.look[2]) : 21;
-    const halfH = Math.atan(13.5 / dist), fitV = 2 * Math.atan(Math.tan(halfH) / camera.aspect) * 180 / Math.PI;
-    camera.fov = Math.min(84, Math.max(52, fitV));
+    // Keep the front corners (plus the mouse parallax) in frame on any aspect; never zoom in past 52°.
+    const fit = VIEWS[inside]?.fit || { half: 12.2, depth: 14 };
+    const halfH = Math.atan((fit.half + PARALLAX.x) / fit.depth), fitV = 2 * Math.atan(Math.tan(halfH) / camera.aspect) * 180 / Math.PI;
+    camera.fov = Math.min(90, Math.max(52, fitV));
     camera.updateProjectionMatrix();
   }
   addEventListener('resize', resize);
@@ -512,6 +591,7 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
   const clock = new THREE.Clock();
   const fps = createFpsMonitor();
   let raf = 0, inboxTimer = 0, last = performance.now(), rendered = 0, markReady;
+  const parallax = { x: 0, y: 0 };
   const ready = new Promise(r => { markReady = r; });
   function frame(now) {
     raf = requestAnimationFrame(frame);
@@ -522,6 +602,13 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
     active.tick(t, dt);
     updateHeld(now, t, dt);
     pillar.userData.tick(t);
+    const view = VIEWS[inside];
+    if (view) {
+      const tx = pointer ? (pointer.x / (root.clientWidth || innerWidth) - 0.5) * 2 : 0, ty = pointer ? (pointer.y / (root.clientHeight || innerHeight) - 0.5) * 2 : 0;
+      parallax.x += (tx - parallax.x) * Math.min(1, dt * 4); parallax.y += (ty - parallax.y) * Math.min(1, dt * 4);
+      camera.position.set(view.pos[0] + parallax.x * PARALLAX.x, view.pos[1] - parallax.y * PARALLAX.y, view.pos[2]);
+      camera.lookAt(view.look[0], view.look[1], view.look[2]);
+    }
     const paused = ui.busy || store.dialogOpen || transitioning || !!held || roomBusy;
     const near = paused || !pointer ? null : pick(pointer.x, pointer.y);
     if (near !== focus) { focus?.setHighlight?.(false); near?.setHighlight?.(true); focus = near; canvas.style.cursor = near ? 'pointer' : ''; }
@@ -548,6 +635,7 @@ export function mountRoom({ store, room: firstRoom, quality: initialQuality, onE
 
   return {
     ready,
+    element:root,
     get room() { return inside; },
     focus() { canvas.focus({ preventScroll: true }); },
     dispose() {

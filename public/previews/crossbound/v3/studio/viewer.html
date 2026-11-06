@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crossbound · 商品页工作室</title>
+<link rel="stylesheet" href="./studio.css">
+<style>x-dc{display:none!important}</style>
+</head>
+<body>
+<p id="studio-loading" style="color:#c4f53a;padding:40px">正在连接商品页工作室…</p>
+<x-dc>
+<helmet>
+
+
+
+<style>
+html,body{margin:0;background:#03080b;color:#e4ecee;font-family:"Noto Sans SC",sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+button{font-family:inherit;white-space:nowrap}
+a{color:#3fd0e0;text-decoration:none}a:hover{color:#c4f53a}
+@keyframes cbIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes cbPulse{0%{box-shadow:0 0 0 0 rgba(245,197,66,.55)}100%{box-shadow:0 0 0 7px rgba(245,197,66,0)}}
+</style>
+</helmet>
+
+<div class="studio-root" ref="{{ rootRef }}" style="position:relative;min-height:100vh;min-width:1180px;display:flex;flex-direction:column;background:radial-gradient(80% 50% at 75% -10%,rgba(63,208,224,.1),transparent 60%),linear-gradient(180deg,#081418,#03080b 60%)">
+  <div style="position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(120,200,210,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(120,200,210,.03) 1px,transparent 1px);background-size:48px 48px"></div>
+
+  <div aria-hidden="true" style="position:fixed;inset:0;z-index:30;background:radial-gradient(ellipse at 50% 46%,#121a12 0,#070b09 38%,#020403 72%);opacity:{{ ovOp }};pointer-events:none;transition:opacity .7s ease-out"></div>
+
+  <header style="position:sticky;top:0;z-index:6;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px 32px;align-items:center;padding:20px 48px 18px;background:linear-gradient(180deg,#071216 80%,rgba(7,18,22,0));opacity:{{ shellOp }};transform:translateY({{ shellY }});transition:opacity .45s ease-out,transform .45s ease-out">
+    <button style="display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;background:rgba(120,200,210,.06);border:1px solid rgba(120,200,210,.14);color:#b9c8cc;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s" style-hover="color:#fff;border-color:rgba(196,245,58,.45);background:rgba(196,245,58,.06)" onClick="{{ goBack }}"><span style="font-family:Oxanium;font-size:15px;line-height:1">←</span>返回园区地图</button>
+    <div style="display:flex;align-items:baseline;gap:16px;min-width:0">
+      <span style="font-family:JetBrains Mono;font-size:11px;letter-spacing:.2em;color:#3fd0e0;white-space:nowrap">W3 · LISTING</span>
+      <h1 style="margin:0;font-size:28px;font-weight:900;letter-spacing:.06em;color:#f4f8f9;white-space:nowrap">商品页工作室</h1>
+      <span style="font-size:13px;color:#7d949a;white-space:nowrap">第 {{ round }} 轮</span>
+    </div>
+    <div style="display:flex;align-items:stretch">
+      <div style="display:flex;flex-direction:column;gap:2px;padding-right:20px">
+        <span style="font-size:11px;color:#7d949a;letter-spacing:.08em">经营现金</span>
+        <span style="font-family:Oxanium;font-size:24px;font-weight:600;line-height:1.1;color:#c4f53a;font-variant-numeric:tabular-nums">{{ cashFmt }}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px;padding-left:20px;border-left:1px solid rgba(120,200,210,.1)">
+        <span style="font-size:11px;color:#7d949a;letter-spacing:.08em">本步花费</span>
+        <span style="font-family:Oxanium;font-size:24px;font-weight:600;line-height:1.1;color:#e4ecee;font-variant-numeric:tabular-nums">{{ spendFmt }}</span>
+      </div>
+    </div>
+    <ol style="grid-column:1/-1;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin:0;padding:0;list-style:none">
+      <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="7">
+        <li style="display:flex;flex-direction:column;gap:7px">
+          <span style="height:3px;background:{{ r.bar }};box-shadow:{{ r.glow }}"></span>
+          <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:{{ r.tc }};font-weight:{{ r.fw }};white-space:nowrap"><span style="font-family:Oxanium;font-size:11px;color:{{ r.mc }}">{{ r.mark }}</span>{{ r.name }}</span>
+        </li>
+      </sc-for>
+    </ol>
+  </header>
+
+  <main class="studio-layout" style="flex:1;display:grid;grid-template-columns:288px minmax(400px,1fr) minmax(0,1.2fr);gap:32px;align-items:start;padding:20px 48px 140px">
+
+    <aside class="studio-sidebar" style="position:sticky;top:148px;display:flex;flex-direction:column;gap:22px;opacity:{{ shellOp }};transform:translateY({{ shellY }});transition:opacity .5s ease-out .12s,transform .5s ease-out .12s">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#a9babe;text-wrap:pretty">每张台子选一项，商品页预览实时变化。分数换算成购买意愿，费用按商品价位计算。</p>
+
+      <section style="display:flex;flex-direction:column;gap:14px;padding:18px 20px;background:rgba(10,22,27,.88);border:1px solid rgba(120,200,210,.14)">
+        <span style="font-family:JetBrains Mono;font-size:10px;letter-spacing:.18em;color:#5f777d">SHELF · 本轮商品</span>
+        <div style="display:flex;gap:14px;align-items:center">
+          <img src="{{ productImage }}" alt="{{ productName }}" width="56" height="56" style="flex:none;object-fit:contain;background:#101c20;border:1px solid rgba(120,200,210,.14)">
+          <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+            <span style="font-family:JetBrains Mono;font-size:10px;letter-spacing:.16em;color:#3fd0e0">{{ productCategory }}</span>
+            <span style="font-size:17px;font-weight:700;color:#f4f8f9">{{ productName }}</span>
+            <span style="font-size:12px;color:#7d949a">{{ market }} · {{ platform }}</span>
+          </div>
+        </div>
+        <dl style="display:grid;grid-template-columns:auto 1fr;gap:10px 20px;margin:0;padding-top:14px;border-top:1px solid rgba(120,200,210,.08)">
+          <dt style="font-size:13px;color:#7d949a">售价</dt><dd style="margin:0;text-align:right;font-family:Oxanium;font-size:15px;font-weight:600;color:#e4ecee;font-variant-numeric:tabular-nums">${{ price }}</dd>
+          <dt style="font-size:13px;color:#7d949a">备货</dt><dd style="margin:0;text-align:right;font-family:Oxanium;font-size:15px;font-weight:600;color:#e4ecee;font-variant-numeric:tabular-nums">{{ quantity }} 件</dd>
+        </dl>
+      </section>
+
+      <sc-if value="{{ hasAsset }}"><section class="studio-reuse"><button onClick="{{ toggleReuse }}" aria-pressed="{{ reused }}" disabled="{{ published }}">{{ reuseLabel }}</button><span>已有商品页 · {{ assetScore }} 分</span><sc-if value="{{ canOptimize }}"><button onClick="{{ optimize }}">优化已有页 +5 分 · $300</button></sc-if></section></sc-if>
+      <ol style="display:flex;flex-direction:column;gap:0;margin:0;padding:0;list-style:none">
+        <sc-for list="{{ subs }}" as="s" hint-placeholder-count="3">
+          <li style="display:flex;gap:14px;align-items:flex-start">
+            <div style="display:flex;flex-direction:column;align-items:center;width:22px;flex:none">
+              <span style="display:grid;place-items:center;width:16px;height:16px;margin:3px 0;transform:rotate(45deg);border:1px solid {{ s.bd }};background:{{ s.bg }};transition:all .2s"><span style="transform:rotate(-45deg);font-family:Oxanium;font-size:9px;font-weight:700;color:{{ s.nc }};line-height:1">{{ s.mark }}</span></span>
+              <span style="width:1px;height:{{ s.lineH }};background:rgba(120,200,210,.22)"></span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:2px;padding-bottom:16px">
+              <span style="font-size:14px;font-weight:500;color:{{ s.tc }}">{{ s.name }}</span>
+              <span style="font-size:12px;color:#5f777d">{{ s.sub }}</span>
+            </div>
+          </li>
+        </sc-for>
+      </ol>
+
+      <section style="display:flex;flex-direction:column;gap:14px;padding-top:18px;border-top:1px solid rgba(120,200,210,.08)">
+        <dl style="display:grid;grid-template-columns:auto 1fr;gap:12px 20px;margin:0">
+          <dt style="font-size:13px;color:#7d949a">上架分</dt><dd style="margin:0;text-align:right;font-family:Oxanium;font-size:16px;font-weight:600;color:#c4f53a;font-variant-numeric:tabular-nums">{{ score }} 分</dd>
+          <dt style="font-size:13px;color:#7d949a">购买意愿</dt><dd style="margin:0;text-align:right;font-family:Oxanium;font-size:16px;font-weight:600;color:#e4ecee;font-variant-numeric:tabular-nums">×{{ intent }}</dd>
+          <dt style="font-size:13px;color:#7d949a">制作费</dt><dd style="margin:0;text-align:right;font-family:Oxanium;font-size:16px;font-weight:600;color:#e4ecee;font-variant-numeric:tabular-nums">${{ cost }}</dd>
+        </dl>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="position:relative;height:4px;background:rgba(120,200,210,.14)"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ meterW }};background:linear-gradient(90deg,#3fd0e0,#c4f53a);transition:width .45s cubic-bezier(.2,.8,.2,1)"></span></div>
+          <div style="display:flex;justify-content:space-between;font-family:JetBrains Mono;font-size:10px;letter-spacing:.12em;color:#4f686e"><span>60</span><span>95 MAX</span></div>
+        </div>
+      </section>
+    </aside>
+
+    <div class="studio-stage" ref="{{ stageRef }}" style="position:sticky;top:148px;z-index:{{ colZ }};display:flex;flex-direction:column;align-items:center;gap:22px;padding-top:4px">
+      <div ref="{{ slotRef }}" style="position:relative;width:360px;height:var(--card-height,720px)">
+        <div style="position:absolute;inset:0;opacity:{{ posOp }};transform:translate3d({{ ox }}px,{{ oy }}px,0) scale({{ posScale }});transition:{{ posTr }}">
+          <div aria-hidden="true" style="position:absolute;left:50%;top:44%;width:760px;height:700px;transform:translate(-50%,-50%);pointer-events:none;background:radial-gradient(ellipse at 48% 37%,rgba(199,252,48,.10),transparent 37%),radial-gradient(ellipse at 59% 57%,rgba(114,197,104,.07),transparent 54%)"></div>
+          <div aria-hidden="true" style="position:absolute;left:50%;bottom:-26px;width:300px;height:36px;transform:translateX(-50%);background:radial-gradient(closest-side,#010803,rgba(1,8,3,0));opacity:.9"></div>
+          <div tabindex="0" role="group" aria-label="商品页实时预览卡片" style="position:relative;width:360px;height:var(--card-height,720px);perspective:1100px;outline:none">
+            <div ref="{{ tiltRef }}" style="position:relative;width:100%;height:100%;transform-style:preserve-3d;--angle:125deg;--shift:0%;--lx:50%;--ly:50%;--bx:50%;--by:50%;--active:.18;--sweep:-160%">
+              <div style="position:absolute;inset:0;transform-style:preserve-3d;transform:{{ flipT }};transition:{{ flipTr }}">
+
+                <div style="position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;opacity:{{ frontOp }};transition:opacity 0s linear .45s">
+                  <div style="position:absolute;inset:0;isolation:isolate;overflow:hidden;border-radius:22px;mask-image:var(--shape);-webkit-mask-image:var(--shape);mask-size:100% 100%;-webkit-mask-size:100% 100%;background:#98be38">
+                    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 85% 52% at 0 0,#d9efa188,transparent),radial-gradient(ellipse 70% 60% at 100% 100%,#81bd3f99,transparent),linear-gradient(var(--angle),#3d5c27 calc(-12% + var(--shift)),#668b30 calc(9% + var(--shift)),#b2e32b calc(25% + var(--shift)),#c8e78b calc(37% + var(--shift)),#ebf4d6 calc(45% + var(--shift)),#bfdf92 calc(52% + var(--shift)),#9bce36 calc(64% + var(--shift)),#73a136 calc(79% + var(--shift)),#2f512e calc(110% + var(--shift)))"></div>
+                    <div style="position:absolute;inset:0;background-image:var(--foil),repeating-linear-gradient(-32deg,#548c43 0%,#d8f0a1 9%,#6bbca1 18%,#87a1bc 27%,#bbdf6b 36%,#548c43 45%),repeating-linear-gradient(132deg,#132f3d 0%,#a9ba82 3%,#528a56 6%,#daeaa3 9%,#193b34 15%),radial-gradient(farthest-corner circle at var(--lx) var(--ly),#c7fc3077,#6bd7b177 30%,#8f84c166 64%,#c7fc3088);background-size:180px 120px,1000% 1000%,650% 650%,200% 200%;background-position:center,0 var(--by),var(--bx) var(--by),var(--bx) var(--by);background-blend-mode:color-burn,screen,soft-light;filter:brightness(1.12) contrast(1.7) saturate(.85);opacity:calc(.3 + var(--active)*.25)"></div>
+                    <div style="position:absolute;inset:6px;border-radius:17px;overflow:hidden;background:linear-gradient(180deg,#f4f7f1,#edf1ea);box-shadow:0 0 0 1px rgba(36,56,22,.35),inset 0 1px 0 #fff">
+                      <div style="position:absolute;inset:0;background:var(--foil) center/180px 120px;mix-blend-mode:luminosity;opacity:.045;pointer-events:none"></div>
+                      <div style="position:absolute;left:0;right:0;top:383px;border-top:1px dashed rgba(17,26,30,.18)"></div>
+                      <div style="position:relative;display:flex;flex-direction:column;gap:12px;padding:14px 14px 0">
+                        <div style="display:flex;justify-content:space-between;align-items:center;height:22px">
+                          <span style="display:flex;align-items:center;gap:8px;font-family:JetBrains Mono;font-size:9px;letter-spacing:.16em;color:#4a5a60"><span style="width:6px;height:6px;background:#111a1e"></span>{{ platform }} · {{ market }}</span>
+                          <span style="display:flex;align-items:baseline;gap:5px;font-size:10px;color:#5a6870">上架分<span style="font-family:Oxanium;font-size:15px;font-weight:700;color:#2f6a00;font-variant-numeric:tabular-nums">{{ score }}</span></span>
+                        </div>
+                        <div style="position:relative;width:320px;height:320px;border-radius:10px;outline:{{ zB.ol }};outline-offset:3px;transition:outline-color .2s">
+                          <div style="position:absolute;inset:0;border-radius:10px;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#f7faf3,#dfe6dc);opacity:{{ zB.op }};transition:opacity .3s">
+                            <div style="position:absolute;inset:0;transform:scale({{ imgScale }});transform-origin:50% 54%;transition:transform .5s cubic-bezier(.2,.8,.2,1)">
+                              <img src="{{ productImage }}" alt="{{ productName }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain">
+                            </div>
+                            <div style="position:absolute;inset:0;border-radius:10px;box-shadow:inset 0 0 0 1px rgba(17,26,30,.1);pointer-events:none"></div>
+                          </div>
+                          <span style="position:absolute;left:10px;bottom:10px;padding:3px 6px;background:rgba(244,247,241,.86);font-family:JetBrains Mono;font-size:9px;letter-spacing:.12em;color:#5a6870;pointer-events:none">CROSSBOUND · STUDIO</span>
+                          <sc-if value="{{ showTags }}" hint-placeholder-val="{{ false }}">
+                            <div style="position:absolute;top:14px;right:12px;display:flex;flex-direction:column;gap:6px;align-items:flex-end;pointer-events:none;animation:cbIn .22s ease-out">
+                              <sc-for list="{{ specs }}" as="t" hint-placeholder-count="2">
+                                <span style="display:flex;align-items:center;gap:6px;padding:4px 8px;background:#111a1e;color:#c4f53a;font-size:11px;font-weight:500"><span style="width:4px;height:4px;background:#c4f53a"></span>{{ t }}</span>
+                              </sc-for>
+                            </div>
+                          </sc-if>
+                          <sc-if value="{{ zB.pending }}" hint-placeholder-val="{{ false }}">
+                            <span style="position:absolute;top:10px;left:10px;padding:3px 7px;background:#111a1e;font-family:JetBrains Mono;font-size:9px;letter-spacing:.14em;color:#8aa3a9;pointer-events:none">B · 主图待选</span>
+                          </sc-if>
+                          <sc-if value="{{ published }}" hint-placeholder-val="{{ false }}">
+                            <span style="position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:6px;padding:5px 9px;background:#c4f53a;color:#08140a;font-family:JetBrains Mono;font-size:10px;font-weight:500;letter-spacing:.16em;pointer-events:none;animation:cbIn .22s ease-out">✓ LISTED · 已上架</span>
+                          </sc-if>
+                        </div>
+                      </div>
+                      <div class="studio-card-copy" style="position:relative;display:flex;flex-direction:column;gap:10px;padding:23px 16px 20px">
+                        <div style="position:relative;outline:{{ zA.ol }};outline-offset:4px;transition:outline-color .2s">
+                          <h2 style="margin:0;font-size:16px;line-height:1.45;font-weight:700;color:{{ zA.c }};display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:46px;text-wrap:pretty;transition:color .25s">{{ listingTitle }}</h2>
+                          <sc-if value="{{ zA.pending }}" hint-placeholder-val="{{ false }}">
+                            <span style="position:absolute;right:0;bottom:-2px;padding:2px 6px;background:#111a1e;font-family:JetBrains Mono;font-size:9px;letter-spacing:.14em;color:#8aa3a9">A · 待选</span>
+                          </sc-if>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:baseline">
+                          <span style="display:flex;align-items:baseline;gap:2px;font-family:Oxanium;font-weight:700;color:#111a1e;font-variant-numeric:tabular-nums"><span style="font-size:14px">$</span><span style="font-size:26px;line-height:1">{{ priceWhole }}</span><span style="font-size:13px">{{ priceDecimal }}</span></span>
+                          <span style="font-size:12px;color:#a87400;letter-spacing:.1em">★★★★★</span>
+                        </div>
+                        <div style="position:relative;outline:{{ zC.ol }};outline-offset:4px;transition:outline-color .2s">
+                          <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:3px;font-size:12.5px;line-height:1.45;color:{{ zC.c }};transition:color .25s">
+                            <sc-for list="{{ bullets }}" as="t" hint-placeholder-count="2">
+                              <li style="display:flex;gap:8px;align-items:baseline;animation:cbIn .22s ease-out"><span style="flex:none;width:4px;height:4px;transform:translateY(-2px);background:#3d7a00"></span>{{ t }}</li>
+                            </sc-for>
+                          </ul>
+                          <sc-if value="{{ zC.pending }}" hint-placeholder-val="{{ false }}">
+                            <span style="position:absolute;right:0;top:0;padding:2px 6px;background:#111a1e;font-family:JetBrains Mono;font-size:9px;letter-spacing:.14em;color:#8aa3a9">C · 待选</span>
+                          </sc-if>
+                        </div>
+                      </div>
+                    </div>
+                    <div style="position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(farthest-corner circle at var(--lx) var(--ly),#fff 0%,#f5ffe5a6 10%,#fff0 48%),repeating-linear-gradient(132deg,#fff0 0%,#fff0 9%,#e2ffc599 11%,#fff 12%,#b3ddd588 14%,#fff0 17%,#fff0 25%);background-size:100% 100%,310% 310%;background-position:center,var(--bx) var(--by);mix-blend-mode:screen;opacity:calc(.03 + var(--active)*.12)"></div>
+                    <div style="position:absolute;inset:0;pointer-events:none;background-image:var(--grain);background-size:128px 128px;mix-blend-mode:soft-light;opacity:.14"></div>
+                    <div style="position:absolute;inset:-50%;pointer-events:none;background:linear-gradient(113deg,transparent 36%,#efffc533 44%,#fff9 49%,#d1ffc944 52%,transparent 60%);transform:translateX(var(--sweep));mix-blend-mode:screen;opacity:.6"></div>
+                    <div style="position:absolute;inset:0;pointer-events:none;border-radius:22px;box-shadow:inset 0 1.2px 1px #fffffff0,inset 0 0 1.5px 1px #eaffca99,inset 0 -2px 3px #1330006b"></div>
+                  </div>
+                  <svg viewBox="0 0 360 720" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#edffd0;stroke-width:.7;opacity:.65;pointer-events:none"><path d="M1 379Q13 389 1 399M359 379Q347 389 359 399"></path></svg>
+                </div>
+
+                <div style="position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(180deg);opacity:{{ backOp }};transition:opacity 0s linear .45s">
+                  <div style="position:absolute;inset:0;isolation:isolate;overflow:hidden;border-radius:22px;mask-image:var(--shape);-webkit-mask-image:var(--shape);mask-size:100% 100%;-webkit-mask-size:100% 100%;background:#98be38">
+                    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 85% 52% at 0 0,#d9efa188,transparent),radial-gradient(ellipse 70% 60% at 100% 100%,#81bd3f99,transparent),linear-gradient(var(--angle),#3d5c27 calc(-12% + var(--shift)),#668b30 calc(9% + var(--shift)),#b2e32b calc(25% + var(--shift)),#c8e78b calc(37% + var(--shift)),#ebf4d6 calc(45% + var(--shift)),#bfdf92 calc(52% + var(--shift)),#9bce36 calc(64% + var(--shift)),#73a136 calc(79% + var(--shift)),#2f512e calc(110% + var(--shift)))"></div>
+                    <div style="position:absolute;inset:0;background:var(--foil) center/180px 120px;mix-blend-mode:luminosity;opacity:.22"></div>
+                    <div style="position:absolute;inset:0;background-image:var(--foil),repeating-linear-gradient(-32deg,#548c43 0%,#d8f0a1 9%,#6bbca1 18%,#87a1bc 27%,#bbdf6b 36%,#548c43 45%),repeating-linear-gradient(132deg,#132f3d 0%,#a9ba82 3%,#528a56 6%,#daeaa3 9%,#193b34 15%),radial-gradient(farthest-corner circle at var(--lx) var(--ly),#c7fc3077,#6bd7b177 30%,#8f84c166 64%,#c7fc3088);background-size:180px 120px,1000% 1000%,650% 650%,200% 200%;background-position:center,0 var(--by),var(--bx) var(--by),var(--bx) var(--by);background-blend-mode:color-burn,screen,soft-light;filter:brightness(1.12) contrast(1.7) saturate(.85);opacity:calc(.24 + var(--active)*.25);mask-image:linear-gradient(#fff 48%,#fffa 73%,#fff6);-webkit-mask-image:linear-gradient(#fff 48%,#fffa 73%,#fff6)"></div>
+                    <div style="position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(farthest-corner circle at var(--lx) var(--ly),#fff 0%,#f5ffe5a6 10%,#fff0 48%),repeating-linear-gradient(132deg,#fff0 0%,#fff0 9%,#e2ffc599 11%,#fff 12%,#b3ddd588 14%,#fff0 17%,#fff0 25%);background-size:100% 100%,310% 310%;background-position:center,var(--bx) var(--by);mix-blend-mode:screen;opacity:calc(.09 + var(--active)*.34)"></div>
+                    <div style="position:absolute;inset:0;pointer-events:none;background-image:var(--grain);background-size:128px 128px;mix-blend-mode:soft-light;opacity:.18"></div>
+                    <div style="position:absolute;inset:-50%;pointer-events:none;background:linear-gradient(113deg,transparent 36%,#efffc533 44%,#fff9 49%,#d1ffc944 52%,transparent 60%);transform:translateX(var(--sweep));mix-blend-mode:screen;opacity:.75"></div>
+                    <div style="position:absolute;inset:0;pointer-events:none;border-radius:22px;box-shadow:inset 0 1.2px 1px #fffffff0,inset 0 0 1.5px 1px #eaffca99,inset 0 -2px 3px #1330006b"></div>
+                  </div>
+                  <svg viewBox="0 0 360 720" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#edffd0;stroke-width:.7;opacity:.6;pointer-events:none"><path d="M1 379Q13 389 1 399M359 379Q347 389 359 399"></path></svg>
+                  <div style="position:absolute;inset:0;color:#243816;text-align:center;pointer-events:none">
+                    <div style="position:absolute;top:26px;left:28px;right:28px;display:flex;justify-content:space-between;font-family:JetBrains Mono;font-size:9px;letter-spacing:.18em;opacity:.8"><span>CB / W3 · LISTING</span><span>№ R{{ round }}-03</span></div>
+                    <div style="position:absolute;width:208px;height:208px;top:72px;left:76px;border:1px solid #3655262b;border-radius:50%"></div>
+                    <div style="position:absolute;width:186px;height:186px;top:83px;left:87px;border:1px solid #36552614;border-radius:50%"></div>
+                    <div style="position:absolute;width:132px;height:132px;top:110px;left:114px;mask-image:var(--mark);-webkit-mask-image:var(--mark);mask-size:100% 100%;-webkit-mask-size:100% 100%;background:linear-gradient(160deg,#2d4a1c,#1c3110 60%,#3b5d24);opacity:.78"></div>
+                    <div style="position:absolute;top:318px;width:100%;font-family:JetBrains Mono;font-size:10px;letter-spacing:.3em;color:#314b23">BEYOND BOUNDARIES</div>
+                    <div style="position:absolute;top:418px;left:24px;right:24px;display:flex;flex-direction:column;gap:10px;align-items:center">
+                      <span style="font-family:Oxanium;font-size:32px;font-weight:600;line-height:1.2;letter-spacing:.04em;text-shadow:0 1px #eaffc933">Crossbound</span>
+                      <span style="font-size:12px;font-weight:700;letter-spacing:.3em">商品页工作室</span>
+                      <span style="font-family:JetBrains Mono;font-size:10px;letter-spacing:.26em;opacity:.8">LISTING STUDIO</span>
+                    </div>
+                    <div style="position:absolute;left:28px;right:28px;bottom:26px;display:flex;align-items:center;justify-content:space-between;font-family:JetBrains Mono;font-size:8px;letter-spacing:.14em;opacity:.72"><span>{{ productCode }} · {{ market }}</span><span style="width:58px;height:14px;background:repeating-linear-gradient(90deg,#263f18 0 1px,transparent 1px 3px,#263f18 3px 5px,transparent 5px 6px,#263f18 6px 7px,transparent 7px 11px)"></span><span>EST. 2026</span></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="studio-controls" style="display:flex;flex-direction:column;gap:28px;min-width:0;opacity:{{ shellOp }};transform:translateY({{ shellY }});transition:opacity .5s ease-out .22s,transform .5s ease-out .22s">
+      <sc-for list="{{ benches }}" as="b" hint-placeholder-count="3">
+        <section class="studio-bench" style="display:flex;flex-direction:column;gap:14px" onMouseEnter="{{ b.enter }}" onMouseLeave="{{ b.leave }}">
+          <div style="display:flex;align-items:baseline;gap:12px;padding-bottom:12px;border-bottom:1px solid rgba(120,200,210,.08)">
+            <span style="font-family:JetBrains Mono;font-size:11px;letter-spacing:.12em;color:#3fd0e0">{{ b.no }}</span>
+            <span style="font-size:17px;font-weight:700;letter-spacing:.04em;color:#f2f7f8">{{ b.name }}</span>
+            <span style="font-size:12px;color:#6f878d">{{ b.hint }}</span>
+            <span style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:{{ b.stC }}"><span style="width:5px;height:5px;background:{{ b.stC }}"></span>{{ b.status }}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(156px,1fr));gap:10px">
+            <sc-for list="{{ b.options }}" as="o" hint-placeholder-count="3">
+              <button aria-pressed="{{ o.selected }}" disabled="{{ locked }}" style="position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;color:#e4ecee;padding:16px 40px 14px 16px;background:{{ o.bg }};border:1px solid {{ o.bd }};box-shadow:{{ o.sh }};opacity:{{ o.op }};cursor:{{ o.cur }};transition:border-color .15s,background .15s,box-shadow .15s;white-space:normal" style-hover="border-color:rgba(196,245,58,.55)" onClick="{{ o.pick }}">
+                <span style="position:absolute;top:16px;right:16px;display:grid;place-items:center;width:14px;height:14px;transform:rotate(45deg);border:1px solid {{ o.rbd }};background:{{ o.rbg }};transition:all .15s"><span style="transform:rotate(-45deg);font-size:9px;font-weight:900;color:#08140a;line-height:1">{{ o.tick }}</span></span>
+                <span style="font-size:14px;font-weight:700;color:#f4f8f9">{{ o.label }}</span>
+                <span style="font-size:12px;line-height:1.55;color:#8aa3a9;text-wrap:pretty">{{ o.detail }}</span>
+                <span style="display:flex;gap:10px;align-items:baseline;padding-top:8px;margin-top:auto;width:100%;border-top:1px solid rgba(120,200,210,.08);font-family:Oxanium;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap"><span style="color:{{ o.ptsC }}">{{ o.pts }}</span><span style="color:#5f777d">制作费 {{ o.cost }}</span></span>
+              </button>
+            </sc-for>
+          </div>
+        </section>
+      </sc-for>
+    </div>
+  </main>
+
+  <footer style="position:fixed;left:0;right:0;bottom:0;z-index:6;min-width:1180px;display:flex;align-items:center;gap:24px;padding:28px 48px 24px;background:linear-gradient(180deg,rgba(3,8,11,0),#03080b 42%);opacity:{{ shellOp }};transform:translateY({{ shellYb }});transition:opacity .5s ease-out .34s,transform .5s ease-out .34s">
+    <span style="font-family:JetBrains Mono;font-size:10px;letter-spacing:.2em;color:#4f686e;white-space:nowrap">PRESS ENTER ↵ · ESC 返回</span>
+    <div style="flex:1"></div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+      <span style="font-size:12px;color:{{ noteC }}">{{ note }}</span>
+      <span style="font-family:JetBrains Mono;font-size:10px;letter-spacing:.14em;color:#4f686e">{{ noteSub }}</span>
+    </div>
+    <sc-if value="{{ ctaOn }}" hint-placeholder-val="{{ false }}">
+      <button style="display:flex;align-items:center;justify-content:space-between;gap:20px;min-width:240px;height:56px;padding:0 22px 0 26px;background:#c4f53a;border:0;color:#08140a;font-size:16px;font-weight:700;letter-spacing:.05em;cursor:pointer;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);transition:background .15s,filter .15s" style-hover="background:#d6ff5c;filter:drop-shadow(0 0 14px rgba(196,245,58,.45))" style-active="background:#b3e22e;transform:translateY(1px)" onClick="{{ commit }}">{{ ctaLabel }}<span style="font-family:Oxanium;font-size:20px">→</span></button>
+    </sc-if>
+    <sc-if value="{{ ctaOff }}" hint-placeholder-val="{{ true }}">
+      <button disabled="{{ true }}" aria-disabled="true" style="display:flex;align-items:center;justify-content:space-between;gap:20px;min-width:240px;height:56px;padding:0 22px 0 26px;background:rgba(120,200,210,.12);border:0;color:#5f777d;font-size:16px;font-weight:700;letter-spacing:.05em;cursor:not-allowed;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px)" onClick="{{ commit }}">{{ ctaLabel }}<span style="font-family:Oxanium;font-size:20px">→</span></button>
+    </sc-if>
+  </footer>
+
+  <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+    <div role="status" style="position:fixed;left:50%;bottom:100px;z-index:50;transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:11px 16px;background:#0e2027;border:1px solid rgba(196,245,58,.4);box-shadow:0 18px 40px rgba(0,0,0,.6);font-size:13px;color:#e4ecee;white-space:nowrap;animation:cbIn .2s ease-out"><span style="width:7px;height:7px;transform:rotate(45deg);background:#c4f53a"></span>{{ toast }}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;flipDelay&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0.3,&quot;min&quot;:0,&quot;max&quot;:1.5,&quot;step&quot;:0.1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;入场&quot;},&quot;skipIntro&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;入场&quot;},&quot;tilt&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:7,&quot;min&quot;:0,&quot;max&quot;:12,&quot;step&quot;:1,&quot;unit&quot;:&quot;°&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;卡片&quot;}}">
+class Component extends DCLogic {
+  state = { phase: 'pre', flipped: false, ox: 0, oy: 0, picks: window.studioModel.picks, hover: null, flash: null, published: window.studioModel.published, cash: window.studioModel.cash, toast: null };
+  vm = window.studioModel;
+  rootRef = React.createRef(); stageRef = React.createRef(); slotRef = React.createRef(); tiltRef = React.createRef();
+  timers = [];
+  get BENCHES() { return this.vm.benches; }
+  get PROD() { return this.vm.product; }
+  applyView(vm) { this.vm=vm; this.setState({picks:vm.picks,published:vm.published,cash:vm.cash}); }
+  ROOMS = ['市场研究所', '选品展厅', '定价财务室', '商品页工作室', '推广室', '物流仓', '财报结算厅'];
+
+  at(ms, fn) { this.timers.push(setTimeout(fn, ms)); }
+  clear() { this.timers.forEach(clearTimeout); this.timers = []; }
+  flashMsg(t) { clearTimeout(this.tt); this.setState({ toast: t }); this.tt = setTimeout(() => this.setState({ toast: null }), 2400); }
+
+  componentDidMount() {
+    window.studioComponent=this; window.CrossboundStudio.send("mounted");
+    const root = this.rootRef.current;
+    this.urls = this.urls || [];
+    const u = s => { const b = URL.createObjectURL(new Blob([s], { type: 'image/svg+xml' })); this.urls.push(b); return 'url("' + b + '")'; };
+    root.style.setProperty('--shape', u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 720"><path fill="white" d="M22 0H338Q360 0 360 22V379Q348 389 360 399V698Q360 720 338 720H22Q0 720 0 698V399Q12 389 0 379V22Q0 0 22 0Z"/></svg>'));
+    root.style.setProperty('--mark', u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><g fill="white" transform="translate(0 8)"><path d="M24 31 42 21V90L24 100Z"/><path d="M51 40 69 30V80L51 90Z"/><path d="M78 49 96 39V70L78 80Z"/></g></svg>'));
+    root.style.setProperty('--grain', u('<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".77" numOctaves="3" stitchTiles="stitch"/></filter><path fill="#888" filter="url(#n)" d="M0 0h128v128H0z"/></svg>'));
+    let tile = '<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240"><defs><linearGradient id="f" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#161616"/><stop offset=".43" stop-color="#b1b1b1"/><stop offset=".53" stop-color="#e4e4e4"/><stop offset="1" stop-color="#555"/></linearGradient><linearGradient id="g" x2=".2" y2="1"><stop stop-color="#ededed"/><stop offset="1" stop-color="#272727"/></linearGradient></defs><rect width="360" height="240" fill="#999"/>';
+    for (let r = -1; r < 9; r++) for (let c = -1; c < 9; c++) { const x = c * 48 + (r % 2) * 24, y = r * 32, fl = (r + c) % 3 === 0; tile += `<g transform="translate(${x} ${y})"><path d="M0 0Q24 9 48 0Q39 18 24 32Q8 24 0 0Z" fill="url(#${fl ? 'g' : 'f'})" opacity=".62"/><path d="M0 0Q12 19 24 32Q38 11 48 0" fill="none" stroke="#ddd" stroke-opacity=".3" stroke-width=".65"/>`; for (let k = 3; k < 24; k += 3) tile += `<path d="M${k / 2} ${k * .65} Q24 ${k * 1.1 + 8} ${48 - k / 2} ${k * .65}" fill="none" stroke="#333" stroke-opacity=".11" stroke-width=".5"/>`; tile += '</g>'; }
+    root.style.setProperty('--foil', u(tile + '</svg>'));
+
+    const E = this.E = { rx: 0, ry: 0, vx: 0, vy: 0, tx: 0, ty: 0, lx: .5, ly: .5, tlx: .5, tly: .5, a: .18, ta: .18, raf: 0, last: 0, sweep: 0 };
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    const frame = now => {
+      E.raf = 0; const el = this.tiltRef.current; if (!el) return;
+      const dt = Math.min((now - (E.last || now - 16.67)) / 1000, .032); E.last = now;
+      E.vx += (E.tx - E.rx) * 190 * dt; E.vy += (E.ty - E.ry) * 190 * dt; E.vx *= Math.exp(-13 * dt); E.vy *= Math.exp(-13 * dt); E.rx += E.vx * dt; E.ry += E.vy * dt;
+      const k = 1 - Math.exp(-dt * 9); E.lx += (E.tlx - E.lx) * k; E.ly += (E.tly - E.ly) * k; E.a += (E.ta - E.a) * (1 - Math.exp(-dt * 7));
+      el.style.transform = `rotateX(${E.rx.toFixed(3)}deg) rotateY(${E.ry.toFixed(3)}deg)`;
+      const v = { '--angle': `${125 + (E.ry - E.rx) * .85}deg`, '--shift': `${(E.rx + E.ry) * 1.35}%`, '--lx': `${E.lx * 100}%`, '--ly': `${E.ly * 100}%`, '--bx': `${80 - E.lx * 60}%`, '--by': `${80 - E.ly * 60}%`, '--active': E.a };
+      for (const n in v) el.style.setProperty(n, String(v[n]));
+      let sw = false;
+      if (E.sweep) { const p = (now - E.sweep) / 850; if (p < 0) sw = true; else if (p < 1) { el.style.setProperty('--sweep', `${-100 + 200 * p}%`); sw = true; } else { E.sweep = 0; el.style.setProperty('--sweep', '-160%'); } }
+      const mv = Math.abs(E.tx - E.rx) + Math.abs(E.ty - E.ry) + Math.abs(E.vx) + Math.abs(E.vy) + Math.abs(E.tlx - E.lx) + Math.abs(E.tly - E.ly) + Math.abs(E.ta - E.a) > .001;
+      if (mv || sw) this.kick(); else E.last = 0;
+    };
+    this.kick = () => { if (!E.raf) E.raf = requestAnimationFrame(frame); };
+    this.sweep = (delay = 0) => { E.sweep = performance.now() + delay; this.kick(); };
+    const stage = this.stageRef.current;
+    this.onMove = e => {
+      if (this.state.phase !== 'ready' || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const r = this.slotRef.current.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height, T = this.props.tilt ?? 7;
+      E.tx = -clamp((py - .5) * 2, -1.4, 1.4) * T; E.ty = clamp((px - .5) * 2, -1.4, 1.4) * T; E.tlx = clamp(px, 0, 1); E.tly = clamp(py, 0, 1); E.ta = 1; this.kick();
+    };
+    this.onLeave = () => { E.tx = E.ty = 0; E.tlx = E.tly = .5; E.ta = .18; this.kick(); };
+    stage.addEventListener('pointermove', this.onMove); stage.addEventListener('pointerleave', this.onLeave);
+    this.onKey = e => {
+      const tag = (e.target.tagName || '').toLowerCase(); if (e.isComposing || ['input','textarea','select','button','a'].includes(tag)) { if(e.key==='Escape')this.goBack(); return; }
+      if (e.key === 'Enter') { e.preventDefault(); this.commit(); }
+      else if (e.key === 'Escape') this.goBack();
+    };
+    window.addEventListener('keydown', this.onKey);
+    this.fit = () => {
+      const main=root.querySelector('main');
+      const desktop=innerWidth>=1180;
+      const copy=root.querySelector('.studio-card-copy');
+      const cardHeight=Math.max(720,396+(copy?.scrollHeight||0));
+      root.style.setProperty('--card-height',cardHeight+'px');
+      const cardFit=desktop?Math.min(1,Math.max(.4,(main.clientHeight-24)/cardHeight)):1;
+      root.style.setProperty('--card-fit',cardFit);
+      root.style.setProperty('--studio-card-width',`${360*cardFit}px`);
+      root.style.setProperty('--sidebar-fit',desktop?Math.min(1,Math.max(.6,(main.clientHeight-28)/Math.max(630,root.querySelector('aside').scrollHeight))):1);
+    };
+    this.resizeObserver=new ResizeObserver(this.fit);this.resizeObserver.observe(root);this.fit();
+    this.intro();
+  }
+  componentDidUpdate() { this.fit?.(); }
+  componentWillUnmount() {
+    this.resizeObserver?.disconnect();window.studioComponent=null; this.clear(); clearTimeout(this.tt); clearTimeout(this.ft); cancelAnimationFrame(this.E.raf); (this.urls || []).forEach(x => URL.revokeObjectURL(x));
+    window.removeEventListener('keydown', this.onKey);
+    const st = this.stageRef.current; if (st) { st.removeEventListener('pointermove', this.onMove); st.removeEventListener('pointerleave', this.onLeave); }
+  }
+  intro() {
+    this.clear(); this.onLeave && this.onLeave();
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (this.props.skipIntro || reduce) { this.setState({ phase: 'ready', flipped: true, ox: 0, oy: 0 }); return; }
+    window.scrollTo(0, 0);
+    const slot = this.slotRef.current, r = slot.getBoundingClientRect();
+    // The slot is zoomed to fit the workbench; translations use its local pixels.
+    const scale = r.width / slot.offsetWidth || 1;
+    const ox = (innerWidth / 2 - (r.left + r.width / 2)) / scale;
+    const oy = (innerHeight / 2 - (r.top + r.height / 2)) / scale;
+    const introScale = Math.min(1, (innerWidth - 48) / r.width, (innerHeight - 64) / r.height);
+    this.setState({ phase: 'pre', flipped: false, ox, oy, introScale });
+    const d = Math.max(0, (this.props.flipDelay ?? .3) * 1000);
+    this.at(40, () => this.setState({ phase: 'arrive' }));
+    this.at(40 + 800 + d, () => this.setState({ flipped: true }));
+    this.at(40 + 800 + d + 520, () => this.sweep(0));
+    this.at(40 + 800 + d + 950, () => this.setState({ phase: 'settle', ox: 0, oy: 0 }));
+    this.at(40 + 800 + d + 950 + 760, () => this.setState({ phase: 'ready' }));
+  }
+  goBack = () => { if(!this.vm.busy)window.CrossboundStudio.send('exit'); };
+  commit = () => {
+    if(this.state.phase!=='ready')return;
+    if(this.vm.canRecover){window.CrossboundStudio.send('recover');return;}
+    if(!this.vm.canConfirm)return;
+    window.CrossboundStudio.send('confirm');
+  };
+  pick(key,id) {
+    if(this.vm.published||this.vm.busy||this.vm.mode==='reuse')return;
+    this.setState({flipped:true,flash:key});
+    window.CrossboundStudio.send('pick',{key,id});
+    clearTimeout(this.ft);this.ft=setTimeout(()=>this.setState({flash:null}),650);
+  }
+
+  renderVals() {
+    const s = this.state, P = this.PROD, L = '#c4f53a', picks = s.picks;
+    const score = this.vm.score, cost = this.vm.cost;
+    const eff = k => picks[k] || this.BENCHES.find(b => b.key === k).options[0][0];
+    const t = eff('title'), im = eff('image'), dt = eff('detail');
+    const phase = s.phase, pre = phase === 'pre', intro = pre || phase === 'arrive', ready = phase === 'ready';
+    const zone = k => {
+      const pending = !picks[k] && !s.published;
+      return { pending, ol: s.flash === k ? '1px solid #6fa800' : s.hover === k ? '1px dashed #2aa7b5' : '1px solid transparent', c: pending ? '#8d999e' : '#111a1e', op: pending ? .62 : 1 };
+    };
+    const miss = this.BENCHES.filter(b => !picks[b.key]);
+    const enabled = ready && (this.vm.canConfirm||this.vm.canRecover);
+    const benches = this.BENCHES.map(b => {
+      const cur = picks[b.key];
+      return {
+        no: b.no, name: b.name, hint: b.hint,
+        status: s.published ? '已锁定' : cur ? '已选' : '待选', stC: s.published ? '#5f777d' : cur ? L : '#7d949a',
+        enter: () => this.setState({ hover: b.key }), leave: () => this.setState({ hover: null }),
+        options: b.options.map(([id, label, detail, pts, optionCost]) => {
+          const on = cur === id;
+          return {
+            label, detail, pts: pts ? '+' + pts + ' 分' : '基础分', ptsC: pts ? '#3fd0e0' : '#7d949a', cost: '$' + optionCost.toFixed(2), selected: on,
+            bg: on ? 'rgba(196,245,58,.06)' : 'rgba(10,22,27,.88)', bd: on ? L : 'rgba(120,200,210,.14)',
+            sh: on ? 'inset 0 0 0 1px rgba(196,245,58,.35),0 0 22px rgba(196,245,58,.1)' : 'none',
+            rbd: on ? L : 'rgba(120,200,210,.35)', rbg: on ? L : 'transparent', tick: on ? '✓' : '',
+            op: s.published && !on ? .42 : 1, cur: s.published ? 'not-allowed' : 'pointer',
+            pick: () => this.pick(b.key, id)
+          };
+        })
+      };
+    });
+    const doneT = !!picks.title, doneID = !!picks.image && !!picks.detail;
+    const st = [doneT, doneID, s.published]; const curI = st.indexOf(false);
+    const subs = [['写标题', '标题台 A'], ['定主图与详情', '主图台 B · 详情台 C'], ['发布上架', '发布后锁定本轮商品页']].map(([name, sub], i) => {
+      const done = st[i], cur = i === curI;
+      return { name, sub, mark: done ? '✓' : '0' + (i + 1), bd: done ? L : cur ? '#3fd0e0' : 'rgba(120,200,210,.22)', bg: done ? L : 'transparent', nc: done ? '#08140a' : cur ? '#3fd0e0' : '#4f686e', tc: done ? '#b9c8cc' : cur ? '#f4f8f9' : '#5f777d', lineH: i < 2 ? '28px' : '0px' };
+    });
+    const rooms = this.ROOMS.map((name, i) => {
+      const done = i < 3 || (i === 3 && s.published), cur = i === 3 && !s.published;
+      return { name, mark: done ? '✓' : cur ? '▲' : String(i + 1).padStart(2, '0'), bar: done ? L : cur ? '#f5c542' : 'rgba(120,200,210,.14)', glow: cur ? '0 0 8px rgba(245,197,66,.6)' : 'none', tc: done ? '#b9c8cc' : cur ? '#f5c542' : '#4f686e', mc: done ? L : cur ? '#f5c542' : '#3e5a60', fw: cur ? 700 : 400 };
+    });
+    return {
+      round:this.vm.round, market:this.vm.market, platform:this.vm.platform, quantity:this.vm.quantity,
+      productCode:P.id.toUpperCase(),productName:P.name,productCategory:P.id.toUpperCase()+' · '+P.category,productImage:P.image,price:Number(P.price).toFixed(2),priceWhole:Number(P.price).toFixed(2).split('.')[0],priceDecimal:'.'+Number(P.price).toFixed(2).split('.')[1],
+      hasAsset:this.vm.hasAsset,assetScore:this.vm.assetScore,reused:this.vm.mode==='reuse',canOptimize:this.vm.canOptimize&&!this.vm.busy,
+      locked:this.vm.published||this.vm.busy||this.vm.mode==='reuse',reuseLabel:this.vm.mode==='reuse'?'✓ 沿用已有页 · 点击重新制作':'沿用已有商品页',
+      toggleReuse:()=>window.CrossboundStudio.send('reuse',{value:this.vm.mode!=='reuse'}),optimize:()=>window.CrossboundStudio.send('optimize'),
+      rootRef: this.rootRef, stageRef: this.stageRef, slotRef: this.slotRef, tiltRef: this.tiltRef,
+      ovOp: intro ? 1 : 0, shellOp: intro ? 0 : 1, shellY: intro ? '10px' : '0px', shellYb: intro ? '16px' : '0px', colZ: ready ? 4 : 31,
+      ox: s.ox, oy: pre ? s.oy + 32 : s.oy, posScale: intro ? (s.introScale ?? 1) * (pre ? .8 : 1) : 1, posOp: pre ? 0 : 1,
+      posTr: pre ? 'none' : phase === 'arrive' ? 'transform 1s cubic-bezier(.2,1.3,.3,1),opacity .45s ease-out' : 'transform .76s cubic-bezier(.7,0,.2,1),opacity .3s',
+      flipT: s.flipped ? 'rotateY(0deg)' : 'rotateY(180deg)', flipTr: pre ? 'none' : 'transform .9s cubic-bezier(.65,0,.25,1)',
+      frontOp: s.flipped ? 1 : 0, backOp: s.flipped ? 0 : 1,
+      cashFmt: '$' + s.cash.toLocaleString(), spendFmt: '$' + cost.toFixed(2),
+      score, cost, intent: this.vm.intent.toFixed(2), meterW: (Math.min(100,(score - 60) / 35 * 100)).toFixed(1) + '%',
+      listingTitle: P.name + (t === 'use' ? '｜' + P.sp : t === 'specs' ? '｜' + P.specs.slice(0,2).join(' · ') : ''),
+      bullets: [P.sp, ...(dt === 'summary' ? [] : P.specs), ...(dt === 'complete' ? ['包装内容：' + P.pack] : [])],
+      imgScale: im === 'focus' ? 1.32 : 1, showTags: im === 'annotated', specs: P.specs.slice(0,2),
+      zA: zone('title'), zB: zone('image'), zC: zone('detail'), published: s.published,
+      benches, subs, rooms,
+      note: this.vm.notice,
+      noteC: s.published ? L : miss.length ? '#a9babe' : '#b9c8cc',
+      noteSub: '上架分 ' + score + ' · 购买意愿 ×' + this.vm.intent.toFixed(2),
+      ctaLabel: this.vm.busy ? '正在保存…' : this.vm.canRecover ? '现金不足 · 查看恢复方案' : s.published ? '进入推广室' : '发布上架 · $' + cost.toFixed(2),
+      ctaOn: enabled, ctaOff: !enabled,
+      commit: this.commit, goBack: this.goBack,
+      hasToast: !!s.toast, toast: s.toast
+    };
+  }
+}
+</script>
+<script>
+(async()=>{document.querySelector('link[rel=stylesheet]').href='./studio.css'+location.search;for(const file of ['../market/vendor/react.js','../market/vendor/react-dom.js','./frame.js'])await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=file+location.search;s.onload=resolve;s.onerror=reject;document.body.append(s);});})().catch(()=>{document.getElementById('studio-loading').textContent='工作室加载失败，请返回园区重试。';});
+</script>
+</body>
+</html>

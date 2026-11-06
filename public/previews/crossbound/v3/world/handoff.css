@@ -17,6 +17,28 @@
   --cb-sel: inset 0 0 0 1px rgba(196, 245, 58, .35), 0 0 22px rgba(196, 245, 58, .1);
   --cb-pop: 0 18px 40px rgba(0, 0, 0, .6);
 }
+
+/* One campus, one visual language: graphite rooms, restrained cyan light and lime actions. */
+html body #v3-showroom {
+  --bg:#060d10;--panel:#0b171c;--panel-2:#102127;
+  --line:rgba(120,200,210,.22);--line-soft:rgba(120,200,210,.1);
+  --cyan:var(--cb-cyan);--lime:var(--cb-lime);--white:var(--cb-t0);--muted:var(--cb-t3);
+  background:radial-gradient(ellipse at 40% 65%,rgba(63,208,224,.06),transparent 60%),#060d10;
+}
+html body .v3s {
+  background:radial-gradient(ellipse at 48% 32%,rgba(63,208,224,.06),transparent 58%),linear-gradient(180deg,#081418,#03080b 75%)!important;
+}
+html body #v3-world::after {
+  content:'';position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 0 140px 24px rgba(3,8,11,.38);
+}
+html body :is(.v3s,.campaign-playing,#v3-showroom,#v3-world) button:focus-visible {
+  outline:2px solid var(--cb-cyan);outline-offset:4px;
+}
+@media(prefers-reduced-motion:reduce){
+  html body :is(.v3s,#v3-world,#v3-showroom){animation:none!important;transition:none!important}
+  html body :is(.v3s,#v3-world,#v3-showroom) button{transition:none!important}
+}
 @keyframes cbIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes cbPulse { 0% { box-shadow: 0 0 0 0 rgba(245, 197, 66, .55); } 70% { box-shadow: 0 0 0 7px rgba(245, 197, 66, 0); } 100% { box-shadow: 0 0 0 0 rgba(245, 197, 66, 0); } }
 
@@ -38,6 +60,17 @@ html body main.campaign-playing .campaign-header > .company-header-actions { mar
 html body main.campaign-playing .company-header-actions, html body main.campaign-playing .campus-header-tools { display: flex; align-items: center; flex-wrap: nowrap; gap: 8px; margin-left: auto; }
 
 /* Map area: the campus is the main subject; the message bar is a 308px column on its right (§6.1 ③④). */
+/* 新手教程 matches 出海成就 (the old layer made it 44px tall with its own padding). */
+html body main.campaign-playing .campaign-header .company-tutorial-entry > .cut-action,
+html body main.campaign-playing .campaign-header .v11-header-achievements > .cut-action {
+  height: 40px !important; min-height: 40px !important; padding: 0 18px !important; font-size: 13px !important; line-height: 1 !important; }
+html body main.campaign-playing .campaign-header .company-tutorial-entry { height: 40px !important; }
+
+/* The campus fits the window height (it was a fixed 520px, so zooming in or a short window pushed its front
+   buildings below the fold). The 3D canvas follows its container. */
+html body main.campaign-playing .enterprise-campus-v18,
+html body main.campaign-playing .enterprise-campus-v18 .enterprise-campus-v17__viewport { height: clamp(300px, calc(100vh - 470px), 640px) !important; }
+
 /* Product feedback 2026-10-30: the campus is the centred, full-width subject; the message list floats over its
    top-right corner (a glass layer above the map, not a column beside it). */
 html body main.campaign-playing .campus-world { position: relative; margin: 8px 48px 0; padding: 44px 0 72px; }
@@ -413,4 +446,27 @@ html body #v3-world .v3-dialog .v3-name { font: 400 11px/1 var(--cb-mono); lette
 html body #v3-world .v3-notice { border-radius: 0; top: auto; bottom: 72px; border: 1px solid rgba(196, 245, 58, .4); background: #0e2027; color: var(--cb-t1); font-size: 13px; animation: cbIn .2s ease-out; }
 html body #v3-world .v3-notice::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 10px; background: var(--cb-lime); transform: rotate(45deg); vertical-align: middle; }
 html body #v3-world .v3-inbox-head, html body #v3-world .v3-inbox-link { border-radius: 0; border-color: var(--cb-line2); background: var(--cb-glass); }
+/* W1 product viewer: the product library's interactive model in a right-hand glass panel (view → 就选这件). */
+html body #v3-world .v3-viewer { position: absolute; top: 0; right: 0; bottom: 0; z-index: 20; width: min(420px, 100%); display: flex; flex-direction: column; gap: 16px;
+  padding: 24px 24px 22px; overflow-y: auto; pointer-events: auto; background: linear-gradient(90deg, rgba(5, 12, 15, .82), rgba(5, 12, 15, .96) 30%);
+  border-left: 1px solid var(--cb-line2); backdrop-filter: blur(10px); opacity: 0; transform: translateX(16px); transition: opacity .2s ease-out, transform .2s ease-out; }
+html body #v3-world .v3-viewer.is-in { opacity: 1; transform: none; }
+html body #v3-world .v3-viewer.is-out { opacity: 0; transform: translateX(16px); }
+html body #v3-world .v3-viewer-head { display: flex; flex-direction: column; gap: 6px; }
+html body #v3-world .v3-viewer-kicker { font: 400 10px/1 var(--cb-mono); letter-spacing: .18em; color: var(--cb-cyan); }
+html body #v3-world .v3-viewer-head h3 { margin: 0; font: 900 22px/1.3 var(--cb-sans); letter-spacing: .04em; color: var(--cb-t0); }
+html body #v3-world .v3-viewer-model { position: relative; height: 300px; flex: none; border: 1px solid var(--cb-line2); background: radial-gradient(80% 80% at 50% 40%, #12303a, #071318 75%); overflow: hidden; }
+html body #v3-world .v3-viewer-stage, html body #v3-world .v3-viewer-stage > div { position: absolute; inset: 0; width: 100%; height: 100%; }
+html body #v3-world .v3-viewer-stage canvas { display: block; width: 100% !important; height: 100% !important; cursor: grab; }
+html body #v3-world .v3-viewer-hint { position: absolute; left: 0; right: 0; bottom: 10px; text-align: center; font-size: 12px; color: var(--cb-t3); pointer-events: none; }
+html body #v3-world .v3-viewer-modes { display: grid; grid-template-columns: auto 1fr; gap: 8px; }
+html body #v3-world .v3-viewer-modes .v3-btn { height: 40px; }
+html body #v3-world .v3-viewer-modes .v3-btn[aria-pressed="true"] { border-color: var(--cb-lime); color: var(--cb-lime); background: rgba(196, 245, 58, .08); }
+html body #v3-world .v3-viewer-feedback { margin: 0; padding-left: 14px; position: relative; font-size: 13px; line-height: 1.6; color: var(--cb-t2); }
+html body #v3-world .v3-viewer-feedback::before { content: ""; position: absolute; left: 0; top: .6em; width: 6px; height: 6px; background: var(--cb-lime); transform: rotate(45deg); }
+html body #v3-world .v3-viewer-body { margin: 0; font-size: 13px; line-height: 1.65; color: var(--cb-t3); }
+html body #v3-world .v3-viewer-rows { display: grid; grid-template-columns: auto 1fr; gap: 11px 16px; margin: 0; padding: 16px 0; border-top: 1px solid var(--cb-line1); border-bottom: 1px solid var(--cb-line1); }
+html body #v3-world .v3-viewer-rows dt { font-size: 12px; color: var(--cb-t3b); }
+html body #v3-world .v3-viewer-rows dd { margin: 0; text-align: right; font: 600 15px/1.3 var(--cb-num); color: var(--cb-t1); font-variant-numeric: tabular-nums; }
+html body #v3-world .v3-viewer-actions { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: auto; }
 html body #v3-world .v3-bubble { border-radius: 0; background: rgba(5, 12, 15, .94); border: 1px solid var(--cb-line2); color: var(--cb-t1); }

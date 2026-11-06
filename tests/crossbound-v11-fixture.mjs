@@ -1,13 +1,12 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-import { execFileSync } from 'node:child_process';
 import { createCrossboundV11 } from '../public/previews/crossbound/v11/model.js';
 import { createGrowth } from '../public/previews/crossbound/v11/growth.js';
 
 // Exercise the real upstream products, suppliers and historical model, not duplicate test constants.
 export function fixture() {
-  const html = execFileSync('git', ['show', 'b1cddb5:public/previews/crossbound/preview.html'], { encoding: 'utf8', maxBuffer: 30e6 });
+  const html = fs.readFileSync(new URL('../src/baseline/preview.html', import.meta.url), 'utf8');
   const script = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].find(m => m[1].includes('function Roe('))[1];
   const sf = ts.createSourceFile('upstream.js', script, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
   let scope;

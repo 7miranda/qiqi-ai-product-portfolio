@@ -1,3 +1,4 @@
+import {entrySource} from './entry-source.mjs';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
@@ -57,7 +58,7 @@ test('the new course entry coexists with enterprise services in the homepage nav
 
 for (const file of ['index.html', 'preview.html']) {
   test(`${file}: course view closes to its caller without touching the simulation`, () => {
-    const html = read(file);
+    const html = entrySource(read(file));
     const script = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)]
       .map(match => match[1]).find(text => text.includes('CoursesUI.Workspace'));
     assert.ok(script);
@@ -85,7 +86,7 @@ for (const file of ['index.html', 'preview.html']) {
     const modelHash = createHash('sha256').update(read('courses/model.js')).digest('hex').slice(0, 10);
     assert.ok(read('courses/ui.js').includes(`./model.js?v=${modelHash}`));
     const version = createHash('sha256').update(['model.js', 'ui.js', 'styles.css'].map(f => read(`courses/${f}`)).join('')).digest('hex').slice(0, 10);
-    assert.ok(read(file).includes(`./courses/ui.js?v=${version}`));
+    assert.ok(entrySource(read(file)).includes(`./courses/ui.js?v=${version}`));
     assert.ok(read(file).includes(`./courses/styles.css?v=${version}`));
   });
 }

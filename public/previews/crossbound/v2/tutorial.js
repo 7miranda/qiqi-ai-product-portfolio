@@ -11,7 +11,6 @@ function baseSteps(n,view){
     const s=steps[n.stage];return s?[{id:`1:${s[0]}`,segment:s[1],title:s[2],action:s[3],effect:s[4]}]:[];
   }
   if(n.round===2){
-    if(view==='v2-events')return [{id:'2:event',segment:2,title:'总部来电 · 经营事件',action:'先看事件影响，再选择一个应对办法。',effect:'处理费用和后续影响都会写入这一轮的经营记录。'}];
     if(view==='complete'||view==='financials')return [{id:'2:report',segment:2,title:'这轮的钱主要卡在哪一步？',action:'打开财报，看看应收、应付和平台费用。',effect:'应收是还没到账的钱，应付是尚未支付的进货款；两者都会影响下轮可用现金。'}];
     if(view==='decision'&&n.stage===0)return [{id:'2:platform',segment:1,title:'先选开店平台',action:'在市场下面比较平台，再确认这一站。',effect:'不同平台的入驻费用、流量和佣金不同。'}];
     if(view==='decision'&&n.stage===2)return [{id:'2:credit',segment:1,title:'货款什么时候付',action:'核对现款或账期采购，再看资金时间线。',effect:'账期能暂时保留现金，但到期仍要付款，利润不会凭空增加。'}];
@@ -23,7 +22,6 @@ function baseSteps(n,view){
 export function tutorialSteps(n,view,state){
   // A report already read is never walked through again (the old "看完出来又要看" loop).
   const steps=baseSteps(n,view).filter(s=>!(s.id.endsWith(':report')&&state?.reports?.[n.round]));
-  if(n.round===2&&view==='decision'&&n.v2?.events?.some(e=>e.dueRound===n.round&&n.stage>=e.stage&&!e.choice))steps.push(...baseSteps(n,'v2-events'));
   return steps;
 }
 // REQ-053 P2-4: the checklist is the progress — each item is one real action, ticked once and never asked again.

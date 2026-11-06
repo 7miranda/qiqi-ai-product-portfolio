@@ -64,8 +64,9 @@ export function financialStatements(company, report) {
   const flow = [...groups].map(([id,r])=>({id,...r}));
   const movement = cents(entries.reduce((s,e)=>s+e.cashDelta,0));
   const cashEnd = cents(opening.cash+movement), equityChange = cents(closing.equity-opening.equity);
-  const checks = [Math.abs(closing.assets-closing.liabilities-closing.equity)<.011,Math.abs(equityChange-report.profit)<.011,Math.abs(cashEnd-closing.cash)<.011 && Math.abs(closing.cash-report.cash)<.011];
-  return {legacy:false,report,opening,closing,flow,movement,cashEnd,equityChange,checks,
+  const capitalContribution=cents(entries.filter(e=>e.category==='communityCapital').reduce((s,e)=>s+e.cashDelta,0));
+  const checks = [Math.abs(closing.assets-closing.liabilities-closing.equity)<.011,Math.abs(equityChange-report.profit-capitalContribution)<.011,Math.abs(cashEnd-closing.cash)<.011 && Math.abs(closing.cash-report.cash)<.011];
+  return {legacy:false,report,opening,closing,flow,movement,cashEnd,equityChange,capitalContribution,checks,
     cashRisk:closing.cash < closing.payables+closing.principal+closing.interest};
 }
 export function financeSnapshot(n) {

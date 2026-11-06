@@ -162,11 +162,14 @@ export function settlementSplit(stacks, unitsBefore, returnedUnits) {
 }
 
 // Nearest interactable to a floor point (the pointer's hit on the room), within reach.
+// An item with zSpan [z0, z1] is a long object (a conveyor belt): any point along it counts, not just its anchor —
+// at eye level the visible part of a belt is its middle and back, far from the front-end anchor.
 export function nearestInteractable(pos, items, reach = 2.5) {
   let best = null, bestD = reach;
   for (const item of items) {
     if (item.enabled === false) continue;
-    const d = Math.hypot(pos.x - item.x, pos.z - item.z);
+    const z = item.zSpan ? Math.min(Math.max(pos.z, Math.min(...item.zSpan)), Math.max(...item.zSpan)) : item.z;
+    const d = Math.hypot(pos.x - item.x, pos.z - z);
     if (d <= bestD) { best = item; bestD = d; }
   }
   return best;

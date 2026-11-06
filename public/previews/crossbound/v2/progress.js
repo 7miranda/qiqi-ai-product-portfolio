@@ -43,8 +43,10 @@ export function assessment(company, ops, markets, tasks) {
   const best = Math.max(0, ...history.map(r => r.profit)), average = last.length ? last.reduce((s, r) => s + r.profit, 0) / last.length : 0;
   const orders = history.reduce((s, r) => s + r.orders, 0), refunds = history.reduce((s, r) => s + r.refunds, 0);
   const lossRounds = history.filter(r => r.profit < 0).length;
-  const attempts = (ops?.history || []).filter(e => e.type === 'operation' || e.type === 'review');
-  const correct = attempts.filter(e => e.type === 'review' ? e.choiceId === 'investigate' : tasks.find(t => t.id === e.operationId)?.choices.find(c => c.id === e.choiceId)?.correct).length;
+  // 经营认知 counts only the HQ operating questions that are still in the game; old 售后复盘 answers stay in the
+  // growth ledger (their XP and points are kept) but no longer count here.
+  const attempts = (ops?.history || []).filter(e => e.type === 'operation');
+  const correct = attempts.filter(e => tasks.find(t => t.id === e.operationId)?.choices.find(c => c.id === e.choiceId)?.correct).length;
   const scores = [
     { key: 'profit', name: '盈利力', value: clamp(best / 20000 * 50 + Math.max(0, average) / 10000 * 50), detail: `最佳单轮 $${best.toFixed(0)} · 近${last.length}轮平均 $${average.toFixed(0)}` },
     { key: 'stability', name: '稳定性', value: history.length ? clamp(100 - (orders ? refunds / orders * 250 : 100) - lossRounds / history.length * 50) : 0, detail: `退款率 ${orders ? (refunds / orders * 100).toFixed(1) : '—'}% · 亏损${lossRounds}/${history.length}轮` },

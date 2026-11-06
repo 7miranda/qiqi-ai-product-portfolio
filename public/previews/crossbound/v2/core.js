@@ -1,7 +1,8 @@
-import { BALANCE_VERSION, friendly, balanceRules, balanceOptions, acquisitionRisk, STOCK_CARRYOVER, STOCK_RETURN_FEE, CREATOR_RANGE, CREATOR_MATCH, EVENT_FLOOR } from '../v11/balance.js';
-import { TAX, taxQuote, PLATFORMS, FIRST_MILE, BIDS, TIME_SLOTS, OFFSITE, CONFIG_DEFAULTS, season } from './catalog.js';
+import { BALANCE_VERSION, friendly, balanceRules, balanceOptions, acquisitionRisk, STOCK_CARRYOVER, STOCK_RETURN_FEE, CREATOR_RANGE, CREATOR_MATCH } from '../v11/balance.js';
+import { TAX, taxQuote, PLATFORMS, FIRST_MILE, BIDS, TIME_SLOTS, OFFSITE, CONFIG_DEFAULTS, season, liveEvent, FEATURE_SET, RETIRED_CONFIG, liveConfig } from './catalog.js';
 import { productFit } from './product-fit.js';
 import { GOAL_VERSION, goal, goalPasses, financeSnapshot } from './release.js';
+import { COMMUNITY_CAPITAL } from './recovery.js';
 // Crossbound v1.1: pure operating rules. The bridge supplies the existing demo data.
 export const money = value => Math.round((value + Number.EPSILON) * 100) / 100;
 const copy = value => structuredClone(value);
@@ -64,8 +65,9 @@ export function createV2Core(a) {
   const valid = n => n?.engineVersion === 'v2';
   const initialV2 = () => ({ identity: companyIdentity(), config: { ...CONFIG_DEFAULTS, firstMile:'mixed' }, receivables: [], payables: [], loans: [],
     events: [], eventHistory: [], actions: [], heat: {}, tests: [], openedPlatforms: [], entered: [], entryRewards: [],
-    trademark: false, trademarks: [], seasonPrepared: 0, rivalEncounters: 0 });
-  const config = n => ({ ...CONFIG_DEFAULTS, ...friendly(n) ? {firstMile:'mixed'} : {}, ...n.v2?.config });
+    trademark: false, trademarks: [], seasonPrepared: 0, rivalEncounters: 0, capitalGrants: [] });
+  // Retired strategies always read as their neutral value, whatever an old save or a direct call stored.
+  const config = n => ({ ...CONFIG_DEFAULTS, ...friendly(n) ? {firstMile:'mixed'} : {}, ...n.v2?.config, ...RETIRED_CONFIG });
   const selected = (rows, id) => rows.find(r => r.id === id) || rows[0];
   const dueTotal = rows => sum(rows.filter(r => !r.paid).map(r => r.amount));
   const expenses = (n, category) => sum(n.ledger.filter(e => e.round === n.round && e.category === category).map(e => -e.cashDelta));
@@ -76,14 +78,14 @@ export function createV2Core(a) {
     n.ledger.push({ id: n.ledger.length + 1, round: n.round, category, label, cashDelta: money(cashDelta) });
   };
   function snapshot(n) {
-    return { ...old.snapshot(n), engineVersion: 'v2', balanceVersion:n.balanceVersion, goalVersion:n.goalVersion, runSeed: n.runSeed, round: n.round, v2: copy(n.v2),
+    return { ...old.snapshot(n), engineVersion: 'v2', balanceVersion:n.balanceVersion, goalVersion:n.goalVersion, featureSet: n.featureSet, runSeed: n.runSeed, round: n.round, v2: copy(n.v2),
       visitedMarkets: copy(n.visitedMarkets || []), ratings: copy(n.ratings || {}),
       contentTail: n.contentTail || 0, previousMarket: n.previousMarket || null,
       listingInvestments: copy(n.listingInvestments || []), clearanceEvents: copy(n.clearanceEvents || []) };
   }
   function create(seed) {
     const n = old.create();
-    Object.assign(n, { balanceVersion:BALANCE_VERSION, engineVersion: 'v2', goalVersion:GOAL_VERSION, runSeed: seed ?? globalThis.crypto.getRandomValues(new Uint32Array(1))[0],
+    Object.assign(n, { balanceVersion:BALANCE_VERSION, engineVersion: 'v2', goalVersion:GOAL_VERSION, featureSet: FEATURE_SET, runSeed: seed ?? globalThis.crypto.getRandomValues(new Uint32Array(1))[0],
       visitedMarkets: [], ratings: {}, contentTail: 0, previousMarket: null, listingInvestments: [], clearanceEvents: [], v2: initialV2() });
     n.roundStart = snapshot(n);
     return n;
@@ -93,7 +95,7 @@ export function createV2Core(a) {
     const out = copy(n);
     // A running historical round keeps its rules until next round. No history is recalculated.
     if (out.stage !== 0) return out;
-    Object.assign(out, { balanceVersion:BALANCE_VERSION, goalVersion:GOAL_VERSION, engineVersion: 'v2', runSeed: globalThis.crypto.getRandomValues(new Uint32Array(1))[0],
+    Object.assign(out, { balanceVersion:BALANCE_VERSION, goalVersion:GOAL_VERSION, featureSet: FEATURE_SET, engineVersion: 'v2', runSeed: globalThis.crypto.getRandomValues(new Uint32Array(1))[0],
       visitedMarkets: [...new Set(out.history.map(r => r.marketId))], ratings: {}, contentTail: 0,
       previousMarket: out.carryEffect.previousMarket, listingInvestments: [], clearanceEvents: [], v2: initialV2() });
     const assets = {};
@@ -110,7 +112,7 @@ export function createV2Core(a) {
   function upgrade(n) {
     if (valid(n) || n.stage !== 0) return n;
     const r = copy(n);
-    r.engineVersion = 'v2'; r.goalVersion=GOAL_VERSION; r.balanceVersion=BALANCE_VERSION;
+    r.engineVersion = 'v2'; r.goalVersion=GOAL_VERSION; r.balanceVersion=BALANCE_VERSION; r.featureSet = FEATURE_SET;
     r.v2 = {...initialV2(),collectionIdentity:`legacy-${n.runSeed}`};
     // Already explored countries are not first-entry rewards a second time.
     r.v2.entered = [...(r.visitedMarkets || [])];
@@ -123,15 +125,14 @@ export function createV2Core(a) {
     const rules = {
       platform: [0, PLATFORMS.map(x => x.id)], firstMile: [4, FIRST_MILE.map(x => x.id)],
       terms: [2, ['cash', 'credit']], negotiation: [2, ['none', 'volume', 'credit']],
-      bid: [3, BIDS.map(x => x.id)], timeSlot: [3, TIME_SLOTS.map(x => x.id)], offsite: [3, OFFSITE.map(x => x.id)],
-      seasonPrep: [2, [true, false]],
+      // bid / timeSlot / offsite / seasonPrep are retired (2026-11-01): no rule, so a patch cannot set them.
     };
     for (const [key, v] of Object.entries(patch || {})) {
       const rule = rules[key];
       if (rule && n.stage <= rule[0] && rule[1].includes(v)) c[key] = v;
     }
     if (c.negotiation === 'credit') c.terms = 'credit';
-    r.v2.config = c;
+    r.v2.config = liveConfig(c);
     return r;
   }
   function supplyQuote(n, quantity) {
@@ -144,29 +145,26 @@ export function createV2Core(a) {
       volumeDiscount: 1 - discount, originalUnitCost: base.unitCost };
   }
   function eventEffect(n) {
-    const active = n.v2.events.filter(e => e.dueRound === n.round && n.stage >= e.stage);
+    // Every event kind is retired: old queued events (跟卖、慢递、需求变化、税务核验) have no conversion, traffic, price,
+    // packaging or delay effect.
+    const active = n.v2.events.filter(e => liveEvent(e) && e.dueRound === n.round && n.stage >= e.stage);
     let conversion = 1, traffic = 1, packaging = 0, delayDays = 0;
     for (const e of active) {
       if (e.kind === 'slow-delivery' && e.choice !== 'repair') conversion *= .9;
       if (e.kind === 'demand-shift' && e.choice !== 'adapt') traffic *= .9;
       if (['vat-review', 'classification-review', 'packaging-review'].includes(e.kind) && e.choice !== 'prepare') delayDays += 3;
-      if (e.kind === 'rival') {
-        if (n.productId !== e.productId || n.marketId !== e.marketId) continue;
-        const avoided = e.choice === 'exit' && n.marketId !== e.marketId;
-        if (avoided || e.choice === 'complaint' && e.success) continue;
-        if (e.choice === 'differentiate') { conversion *= 1; packaging += 1.5; }
-        else if (e.choice === 'pricewar') conversion *= .95;
-        else conversion *= Math.max(EVENT_FLOOR, .7 - .03 * (e.encounter - 1));
-      }
     }
-    return { conversion, traffic, packaging, delayDays, active, priceFactor: active.some(e => e.kind === 'rival' && e.marketId === n.marketId && e.productId === n.productId && e.choice === 'pricewar') ? .9 : 1 };
+    return { conversion, traffic, packaging, delayDays, active, priceFactor: 1 };
   }
   function hasTrademark(n,productId=n.productId) {
     return Array.isArray(n.v2.trademarks)?n.v2.trademarks.includes(productId):!!n.v2.trademark;
   }
   const testCost = n => (n.v2?.tests?.length ? 150 : 0);
-  function act(n, input) {
+  // replay: rollback re-runs this round's recorded actions. Retired actions (商标登记、跟卖应对) are still
+  // accepted there so a fee already paid before the feature went offline is not dropped from the ledger.
+  function act(n, input, { replay = false } = {}) {
     if (!valid(n) || !input) return n;
+    if (!replay && (['trademark', 'test'].includes(input.type) || input.type === 'event' && !liveEvent(n.v2.events.find(e => e.id === input.id)))) return n;
     const r = copy(n);
     if (input.type === 'loan') {
       const amount = Number(input.amount);
@@ -186,8 +184,10 @@ export function createV2Core(a) {
       r.v2.trademarks=[...(r.v2.trademarks||[]),n.productId]; r.v2.trademark = true; entry(r, 'trademark', '模拟商标登记', -600);
     } else if (input.type === 'event') {
       const e = r.v2.events.find(e => e.id === input.id && e.dueRound === n.round && n.stage >= e.stage);
-      if (!e || e.choice || !eventChoices(e).some(x => x.id === input.choice)) return n;
-      const choice = eventChoices(e).find(x => x.id === input.choice);
+      if (!e || e.choice) return n;
+      const choices = liveEvent(e) ? eventChoices(e) : legacyChoices(e);
+      if (!choices.some(x => x.id === input.choice)) return n;
+      const choice = choices.find(x => x.id === input.choice);
       if (choice.cost > n.cash || input.choice === 'complaint' && !hasTrademark(n,e.productId)) return n;
       e.choice = input.choice;
       if (choice.cost) entry(r, 'events', `${e.title} · ${choice.name}`, -choice.cost);
@@ -198,7 +198,10 @@ export function createV2Core(a) {
     r.v2.actions.push({ ...copy(input), stage: n.stage });
     return feedback(r, '经营选择已记录', '费用和后续影响已记入本轮档案。');
   }
-  function eventChoices(e) {
+  // The current game offers no event choices: every event kind is retired (2026-11-01).
+  function eventChoices(e) { return liveEvent(e) ? legacyChoices(e) : []; }
+  // History only: rollback replays a choice recorded before the events went offline, so its fee stays in the ledger.
+  function legacyChoices(e) {
     if (e.kind === 'rival') return [
       { id: 'pricewar', name: '降价迎战', cost: 0, detail: '成交价九折，转化系数恢复至95%' },
       { id: 'complaint', name: '提交商标与商品证据', cost: 200, detail: '需已登记商标；成功率等于上架分%，失败保留原影响' },
@@ -213,17 +216,14 @@ export function createV2Core(a) {
     return [{ id: 'adapt', name: '调整本地内容', cost: 200, detail: '解除本轮10%的到访下降' }, { id: 'accept', name: '沿用原计划', cost: 0, detail: '本轮到访下降10%' }];
   }
   function schedule(n) {
-    const report = n.report, dueRound = n.round + 1;
+    const dueRound = n.round + 1;
+    // 2026-11-01: every event kind below is retired, so nothing is scheduled (high profit, back-to-back big
+    // rounds, the economy line and the random pool alike). The generic event store stays for old saves.
     const add = (kind, title, stage, extra = {}) => {
       const id = `${kind}:${dueRound}`;
-      if (!n.v2.events.some(e => e.id === id)) n.v2.events.push({ id, kind, title, dueRound, stage, choice: null, ...extra });
+      if (liveEvent({ kind }) && !n.v2.events.some(e => e.id === id)) n.v2.events.push({ id, kind, title, dueRound, stage, choice: null, ...extra });
     };
     if (n.fulfillmentPlanId === 'economy') add('slow-delivery', '上一轮买家反馈：到货太慢', 0);
-    const last = n.history.filter(r => r.round < n.round).at(-1);
-    if (report.profit > 6000 || report.orders >= 800 && last?.productId === n.productId && last.orders >= 800) {
-      n.v2.rivalEncounters++;
-      add('rival', '影子卖家老 K 跟来了', 4, { marketId: n.marketId, productId: n.productId, encounter: n.v2.rivalEncounters });
-    }
     if (seededUnit(n.runSeed, dueRound, 'event-pool') < .45) {
       const pool = [['demand-shift', '当地买家关注点变了'], ['vat-review', '进口税台账，需要核对'], ['classification-review', '归类与原产地复核：是否涉及附加税'], ['packaging-review', '包装资料核验：了解 EPR']];
       const chosen = pool[Math.floor(seededUnit(n.runSeed, dueRound, 'event-kind') * pool.length)];
@@ -284,8 +284,10 @@ export function createV2Core(a) {
     const selected = find(options, input?.id) || options.at(-1);
     const category = products.some(x => x.category === input?.category) ? input.category : p?.category;
     const matched = channelId === 'creator' ? selected.id === 'vertical' && category === p?.category : !!selected.categories?.includes(p?.category);
-    return { ...selected, category, matched, trafficFactor: selected.visitors * (channelId === 'content' && matched ? 1.1 : 1),
-      conversionFactor: channelId === 'ads' ? matched ? 1.1 : .95 : channelId === 'creator' && matched ? CREATOR_MATCH : 1 };
+    const audience = channelId === 'ads' && ['tech','broad'].includes(input?.audience) ? input.audience : null;
+    const creatorId = channelId === 'creator' && ['lena','kai','noor'].includes(input?.creatorId) ? input.creatorId : null;
+    return { ...selected, category, matched, ...(audience ? {audience} : {}), ...(creatorId ? {creatorId} : {}), trafficFactor: selected.visitors * (audience === 'broad' ? 1.3 : 1) * (channelId === 'content' && matched ? 1.1 : 1),
+      conversionFactor: channelId === 'ads' ? (matched ? 1.1 : .95) * (audience === 'broad' ? .7 : audience === 'tech' ? 1.1 : 1) : channelId === 'creator' && matched ? CREATOR_MATCH : 1 };
   }
   function normalize(n, input) {
     const raw = typeof input === 'string' ? { id: input } : input;
@@ -304,7 +306,7 @@ export function createV2Core(a) {
       if (n.currentListing) out.listing = copy(n.currentListing.selection);
       else if (raw.listing && listingQuote(n, raw.listing)) out.listing = copy(raw.listing);
       const c = choice(out.id, raw.promotionChoice, find(products, n.productId));
-      out.promotionChoice = { id: c.id, category: c.category };
+      out.promotionChoice = { id: c.id, category: c.category, ...(c.audience ? {audience:c.audience} : {}), ...(c.creatorId ? {creatorId:c.creatorId} : {}) };
     }
     return out;
   }
@@ -314,7 +316,10 @@ export function createV2Core(a) {
     const stock = find(stocks, n.stockPlanId) || stocks[0], channel = find(options(n, 'channels'), n.trafficPlanId) || options(n, 'channels')[0], f = find(options(n, 'fulfillment'), n.fulfillmentPlanId) || options(n, 'fulfillment')[1];
     const rules = balanceRules(n);
     const c = config(n), platform = selected(PLATFORMS, c.platform), firstMile = selected(FIRST_MILE, c.firstMile);
+    // c carries RETIRED_CONFIG, so these are the neutral rows: no off-site visits, discount or rating, no bid / time-slot factor.
     const offsite = selected(OFFSITE, c.offsite), bid = selected(BIDS, c.bid), timeSlot = selected(TIME_SLOTS, c.timeSlot), effects = eventEffect(n);
+    // An old save may already have paid for off-site promotion this round: the fee stays, the effect does not.
+    const offsiteCost = expenses(n, 'offsite');
     const advertisedPrice = n.price ?? Math.round(p.basePrice * stock.priceFactor), quantity = n.quantity ?? stock.quantity;
     const price = money(advertisedPrice * offsite.price * effects.priceFactor);
     const budget = n.trafficBudget ?? channel.budget, supply = supplyQuote(n, quantity);
@@ -337,8 +342,8 @@ export function createV2Core(a) {
     // Content wins economical tests and builds tail; production capacity limits rapid scaling.
     const contentScaling = channel.id === 'content' ? 1 / (1 + .035 * Math.max(0, budget / 900 - 1)) : 1;
     const heat = n.v2.heat[p.id] ?? 1, seasonInfo = season(n.round);
-    const seasonFactor = seasonInfo.index === 2 ? n.v2.seasonPrepared === Math.ceil(n.round / 3) ? 1.3 : 1.1 : 1;
-    const adVariation = channel.id !== 'ads' ? 1 : mode === 'low' ? bid.range[0] : mode === 'high' ? bid.range[1] : mode === 'mean' ? 1 : bid.range[0] + draw('auction') * (bid.range[1] - bid.range[0]);
+    // The 备战/预热/收割 cycle and keyword auctions are retired: no season multiplier (not even the old ×1.1), no auction swing.
+    const seasonFactor = 1, adVariation = 1;
     const platformTraffic = platform.traffic * (platform.id === 'tiktok' && channel.id !== 'ads' ? 1.2 : 1);
     const primaryVisitors = Math.floor(baseVisitors * Math.sqrt(budget / channel.budget) * regionFactor * variation('traffic') * creatorFactor * secondary.trafficFactor * contentScaling * platformTraffic * effects.traffic * heat * seasonFactor * (channel.id === 'ads' ? bid.clicks * timeSlot.traffic * adVariation : 1));
     const offsiteVisitors = Math.floor(primaryVisitors * (offsite.visitors - 1));
@@ -373,7 +378,7 @@ export function createV2Core(a) {
     const commission = money(commissionGross - commissionRecovery);
     const sourceNames = ['自然与内容', '广告', '达人', offsite.name], sourceIds = ['organic', 'ads', 'creator', 'offsite'];
     const attribution = sourceVisits.map((v, i) => {
-      const spend = i === 3 ? offsite.cost : (i === 0 && channel.id === 'content' || sourceIds[i] === channel.id) ? budget : 0;
+      const spend = i === 3 ? offsiteCost : (i === 0 && channel.id === 'content' || sourceIds[i] === channel.id) ? budget : 0;
       const kept = sourceOrders[i] - sourceRefunds[i], fee = i === 2 ? commission : 0;
       return { id: sourceIds[i], name: sourceNames[i], visitors: v, orders: sourceOrders[i], refunds: sourceRefunds[i], keptOrders: kept, spend, commission: fee, cac: kept ? money((spend + fee) / kept) : null };
     });
@@ -384,15 +389,15 @@ export function createV2Core(a) {
     const paymentFee = money(netRevenue * .035), fxFee = money(netRevenue * tax.fxFee), packagingCost = money(orders * effects.packaging);
     const warehouseCost = !STOCK_CARRYOVER ? 0 : money(Object.values(n.inventory).reduce((s, v) => s + v, 0) - (n.inventory[p.id] || 0) + totalUnits - orders + returnRestocked) * .5;
     const testingCost = expenses(n, 'testing'), eventCost = expenses(n, 'events'), trademarkCost = expenses(n, 'trademark');
-    const seasonPrepCost = expenses(n, 'season') || (c.seasonPrep && seasonInfo.index !== 2 ? 300 : 0);
+    const seasonPrepCost = expenses(n, 'season');
     const interestCost = sum(n.v2.loans.filter(l => l.round === n.round).map(l => l.interest));
     const platformEntryCost = expenses(n, 'platformEntry') || platformEntry;
     const totalCosts = sum([cogs, writeoffCost, returnHandlingCost, listingCost, shippingCost, platformFees, commission, budget, launchCost, tariff,
-      importTax, paymentFee, fxFee, packagingCost, warehouseCost, firstMileCost, offsite.cost, testingCost, eventCost, trademarkCost, seasonPrepCost, interestCost, platformEntryCost,
+      importTax, paymentFee, fxFee, packagingCost, warehouseCost, firstMileCost, offsiteCost, testingCost, eventCost, trademarkCost, seasonPrepCost, interestCost, platformEntryCost,
       STOCK_CARRYOVER ? 0 : money(money(availableCost - cogs - writeoffCost) * STOCK_RETURN_FEE)]);
     return { balanceVersion:n.balanceVersion, goalVersion:n.goalVersion, modelVersion: 'v2', commerceRule: 'v23', ...supply, leadDays, units, totalUnits, quantity, unitsToBuy, arrivedUnits, delayedUnits, price, advertisedPrice, budget,
       tax, importTax, paymentFee, fxFee, packagingCost, warehouseCost, firstMileCost, firstMileUnit, firstMile, platform, platformEntryCost,
-      commissionGross, commissionRecovery, offsiteCost: offsite.cost, offsite, testingCost, eventCost, trademarkCost, seasonPrepCost, interestCost,
+      commissionGross, commissionRecovery, offsiteCost, offsite, testingCost, eventCost, trademarkCost, seasonPrepCost, interestCost,
       localRevenue: money(netRevenue * tax.fx), heat, season: seasonInfo, seasonFactor, bid, timeSlot, adVariation,
       acos: sourceOrders[1] > sourceRefunds[1] ? budget / ((sourceOrders[1] - sourceRefunds[1]) * price) : null, fit,
       visitors, currentRoundVisitors, carryVisitors, organicBonus, regionFactor, conversion, baseConversion, priceFactor, deliveryFactor, coldStartFactor, capacity, saturated: visitors > capacity,
@@ -406,7 +411,7 @@ export function createV2Core(a) {
       badReviews: Math.round(refunds * .3), commissionRate: secondary.commission, events: copy(effects.active) };
   }
   function candidate(n, d) {
-    const r = copy(n); r.v2.config = copy(d.config || config(n)); r[keys[n.stage]] = d.id;
+    const r = copy(n); r.v2.config = liveConfig(d.config || config(n)); r[keys[n.stage]] = d.id;
     if (n.stage === 2) Object.assign(r, { quantity: d.quantity, price: d.price, supplierId: d.supplierId, supplyRule: d.supplyRule });
     if (n.stage === 3) {
       if (!r.currentListing && d.listing) Object.assign(r, publish(r, d.listing));
@@ -435,7 +440,8 @@ export function createV2Core(a) {
     const settlementCash = n.stage >= 2 && n.stage <= 4 && mean ? money(Math.max(...[mean, low, high].map(p => -settlement(p)))) : 0;
     const laterSpend = n.stage === 2 && mean ? mean.budget || 0 : 0;
     const cashNeed = n.stage === 4 ? settlementCash : n.stage >= 2 && n.stage <= 3 ? money(-cashDelta + laterSpend + settlementCash) : money(-cashDelta);
-    const overdue = [...n.v2.payables, ...n.v2.loans].some(b => !b.paid && b.dueRound <= n.round);
+    const overdueAmount = sum([...n.v2.payables, ...n.v2.loans].filter(b => !b.paid && b.dueRound <= n.round).map(b=>b.amount));
+    const overdue = overdueAmount > 0;
     const blocked = n.stage === 2 && overdue ? '有到期款项尚未偿还，先核对资金时间线或使用过桥方案。' : n.stage === 2 && mean.unitsToBuy > 0 && mean.unitsToBuy < mean.moq ? `${mean.supplierName}至少新增采购${mean.moq}件，当前补货${mean.unitsToBuy}件。请调整数量或供应商。` : null;
     const marketBlocked = n.stage === 0 && n.carryEffect.newMarket && d.id === n.carryEffect.previousMarket;
     const bounds = {};
@@ -449,6 +455,7 @@ export function createV2Core(a) {
     if (n.stage === 5) bounds.profit = [money(n.report.profit - option.cost), money(n.report.profit - option.cost)];
     return { ...mean, cashDelta: money(cashDelta), inventoryDelta, acquisitionBounds, bounds, attributionBounds, settled: n.stage >= 5, profit: n.stage === 5 ? money(n.report.profit - option.cost) : mean?.profit ?? null,
       affordable: n.cash - cashNeed >= 0 && !blocked && !marketBlocked, supplyBlockedReason: blocked,
+      marketBlocked: !!marketBlocked, cashBlocked: n.stage===2&&overdue, overdueAmount: n.stage===2?overdueAmount:0,
       summary: option.summary, risks: [option.risk, ...(blocked ? [blocked] : [])],
       cashShortfall: Math.max(0, money(cashNeed - n.cash)), cashNeed, settlementCash, laterSpend, assumptions: '教学模拟；销售窗口30天，交付后的平台款14天结算，下轮开局到账。同轮同方案固定，跨轮重新波动。', nextTrafficBonus: option.trafficBonus || 0 };
   }
@@ -459,7 +466,7 @@ export function createV2Core(a) {
     const stars = before.rating * before.reviews + p.keptOrders * 5 + (p.refunds - p.badReviews) * 5 + p.badReviews;
     const ratingAfter = Math.min(5, (p.orders > 0 && p.refunds === 0 ? Math.min(5, before.rating + .1) : reviews ? clamp(stars / reviews, 1, 5) : before.rating) + p.offsite.rating);
     n.ratings[n.productId] = { rating: money(ratingAfter), reviews };
-    Object.assign(r, { balanceVersion:n.balanceVersion, goalVersion:n.goalVersion, goalPasses: goalPasses(n), totalCosts: p.totalCosts, ratingAfter: money(ratingAfter), roundStart: copy(n.roundStart), modelVersion: 'v2',
+    Object.assign(r, { balanceVersion:n.balanceVersion, goalVersion:n.goalVersion, featureSet: n.featureSet, goalPasses: goalPasses(n), totalCosts: p.totalCosts, ratingAfter: money(ratingAfter), roundStart: copy(n.roundStart), modelVersion: 'v2',
       formula: '本轮先按来源形成访问机会，再由市场匹配、售价、商品页、配送、评分与波动计算购买意愿；超出市场容量的机会减半，库存和交期限制实际订单。退款与全部费用分别记账。',
       nextRatingImpact: 1 - Math.sqrt(ratingAfter / 5) });
     r.conclusions.push(p.delayedUnits ? `${p.leadDays}天备货使${p.delayedUnits}件新货错过本轮销售窗口，${STOCK_CARRYOVER ? '余货计入下轮库存' : `结算时按成本退回（扣${Math.round(STOCK_RETURN_FEE * 100)}%手续费）`}。` : '现有库存及时衔接了本轮销售。');
@@ -471,7 +478,8 @@ export function createV2Core(a) {
   function balance(n) {
     const receivables = dueTotal(n.v2.receivables), liabilities = money(dueTotal(n.v2.payables) + dueTotal(n.v2.loans));
     const start = n.roundStart, openingReceivables = dueTotal(start.v2?.receivables || []), openingLiabilities = money(dueTotal(start.v2?.payables || []) + dueTotal(start.v2?.loans || []));
-    return { receivables, liabilities, openingReceivables, openingLiabilities,
+    const capitalContribution = sum(n.ledger.filter(e=>e.round===n.round&&e.category==='communityCapital').map(e=>e.cashDelta));
+    return { receivables, liabilities, openingReceivables, openingLiabilities, capitalContribution,
       assetChange: money(n.cash + value(n.inventory, n.inventoryCosts) + receivables - liabilities - start.cash - value(start.inventory, start.inventoryCosts) - openingReceivables + openingLiabilities) };
   }
   function settleDue(n) {
@@ -506,7 +514,6 @@ export function createV2Core(a) {
       r.inventory[r.productId] += p.unitsToBuy; r.inventoryCosts[r.productId] = p.availableCost;
       if (config(r).terms === 'credit' && p.purchaseCost) r.v2.payables.push({ round: r.round, dueRound: r.round + 1, amount: p.purchaseCost, paid: false });
       else entry(r, 'procurement', `${p.supplierName} · 采购补货`, -p.purchaseCost);
-      if (p.seasonPrepCost) { entry(r, 'season', '大卖季提前备战', -p.seasonPrepCost); r.v2.seasonPrepared = Math.ceil(r.round / 3); }
     }
     if (n.stage === 3) { entry(r, 'marketing', `${option.name} · ${p.promotionChoice.name}`, -d.budget); if (p.offsiteCost) entry(r, 'offsite', p.offsite.name, -p.offsiteCost); }
     if (n.stage === 4) {
@@ -522,7 +529,7 @@ export function createV2Core(a) {
       for (const [category, label, amount] of settlementCosts) if (amount) entry(r, category, label, -amount);
       const returned = STOCK_CARRYOVER ? null : returnStock(r);
       r.report = makeReport(r, actual); if (returned) applyReturn(r.report, returned, actual.stockReturnFee); delta = money(r.cash - n.cash);
-      for (const event of r.v2.events.filter(e => e.dueRound === r.round && !e.choice)) {
+      for (const event of r.v2.events.filter(e => liveEvent(e) && e.dueRound === r.round && !e.choice)) {
         event.choice = 'no-action';
         r.v2.eventHistory.push({ ...copy(event), resolvedRound: r.round, outcome: '本轮未采取额外措施，结果已计入战报。' });
       }
@@ -566,6 +573,8 @@ export function createV2Core(a) {
   function rollback(n, stage = 0) {
     if (!Number.isInteger(stage) || stage < 0 || stage > Math.min(5, n.stage)) return n;
     let r = restoreStart(n, n.roundStart);
+    r = preserveCapital(n, r); r.recoveryOps = n.recoveryOps; r.attempt=n.attempt;
+    r.featureSet = n.featureSet; // a rolled-back round keeps the rule label it started with
     // Preserve paid optimizations, with the matching charge, even when replaying this round.
     for (const event of n.listingInvestments.filter(e => e.round === n.round)) {
       if (!r.listingAssets[event.productId]) continue;
@@ -575,10 +584,38 @@ export function createV2Core(a) {
       r.listingInvestments.push(copy(event)); entry(r, 'listing', '商品页持续优化 +5分', -event.cost);
     }
     for (let i = 0; i <= stage; i++) {
-      for (const action of n.v2.actions.filter(e => e.stage === i)) r = act(r, action);
+      for (const action of n.v2.actions.filter(e => e.stage === i)) r = act(r, action, { replay: true });
       if (i < stage) r = commit(r, n.decisions[i]);
     }
     return feedback(r, '已回到本轮选择', '本轮市场波动保持相同，相同方案得到相同结果；已购优化与对应费用保留。');
+  }
+  function grantCommunity(n, claim) {
+    const identity=n.v2?.collectionIdentity||n.v2?.identity;
+    if (!valid(n)||claim?.id!=='first'||claim.run!==identity||claim.capital!==COMMUNITY_CAPITAL||!Number.isInteger(claim.rounds)||claim.rounds<0)return n;
+    const id=`community:${identity}:first`;
+    if((n.v2.capitalGrants||[]).some(g=>g.id===id))return n;
+    const r=copy(n);
+    r.v2.capitalGrants=[...(r.v2.capitalGrants||[]),{id,amount:COMMUNITY_CAPITAL,round:r.round}];
+    entry(r,'communityCapital','共建者经营补助（非经营收入）',COMMUNITY_CAPITAL);
+    // A survey may also be completed after settlement. Keep that report's cash/finance views consistent.
+    if(r.report){r.report.cash=r.cash;r.report.cashChange=money(r.cash-r.roundStart.cash);Object.assign(r.report,balance(r));r.report.financeEnd=financeSnapshot(r);if(r.stage===6)r.history[r.history.length-1]=copy(r.report);}
+    return r;
+  }
+  function preserveCapital(source, restored) {
+    let r=restored;
+    for(const grant of source.v2.capitalGrants||[])if(!(r.v2.capitalGrants||[]).some(g=>g.id===grant.id)){
+      r=grantCommunity(r,{id:'first',run:r.v2.collectionIdentity||r.v2.identity,rounds:0,capital:grant.amount});
+    }
+    return r;
+  }
+  // Unlike rollback(), a failed attempt is entirely void, including listing optimizations and loans.
+  // roundStart predates settleDue: restoreStart replays only opening receipts/debts, exactly once.
+  function restartRound(n) {
+    if(!valid(n)||n.stage>=6)return n;
+    const r=preserveCapital(n,restoreStart(n,n.roundStart));
+    r.featureSet=n.featureSet;r.recoveryOps=n.recoveryOps;
+    r.attempt=(n.attempt||0)+1;
+    return feedback(r,'本轮已重新开始',`第${r.round}轮的上一次尝试已作废，现金、库存和债务已恢复至轮初；共建补助保留。`);
   }
   function next(n) {
     if (n.stage !== 6) return n;
@@ -586,7 +623,8 @@ export function createV2Core(a) {
     for (const k of ['cash', 'inventory', 'inventoryCosts', 'listingAssets', 'ledger', 'history', 'visitedMarkets', 'ratings', 'contentTail', 'previousMarket', 'carryEffect', 'listingInvestments', 'clearanceEvents', 'v2']) r[k] = copy(n[k]);
     r.v2.heat = n.productId ? { [n.productId]: Math.min(1.15, money((n.v2.heat[n.productId] ?? 1) + .05)) } : {};
     r.v2.actions = []; r.v2.firstEntry = null;
-    r.v2.config = { ...CONFIG_DEFAULTS, firstMile:'mixed', platform: config(n).platform };
+    r.v2.config = { ...liveConfig(CONFIG_DEFAULTS), firstMile:'mixed', platform: config(n).platform };
+    r.featureSet = FEATURE_SET;
     r.round = n.round + 1; r.roundStart = snapshot(r);
     settleDue(r);
     return feedback(r, `第${r.round}轮经营已开始`, `${STOCK_CARRYOVER ? '现金、库存、商品页与评分已保留' : '现金、商品页与评分已保留，本轮重新备货'}。本轮市场波动已更新，同轮重试保持公平。`);
@@ -594,7 +632,8 @@ export function createV2Core(a) {
   function previous(n) {
     const report = n.history.find(r => r.round === n.round - 1);
     if (!report?.roundStart?.engineVersion) return n;
-    return restoreStart(n, report.roundStart);
+    // Replaying the previous round starts it over under the current rules, retired features included.
+    return { ...preserveCapital(n,restoreStart(n, report.roundStart)), featureSet: FEATURE_SET };
   }
   function clearStock(n, productId) {
     if (![5, 6].includes(n.stage) || !(n.inventory[productId] > 0) || !find(products, productId)) return n;
@@ -626,6 +665,7 @@ export function createV2Core(a) {
       if (!n.v2 || !n.roundStart.v2 || !['receivables', 'payables', 'loans', 'events', 'eventHistory', 'actions', 'tests', 'entered', 'openedPlatforms', 'entryRewards'].every(k => Array.isArray(n.v2[k]))) return null;
       if ([...n.v2.receivables, ...n.v2.payables, ...n.v2.loans].some(r => !Number.isFinite(r.amount) || r.amount < 0 || !Number.isInteger(r.dueRound))) return null;
       if (typeof n.v2.identity !== 'string' || !n.v2.heat || Object.values(n.v2.heat).some(v => !Number.isFinite(v) || v < 0 || v > 1.15) || n.v2.tests.some(t => !Number.isFinite(t.score))) return null;
+      if(n.v2.capitalGrants!=null&&(!Array.isArray(n.v2.capitalGrants)||n.v2.capitalGrants.length>1||n.v2.capitalGrants.some(g=>g.id!==`community:${n.v2.collectionIdentity||n.v2.identity}:first`||g.amount!==COMMUNITY_CAPITAL)))return null;
       const roundDelta = sum(n.ledger.filter(e => e.round === n.round).map(e => e.cashDelta));
       if (money(n.roundStart.cash + roundDelta) !== n.cash) return null;
       const restored=copy(n);
@@ -654,5 +694,5 @@ export function createV2Core(a) {
     return defs.map(([id, name, description, predicate]) => { const found = history.find(predicate); return { id, name, description, earned: !!found, round: found?.round }; });
   }
   return { help: HELP, testCost, valid, create, migrate, upgrade, snapshot, listingProduct, listingQuote, publish, optimize, choice, normalize, simulate, preview, commit, rollback, next, previous, clearStock, serialize, deserialize, milestones, scale, options, products, markets, channels,
-    configure, config, supplyQuote, hasTrademark, act, eventChoices, eventEffect, balance };
+    configure, config, supplyQuote, hasTrademark, act, eventChoices, eventEffect, balance, restartRound, grantCommunity };
 }

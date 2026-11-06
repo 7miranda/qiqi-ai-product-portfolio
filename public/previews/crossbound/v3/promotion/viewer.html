@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crossbound · 推广室</title><link rel="stylesheet" href="promotion.css">
+</head>
+<body><p id="promotion-loading">正在载入本轮推广方案…</p>
+<x-dc>
+<helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#060d10"/><rect x="30" y="30" width="40" height="40" fill="#c4f637"/></svg></template>
+<link rel="stylesheet" href="fonts.css">
+<style>body{margin:0;background:#060d10}*{box-sizing:border-box}a{color:#65d4df}a:hover{color:#c4f637}button{font:inherit;color:inherit}input[type=range]{accent-color:#c4f637}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}</style>
+</helmet>
+<div style="min-height:100vh;background:#060d10;color:#e8f1f3;font-family:'Noto Sans SC','PingFang SC',sans-serif;font-size:13px;padding:22px 40px 0;max-width:1760px;margin:0 auto">
+  <header style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+    <button onClick="{{ goBack }}" style="border:1px solid #1f343b;background:transparent;padding:10px 16px;cursor:pointer;font-size:13px" style-hover="border-color:#65d4df">← 返回园区地图</button>
+    <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:3px;color:#65d4df">W4 · PROMOTION</span>
+      <h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:1px">推广室</h1>
+      <span style="color:#8aa3ab;font-size:13px">第 {{ round }} 轮 · 三个渠道随时切换，选一个开推</span>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:28px">
+      <div><div style="font-size:11px;color:#8aa3ab">经营现金</div><div style="font-family:Oxanium,sans-serif;font-size:26px;font-weight:600;color:#c4f637">{{ cashText }}</div></div>
+      <div style="border-left:1px solid #1f343b;padding-left:28px"><div style="font-size:11px;color:#8aa3ab">本步花费</div><div style="font-family:Oxanium,sans-serif;font-size:26px;font-weight:600">{{ costText }}</div></div>
+    </div>
+  </header>
+
+  <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:18px">
+    <sc-for list="{{ journey }}" as="j" hint-placeholder-count="7">
+      <div style="border-top:2px solid {{ j.line }};padding-top:8px;font-size:11px;color:{{ j.color }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ j.label }}</div>
+    </sc-for>
+  </div>
+
+  <nav class="promotion-tabs" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:28px">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+      <button onClick="{{ t.go }}" style="display:flex;align-items:center;gap:14px;text-align:left;padding:10px 16px 10px 10px;cursor:pointer;background:{{ t.bg }};border:1px solid {{ t.bd }};transition:all .2s" style-hover="border-color:#65d4df">
+        <img data-promotion-src="{{ t.img }}" alt="" style="width:76px;height:52px;object-fit:cover;background:#dfe4e6;flex:none;opacity:{{ t.op }}">
+        <div style="min-width:0;flex:1">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:#65d4df">{{ t.code }}</div>
+          <div style="font-size:16px;font-weight:700;margin-top:3px">{{ t.name }}</div>
+        </div>
+        <div style="text-align:right;flex:none">
+          <div style="font-family:Oxanium,sans-serif;font-size:15px;font-weight:600;color:{{ t.pc }}">{{ t.profit }}</div>
+          <div style="font-size:11px;color:#8aa3ab;margin-top:2px">{{ t.meta }}</div>
+        </div>
+      </button>
+    </sc-for>
+  </nav>
+
+  <main class="promotion-main" style="display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);gap:40px;margin-top:28px;align-items:start">
+
+    <sc-if value="{{ isLive }}" hint-placeholder-val="{{ true }}">
+      <section data-screen-label="A 直播间" style="min-width:0">
+        <div style="position:relative;aspect-ratio:16/9;overflow:hidden;background:#000">
+          <img data-promotion-src="{{ liveImg }}" alt="直播场景" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .4s">
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 55%,rgba(0,0,0,.75) 100%)"></div>
+          <div style="position:absolute;top:18px;left:18px;display:flex;gap:8px;align-items:center">
+            <span style="background:{{ livePill }};color:#fff;font:700 11px 'JetBrains Mono',monospace;letter-spacing:2px;padding:5px 9px">{{ liveLabel }}</span>
+            <span style="background:rgba(0,0,0,.5);backdrop-filter:blur(8px);font:500 12px Oxanium,sans-serif;padding:5px 10px">◉ {{ viewers }}</span>
+          </div>
+          <div style="position:absolute;top:18px;right:18px;font:11px 'JetBrains Mono',monospace;color:rgba(255,255,255,.7);letter-spacing:1px">crossbound.store · 1080p</div>
+          <div style="position:absolute;right:18px;bottom:96px;width:min(42%,300px);display:flex;flex-direction:column;gap:6px">
+            <sc-for list="{{ comments }}" as="c" hint-placeholder-count="0">
+              <div style="background:rgba(0,0,0,.42);backdrop-filter:blur(10px);padding:8px 11px;font-size:12px;line-height:1.45;font-family:system-ui,-apple-system,sans-serif;animation:rise .35s ease">
+                <b style="color:{{ c.color }};font-weight:600">{{ c.user }}</b> <span style="color:#f2f5f6">{{ c.text }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="position:absolute;left:22px;bottom:22px;right:22px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px">
+            <div style="min-width:0">
+              <div style="font:11px 'JetBrains Mono',monospace;letter-spacing:2px;color:#c4f637">{{ liveStyleEn }}</div>
+              <div style="font-family:system-ui,-apple-system,'Helvetica Neue',sans-serif;font-size:clamp(18px,2.2vw,30px);font-weight:700;line-height:1.15;margin-top:6px;text-wrap:pretty;max-width:520px">{{ liveTitle }}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;background:#fff;color:#0b1216;padding:8px 14px 8px 8px;flex:none;font-family:system-ui,-apple-system,sans-serif">
+              <img data-promotion-src="{{ productImage }}" alt="" style="width:54px;height:40px;object-fit:contain">
+              <div><div style="font-size:11px;color:#5b6a70">Pinned</div><div style="font-size:13px;font-weight:600">{{ productName }}</div></div>
+              <div style="font-weight:700;font-size:15px">{{ priceText }}</div>
+              <span style="background:#0b1216;color:#fff;font-size:12px;font-weight:600;padding:6px 12px">Shop</span>
+            </div>
+          </div>
+          <sc-if value="{{ showPlay }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ rehearse }}" style="position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);background:rgba(6,13,16,.55);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.35);padding:14px 22px;cursor:pointer;font-size:14px;display:flex;gap:10px;align-items:center" style-hover="background:rgba(6,13,16,.8);border-color:#c4f637">▶ 试播 15 秒，看观众怎么反应</button>
+          </sc-if>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid #1f343b;flex-wrap:wrap">
+          <span style="width:36px;height:36px;border-radius:50%;background:#c4f637;color:#060d10;display:grid;place-items:center;font:700 15px Oxanium,sans-serif;flex:none">C</span>
+          <div style="min-width:0;flex:1"><div style="font-weight:600">crossbound.store <span style="color:#8aa3ab;font-weight:400">· 品牌自有账号 · 模拟账号</span></div><div style="color:#8aa3ab;font-size:12px;margin-top:2px">不收分佣；起步观众少，适合先验证卖点。场景与评论为模拟。</div></div>
+          <div style="display:flex;gap:8px">
+            <sc-for list="{{ scenes }}" as="s" hint-placeholder-count="3">
+              <button onClick="{{ s.pick }}" style="padding:0;border:1px solid {{ s.bd }};background:none;cursor:pointer;position:relative">
+                <img data-promotion-src="{{ s.img }}" alt="" style="width:82px;height:46px;object-fit:cover;display:block;opacity:{{ s.op }}">
+                <span style="position:absolute;left:5px;bottom:3px;font-size:10px;text-shadow:0 1px 3px #000">{{ s.label }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isAds }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="B 广告" style="min-width:0;display:flex;gap:44px;align-items:center;justify-content:center;padding:12px 0;flex-wrap:wrap">
+        <div style="width:330px;flex:none;background:#000;border:9px solid #1a2428;border-radius:44px;overflow:hidden;font-family:system-ui,-apple-system,'Helvetica Neue',sans-serif;box-shadow:0 40px 80px rgba(0,0,0,.5)">
+          <div style="display:flex;justify-content:space-between;padding:12px 24px 4px;font-size:12px;font-weight:600"><span>9:41</span><span>▮▮▮ ▰</span></div>
+          <div style="display:flex;justify-content:center;gap:18px;padding:6px 0 10px;font-size:14px"><span style="color:#8a8f92">Following</span><span style="font-weight:700;border-bottom:2px solid #fff;padding-bottom:3px">For You</span></div>
+          <div style="position:relative;aspect-ratio:4/5;overflow:hidden;background:{{ adBg }}">
+            <img data-promotion-src="{{ adImg }}" alt="广告主视觉" style="position:absolute;inset:0;width:100%;height:100%;object-fit:{{ adFit }};padding:{{ adPad }}">
+            <div style="position:absolute;inset:auto 0 0 0;height:55%;background:linear-gradient(0deg,rgba(0,0,0,.78),rgba(0,0,0,0))"></div>
+            <div style="position:absolute;left:16px;right:56px;bottom:16px">
+              <div style="font-size:13px;font-weight:600">crossbound.store <span style="font-weight:400;color:#cfd4d6">· Sponsored</span></div>
+              <div style="font-size:20px;font-weight:700;line-height:1.2;margin-top:6px;text-wrap:pretty">{{ adHeadline }}</div>
+              <div style="font-size:12px;color:#d6dadc;margin-top:6px">{{ productName }} · {{ priceText }} · {{ marketText }}</div>
+            </div>
+            <div style="position:absolute;right:12px;bottom:18px;display:flex;flex-direction:column;gap:16px;align-items:center;font-size:11px;color:#fff"><span>♡<br>2.1K</span><span>◯<br>84</span><span>↗</span></div>
+          </div>
+          <div style="margin:10px 12px;background:#fff;color:#000;text-align:center;font-weight:700;font-size:14px;padding:11px">Shop now</div>
+          <div style="height:70px;margin:0 12px 14px;background:repeating-linear-gradient(135deg,#0d1416 0 8px,#121b1e 8px 16px);display:grid;place-items:center;font:10px 'JetBrains Mono',monospace;color:#4f6268">下一条 · 其他内容</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:26px;min-width:200px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:#65d4df">买家刷到的就是这一条</div>
+          <sc-for list="{{ adStats }}" as="m" hint-placeholder-count="3">
+            <div><div style="font-size:12px;color:#8aa3ab">{{ m.label }}</div><div style="font-family:Oxanium,sans-serif;font-size:34px;font-weight:600;margin-top:2px">{{ m.value }}</div><div style="font-size:11px;color:#8aa3ab;margin-top:2px">{{ m.note }}</div></div>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isCreator }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="C 达人" style="min-width:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;background:#0a161a;border:1px solid #1f343b">
+        <div style="position:relative;aspect-ratio:3/4;overflow:hidden">
+          <img data-promotion-src="{{ cr.img }}" alt="{{ cr.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 50%,rgba(0,0,0,.82) 100%)"></div>
+          <sc-if value="{{ cr.match }}" hint-placeholder-val="{{ false }}">
+            <span style="position:absolute;top:16px;left:16px;background:#c4f637;color:#060d10;font-size:12px;font-weight:700;padding:5px 10px">✓ 与当前商品品类对口 · 购买意愿 +30%</span>
+          </sc-if>
+          <div style="position:absolute;left:20px;right:20px;bottom:20px;font-family:system-ui,-apple-system,'Helvetica Neue',sans-serif">
+            <div style="font-size:26px;font-weight:700">{{ cr.name }}</div>
+            <div style="color:#d6dadc;margin-top:2px">{{ cr.handle }} · {{ cr.niche }}</div>
+            <div style="display:flex;gap:24px;margin-top:14px">
+              <div><div style="font:600 20px Oxanium,sans-serif">{{ cr.fans }}</div><div style="font-size:11px;color:#b9c2c5">粉丝</div></div>
+              <div><div style="font:600 20px Oxanium,sans-serif">{{ cr.views }}</div><div style="font-size:11px;color:#b9c2c5">平均播放</div></div>
+              <div><div style="font:600 20px Oxanium,sans-serif">{{ cr.rateText }}</div><div style="font-size:11px;color:#b9c2c5">报价 / 条</div></div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;min-width:0">
+          <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid #1f343b">
+            <img data-promotion-src="{{ cr.img }}" alt="" style="width:30px;height:30px;border-radius:50%;object-fit:cover">
+            <b>{{ cr.handle }}</b><span style="margin-left:auto;font-size:11px;color:{{ dmStatusColor }}">{{ dmStatus }}</span>
+          </div>
+          <div style="flex:1;padding:18px;display:flex;flex-direction:column;gap:12px;font-family:system-ui,-apple-system,sans-serif;font-size:13px;line-height:1.5;justify-content:flex-end">
+            <sc-for list="{{ dm }}" as="d" hint-placeholder-count="1">
+              <div style="align-self:{{ d.align }};max-width:86%;background:{{ d.bg }};color:{{ d.fg }};padding:10px 13px;animation:rise .35s ease">{{ d.text }}</div>
+            </sc-for>
+          </div>
+          <div style="padding:14px 18px;border-top:1px solid #1f343b;display:flex;gap:10px;align-items:center">
+            <div style="flex:1;min-width:0;font-size:12px;color:#8aa3ab">报价 <b style="color:#e8f1f3;font-family:Oxanium,sans-serif;font-size:15px">{{ costText }}</b> · 成交另付 8% 分佣</div>
+            <button onClick="{{ invite }}" style="background:#c4f637;color:#060d10;border:0;padding:10px 16px;font-weight:700;cursor:pointer;flex:none" style-hover="filter:brightness(1.08)">{{ inviteLabel }}</button>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <aside style="display:flex;flex-direction:column;gap:30px;min-width:0">
+      <div>
+        <div style="display:flex;align-items:baseline;gap:12px;padding-bottom:12px;border-bottom:1px solid #1f343b"><span style="font:11px 'JetBrains Mono',monospace;color:#65d4df">01</span><b style="font-size:17px">{{ q1 }}</b><span style="color:#8aa3ab;font-size:12px">{{ q1sub }}</span></div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
+          <sc-for list="{{ options }}" as="o" hint-placeholder-count="3">
+            <button onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:14px;text-align:left;padding:14px 16px;cursor:pointer;background:{{ o.bg }};border:1px solid {{ o.bd }}" style-hover="border-color:#65d4df">
+              <sc-if value="{{ o.img }}" hint-placeholder-val="{{ false }}"><img data-promotion-src="{{ o.img }}" alt="" style="width:38px;height:38px;border-radius:50%;object-fit:cover;flex:none"></sc-if>
+              <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px">{{ o.name }} <span style="font-size:11px;font-weight:500;color:#c4f637;margin-left:6px">{{ o.tag }}</span></div><div style="font-size:12px;color:#8aa3ab;margin-top:3px">{{ o.sub }}</div></div>
+              <span style="color:{{ o.mark }};font-size:14px">◆</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+      <sc-if value="{{ isAds }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:baseline;gap:12px;padding-bottom:12px;border-bottom:1px solid #1f343b"><span style="font:11px 'JetBrains Mono',monospace;color:#65d4df">02</span><b style="font-size:17px">标题与受众</b></div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px">
+            <sc-for list="{{ headlines }}" as="h" hint-placeholder-count="3">
+              <button onClick="{{ h.pick }}" style="text-align:left;padding:10px 14px;cursor:pointer;background:{{ h.bg }};border:1px solid {{ h.bd }};font-family:system-ui,-apple-system,sans-serif;font-size:13px" style-hover="border-color:#65d4df">{{ h.text }}</button>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;margin-top:12px;border:1px solid #1f343b">
+            <sc-for list="{{ audiences }}" as="a" hint-placeholder-count="2">
+              <button onClick="{{ a.pick }}" style="padding:10px;border:0;cursor:pointer;background:{{ a.bg }};color:{{ a.fg }};font-weight:600">{{ a.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+      <div>
+        <div style="display:flex;align-items:baseline;gap:12px;padding-bottom:12px;border-bottom:1px solid #1f343b"><span style="font:11px 'JetBrains Mono',monospace;color:#65d4df">{{ budgetNo }}</span><b style="font-size:17px">{{ budgetLabel }}</b><span style="margin-left:auto;font:600 28px Oxanium,sans-serif;color:#c4f637">{{ costText }}</span></div>
+        <input type="range" min="300" max="6000" step="100" value="{{ budget }}" onInput="{{ setBudget }}" style="width:100%;margin-top:18px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#8aa3ab;margin-top:4px"><span>$300</span><span>$6,000</span></div>
+        <div style="font-size:12px;color:#8aa3ab;margin-top:12px;line-height:1.6;text-wrap:pretty">{{ budgetNote }}</div>
+      </div>
+    </aside>
+  </main>
+
+  <footer style="position:sticky;bottom:0;margin-top:32px;background:rgba(6,13,16,.92);backdrop-filter:blur(12px);border-top:1px solid #1f343b;display:flex;align-items:center;gap:36px;padding:16px 0 18px;flex-wrap:wrap">
+    <div><div style="font-size:11px;color:#8aa3ab">预计订单</div><div style="font:600 22px Oxanium,sans-serif">{{ ordersText }}</div></div>
+    <div><div style="font-size:11px;color:#8aa3ab">预计利润</div><div style="font:600 22px Oxanium,sans-serif;color:{{ profitColor }}">{{ profitText }}</div></div>
+    <div><div style="font-size:11px;color:#8aa3ab">获客成本</div><div style="font:600 22px Oxanium,sans-serif">{{ cacText }}</div></div>
+    <div style="flex:1;min-width:200px;font-size:13px;font-weight:600;color:{{ verdictColor }};text-wrap:pretty">{{ verdict }}</div>
+    <button onClick="{{ openLaunch }}" disabled="{{ launchDisabled }}" style="background:{{ launchBg }};color:#060d10;border:0;padding:16px 26px;font-size:15px;font-weight:700;cursor:pointer;display:flex;gap:28px;align-items:center;clip-path:polygon(0 0,100% 0,100% 72%,calc(100% - 14px) 100%,0 100%)">{{ launchText }} <span>→</span></button>
+    <sc-if value="{{ canRecover }}"><button onClick="{{ recover }}" style="padding:12px;background:transparent;border:1px solid #ff8a5c;color:#ff8a5c">现金不足 · 查看恢复方案</button></sc-if>
+  </footer>
+
+  <sc-if value="{{ showModal }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeModal }}" style="position:fixed;inset:0;background:rgba(2,6,8,.78);backdrop-filter:blur(6px);display:grid;place-items:center;z-index:10;padding:20px">
+      <div onClick="{{ stop }}" style="width:min(480px,100%);background:#0b1a20;border:1px solid #1f343b;padding:32px">
+        <div style="font:11px 'JetBrains Mono',monospace;letter-spacing:2px;color:#65d4df">{{ modalEyebrow }}</div>
+        <h2 style="margin:10px 0 18px;font-size:24px">{{ modalTitle }}</h2>
+        <div style="font-size:13px;color:#b9c8cd;line-height:1.7">{{ modalBody }}</div>
+        <div style="display:flex;gap:10px;margin-top:26px;justify-content:flex-end">
+          <button onClick="{{ closeModal }}" style="background:none;border:1px solid #1f343b;padding:12px 18px;cursor:pointer">{{ modalBack }}</button>
+          <sc-if value="{{ modalConfirm }}" hint-placeholder-val="{{ true }}"><button onClick="{{ confirm }}" style="background:#c4f637;color:#060d10;border:0;padding:12px 18px;font-weight:700;cursor:pointer">确认启动 →</button></sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+
+const money=n=>(n<0?'-$':'$')+Math.abs(Math.round(n)).toLocaleString('en-US');
+const NAMES={live:'内容直播间',ads:'广告投放',creator:'达人合作'};
+const SCENES=[{id:'home',label:'客厅'},{id:'tech',label:'工位'},{id:'outdoor',label:'露台'}];
+const LIVE=[
+ {name:'测评',sub:'拆音质、测续航，用证据说话',conv:.016,fit:true,en:'SOUND TEST',title:'Does a $39 speaker really fill a room? Let\'s test it.',
+  c:[['mia.k','how loud does it get at max?'],['devonr','bass test pls'],['jt_audio','battery life for real?'],['sam.wu','ok that\'s actually clean'],['lex','vs JBL Go?'],['noah','just ordered one']]},
+ {name:'开箱',sub:'外观、配件、手感',conv:.013,fit:false,en:'UNBOXING',title:'Unboxing the pocket speaker everyone\'s asking about.',
+  c:[['mia.k','what colors does it come in?'],['priya','is there a strap?'],['devonr','looks smaller than i thought'],['lex','cable included?'],['sam.wu','packaging is nice'],['jt_audio','price?']]},
+ {name:'教程',sub:'连接、收纳与日常用法',conv:.010,fit:false,en:'HOW-TO',title:'Pair it in 5 seconds: a quick setup walkthrough.',
+  c:[['mia.k','does it work with android?'],['priya','can i pair two?'],['lex','ok but how does it sound'],['devonr','skip to the sound test'],['sam.wu','neat'],['jt_audio','water resistant?']]}];
+const ADS=[{name:'卖点直给',sub:'产品特写 + 关键参数',conv:.011,fit:true},{name:'场景种草',sub:'生活场景，产品退到画面里',conv:.008,fit:false}];
+const HEAD=['12 hours of sound. Fits in your palm.','Big sound for small spaces.','Take the party to the rooftop.'];
+const AUD=[{name:'科技兴趣人群',v:1,k:1.1},{name:'广泛人群',v:1.3,k:.7}];
+const CR=[
+ {id:'lena',name:'Lena Lin',handle:'@lena.athome',niche:'家居收纳',fans:'86K',views:'31K',rate:1800,conv:.009,match:false,
+  ok:'Love the design! I can fit it into my "desk reset" video this Thursday. Send a sample and I\'ll share a rough cut first.',
+  no:'Thanks for thinking of me. My rate for a dedicated video is $1,800, happy to talk if that works.'},
+ {id:'kai',name:'Kai Chen',handle:'@kai.desk',niche:'3C 数码 · 桌面搭配',fans:'124K',views:'52K',rate:2400,conv:.013,match:true,
+  ok:'Been looking for a speaker like this for my setup series. 60-sec review, posted Friday, honest take. Deal?',
+  no:'Appreciate it! For a full review my rate is $2,400. My audience trusts my tests, so I don\'t discount those.'},
+ {id:'noor',name:'Noor Amin',handle:'@noor.daily',niche:'个护日用',fans:'63K',views:'24K',rate:1400,conv:.009,match:false,
+  ok:'Sure! It could work in my morning-routine video. Heads up: my audience is mostly beauty, not tech.',
+  no:'Thank you! My rate is $1,400 per video. Let me know if you can make it work.'}];
+const COLORS=['#ff9ec7','#7fd8ff','#ffd36e','#b6f27a','#c9a8ff','#ff9c7a'];
+
+class Component extends DCLogic {
+  vm=window.promotionModel;
+  state={...window.promotionModel.draft,tick:0,rehearsing:false,modal:null};
+  componentDidMount(){window.promotionComponent=this;this.applyView(this.vm);this.started=0;this.t=setInterval(()=>{if(this.state.rehearsing){const elapsed=Date.now()-this.started;this.setState({tick:Math.min(6,1+Math.floor(elapsed/1300)),rehearsing:elapsed<15000});}},250);window.CrossboundPromotion.send('mounted');}
+  componentWillUnmount(){clearInterval(this.t);if(window.promotionComponent===this)window.promotionComponent=null;}
+  applyView(vm){this.vm=vm;const changed=this.state.channel!==vm.draft.channel||this.state.live.style!==vm.draft.live.style;this.setState({...vm.draft,...changed?{tick:0,rehearsing:false}:{}});}
+  up(fn){if(this.vm.busy)return;const n=fn(this.state),m={...this.state,...n};window.CrossboundPromotion.send('draft',{draft:m});}
+  patch(c,obj){this.up(s=>({[c]:Object.assign({},s[c],obj)}))}
+  est(c,s){return this.vm.quotes[c];}
+  inviteStatus(s){const d=s.creator,p=CR[d.person],inv=d.invites[p.id];if(!inv||inv!==d.budget)return null;return inv>=p.rate*.85?'ok':'no'}
+  demoVals(){
+    const s=this.state,ch=s.channel,d=s[ch],e=this.est(ch,s);
+    const on=(a)=>({bg:a?'rgba(196,246,55,.07)':'transparent',bd:a?'#c4f637':'#1f343b',mark:a?'#c4f637':'#2c444c'});
+    const steps=['市场研究所','选品展厅','定价财务室','商品页工作室','推广室','物流仓','财报结算厅'];
+    const journey=steps.map((l,i)=>({label:i<4?'✓ '+l:i===4?'▲ '+l:'0'+(i+1)+' '+l,line:i<4?'#c4f637':i===4?'#65d4df':'#1a2a30',color:i<4?'#e8f1f3':i===4?'#65d4df':'#4f6268'}));
+    const tabImg={live:'assets/'+s.live.scene+'.jpg',ads:'assets/speaker.png',creator:'assets/'+CR[s.creator.person].id+'.jpg'};
+    const tabs=['live','ads','creator'].map((c,i)=>{const x=this.est(c,s),a=c===ch;return{code:['A · OWNED','B · PAID','C · CREATOR'][i],name:NAMES[c],img:tabImg[c],op:a?1:.55,
+      bg:a?'#0b1a20':'transparent',bd:a?'#c4f637':'#1f343b',profit:money(x.profit),pc:x.profit<0?'#ff8a5c':'#c4f637',meta:'预算 '+money(s[c].budget),go:()=>this.up(()=>({channel:c,rehearsing:false,tick:0}))}});
+    let options,q1,q1sub,budgetLabel,budgetNote;
+    if(ch==='live'){q1='打法';q1sub='直播先讲什么';options=LIVE.map((o,i)=>Object.assign({name:o.name,sub:o.sub,tag:o.fit?'品类对口':'',img:'',pick:()=>this.up(st=>({live:Object.assign({},st.live,{style:i}),tick:0,rehearsing:false}))},on(i===d.style)));budgetLabel='引流预算';budgetNote='给直播间买流量。自有账号起步观众少，到访按预算的平方根增长，先小额验证。'}
+    else if(ch==='ads'){q1='创意';q1sub='买家第一眼看到什么';options=ADS.map((o,i)=>Object.assign({name:o.name,sub:o.sub,tag:o.fit?'品类对口':'',img:'',pick:()=>this.patch('ads',{style:i})},on(i===d.style)));budgetLabel='投放预算';budgetNote='预算越高曝光越大，但同一批人看多了会疲劳，边际到访递减。'}
+    else{const st=s.creator;q1='选达人';q1sub='每位达人的邀约单独保留';options=CR.map((p,i)=>{const iv=st.invites[p.id];const tag=iv?(iv>=p.rate*.85?'已接受':'已还价'):(p.match?'品类对口':'');return Object.assign({name:p.name,sub:p.niche+' · '+p.fans+' 粉丝',tag,img:'assets/'+p.id+'.jpg',pick:()=>this.patch('creator',{person:i,budget:st.invites[p.id]||p.rate})},on(i===st.person))});budgetLabel='合作报价';budgetNote='低于达人报价太多会被还价。改报价后重新发送邀约即可。'}
+    const live=s.live,ls=LIVE[live.style];
+    const comments=ls.c.slice(0,s.tick).slice(-4).map((c,i)=>({user:c[0],text:c[1],color:COLORS[(ls.c.indexOf(c))%6]}));
+    const ad=s.ads;
+    const adStats=[];
+    const cs=s.creator,p=CR[cs.person],stt=this.inviteStatus(s);
+    const dm=[{text:'Hi! I make '+p.niche.replace(/ · .*/,'')+' content. Rate is '+money(p.rate)+' per video.',align:'flex-start',bg:'#16282f',fg:'#e8f1f3'}];
+    if(stt){dm.push({text:'Hey '+p.name.split(' ')[0]+', we\'d love a 60-sec video on our Pocket Speaker ($39). Offering '+money(cs.invites[p.id])+' + 8% commission.',align:'flex-end',bg:'#c4f637',fg:'#060d10'});dm.push({text:stt==='ok'?p.ok:p.no,align:'flex-start',bg:'#16282f',fg:'#e8f1f3'})}
+    const warnCac=e.warning;
+    let verdict=e.profit<0?'预计亏损：推广费超过了能赚回的毛利，降低预算试试。':warnCac?'获客成本超过单件毛利一半，小心赚不回来。':e.capped?'订单已到可售库存上限，再加预算不会多卖。':'在安全线内。';
+    let launchDisabled=false;if(ch==='creator'&&stt!=='ok'){launchDisabled=true;verdict=stt==='no'?p.name+' 还价了：提高报价后重新邀约。':'先给达人发邀约，对方接受后才能启动。'}
+    const m=s.modal;
+    return{
+      journey,tabs,isLive:ch==='live',isAds:ch==='ads',isCreator:ch==='creator',
+      costText:money(d.budget),budget:d.budget,setBudget:ev=>this.patch(ch,{budget:+ev.target.value}),
+      liveImg:'assets/'+live.scene+'.jpg',liveTitle:ls.title,liveStyleEn:ls.en+' · LIVE REHEARSAL',
+      livePill:s.rehearsing?'#ff3b5c':'rgba(0,0,0,.55)',liveLabel:s.rehearsing?'● LIVE':s.tick>0?'REPLAY':'OFFLINE',
+      viewers:(s.tick===0?0:Math.round(Math.sqrt(live.budget/900)*(40+s.tick*31)*(1+live.style*-.15))).toLocaleString(),comments,showPlay:!s.rehearsing,
+      rehearse:()=>{this.started=Date.now();this.setState({rehearsing:true,tick:1})},
+      scenes:SCENES.map(x=>({label:x.label,img:'assets/'+x.id+'.jpg',bd:x.id===live.scene?'#c4f637':'transparent',op:x.id===live.scene?1:.6,pick:()=>this.patch('live',{scene:x.id})})),
+      adImg:ad.style===0?'assets/speaker.png':'assets/outdoor.jpg',adBg:ad.style===0?'#e6eaec':'#000',adFit:ad.style===0?'contain':'cover',adPad:ad.style===0?'40px 20px 140px':'0',adHeadline:HEAD[ad.head],adStats,
+      headlines:HEAD.map((t,i)=>({text:t,bg:i===ad.head?'rgba(196,246,55,.07)':'transparent',bd:i===ad.head?'#c4f637':'#1f343b',pick:()=>this.patch('ads',{head:i})})),
+      audiences:AUD.map((a,i)=>({name:a.name,bg:i===ad.aud?'#c4f637':'transparent',fg:i===ad.aud?'#060d10':'#e8f1f3',pick:()=>this.patch('ads',{aud:i})})),
+      cr:Object.assign({},p,{img:'assets/'+p.id+'.jpg',rateText:money(p.rate)}),dm,
+      dmStatus:stt==='ok'?'● 已接受合作':stt==='no'?'● 对方还价':'未联系',dmStatusColor:stt==='ok'?'#c4f637':stt==='no'?'#ff8a5c':'#8aa3ab',
+      inviteLabel:stt?'重新发送邀约':'发送合作邀约',
+      invite:()=>window.CrossboundPromotion.send('invite'),
+      options,q1,q1sub,budgetLabel,budgetNote,budgetNo:ch==='ads'?'03':'02',
+      ordersText:e.orders+' 单',profitText:money(e.profit),profitColor:e.profit<0?'#ff8a5c':'#c4f637',cacText:money(e.cac),
+      verdict,verdictColor:(e.profit<0||warnCac||launchDisabled)?'#ff8a5c':'#e8f1f3',
+      launchDisabled,launchBg:launchDisabled?'#3a4a3f':'#c4f637',launchText:'启动推广 · 花 '+money(d.budget),
+      openLaunch:()=>this.setState({modal:'confirm'}),closeModal:()=>this.setState({modal:null}),stop:ev=>ev.stopPropagation(),
+      confirm:()=>{if(this.vm.canConfirm)window.CrossboundPromotion.send('confirm');this.setState({modal:null})},
+      showModal:!!m,modalConfirm:m==='confirm',modalBack:m==='done'?'返回推广室':'返回调整',
+      modalEyebrow:m==='done'?'LAUNCHED':'ROUND 02 · 确认方案',
+      modalTitle:m==='done'?NAMES[ch]+' 已启动 ✓':'本轮用「'+NAMES[ch]+'」开推？',
+      modalBody:m==='done'?'预计 '+e.orders+' 单进入物流仓待发货。确认后进入正式物流流程。':'花费 '+money(d.budget)+'，预计 '+e.orders+' 单，利润 '+money(e.profit)+'。另外两个渠道的草稿会保留。'
+    }}
+  renderVals(){
+    const vm=this.vm,p=vm.product,s=this.state;
+    LIVE.forEach((o,i)=>o.fit=({review:['electronics','future'],unboxing:['lifestyle','outdoor'],tutorial:['home','furniture']})[['review','unboxing','tutorial'][i]].includes(p.category));
+    ADS[0].fit=['electronics','home'].includes(p.category);ADS[1].fit=['lifestyle','future','furniture','outdoor'].includes(p.category);
+    CR.forEach((c,i)=>c.match=['home','electronics','lifestyle'][i]===p.category);
+    HEAD[0]='Meet '+p.english+'. Take a closer look.';HEAD[1]='Made for everyday moments.';HEAD[2]='Find your next everyday favorite.';
+    AUD[0].name='品类兴趣人群';
+    const v=this.demoVals(),q=vm.quotes[s.channel];
+    if(p.id!=='speaker')v.comments=v.comments.map((c,i)=>({...c,text:['Can you show how it works?','What is included?','How big is it?','Can we see the details?'][i%4]}));
+    v.options=v.options.map(o=>({...o,sub:s.channel==='live'?['用实际体验与证据讲清卖点','展示外观、配件和细节','演示使用步骤与日常用途'][LIVE.findIndex(x=>x.name===o.name)]||o.sub:o.sub}));
+    const cr=CR[s.creator.person],offer=s.creator.invites[cr.id];
+    v.dm=[{text:'Hi! My rate is '+money(cr.rate)+' per video.',align:'flex-start',bg:'#16282f',fg:'#e8f1f3'}];
+    if(offer){v.dm.push({text:'Hi '+cr.name.split(' ')[0]+', we would love a video featuring '+p.english+' ('+money(p.price)+'). Offering '+money(offer)+' + 8% commission.',align:'flex-end',bg:'#c4f637',fg:'#060d10'});v.dm.push({text:offer>=cr.rate*.85?'Thanks! That works. Send a sample; I will share a draft before publishing.':'Thanks! My rate is '+money(cr.rate)+'. Could you increase the offer?',align:'flex-start',bg:'#16282f',fg:'#e8f1f3'});}
+    return {...v,canRecover:vm.canRecover,recover:()=>window.CrossboundPromotion.send('recover'),round:vm.round,cashText:money(vm.cash),productImage:p.image,productName:p.english,priceText:money(p.price),marketText:'View product details',
+      goBack:()=>{if(!vm.busy)window.CrossboundPromotion.send('exit')},
+      liveTitle:['A closer look at '+p.english+'.','Unboxing: '+p.english+'.','How to use '+p.english+'.'][s.live.style],
+      liveStyleEn:LIVE[s.live.style].en+' · SIMULATED REHEARSAL',
+      tabProduct:p.name,
+      tabs:v.tabs.map((t,i)=>({...t,img:i===1?p.image:t.img})),
+      adImg:s.ads.style===0?p.image:'assets/outdoor.jpg',
+      adStats:[{label:'预计到访',value:vm.quotes.ads.visits.toLocaleString(),note:'正式经营模型 · 中位预估'},{label:'预计订单',value:vm.quotes.ads.orders+' 单',note:'受库存、售价与商品页影响'},{label:'获客成本',value:vm.quotes.ads.cac==null?'暂无':money(vm.quotes.ads.cac),note:'含分佣 / 按渠道归因计算'}],
+      verdict:vm.notice,verdictColor:!vm.canConfirm||q.profit<0||q.warning?'#ff8a5c':'#e8f1f3',launchDisabled:!vm.canConfirm,launchBg:vm.canConfirm?'#c4f637':'#3a4a3f',launchText:vm.busy?'正在启动…':'启动推广 · 花 '+money(s[s.channel].budget),
+      cacText:q.cac==null?'暂无':money(q.cac),modalEyebrow:'ROUND '+vm.round+' · 确认方案',modalBody:'推广 '+p.name+'，花费 '+money(s[s.channel].budget)+'。预计 '+q.orders+' 单，预计利润 '+money(q.profit)+'。确认后扣除推广预算，进入物流仓。实际结果可能波动。',
+      openLaunch:()=>{if(vm.canConfirm)this.setState({modal:'confirm'})}
+    };
+  }
+
+}
+</script>
+<script>
+(async()=>{document.querySelector('link[rel=stylesheet]').href='./promotion.css'+location.search;for(const file of ['../market/vendor/react.js','../market/vendor/react-dom.js','./frame.js'])await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=file+location.search;s.onload=resolve;s.onerror=reject;document.body.append(s);});})().catch(()=>{document.getElementById('promotion-loading').textContent='推广室加载失败，请返回园区重试。';});
+</script></body>
+</html>

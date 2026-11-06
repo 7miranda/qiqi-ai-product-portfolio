@@ -25,8 +25,31 @@ function boardLines(p, marketLabel, marketId, { selected, recommended }) {
     { text: `参考价 $${p.basePrice ?? '-'} · 成本 $${p.cost ?? '-'}`, size: 0.15, color: '#c7d3dc', weight: 500 },
     tier
       ? { text: `${marketLabel || '本市场'}匹配度 ${tier.label} ${'★'.repeat(tier.stars)}${'☆'.repeat(5 - tier.stars)}`, size: 0.15, color: '#ffd34d', weight: 500 }
-      : { text: '匹配度待测 · 首次测款免费', size: 0.15, color: '#9fb0ba', weight: 500 },
+      : { text: '匹配度待测', size: 0.15, color: '#9fb0ba', weight: 500 },
   ];
+}
+
+// Product feedback 2026-10-30: the stands show the catalog's own studio render of each product (the same detailed
+// model as the product library, transparent PNG) instead of the low-poly stand-in, which stays until the photo is
+// ready or when the catalog renderer is unavailable. The photo always faces the fixed camera.
+const PHOTO_W = 2.8, PHOTO_H = PHOTO_W * 320 / 480;   // stands are 3.5 m apart
+function showStudioPhoto(p, holder, model) {
+  const studio = typeof window !== 'undefined' ? window.CrossboundProductPreview : null;
+  if (typeof studio !== 'function') return;
+  try {
+    studio(p.id, res => {
+      if (!res?.image) return;
+      new THREE.TextureLoader().load(res.image, texture => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, alphaTest: 0.08, toneMapped: false }));
+        sprite.scale.set(PHOTO_W, PHOTO_H, 1);
+        sprite.position.y = PHOTO_H * 0.42;
+        sprite.name = 'studio-photo';
+        model.group.visible = false;
+        holder.add(sprite);
+      });
+    });
+  } catch { /* keep the stand-in model */ }
 }
 
 // batch: { page, pages, total } for the 「换一批」 terminal.
@@ -52,12 +75,13 @@ export function buildShowroom({ products, recommendedId, marketId, marketLabel, 
   const glowStrips = [];
   for (const [x, z, w, d] of [[0, -8.95, 23.6, 0.06], [-11.95, 0, 0.06, 17.6], [11.95, 0, 0.06, 17.6]]) glowStrips.push(block(w, 0.08, d, neon(P.violet, 0.8), { x, y: 5.3, z, parent: group, shadow: false }));
   const title = neonSign('选品展厅 · SHOWROOM', P.cyan, { width: 8, height: 1.3 });
-  title.position.set(0, 3.9, -8.95); group.add(title);
+  title.position.set(0, 4.6, -8.95); group.add(title);
 
   // Product stands.
   const stands = new Map();
   products.slice(0, COLS.length * ROWS.length).forEach((p, i) => {
-    const x = COLS[i % COLS.length], z = ROWS[Math.floor(i / COLS.length)];
+    // Every other row shifts half a slot so, at eye level, the back rows show between the front stands.
+    const row = Math.floor(i / COLS.length), x = COLS[i % COLS.length] + (row % 2 ? 1.75 : 0), z = ROWS[row];
     const color = CATEGORY_COLOR[p.category] || P.cyan;
     const g = new THREE.Group(); g.position.set(x, 0, z); group.add(g);
     mesh(new THREE.CylinderGeometry(0.6, 0.7, 0.9, 20), toon(0x2a3448), { y: 0.45, parent: g });
@@ -65,10 +89,11 @@ export function buildShowroom({ products, recommendedId, marketId, marketLabel, 
     const model = productModel(p, { size: MODEL_SIZE });
     const holder = new THREE.Group(); holder.position.y = MODEL_Y; g.add(holder);
     holder.add(model.group);
+    showStudioPhoto(p, holder, model);
     const recommended = p.id === recommendedId;
     const board = textPlane(boardLines(p, marketLabel, marketId, { recommended }), { width: 1.9, height: 0.75, px: 200, bg: '#0a1220', border: recommended ? '#ffd34d' : '#29414a' });
     // Lectern-style board below the model so it never hides the product from the walkway (F-001: readable at 5 m).
-    board.position.set(0, 0.62, 0.9); board.rotation.x = -0.95; g.add(board);
+    board.position.set(0, 0.62, 0.9); board.rotation.x = -0.45; g.add(board);   // nearly upright: read at eye level
     const ring = mesh(new THREE.RingGeometry(0.85, 1.05, 32), neon(P.green, 0.85), { y: 0.03, parent: g, shadow: false });
     ring.rotation.x = -Math.PI / 2; ring.visible = false;
     const tag = textPlane([{ text: '✓ 已选', size: 0.55, color: '#0a1220', weight: 800 }], { width: 1.1, height: 0.4, px: 128, bg: '#5dff9a' });
@@ -103,12 +128,14 @@ export function buildShowroom({ products, recommendedId, marketId, marketLabel, 
 
   // 「换一批」 terminal (front centre, where the entrance was): 20 stands per batch; this pages through every product on sale here.
   if (batch.pages > 1) {
-    const kiosk = block(2.2, 0.9, 0.7, toon(0x2a3448), { x: 0, y: 0.45, z: 7.4, parent: group });
-    block(2.22, 0.06, 0.72, neon(P.gold, 0.9), { x: 0, y: 0.91, z: 7.4, parent: group, shadow: false });
+    // Front-right corner, so at eye level it never stands between the visitor and the stands.
+    const KX = 8.2, KZ = 7.3;
+    const kiosk = block(2.2, 0.9, 0.7, toon(0x2a3448), { x: KX, y: 0.45, z: KZ, parent: group });
+    block(2.22, 0.06, 0.72, neon(P.gold, 0.9), { x: KX, y: 0.91, z: KZ, parent: group, shadow: false });
     const label = textPlane([{ text: '换一批', size: 0.42, color: '#ffd34d' }, { text: `第 ${batch.page + 1}/${batch.pages} 批 · 共 ${batch.total} 件`, size: 0.22, color: '#c7d3dc', weight: 500 }], { width: 1.6, height: 0.8, px: 180, bg: '#0a1220', border: '#ffd34d' });
-    label.position.set(0, 1.0, 7.8); label.rotation.x = -0.9; group.add(label);
-    boxes.push({ minX: -1.1, maxX: 1.1, minZ: 7, maxZ: 7.8 });
-    interactables.push({ id: 'shuffle', kind: 'shuffle', x: 0, z: 7.4, y: 2.6, label: `换一批商品（第 ${batch.page + 1}/${batch.pages} 批）`, setHighlight: addOutline(kiosk) });
+    label.position.set(KX, 1.35, KZ + 0.4); label.rotation.x = -0.35; group.add(label);
+    boxes.push({ minX: KX - 1.1, maxX: KX + 1.1, minZ: KZ - 0.4, maxZ: KZ + 0.4 });
+    interactables.push({ id: 'shuffle', kind: 'shuffle', x: KX, z: KZ, y: 2.6, label: `换一批商品（第 ${batch.page + 1}/${batch.pages} 批）`, setHighlight: addOutline(kiosk) });
   }
 
   // Exit (3D-021): red until product + supplier are chosen.
