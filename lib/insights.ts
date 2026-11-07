@@ -7,4 +7,4 @@ const publicationDate = getPublicationDate(new Date(), process.env.INSIGHTS_BUIL
 
 export const publishedInsights = [...octoberInsights, ...practiceInsights]
   .filter((article) => article.date <= publicationDate)
-  .sort((a, b) => b.date.localeCompare(a.date));
+  .sort((a, b) => b.date.localeCompare(a.date) || b.number.localeCompare(a.number));

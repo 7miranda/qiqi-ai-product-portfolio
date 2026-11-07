@@ -4,9 +4,6 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-  schedule:
-    # 09:17 Asia/Shanghai; avoids the busy top of the hour.
-    - cron: "17 1 * * *"
 
 permissions:
   contents: read
@@ -18,34 +15,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  publication-window:
-    runs-on: ubuntu-latest
-    outputs:
-      build: ${{ steps.window.outputs.build }}
-      date: ${{ steps.window.outputs.date }}
-    steps:
-      - id: window
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-        run: |
-          # Final article: December 6; allow catch-up builds through December 10.
-          today=$(TZ=Asia/Shanghai date +%F)
-          echo "date=$today" >> "$GITHUB_OUTPUT"
-          if [[ "$EVENT_NAME" != "schedule" || ( "$today" > "2026-11-07" && "$today" < "2026-12-11" ) ]]; then
-            echo "build=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "build=false" >> "$GITHUB_OUTPUT"
-          fi
   build:
-    needs: publication-window
-    if: needs.publication-window.outputs.build == 'true'
     runs-on: ubuntu-latest
-    env:
-      INSIGHTS_BUILD_DATE: ${{ needs.publication-window.outputs.date }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Capture publication date in Shanghai
+        run: echo "INSIGHTS_BUILD_DATE=$(TZ=Asia/Shanghai date +%F)" >> "$GITHUB_ENV"
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
