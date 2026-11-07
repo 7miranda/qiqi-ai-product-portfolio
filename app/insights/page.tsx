@@ -4,15 +4,15 @@ import { ArrowUpRight } from "lucide-react";
 import AnimatedList from "@/components/react-bits/animated-list";
 import StaggeredText from "@/components/react-bits/staggered-text";
 import Footer8 from "@/components/blocks/footer-8";
-import { octoberInsights } from "@/lib/october-insights";
+import { publishedInsights } from "@/lib/insights";
 
 export const metadata: Metadata = {
   title: "最新资讯",
-  description: "从 AI 产品经理视角，持续记录模型更新、产品变化与行业判断。",
+  description: "从 AI 产品经理视角，记录技术实践、工程验证与 AI 产品判断。",
 };
 
 const articles = [
-  ...octoberInsights.map((article) => ({
+  ...publishedInsights.map((article) => ({
     slug: article.slug,
     number: article.number,
     date: article.date.replaceAll("-", "."),
@@ -80,7 +80,7 @@ export default function InsightsIndexPage() {
           </div>
           <StaggeredText
             as="h1"
-            text={"记录模型变化，\n判断产品方向。"}
+            text={"记录技术实践，\n让想法落到实处。"}
             segmentBy="lines"
             className="news-index-title"
             direction="bottom"
@@ -89,8 +89,8 @@ export default function InsightsIndexPage() {
             blur
           />
           <div className="news-index-intro">
-            <p>不只复述参数和榜单，而是从用户任务、产品形态、商业价值与风险边界出发，判断一次 AI 更新真正改变了什么。</p>
-            <div><span>已发布</span><strong>{String(articles.length).padStart(2, "0")}</strong><small>篇产品观察</small></div>
+            <p>从真实项目中的问题出发，写清实现方式、失败路径和验证结果，也记录模型变化带来的产品判断。</p>
+            <div><span>已发布</span><strong>{String(articles.length).padStart(2, "0")}</strong><small>篇实践与观察</small></div>
           </div>
         </div>
       </section>

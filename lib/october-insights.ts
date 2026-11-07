@@ -12,6 +12,7 @@ export type InsightArticle = {
   sections: { id: string; title: string; paragraphs: string[] }[];
   takeaway: string;
   sources: { title: string; href: string }[];
+  sourceNote?: string;
 };
 
 export const octoberInsights: InsightArticle[] = [

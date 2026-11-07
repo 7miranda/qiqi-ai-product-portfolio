@@ -91,14 +91,14 @@ export default function InsightArticlePage({ article }: { article: InsightArticl
             ))}
             <div className="insight-conclusion"><span>PRODUCT TAKE</span><p>{article.takeaway}</p></div>
             <section id="sources" className="insight-sources" aria-labelledby="source-title">
-              <span className="insight-section-no">SOURCES / PUBLIC MATERIALS</span>
+              <span className="insight-section-no">SOURCES / {article.sourceNote ? "PROJECT NOTES" : "PUBLIC MATERIALS"}</span>
               <h2 id="source-title">资料来源</h2>
               {article.sources.map((source) => (
                 <a key={source.href} href={source.href} target="_blank" rel="noreferrer">
                   <span>{source.title}</span><ArrowUpRight aria-hidden="true" />
                 </a>
               ))}
-              <p>本文基于 {displayDate} 及此前公开资料。案例与示例数字仅用于说明方法，不对应真实企业。</p>
+              <p>{article.sourceNote ?? `本文基于 ${displayDate} 及此前公开资料。案例与示例数字仅用于说明方法，不对应真实企业。`}</p>
             </section>
           </div>
         </div>
