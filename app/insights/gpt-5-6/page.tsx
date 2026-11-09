@@ -69,22 +69,12 @@ export default function Gpt56ArticlePage() {
             </div>
             <StaggeredText
               as="h1"
-              text={"GPT-5.6\n不是 Sol 更强，\n而是模型开始被\n组织成任务系统"}
+              text="GPT-5.6 不是 Sol 更强，而是模型开始被组织成任务系统"
               segmentBy="lines"
-              className="insight-title insight-title-desktop"
+              className="insight-title"
               direction="bottom"
               delay={38}
               duration={0.78}
-              blur
-            />
-            <StaggeredText
-              as="h1"
-              text={"GPT-5.6\n不只是 Sol\n更强，\n而是模型开始\n被组织成\n任务系统"}
-              segmentBy="lines"
-              className="insight-title insight-title-mobile"
-              direction="bottom"
-              delay={34}
-              duration={0.72}
               blur
             />
             <div className="insight-hero-bottom">
@@ -115,7 +105,7 @@ export default function Gpt56ArticlePage() {
 
             <section id="tiers" className="insight-section">
               <span className="insight-section-no">02 / SOL, TERRA &amp; LUNA</span>
-              <h2>三个长期能力层级，<br />改变了模型版本的产品逻辑</h2>
+              <h2>三个长期能力层级，改变了模型版本的产品逻辑</h2>
               <p>GPT-5.6 的数字代表模型代际，Sol、Terra、Luna 则是能够独立演进的能力层级。这个命名变化看似只是整理模型菜单，实际上是在建立一套更稳定的产品契约：用户和开发者可以先理解任务档位，再适应每一档能力的持续升级。</p>
 
               <div className="model-table" role="table" aria-label="GPT-5.6 模型层级产品对比">
@@ -139,7 +129,7 @@ export default function Gpt56ArticlePage() {
 
             <section id="orchestration" className="insight-section">
               <span className="insight-section-no">03 / FROM REASONING TO ORCHESTRATION</span>
-              <h2>max 与 ultra 的分界，<br />是“想得更久”与“组织工作”</h2>
+              <h2>max 与 ultra 的分界，是“想得更久”与“组织工作”</h2>
 
               <div className="insight-points">
                 <article>
@@ -161,7 +151,7 @@ export default function Gpt56ArticlePage() {
 
             <section id="metrics" className="insight-section insight-metrics-section">
               <span className="insight-section-no">04 / METRIC MIGRATION</span>
-              <h2>如果我是产品负责人，<br />我会用四个指标管理智能预算</h2>
+              <h2>如果我是产品负责人，我会用四个指标管理智能预算</h2>
               <div className="insight-metrics">
                 {productMetrics.map(([title, description], index) => (
                   <article key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{description}</p></article>
@@ -172,7 +162,7 @@ export default function Gpt56ArticlePage() {
 
             <section id="limits" className="insight-section">
               <span className="insight-section-no">05 / LIMITS &amp; RISKS</span>
-              <h2>选择越丰富，<br />越需要产品替用户做判断</h2>
+              <h2>选择越丰富，越需要产品替用户做判断</h2>
               <p>Sol、Terra、Luna，再叠加 Medium、High、Extra High、Pro、max 与 ultra，给专业用户带来了控制力，也给普通用户制造了新的理解成本。如果产品只是把所有档位塞进下拉菜单，就等于把模型路由、成本判断和风险决策重新推给用户。</p>
               <p>更合理的方案是让用户表达目标、时间要求和结果标准，由系统根据任务复杂度自动选择模型与推理强度；只有在高成本、高权限或不可逆操作前，才要求用户显式确认。同时，多 Agent 任务必须提供过程可见性、权限隔离、失败恢复与结果溯源，否则“更多 Agent”只会带来更难定位的错误。</p>
               <p>GPT-5.6 的更强网络安全能力也伴随更严格的保护与实时监测。对企业产品而言，能力开放不能脱离权限、审计和数据策略，尤其需要区分正常的防御性任务与高风险操作。</p>

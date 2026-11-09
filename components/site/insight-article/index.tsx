@@ -7,6 +7,7 @@ import type { InsightArticle } from "@/lib/october-insights";
 
 export default function InsightArticlePage({ article }: { article: InsightArticle }) {
   const displayDate = article.date.replaceAll("-", ".");
+  const displayTitle = article.desktopTitle.replace(/\r?\n/g, "");
 
   return (
     <main className="secondary-page insight-page">
@@ -39,22 +40,12 @@ export default function InsightArticlePage({ article }: { article: InsightArticl
             </div>
             <StaggeredText
               as="h1"
-              text={article.desktopTitle}
+              text={displayTitle}
               segmentBy="lines"
-              className="insight-title insight-title-desktop"
+              className="insight-title"
               direction="bottom"
               delay={38}
               duration={0.78}
-              blur
-            />
-            <StaggeredText
-              as="h1"
-              text={article.mobileTitle}
-              segmentBy="lines"
-              className="insight-title insight-title-mobile"
-              direction="bottom"
-              delay={34}
-              duration={0.72}
               blur
             />
             <div className="insight-hero-bottom">
@@ -110,7 +101,7 @@ export default function InsightArticlePage({ article }: { article: InsightArticl
                     打开抖音主页<ArrowUpRight aria-hidden="true" />
                   </a>
                 </div>
-                <p className="insight-download-account">抖音：<strong>{article.download.douyinName}</strong><br />抖音号：<strong>{article.download.douyinHandle}</strong> · 私信关键词：<strong>{article.download.messageKeyword}</strong></p>
+                <p className="insight-download-account">抖音：<strong>{article.download.douyinName}</strong> · 抖音号：<strong>{article.download.douyinHandle}</strong> · 私信关键词：<strong>{article.download.messageKeyword}</strong></p>
                 <dl className="insight-download-meta">
                   <div><dt>文件</dt><dd>{article.download.fileName}</dd></div>
                   <div><dt>版本 / 大小</dt><dd>{article.download.version} / {article.download.sizeLabel}</dd></div>

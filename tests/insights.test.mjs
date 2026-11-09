@@ -75,6 +75,22 @@ test("the separate benchmark Skill article exports its full text and download wi
   assert.doesNotMatch(html, /\/user\/self|\/Users\//);
 });
 
+test("article headings use one continuous hero title and no forced heading breaks", async () => {
+  const index = await readFile(new URL("../out/insights/index.html", import.meta.url), "utf8");
+  const links = [...index.matchAll(/class="news-card" href="([^"]+)"/g)].map((match) => match[1]);
+  for (const href of links) {
+    const html = await readFile(new URL(`../out${href}index.html`, import.meta.url), "utf8");
+    const hero = html.match(/<header class="insight-hero">[\s\S]*?<\/header>/)?.[0];
+    assert.ok(hero, `missing article hero: ${href}`);
+    const titles = [...hero.matchAll(/<h1\b[\s\S]*?<\/h1>/g)].map((match) => match[0]);
+    assert.equal(titles.length, 1, `one responsive title must serve both screen sizes: ${href}`);
+    assert.doesNotMatch(titles[0], /<br\b|\n|insight-title-(?:desktop|mobile)/);
+    for (const heading of html.matchAll(/<h2\b[\s\S]*?<\/h2>/g)) {
+      assert.doesNotMatch(heading[0], /<br\b/, `section title must wrap naturally: ${href}`);
+    }
+  }
+});
+
 for (const [slug] of published) {
   test(`${slug} exports its complete practice record with the publication date`, async () => {
     const html = await readFile(new URL(`../out/insights/${slug}/index.html`, import.meta.url), "utf8");

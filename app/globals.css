@@ -263,8 +263,8 @@ body:has(.home-page) .sound-toggle { right:24px; bottom:134px; background:transp
 .news-index-hero-inner { display:flex; min-height:620px; flex-direction:column; padding-top:70px; padding-bottom:52px; }
 .news-index-kicker { display:flex; justify-content:space-between; color:rgba(243,244,239,.48); font-family:var(--mono); font-size:12px; letter-spacing:.14em; }
 .news-index-kicker span:last-child { color:#caff52; }
-.news-index-title { max-width:980px; margin:auto 0 0; font-size:clamp(64px,8vw,116px); font-weight:560; letter-spacing:.01em; line-height:1.13; }
-.news-index-title > span:last-child { color:#caff52; }
+.news-index-title { max-width:100%; margin:auto 0 0; font-size:clamp(40px,5vw,72px); font-weight:560; letter-spacing:0; line-height:1.2; white-space:normal; }
+.news-index-title > span:last-child:not(:first-child) { color:#caff52; }
 .news-index-intro { display:grid; grid-template-columns:minmax(0,720px) auto; justify-content:space-between; align-items:end; gap:48px; margin-top:54px; }
 .news-index-intro > p { margin:0; color:rgba(243,244,239,.68); font-size:18px; line-height:1.8; }
 .news-index-intro > div { display:grid; grid-template-columns:auto auto; align-items:end; column-gap:10px; padding-left:18px; border-left:2px solid #caff52; }
@@ -286,7 +286,7 @@ body:has(.home-page) .sound-toggle { right:24px; bottom:134px; background:transp
 .news-card-meta time { margin-top:12px; color:rgba(243,244,239,.38); }
 .news-card-main { padding:46px 44px; }
 .news-card-category { color:#caff52; font-family:var(--mono); font-size:11px; letter-spacing:.12em; }
-.news-card h2 { max-width:820px; margin:26px 0 0; font-size:clamp(32px,4vw,54px); font-weight:560; letter-spacing:.01em; line-height:1.22; }
+.news-card h2 { max-width:100%; margin:26px 0 0; font-size:clamp(28px,2.8vw,40px); font-weight:560; letter-spacing:0; line-height:1.3; white-space:normal; }
 .news-card-main p { max-width:780px; margin:24px 0 0; color:rgba(243,244,239,.58); font-size:16px; line-height:1.8; }
 .news-card-foot { display:flex; flex-direction:column; justify-content:space-between; padding:28px; border-left:1px solid rgba(243,244,239,.16); }
 .news-card-foot > div { display:flex; flex-wrap:wrap; gap:8px; }
@@ -309,9 +309,7 @@ body:has(.home-page) .sound-toggle { right:24px; bottom:134px; background:transp
 .insight-kicker { display:flex; justify-content:space-between; color:rgba(243,244,239,.54); font-family:var(--mono); font-size:13px; letter-spacing:.14em; }
 .insight-back-link { transition:color .2s ease; }
 .insight-back-link:hover { color:var(--insight-accent); }
-.insight-title { max-width:1120px; margin:auto 0 0; font-size:clamp(56px,7.2vw,108px); font-weight:560; letter-spacing:.01em; line-height:1.14; white-space:pre-line; }
-.insight-title > span:last-child { color:var(--insight-accent); }
-.insight-title-mobile { display:none; }
+.insight-title { max-width:100%; margin:auto 0 0; font-size:clamp(40px,5vw,72px); font-weight:560; letter-spacing:0; line-height:1.2; white-space:normal; }
 .insight-hero-bottom { display:grid; grid-template-columns:minmax(0,740px) auto; justify-content:space-between; align-items:end; gap:60px; margin-top:58px; }
 .insight-hero-bottom > p { margin:0; color:rgba(243,244,239,.7); font-size:19px; line-height:1.8; }
 .insight-hero-bottom > div { min-width:220px; padding-left:20px; border-left:2px solid var(--insight-accent); }
@@ -329,7 +327,7 @@ body:has(.home-page) .sound-toggle { right:24px; bottom:134px; background:transp
 .insight-section,.insight-lead { padding:0 0 86px; scroll-margin-top:120px; }
 .insight-section + .insight-section,.insight-sources { padding-top:82px; border-top:1px solid rgba(243,244,239,.16); }
 .insight-section-no { display:block; color:var(--insight-accent); font-family:var(--mono); font-size:12px; letter-spacing:.14em; }
-.insight-body h2 { margin:28px 0 36px; font-size:clamp(38px,4.5vw,62px); font-weight:560; letter-spacing:.01em; line-height:1.2; }
+.insight-body h2 { margin:28px 0 36px; font-size:clamp(28px,2.7vw,40px); font-weight:560; letter-spacing:0; line-height:1.3; white-space:normal; }
 .insight-body h3 { font-weight:600; }
 .insight-body p { margin:24px 0 0; color:rgba(243,244,239,.68); font-size:18px; line-height:1.9; }
 .insight-opening { margin-top:30px !important; color:#f3f4ef !important; font-size:clamp(27px,3vw,38px) !important; font-weight:520; line-height:1.55 !important; }
@@ -409,7 +407,7 @@ body:has(.home-page) .sound-toggle { right:24px; bottom:134px; background:transp
   .news-index-hero { min-height:560px; background:linear-gradient(180deg,#070806 0 94%,#caff52 94% 95%,#0d100b 95%); }
   .news-index-hero-inner { min-height:560px; padding-top:42px; padding-bottom:38px; }
   .news-index-kicker { font-size:10px; }
-  .news-index-title { margin-top:auto; font-size:42px; line-height:1.2; }
+  .news-index-title { margin-top:auto; font-size:clamp(32px,7vw,42px); line-height:1.25; }
   .news-index-intro { grid-template-columns:1fr; gap:24px; margin-top:34px; }
   .news-index-intro > p { font-size:16px; line-height:1.75; }
   .news-index-intro > div { grid-template-columns:auto 1fr; width:max-content; }
@@ -432,8 +430,7 @@ body:has(.home-page) .sound-toggle { right:24px; bottom:134px; background:transp
   .insight-hero-scrim { background:linear-gradient(180deg,rgba(7,8,6,.3),rgba(7,8,6,.94) 67%,#070806); }
   .insight-hero-inner { min-height:min(86svh,760px); padding-top:42px; padding-bottom:34px; }
   .insight-kicker { font-size:10px; }
-  .insight-title-desktop { display:none; }
-  .insight-title-mobile { display:block; margin-top:auto; font-size:clamp(42px,12vw,60px); line-height:1.18; }
+  .insight-title { margin-top:auto; font-size:clamp(32px,8vw,48px); line-height:1.25; }
   .insight-hero-bottom { grid-template-columns:1fr; gap:24px; margin-top:36px; }
   .insight-hero-bottom > p { font-size:16px; line-height:1.75; }
   .insight-hero-bottom > div { min-width:0; }
@@ -443,7 +440,7 @@ body:has(.home-page) .sound-toggle { right:24px; bottom:134px; background:transp
   .insight-rail a { font-size:12px; }
   .insight-section,.insight-lead { padding-bottom:64px; }
   .insight-section + .insight-section,.insight-sources { padding-top:60px; }
-  .insight-body h2 { margin:24px 0 30px; font-size:38px; line-height:1.22; }
+  .insight-body h2 { margin:24px 0 30px; font-size:clamp(26px,7vw,32px); line-height:1.3; }
   .insight-body p { font-size:16px; line-height:1.85; }
   .insight-opening { font-size:25px !important; line-height:1.55 !important; }
   .insight-body blockquote { margin-top:38px; padding:22px; font-size:22px; }

@@ -72,22 +72,12 @@ export default function KimiK3ArticlePage() {
             </div>
             <StaggeredText
               as="h1"
-              text={"Kimi K3\n不是更大的聊天模型，\n而是一台正在成形的\n任务机器"}
+              text="Kimi K3 不是更大的聊天模型，而是一台正在成形的任务机器"
               segmentBy="lines"
-              className="insight-title insight-title-desktop"
+              className="insight-title"
               direction="bottom"
               delay={38}
               duration={0.78}
-              blur
-            />
-            <StaggeredText
-              as="h1"
-              text={"Kimi K3\n不是更大的\n聊天模型，\n而是一台\n正在成形的\n任务机器"}
-              segmentBy="lines"
-              className="insight-title insight-title-mobile"
-              direction="bottom"
-              delay={34}
-              duration={0.72}
               blur
             />
             <div className="insight-hero-bottom">
@@ -117,7 +107,7 @@ export default function KimiK3ArticlePage() {
 
             <section id="evolution" className="insight-section">
               <span className="insight-section-no">02 / FROM K2.6 TO K3</span>
-              <h2>K2.6、K2.7 到 K3，<br />升级的不是同一条能力曲线</h2>
+              <h2>K2.6、K2.7 到 K3，升级的不是同一条能力曲线</h2>
               <p>K2.6 解决的是通用与多模态问题，K2.7 Code 把重点收敛到复杂编程任务的可靠执行，而 K3 再次把能力面展开，但目标已经从“什么都会一点”变成“围绕复杂任务完成端到端交付”。</p>
 
               <div className="model-table" role="table" aria-label="Kimi 版本产品演进对比">
@@ -140,7 +130,7 @@ export default function KimiK3ArticlePage() {
 
             <section id="product" className="insight-section">
               <span className="insight-section-no">03 / PRODUCT SHIFT</span>
-              <h2>三项变化，正在重写<br />AI 产品的交互范式</h2>
+              <h2>三项变化，正在重写 AI 产品的交互范式</h2>
 
               <div className="insight-points">
                 <article>
@@ -162,7 +152,7 @@ export default function KimiK3ArticlePage() {
 
             <section id="metrics" className="insight-section insight-metrics-section">
               <span className="insight-section-no">04 / METRIC MIGRATION</span>
-              <h2>如果我是产品负责人，<br />我会重新定义四个核心指标</h2>
+              <h2>如果我是产品负责人，我会重新定义四个核心指标</h2>
               <div className="insight-metrics">
                 {productMetrics.map(([title, description], index) => (
                   <article key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{description}</p></article>
@@ -173,7 +163,7 @@ export default function KimiK3ArticlePage() {
 
             <section id="limits" className="insight-section">
               <span className="insight-section-no">05 / LIMITS &amp; RISKS</span>
-              <h2>越能自主执行，<br />越需要清晰的产品边界</h2>
+              <h2>越能自主执行，越需要清晰的产品边界</h2>
               <p>官方披露了两个非常典型的 Agent 产品问题：一是 K3 对完整思考历史的传递较敏感，在不兼容的 Agent 框架中途切换模型，输出质量可能不稳定；二是它在复杂任务上有时会“过度主动”，替用户做出超出预期的决定。</p>
               <p>因此，K3 不应该无差别地接管所有任务。产品层需要通过模型路由、权限分级、关键步骤确认和可回滚机制，把高能力放进明确边界。尤其考虑到 K3 的 API 定价高于 K2.6、K2.7 Code，真正合理的方案不是“全量升级”，而是让高价值、长周期任务调用 K3，让日常问答和明确的 Coding 任务继续由更轻的模型承担。</p>
 
