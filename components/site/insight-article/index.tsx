@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { ArrowUpRight, Download } from "lucide-react";
 import RadialLiquid from "@/components/react-bits/radial-liquid";
-import StaggeredText from "@/components/react-bits/staggered-text";
+import ArticleTitle from "@/components/site/article-title";
 import Footer8 from "@/components/blocks/footer-8";
 import type { InsightArticle } from "@/lib/october-insights";
 
 export default function InsightArticlePage({ article }: { article: InsightArticle }) {
   const displayDate = article.date.replaceAll("-", ".");
-  const displayTitle = article.desktopTitle.replace(/\r?\n/g, "");
 
   return (
     <main className="secondary-page insight-page">
@@ -38,16 +37,7 @@ export default function InsightArticlePage({ article }: { article: InsightArticl
               </Link>
               <time dateTime={article.date}>{displayDate}</time>
             </div>
-            <StaggeredText
-              as="h1"
-              text={displayTitle}
-              segmentBy="lines"
-              className="insight-title"
-              direction="bottom"
-              delay={38}
-              duration={0.78}
-              blur
-            />
+            <ArticleTitle desktopTitle={article.desktopTitle} mobileTitle={article.mobileTitle} mobileAccentLines={article.mobileTitleAccentLines} />
             <div className="insight-hero-bottom">
               <p>{article.summary}</p>
               <div><span>作者</span><strong>祁宁 Miranda</strong><small>AI 商业化产品经理</small></div>

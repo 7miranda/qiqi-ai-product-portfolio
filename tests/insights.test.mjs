@@ -75,7 +75,7 @@ test("the separate benchmark Skill article exports its full text and download wi
   assert.doesNotMatch(html, /\/user\/self|\/Users\//);
 });
 
-test("article headings use one continuous hero title and no forced heading breaks", async () => {
+test("article heroes preserve semantic groups and accent while sharing one accessible heading", async () => {
   const index = await readFile(new URL("../out/insights/index.html", import.meta.url), "utf8");
   const links = [...index.matchAll(/class="news-card" href="([^"]+)"/g)].map((match) => match[1]);
   for (const href of links) {
@@ -84,11 +84,21 @@ test("article headings use one continuous hero title and no forced heading break
     assert.ok(hero, `missing article hero: ${href}`);
     const titles = [...hero.matchAll(/<h1\b[\s\S]*?<\/h1>/g)].map((match) => match[0]);
     assert.equal(titles.length, 1, `one responsive title must serve both screen sizes: ${href}`);
-    assert.doesNotMatch(titles[0], /<br\b|\n|insight-title-(?:desktop|mobile)/);
-    for (const heading of html.matchAll(/<h2\b[\s\S]*?<\/h2>/g)) {
-      assert.doesNotMatch(heading[0], /<br\b/, `section title must wrap naturally: ${href}`);
-    }
+    assert.match(titles[0], /aria-label="[^"]+"/);
+    assert.match(titles[0], /class="insight-title-desktop" aria-hidden="true"/);
+    assert.match(titles[0], /class="insight-title-mobile" aria-hidden="true"/);
+    assert.match(titles[0], /insight-title-group-accent/);
   }
+});
+
+test("017 highlights the result phrase and keeps technical terms together", async () => {
+  const html = await readFile(new URL("../out/insights/build-a-benchmark-method-skill/index.html", import.meta.url), "utf8");
+  const desktop = html.match(/<span class="insight-title-desktop"[\s\S]*?<\/h1>/)?.[0];
+  assert.ok(desktop?.includes("把高手的判断方法，"));
+  assert.match(desktop, /insight-title-group-accent[\s\S]*?变成 AI 能复用的能力。/);
+  const index = await readFile(new URL("../out/insights/index.html", import.meta.url), "utf8");
+  const cards = index.match(/<ul\b[\s\S]*?<\/ul>/)?.[0];
+  assert.ok(cards?.includes("AI\u00a0Skill"), "AI Skill must stay one technical phrase in the listing");
 });
 
 for (const [slug] of published) {

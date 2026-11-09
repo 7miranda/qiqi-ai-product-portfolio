@@ -5,6 +5,7 @@ export type InsightArticle = {
   title: string;
   desktopTitle: string;
   mobileTitle: string;
+  mobileTitleAccentLines?: number;
   summary: string;
   tags: string[];
   readingTime: string;

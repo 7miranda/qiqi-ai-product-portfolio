@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import MetallicSwirl from "@/components/react-bits/metallic-swirl";
-import StaggeredText from "@/components/react-bits/staggered-text";
+import ArticleTitle from "@/components/site/article-title";
 import Footer8 from "@/components/blocks/footer-8";
 
 export const metadata: Metadata = {
@@ -67,15 +67,9 @@ export default function Gpt56ArticlePage() {
               <Link className="insight-back-link" href="/insights">最新资讯 / MODEL NOTES 002</Link>
               <span>2026.07.09</span>
             </div>
-            <StaggeredText
-              as="h1"
-              text="GPT-5.6 不是 Sol 更强，而是模型开始被组织成任务系统"
-              segmentBy="lines"
-              className="insight-title"
-              direction="bottom"
-              delay={38}
-              duration={0.78}
-              blur
+            <ArticleTitle
+              desktopTitle={"GPT-5.6\n不是 Sol 更强，\n而是模型开始被组织成\n任务系统"}
+              mobileTitle={"GPT-5.6\n不是 Sol 更强，\n而是模型开始\n被组织成\n任务系统"}
             />
             <div className="insight-hero-bottom">
               <p>从 AI 产品经理的视角，GPT-5.6 最重要的变化不是又多了一个旗舰模型，而是能力、成本、推理深度与并发协作开始成为可调度的产品变量。</p>

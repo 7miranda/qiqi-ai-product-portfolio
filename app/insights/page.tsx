@@ -57,7 +57,7 @@ const articleItems = articles.map((article) => ({
       </div>
       <div className="news-card-main">
         <span className="news-card-category">{article.category}</span>
-        <h2>{article.title}</h2>
+        <h2>{article.title.replaceAll("AI Skill", "AI\u00a0Skill")}</h2>
         <p>{article.summary}</p>
       </div>
       <div className="news-card-foot">
@@ -80,7 +80,7 @@ export default function InsightsIndexPage() {
           </div>
           <StaggeredText
             as="h1"
-            text="记录技术实践，让想法落到实处。"
+            text={"记录技术实践，\n让想法落到实处。"}
             segmentBy="lines"
             className="news-index-title"
             direction="bottom"

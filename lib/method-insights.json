@@ -102,8 +102,8 @@
     "number": "017",
     "date": "2026-11-09",
     "title": "从内容到能力：把高手的判断方法做成 AI Skill",
-    "desktopTitle": "从内容到能力：把高手的判断方法做成 AI Skill",
-    "mobileTitle": "从内容到能力：把高手的判断方法做成 AI Skill",
+    "desktopTitle": "把高手的判断方法，\n变成 AI 能复用的能力。",
+    "mobileTitle": "把高手的\n判断方法，\n变成 AI\n能复用的能力。",
     "summary": "我的做法是先限定一种判断能力，再从原材料里找条件、步骤和例外。用方法卡留下依据，选合适底座，分清制作与检查，最后换一道新题，验证这套方法能不能用。",
     "tags": [
       "人物方法提炼",
@@ -192,6 +192,7 @@
       "douyinName": "77学姐 · AI Lab",
       "douyinHandle": "77AIART",
       "messageKeyword": "工作流"
-    }
+    },
+    "mobileTitleAccentLines": 2
   }
 ]

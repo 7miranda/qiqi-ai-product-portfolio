@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import RadialLiquid from "@/components/react-bits/radial-liquid";
-import StaggeredText from "@/components/react-bits/staggered-text";
+import ArticleTitle from "@/components/site/article-title";
 import Footer8 from "@/components/blocks/footer-8";
 
 export const metadata: Metadata = {
@@ -70,15 +70,9 @@ export default function KimiK3ArticlePage() {
               <Link className="insight-back-link" href="/insights">最新资讯 / MODEL NOTES 001</Link>
               <span>2026.07.17</span>
             </div>
-            <StaggeredText
-              as="h1"
-              text="Kimi K3 不是更大的聊天模型，而是一台正在成形的任务机器"
-              segmentBy="lines"
-              className="insight-title"
-              direction="bottom"
-              delay={38}
-              duration={0.78}
-              blur
+            <ArticleTitle
+              desktopTitle={"Kimi K3\n不是更大的聊天模型，\n而是一台正在成形的\n任务机器"}
+              mobileTitle={"Kimi K3\n不是更大的\n聊天模型，\n而是一台\n正在成形的\n任务机器"}
             />
             <div className="insight-hero-bottom">
               <p>从 AI 产品经理的视角，判断一次模型发布的价值，不能只看参数和榜单，而要看它是否改变了用户完成任务的方式。</p>
