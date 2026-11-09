@@ -44,8 +44,8 @@ function zipEntries(bytes) {
 }
 
 test("the article offers an encrypted ZIP and the exact public Douyin account", () => {
-  assert.equal(download.href, "/downloads/77miranda-agent-content-workbench-v1.1.zip");
-  assert.equal(download.fileName, "77miranda-agent-content-workbench-v1.1.zip");
+  assert.equal(download.href, "/downloads/77miranda-agent-content-workbench-v1.zip");
+  assert.equal(download.fileName, "77miranda-agent-content-workbench-v1.zip");
   assert.equal(download.douyinHandle, "77AIART");
   assert.equal(download.douyinName, "77学姐 · AI Lab");
   assert.equal(download.messageKeyword, "工作流");
