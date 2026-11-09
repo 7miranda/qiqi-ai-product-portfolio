@@ -99,7 +99,7 @@ export default function InsightArticlePage({ article }: { article: InsightArticl
                 <p>{article.download.description}</p>
                 <ol className="insight-download-steps">
                   <li><strong>下载文件</strong><span>先保存下方的 AES 加密 ZIP 包。</span></li>
-                  <li><strong>领取密码</strong><span>抖音关注 {article.download.douyinHandle}，私信“{article.download.messageKeyword}”，由我回复解压密码。</span></li>
+                  <li><strong>领取密码</strong><span>抖音关注「{article.download.douyinName}」，私信“{article.download.messageKeyword}”，由我回复解压密码。</span></li>
                   <li><strong>解压使用</strong><span>收到密码后，用支持 AES 加密 ZIP 的软件解压，按包内说明调用 Skill。</span></li>
                 </ol>
                 <div className="insight-download-actions">
@@ -110,7 +110,7 @@ export default function InsightArticlePage({ article }: { article: InsightArticl
                     打开抖音主页<ArrowUpRight aria-hidden="true" />
                   </a>
                 </div>
-                <p className="insight-download-account">抖音号：<strong>{article.download.douyinHandle}</strong> · 私信关键词：<strong>{article.download.messageKeyword}</strong></p>
+                <p className="insight-download-account">抖音：<strong>{article.download.douyinName}</strong><br />抖音号：<strong>{article.download.douyinHandle}</strong> · 私信关键词：<strong>{article.download.messageKeyword}</strong></p>
                 <dl className="insight-download-meta">
                   <div><dt>文件</dt><dd>{article.download.fileName}</dd></div>
                   <div><dt>版本 / 大小</dt><dd>{article.download.version} / {article.download.sizeLabel}</dd></div>

@@ -22,6 +22,7 @@ export type InsightArticle = {
     sizeLabel: string;
     sha256: string;
     douyinUrl: string;
+    douyinName: string;
     douyinHandle: string;
     messageKeyword: string;
   };

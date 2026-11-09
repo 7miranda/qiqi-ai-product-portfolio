@@ -44,9 +44,10 @@ function zipEntries(bytes) {
 }
 
 test("the article offers an encrypted ZIP and the exact public Douyin account", () => {
-  assert.equal(download.href, "/downloads/77miranda-agent-content-workbench-v1.zip");
-  assert.equal(download.fileName, "77miranda-agent-content-workbench-v1.zip");
+  assert.equal(download.href, "/downloads/77miranda-agent-content-workbench-v1.1.zip");
+  assert.equal(download.fileName, "77miranda-agent-content-workbench-v1.1.zip");
   assert.equal(download.douyinHandle, "77AIART");
+  assert.equal(download.douyinName, "77学姐 · AI Lab");
   assert.equal(download.messageKeyword, "工作流");
   assert.equal(download.douyinUrl, "https://www.douyin.com/user/MS4wLjABAAAA3yQ7LsB3NZ5ZoqqZ9J_nKSmTiSPqOC6B369xwpJs3PFRhtMlc7kBYXGT7Aotq-in");
   assert.match(download.sha256, /^[a-f0-9]{64}$/);
@@ -54,7 +55,7 @@ test("the article offers an encrypted ZIP and the exact public Douyin account", 
   assert.ok(card, "download guidance must be exported with the complete article");
   assert.ok(card.includes(`href="${download.href}" download="${download.fileName}"`));
   assert.ok(card.includes(`href="${download.douyinUrl}" target="_blank" rel="noopener noreferrer"`));
-  for (const text of ["下载文件", "领取密码", "解压使用", "77AIART", "工作流", "不核验关注状态", "不会自动发送私信"]) {
+  for (const text of ["下载文件", "领取密码", "解压使用", "77学姐 · AI Lab", "77AIART", "工作流", "不核验关注状态", "不会自动发送私信"]) {
     assert.ok(card.includes(text), `missing practical instruction: ${text}`);
   }
   assert.doesNotMatch(card, /\/user\/self|type="password"|<form\b/);
