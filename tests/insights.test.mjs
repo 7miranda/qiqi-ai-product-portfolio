@@ -35,12 +35,13 @@ test("all ten practice articles publish on November 8 with distinct article numb
   assert.equal(new Set(practiceArticles.map(({ slug }) => slug)).size, 10);
 });
 
-test("exported index lists the new practical tutorial and all fifteen existing articles", async () => {
+test("exported index lists both method articles and all fifteen existing articles", async () => {
   const html = await readFile(new URL("../out/insights/index.html", import.meta.url), "utf8");
   const list = html.match(/<ul\b[\s\S]*?<\/ul>/)?.[0];
   assert.ok(list, "article list must exist in exported HTML");
   const links = [...list.matchAll(/class="news-card" href="([^"]+)"/g)].map((match) => match[1]);
   assert.deepEqual(links, [
+    "/insights/build-a-benchmark-method-skill/",
     "/insights/ai-content-workbench-seven-steps/",
     ...published.map(([slug]) => `/insights/${slug}/`),
     ...articles.map(([slug]) => `/insights/${slug}/`),
@@ -50,10 +51,28 @@ test("exported index lists the new practical tutorial and all fifteen existing a
   const dates = [...list.matchAll(/<time dateTime="([^"]+)"/g)].map((match) => match[1]);
   assert.deepEqual(dates, [
     "2026-11-09",
+    "2026-11-09",
     ...published.map(() => publicationDate),
     "2026-10-12", "2026-10-09", "2026-10-06", "2026-07-17", "2026-07-09",
   ]);
-  assert.ok(html.includes("<strong>16</strong>"));
+  assert.ok(html.includes("<strong>17</strong>"));
+});
+
+test("the separate benchmark Skill article exports its full text and download without replacing 016", async () => {
+  const records = JSON.parse(await readFile(new URL("../lib/method-insights.json", import.meta.url), "utf8"));
+  const added = records.find((entry) => entry.number === "017");
+  const previous = records.find((entry) => entry.number === "016");
+  assert.equal(added.slug, "build-a-benchmark-method-skill");
+  assert.equal(previous.slug, "ai-content-workbench-seven-steps");
+  assert.equal(previous.desktopTitle, "用 AI 做自媒体，\n先做成一篇，\n再把方法留下。");
+  assert.equal(new Set(records.map((entry) => entry.slug)).size, records.length);
+  const html = await readFile(new URL(`../out/insights/${added.slug}/index.html`, import.meta.url), "utf8");
+  for (const text of [added.title, added.opening, ...added.sections.flatMap((section) => section.paragraphs), added.takeaway, added.sourceNote]) {
+    assert.ok(html.includes(escapeHtml(text)), `missing article text: ${text.slice(0, 24)}`);
+  }
+  assert.ok(html.includes(`href="${added.download.href}" download="${added.download.fileName}"`));
+  assert.ok(html.includes("77学姐 · AI Lab"));
+  assert.doesNotMatch(html, /\/user\/self|\/Users\//);
 });
 
 for (const [slug] of published) {

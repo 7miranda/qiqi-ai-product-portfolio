@@ -62,26 +62,28 @@ test("the article offers an encrypted ZIP and the exact public Douyin account", 
 });
 
 test("downloaded export is the exact AES-256 encrypted archive identified by SHA-256", async () => {
-  const source = await readFile(new URL(`../public${download.href}`, import.meta.url));
-  const exported = await readFile(new URL(`../out${download.href}`, import.meta.url));
-  assert.equal(sha256(source), download.sha256, "published metadata must identify the actual ZIP");
-  assert.deepEqual(exported, source, "static export must preserve the downloadable bytes");
-  const files = zipEntries(source).filter((entry) => !entry.name.endsWith("/"));
-  assert.ok(files.some((entry) => entry.name.endsWith("/SKILL.md")), "archive must include a Skill entrypoint");
-  for (const entry of files) {
-    assert.ok((entry.flags & 1) === 1, `${entry.name} must require a password`);
-    assert.equal(entry.method, 99, `${entry.name} must use AES ZIP rather than legacy ZipCrypto`);
-    let aes;
-    for (let offset = 0; offset + 4 <= entry.extra.length;) {
-      const field = entry.extra.readUInt16LE(offset);
-      const length = entry.extra.readUInt16LE(offset + 2);
-      assert.ok(offset + 4 + length <= entry.extra.length, "ZIP extra fields must be complete");
-      if (field === 0x9901) aes = entry.extra.subarray(offset + 4, offset + 4 + length);
-      offset += 4 + length;
+  for (const { download } of records) {
+    const source = await readFile(new URL(`../public${download.href}`, import.meta.url));
+    const exported = await readFile(new URL(`../out${download.href}`, import.meta.url));
+    assert.equal(sha256(source), download.sha256, "published metadata must identify the actual ZIP");
+    assert.deepEqual(exported, source, "static export must preserve the downloadable bytes");
+    const files = zipEntries(source).filter((entry) => !entry.name.endsWith("/"));
+    assert.ok(files.some((entry) => entry.name.endsWith("/SKILL.md")), "archive must include a Skill entrypoint");
+    for (const entry of files) {
+      assert.ok((entry.flags & 1) === 1, `${entry.name} must require a password`);
+      assert.equal(entry.method, 99, `${entry.name} must use AES ZIP rather than legacy ZipCrypto`);
+      let aes;
+      for (let offset = 0; offset + 4 <= entry.extra.length;) {
+        const field = entry.extra.readUInt16LE(offset);
+        const length = entry.extra.readUInt16LE(offset + 2);
+        assert.ok(offset + 4 + length <= entry.extra.length, "ZIP extra fields must be complete");
+        if (field === 0x9901) aes = entry.extra.subarray(offset + 4, offset + 4 + length);
+        offset += 4 + length;
+      }
+      assert.ok(aes?.length >= 7, `${entry.name} must declare its AES encryption`);
+      assert.equal(aes.toString("ascii", 2, 4), "AE");
+      assert.equal(aes[4], 3, `${entry.name} must use a 256-bit AES key`);
     }
-    assert.ok(aes?.length >= 7, `${entry.name} must declare its AES encryption`);
-    assert.equal(aes.toString("ascii", 2, 4), "AE");
-    assert.equal(aes[4], 3, `${entry.name} must use a 256-bit AES key`);
   }
 });
 
