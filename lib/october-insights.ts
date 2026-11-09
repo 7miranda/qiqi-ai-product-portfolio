@@ -9,10 +9,22 @@ export type InsightArticle = {
   tags: string[];
   readingTime: string;
   opening: string;
-  sections: { id: string; title: string; paragraphs: string[] }[];
+  sections: { id: string; title: string; paragraphs: string[]; prompt?: string }[];
   takeaway: string;
   sources: { title: string; href: string }[];
   sourceNote?: string;
+  download?: {
+    title: string;
+    description: string;
+    href: string;
+    fileName: string;
+    version: string;
+    sizeLabel: string;
+    sha256: string;
+    douyinUrl: string;
+    douyinHandle: string;
+    messageKeyword: string;
+  };
 };
 
 export const octoberInsights: InsightArticle[] = [

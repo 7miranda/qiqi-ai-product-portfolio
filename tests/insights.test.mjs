@@ -35,12 +35,13 @@ test("all ten practice articles publish on November 8 with distinct article numb
   assert.equal(new Set(practiceArticles.map(({ slug }) => slug)).size, 10);
 });
 
-test("exported index lists all fifteen articles with numbers 015 through 006 first", async () => {
+test("exported index lists the new practical tutorial and all fifteen existing articles", async () => {
   const html = await readFile(new URL("../out/insights/index.html", import.meta.url), "utf8");
   const list = html.match(/<ul\b[\s\S]*?<\/ul>/)?.[0];
   assert.ok(list, "article list must exist in exported HTML");
   const links = [...list.matchAll(/class="news-card" href="([^"]+)"/g)].map((match) => match[1]);
   assert.deepEqual(links, [
+    "/insights/ai-content-workbench-seven-steps/",
     ...published.map(([slug]) => `/insights/${slug}/`),
     ...articles.map(([slug]) => `/insights/${slug}/`),
     "/insights/kimi-k3/",
@@ -48,10 +49,11 @@ test("exported index lists all fifteen articles with numbers 015 through 006 fir
   ]);
   const dates = [...list.matchAll(/<time dateTime="([^"]+)"/g)].map((match) => match[1]);
   assert.deepEqual(dates, [
+    "2026-11-09",
     ...published.map(() => publicationDate),
     "2026-10-12", "2026-10-09", "2026-10-06", "2026-07-17", "2026-07-09",
   ]);
-  assert.ok(html.includes("<strong>15</strong>"));
+  assert.ok(html.includes("<strong>16</strong>"));
 });
 
 for (const [slug] of published) {
